@@ -1,7 +1,7 @@
 {
   "name" : "fastybird/triggers-module",
   "type" : "project",
-  "description" : "FastyBird IOT server Triggers module for triggers storage & automation service",
+  "description": "FastyBird IOT server Triggers module for triggers storage & basic automation logic",
   "keywords" : [
     "fastybird",
     "fb",
