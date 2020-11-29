@@ -9,7 +9,7 @@ services:
 
 before_script:
   # Additional PHP config
-  - phpenv config-add travis.php.ini
+  - phpenv config-add ./tests/travis.php.ini
 
 before_install:
   # Turn off XDebug
