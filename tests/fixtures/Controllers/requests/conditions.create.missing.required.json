@@ -1,18 +1,18 @@
 {
-  "data" : {
-    "id" : "f333fc7a-6e23-4b2f-808d-ed35105b8430",
-    "type" : "triggers-module/condition-channel-property",
-    "attributes" : {
-      "channel" : "channel-identifier",
-      "property" : "property-identifier",
-      "operator" : "eq",
-      "operand" : "2"
+  "data": {
+    "id": "f333fc7a-6e23-4b2f-808d-ed35105b8430",
+    "type": "triggers-module/condition-channel-property",
+    "attributes": {
+      "channel": "channel-identifier",
+      "property": "property-identifier",
+      "operator": "eq",
+      "operand": "2"
     },
-    "relationships" : {
-      "trigger" : {
-        "data" : {
-          "id" : "1b17bcaa-a19e-45f0-98b4-56211cc648ae",
-          "type" : "triggers-module/trigger-automatic"
+    "relationships": {
+      "trigger": {
+        "data": {
+          "id": "1b17bcaa-a19e-45f0-98b4-56211cc648ae",
+          "type": "triggers-module/trigger-automatic"
         }
       }
     }

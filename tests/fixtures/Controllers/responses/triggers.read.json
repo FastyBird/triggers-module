@@ -1,72 +1,72 @@
 {
-  "data" : {
-    "attributes" : {
-      "comment" : null,
-      "enabled" : true,
-      "name" : "Good Night's Sleep"
+  "data": {
+    "attributes": {
+      "comment": null,
+      "enabled": true,
+      "name": "Good Night's Sleep"
     },
-    "id" : "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
-    "links" : {
-      "self" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4"
+    "id": "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
+    "links": {
+      "self": "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4"
     },
-    "relationships" : {
-      "actions" : {
-        "data" : [
+    "relationships": {
+      "actions": {
+        "data": [
           {
-            "id" : "4aa84028-d8b7-4128-95b2-295763634aa4",
-            "type" : "triggers-module/action-channel-property"
+            "id": "4aa84028-d8b7-4128-95b2-295763634aa4",
+            "type": "triggers-module/action-channel-property"
           },
           {
-            "id" : "827d61f7-5dcf-4cab-9662-f386f6fb0bce",
-            "type" : "triggers-module/action-channel-property"
+            "id": "827d61f7-5dcf-4cab-9662-f386f6fb0bce",
+            "type": "triggers-module/action-channel-property"
           },
           {
-            "id" : "d062ce8b-9543-4b9b-b6ca-51907ec0246a",
-            "type" : "triggers-module/action-channel-property"
+            "id": "d062ce8b-9543-4b9b-b6ca-51907ec0246a",
+            "type": "triggers-module/action-channel-property"
           }
         ],
-        "links" : {
-          "related" : {
-            "href" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions",
-            "meta" : {
-              "count" : 3
+        "links": {
+          "related": {
+            "href": "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions",
+            "meta": {
+              "count": 3
             }
           },
-          "self" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/relationships/actions"
+          "self": "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/relationships/actions"
         }
       },
-      "notifications" : {
-        "data" : [
+      "notifications": {
+        "data": [
           {
-            "id" : "05f28df9-5f19-4923-b3f8-b9090116dadc",
-            "type" : "triggers-module/notification-email"
+            "id": "05f28df9-5f19-4923-b3f8-b9090116dadc",
+            "type": "triggers-module/notification-email"
           },
           {
-            "id" : "4fe1019c-f49e-4cbf-83e6-20b394e76317",
-            "type" : "triggers-module/notification-sms"
+            "id": "4fe1019c-f49e-4cbf-83e6-20b394e76317",
+            "type": "triggers-module/notification-sms"
           }
         ],
-        "links" : {
-          "related" : {
-            "href" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/notifications",
-            "meta" : {
-              "count" : 2
+        "links": {
+          "related": {
+            "href": "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/notifications",
+            "meta": {
+              "count": 2
             }
           },
-          "self" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/relationships/notifications"
+          "self": "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/relationships/notifications"
         }
       }
     },
-    "type" : "triggers-module/trigger-manual"
+    "type": "triggers-module/trigger-manual"
   },
-  "jsonapi" : {
-    "version" : "1.1"
+  "jsonapi": {
+    "version": "1.1"
   },
-  "links" : {
-    "self" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4"
+  "links": {
+    "self": "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4"
   },
-  "meta" : {
-    "author" : "FastyBird dev team",
-    "copyright" : "FastyBird s.r.o"
+  "meta": {
+    "author": "FastyBird dev team",
+    "copyright": "FastyBird s.r.o"
   }
 }
