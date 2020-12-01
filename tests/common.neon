@@ -28,6 +28,7 @@ extensions:
 	ipubDoctrineTimestampable			: IPub\DoctrineTimestampable\DI\DoctrineTimestampableExtension
 	ipubDoctrineDynamicDiscriminatorMap	: IPub\DoctrineDynamicDiscriminatorMap\DI\DoctrineDynamicDiscriminatorMapExtension
 	ipubDoctrinePhone					: IPub\DoctrinePhone\DI\DoctrinePhoneExtension
+	ipubPhone							: IPub\Phone\DI\PhoneExtension
 	fbDatabase							: FastyBird\Database\DI\DatabaseExtension
 	fbDateTimeFactory					: FastyBird\DateTimeFactory\DI\DateTimeFactoryExtension
 	fbJsonApi							: FastyBird\JsonApi\DI\JsonApiExtension
