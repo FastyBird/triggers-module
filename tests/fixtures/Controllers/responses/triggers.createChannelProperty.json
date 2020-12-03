@@ -1,43 +1,43 @@
 {
-  "data": {
-    "attributes": {
-      "channel": "channel-identifier",
-      "comment": null,
-      "device": "device-identifier",
-      "enabled": true,
-      "name": "This is channel trigger",
-      "operand": "2",
-      "operator": "eq",
-      "property": "property-identifier"
+  "data" : {
+    "attributes" : {
+      "channel" : "channel-identifier",
+      "comment" : null,
+      "device" : "device-identifier",
+      "enabled" : true,
+      "name" : "This is channel trigger",
+      "operand" : "2",
+      "operator" : "eq",
+      "property" : "property-identifier"
     },
-    "id": "bbbf5caa-b30e-4558-b83a-699617958cea",
-    "links": {
-      "self": "/v1/triggers/bbbf5caa-b30e-4558-b83a-699617958cea"
+    "id" : "bbbf5caa-b30e-4558-b83a-699617958cea",
+    "links" : {
+      "self" : "/v1/triggers/bbbf5caa-b30e-4558-b83a-699617958cea"
     },
-    "relationships": {
-      "actions": {
-        "data": [],
-        "links": {
-          "related": {
-            "href": "/v1/triggers/bbbf5caa-b30e-4558-b83a-699617958cea/actions",
-            "meta": {
-              "count": 0
+    "relationships" : {
+      "actions" : {
+        "data" : [],
+        "links" : {
+          "related" : {
+            "href" : "/v1/triggers/bbbf5caa-b30e-4558-b83a-699617958cea/actions",
+            "meta" : {
+              "count" : 0
             }
           },
-          "self": "/v1/triggers/bbbf5caa-b30e-4558-b83a-699617958cea/relationships/actions"
+          "self" : "/v1/triggers/bbbf5caa-b30e-4558-b83a-699617958cea/relationships/actions"
         }
       }
     },
-    "type": "triggers-module/trigger-channel-property"
+    "type" : "triggers-module/trigger-channel-property"
   },
-  "jsonapi": {
-    "version": "1.1"
+  "jsonapi" : {
+    "version" : "1.1"
   },
-  "links": {
-    "self": "/v1/triggers"
+  "links" : {
+    "self" : "/v1/triggers"
   },
-  "meta": {
-    "author": "FastyBird dev team",
-    "copyright": "FastyBird s.r.o"
+  "meta" : {
+    "author" : "FastyBird dev team",
+    "copyright" : "FastyBird s.r.o"
   }
 }

@@ -1,7 +1,7 @@
 {
-  "data": {
-    "attributes": {
-      "days": [
+  "data" : {
+    "attributes" : {
+      "days" : [
         1,
         2,
         3,
@@ -10,35 +10,35 @@
         6,
         7
       ],
-      "time": "1970-01-01T07:30:00+01:00",
-      "enabled": true
+      "time" : "1970-01-01T07:30:00+01:00",
+      "enabled" : true
     },
-    "id": "09c453b3-c55f-4050-8f1c-b50f8d5728c2",
-    "links": {
-      "self": "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/conditions/09c453b3-c55f-4050-8f1c-b50f8d5728c2"
+    "id" : "09c453b3-c55f-4050-8f1c-b50f8d5728c2",
+    "links" : {
+      "self" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/conditions/09c453b3-c55f-4050-8f1c-b50f8d5728c2"
     },
-    "relationships": {
-      "trigger": {
-        "data": {
-          "id": "1b17bcaa-a19e-45f0-98b4-56211cc648ae",
-          "type": "triggers-module/trigger-automatic"
+    "relationships" : {
+      "trigger" : {
+        "data" : {
+          "id" : "1b17bcaa-a19e-45f0-98b4-56211cc648ae",
+          "type" : "triggers-module/trigger-automatic"
         },
-        "links": {
-          "related": "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae",
-          "self": "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/conditions/09c453b3-c55f-4050-8f1c-b50f8d5728c2/relationships/trigger"
+        "links" : {
+          "related" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae",
+          "self" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/conditions/09c453b3-c55f-4050-8f1c-b50f8d5728c2/relationships/trigger"
         }
       }
     },
-    "type": "triggers-module/condition-time"
+    "type" : "triggers-module/condition-time"
   },
-  "jsonapi": {
-    "version": "1.1"
+  "jsonapi" : {
+    "version" : "1.1"
   },
-  "links": {
-    "self": "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/conditions/09c453b3-c55f-4050-8f1c-b50f8d5728c2"
+  "links" : {
+    "self" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/conditions/09c453b3-c55f-4050-8f1c-b50f8d5728c2"
   },
-  "meta": {
-    "author": "FastyBird dev team",
-    "copyright": "FastyBird s.r.o"
+  "meta" : {
+    "author" : "FastyBird dev team",
+    "copyright" : "FastyBird s.r.o"
   }
 }

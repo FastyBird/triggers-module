@@ -1,16 +1,16 @@
 {
-  "data": {
-    "id": "bbbf5caa-b30e-4558-b83a-699617958cea",
-    "type": "triggers-module/trigger-channel-property",
-    "attributes": {
-      "comment": null,
-      "enabled": true,
-      "name": "This is channel trigger",
-      "device": "device-identifier",
-      "channel": "channel-identifier",
-      "property": "property-identifier",
-      "operator": "eq",
-      "operand": "2"
+  "data" : {
+    "id" : "bbbf5caa-b30e-4558-b83a-699617958cea",
+    "type" : "triggers-module/trigger-channel-property",
+    "attributes" : {
+      "comment" : null,
+      "enabled" : true,
+      "name" : "This is channel trigger",
+      "device" : "device-identifier",
+      "channel" : "channel-identifier",
+      "property" : "property-identifier",
+      "operator" : "eq",
+      "operand" : "2"
     }
   }
 }
