@@ -52,6 +52,9 @@ final class NotificationsV1Controller extends BaseV1Controller
 	/** @var Models\Triggers\ITriggerRepository */
 	protected $triggerRepository;
 
+	/** @var string */
+	protected $translationDomain = 'module.notifications';
+
 	/** @var Models\Notifications\INotificationRepository */
 	private $notificationRepository;
 
@@ -63,9 +66,6 @@ final class NotificationsV1Controller extends BaseV1Controller
 
 	/** @var Hydrators\Notifications\EmailNotificationHydrator */
 	private $emailNotificationHydrator;
-
-	/** @var string */
-	protected $translationDomain = 'module.notifications';
 
 	public function __construct(
 		Models\Triggers\ITriggerRepository $triggerRepository,
@@ -126,6 +126,44 @@ final class NotificationsV1Controller extends BaseV1Controller
 
 		return $response
 			->withEntity(WebServerHttp\ScalarEntity::from($action));
+	}
+
+	/**
+	 * @param string $id
+	 * @param Entities\Triggers\ITrigger $trigger
+	 *
+	 * @return Entities\Notifications\INotification
+	 *
+	 * @throws JsonApiExceptions\IJsonApiException
+	 */
+	protected function findNotification(
+		string $id,
+		Entities\Triggers\ITrigger $trigger
+	): Entities\Notifications\INotification {
+		try {
+			$findQuery = new Queries\FindNotificationsQuery();
+			$findQuery->byId(Uuid\Uuid::fromString($id));
+			$findQuery->forTrigger($trigger);
+
+			$notification = $this->notificationRepository->findOneBy($findQuery);
+
+			if ($notification === null) {
+				throw new JsonApiExceptions\JsonApiErrorException(
+					StatusCodeInterface::STATUS_NOT_FOUND,
+					$this->translator->translate('//module.base.messages.notFound.heading'),
+					$this->translator->translate('//module.base.messages.notFound.message')
+				);
+			}
+
+		} catch (Uuid\Exception\InvalidUuidStringException $ex) {
+			throw new JsonApiExceptions\JsonApiErrorException(
+				StatusCodeInterface::STATUS_NOT_FOUND,
+				$this->translator->translate('//module.base.messages.notFound.heading'),
+				$this->translator->translate('//module.base.messages.notFound.message')
+			);
+		}
+
+		return $notification;
 	}
 
 	/**
@@ -439,44 +477,6 @@ final class NotificationsV1Controller extends BaseV1Controller
 		}
 
 		return parent::readRelationship($request, $response);
-	}
-
-	/**
-	 * @param string $id
-	 * @param Entities\Triggers\ITrigger $trigger
-	 *
-	 * @return Entities\Notifications\INotification
-	 *
-	 * @throws JsonApiExceptions\IJsonApiException
-	 */
-	protected function findNotification(
-		string $id,
-		Entities\Triggers\ITrigger $trigger
-	): Entities\Notifications\INotification {
-		try {
-			$findQuery = new Queries\FindNotificationsQuery();
-			$findQuery->byId(Uuid\Uuid::fromString($id));
-			$findQuery->forTrigger($trigger);
-
-			$notification = $this->notificationRepository->findOneBy($findQuery);
-
-			if ($notification === null) {
-				throw new JsonApiExceptions\JsonApiErrorException(
-					StatusCodeInterface::STATUS_NOT_FOUND,
-					$this->translator->translate('//module.base.messages.notFound.heading'),
-					$this->translator->translate('//module.base.messages.notFound.message')
-				);
-			}
-
-		} catch (Uuid\Exception\InvalidUuidStringException $ex) {
-			throw new JsonApiExceptions\JsonApiErrorException(
-				StatusCodeInterface::STATUS_NOT_FOUND,
-				$this->translator->translate('//module.base.messages.notFound.heading'),
-				$this->translator->translate('//module.base.messages.notFound.message')
-			);
-		}
-
-		return $notification;
 	}
 
 }

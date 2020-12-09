@@ -62,6 +62,23 @@ final class ActionRepository implements IActionRepository
 	}
 
 	/**
+	 * @param string $type
+	 *
+	 * @return Persistence\ObjectRepository<Entities\Actions\Action>
+	 *
+	 * @phpstan-template T of Entities\Actions\Action
+	 * @phpstan-param    class-string<T> $type
+	 */
+	private function getRepository(string $type): Persistence\ObjectRepository
+	{
+		if (!isset($this->repository[$type])) {
+			$this->repository[$type] = $this->managerRegistry->getRepository($type);
+		}
+
+		return $this->repository[$type];
+	}
+
+	/**
 	 * {@inheritDoc}
 	 *
 	 * @throws Throwable
@@ -91,23 +108,6 @@ final class ActionRepository implements IActionRepository
 		}
 
 		return $result;
-	}
-
-	/**
-	 * @param string $type
-	 *
-	 * @return Persistence\ObjectRepository<Entities\Actions\Action>
-	 *
-	 * @phpstan-template T of Entities\Actions\Action
-	 * @phpstan-param    class-string<T> $type
-	 */
-	private function getRepository(string $type): Persistence\ObjectRepository
-	{
-		if (!isset($this->repository[$type])) {
-			$this->repository[$type] = $this->managerRegistry->getRepository($type);
-		}
-
-		return $this->repository[$type];
 	}
 
 }

@@ -94,9 +94,14 @@ abstract class Condition implements ICondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setEnabled(bool $enabled): void
+	public function toArray(): array
 	{
-		$this->enabled = $enabled;
+		return [
+			'id'      => $this->getPlainId(),
+			'enabled' => $this->isEnabled(),
+			'trigger' => $this->getTrigger()->getPlainId(),
+			'owner'   => $this->getTrigger()->getOwnerId(),
+		];
 	}
 
 	/**
@@ -110,22 +115,17 @@ abstract class Condition implements ICondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getTrigger(): Entities\Triggers\IAutomaticTrigger
+	public function setEnabled(bool $enabled): void
 	{
-		return $this->trigger;
+		$this->enabled = $enabled;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function toArray(): array
+	public function getTrigger(): Entities\Triggers\IAutomaticTrigger
 	{
-		return [
-			'id'      => $this->getPlainId(),
-			'enabled' => $this->isEnabled(),
-			'trigger' => $this->getTrigger()->getPlainId(),
-			'owner'   => $this->getTrigger()->getOwnerId(),
-		];
+		return $this->trigger;
 	}
 
 }

@@ -52,6 +52,9 @@ final class ActionsV1Controller extends BaseV1Controller
 	/** @var Models\Triggers\ITriggerRepository */
 	protected $triggerRepository;
 
+	/** @var string */
+	protected $translationDomain = 'module.actions';
+
 	/** @var Models\Actions\IActionRepository */
 	private $actionRepository;
 
@@ -60,9 +63,6 @@ final class ActionsV1Controller extends BaseV1Controller
 
 	/** @var Hydrators\Actions\ChannelPropertyActionHydrator */
 	private $channelPropertyActionHydrator;
-
-	/** @var string */
-	protected $translationDomain = 'module.actions';
 
 	public function __construct(
 		Models\Triggers\ITriggerRepository $triggerRepository,
@@ -121,6 +121,44 @@ final class ActionsV1Controller extends BaseV1Controller
 
 		return $response
 			->withEntity(WebServerHttp\ScalarEntity::from($action));
+	}
+
+	/**
+	 * @param string $id
+	 * @param Entities\Triggers\ITrigger $trigger
+	 *
+	 * @return Entities\Actions\IAction
+	 *
+	 * @throws JsonApiExceptions\IJsonApiException
+	 */
+	protected function findAction(
+		string $id,
+		Entities\Triggers\ITrigger $trigger
+	): Entities\Actions\IAction {
+		try {
+			$findQuery = new Queries\FindActionsQuery();
+			$findQuery->byId(Uuid\Uuid::fromString($id));
+			$findQuery->forTrigger($trigger);
+
+			$action = $this->actionRepository->findOneBy($findQuery);
+
+			if ($action === null) {
+				throw new JsonApiExceptions\JsonApiErrorException(
+					StatusCodeInterface::STATUS_NOT_FOUND,
+					$this->translator->translate('//module.base.messages.notFound.heading'),
+					$this->translator->translate('//module.base.messages.notFound.message')
+				);
+			}
+
+		} catch (Uuid\Exception\InvalidUuidStringException $ex) {
+			throw new JsonApiExceptions\JsonApiErrorException(
+				StatusCodeInterface::STATUS_NOT_FOUND,
+				$this->translator->translate('//module.base.messages.notFound.heading'),
+				$this->translator->translate('//module.base.messages.notFound.message')
+			);
+		}
+
+		return $action;
 	}
 
 	/**
@@ -415,44 +453,6 @@ final class ActionsV1Controller extends BaseV1Controller
 		}
 
 		return parent::readRelationship($request, $response);
-	}
-
-	/**
-	 * @param string $id
-	 * @param Entities\Triggers\ITrigger $trigger
-	 *
-	 * @return Entities\Actions\IAction
-	 *
-	 * @throws JsonApiExceptions\IJsonApiException
-	 */
-	protected function findAction(
-		string $id,
-		Entities\Triggers\ITrigger $trigger
-	): Entities\Actions\IAction {
-		try {
-			$findQuery = new Queries\FindActionsQuery();
-			$findQuery->byId(Uuid\Uuid::fromString($id));
-			$findQuery->forTrigger($trigger);
-
-			$action = $this->actionRepository->findOneBy($findQuery);
-
-			if ($action === null) {
-				throw new JsonApiExceptions\JsonApiErrorException(
-					StatusCodeInterface::STATUS_NOT_FOUND,
-					$this->translator->translate('//module.base.messages.notFound.heading'),
-					$this->translator->translate('//module.base.messages.notFound.message')
-				);
-			}
-
-		} catch (Uuid\Exception\InvalidUuidStringException $ex) {
-			throw new JsonApiExceptions\JsonApiErrorException(
-				StatusCodeInterface::STATUS_NOT_FOUND,
-				$this->translator->translate('//module.base.messages.notFound.heading'),
-				$this->translator->translate('//module.base.messages.notFound.message')
-			);
-		}
-
-		return $action;
 	}
 
 }

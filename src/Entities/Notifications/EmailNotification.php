@@ -63,9 +63,12 @@ class EmailNotification extends Notification implements IEmailNotification
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setEmail(string $email): void
+	public function toArray(): array
 	{
-		$this->email = $email;
+		return array_merge(parent::toArray(), [
+			'type'  => 'email',
+			'email' => $this->getEmail(),
+		]);
 	}
 
 	/**
@@ -79,12 +82,9 @@ class EmailNotification extends Notification implements IEmailNotification
 	/**
 	 * {@inheritDoc}
 	 */
-	public function toArray(): array
+	public function setEmail(string $email): void
 	{
-		return array_merge(parent::toArray(), [
-			'type'  => 'email',
-			'email' => $this->getEmail(),
-		]);
+		$this->email = $email;
 	}
 
 }

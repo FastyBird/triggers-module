@@ -78,13 +78,13 @@ class TimeCondition extends Condition implements ITimeCondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setTime(DateTimeInterface $time): void
+	public function toArray(): array
 	{
-		if (method_exists($time, 'setTimezone')) {
-			$time->setTimezone(new DateTimeZone('UTC'));
-		}
-
-		$this->time = $time;
+		return array_merge(parent::toArray(), [
+			'type' => 'time',
+			'time' => $this->getTime()->format(DATE_ATOM),
+			'days' => $this->getDays(),
+		]);
 	}
 
 	/**
@@ -98,19 +98,13 @@ class TimeCondition extends Condition implements ITimeCondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setDays($days): void
+	public function setTime(DateTimeInterface $time): void
 	{
-		if (!is_array($days) && !$days instanceof Utils\ArrayHash) {
-			throw new Exceptions\InvalidArgumentException('Provided days have to be valid array.');
+		if (method_exists($time, 'setTimezone')) {
+			$time->setTimezone(new DateTimeZone('UTC'));
 		}
 
-		foreach ($days as $day) {
-			if (!in_array($day, [1, 2, 3, 4, 5, 6, 7], true)) {
-				throw new Exceptions\InvalidArgumentException('Provided days array is not valid.');
-			}
-		}
-
-		$this->days = (array) $days;
+		$this->time = $time;
 	}
 
 	/**
@@ -130,13 +124,19 @@ class TimeCondition extends Condition implements ITimeCondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function toArray(): array
+	public function setDays($days): void
 	{
-		return array_merge(parent::toArray(), [
-			'type' => 'time',
-			'time' => $this->getTime()->format(DATE_ATOM),
-			'days' => $this->getDays(),
-		]);
+		if (!is_array($days) && !$days instanceof Utils\ArrayHash) {
+			throw new Exceptions\InvalidArgumentException('Provided days have to be valid array.');
+		}
+
+		foreach ($days as $day) {
+			if (!in_array($day, [1, 2, 3, 4, 5, 6, 7], true)) {
+				throw new Exceptions\InvalidArgumentException('Provided days array is not valid.');
+			}
+		}
+
+		$this->days = (array) $days;
 	}
 
 }

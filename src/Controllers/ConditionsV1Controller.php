@@ -52,6 +52,9 @@ final class ConditionsV1Controller extends BaseV1Controller
 	/** @var Models\Triggers\ITriggerRepository */
 	protected $triggerRepository;
 
+	/** @var string */
+	protected $translationDomain = 'module.conditions';
+
 	/** @var Models\Conditions\IConditionRepository */
 	private $conditionRepository;
 
@@ -66,9 +69,6 @@ final class ConditionsV1Controller extends BaseV1Controller
 
 	/** @var Hydrators\Conditions\TimeConditionHydrator */
 	private $timeConditionHydrator;
-
-	/** @var string */
-	protected $translationDomain = 'module.conditions';
 
 	public function __construct(
 		Models\Triggers\ITriggerRepository $triggerRepository,
@@ -147,6 +147,44 @@ final class ConditionsV1Controller extends BaseV1Controller
 
 		return $response
 			->withEntity(WebServerHttp\ScalarEntity::from($condition));
+	}
+
+	/**
+	 * @param string $id
+	 * @param Entities\Triggers\ITrigger $trigger
+	 *
+	 * @return Entities\Conditions\ICondition
+	 *
+	 * @throws JsonApiExceptions\IJsonApiException
+	 */
+	protected function findCondition(
+		string $id,
+		Entities\Triggers\ITrigger $trigger
+	): Entities\Conditions\ICondition {
+		try {
+			$findQuery = new Queries\FindConditionsQuery();
+			$findQuery->byId(Uuid\Uuid::fromString($id));
+			$findQuery->forTrigger($trigger);
+
+			$condition = $this->conditionRepository->findOneBy($findQuery);
+
+			if ($condition === null) {
+				throw new JsonApiExceptions\JsonApiErrorException(
+					StatusCodeInterface::STATUS_NOT_FOUND,
+					$this->translator->translate('//module.base.messages.notFound.heading'),
+					$this->translator->translate('//module.base.messages.notFound.message')
+				);
+			}
+
+		} catch (Uuid\Exception\InvalidUuidStringException $ex) {
+			throw new JsonApiExceptions\JsonApiErrorException(
+				StatusCodeInterface::STATUS_NOT_FOUND,
+				$this->translator->translate('//module.base.messages.notFound.heading'),
+				$this->translator->translate('//module.base.messages.notFound.message')
+			);
+		}
+
+		return $condition;
 	}
 
 	/**
@@ -467,44 +505,6 @@ final class ConditionsV1Controller extends BaseV1Controller
 		}
 
 		return parent::readRelationship($request, $response);
-	}
-
-	/**
-	 * @param string $id
-	 * @param Entities\Triggers\ITrigger $trigger
-	 *
-	 * @return Entities\Conditions\ICondition
-	 *
-	 * @throws JsonApiExceptions\IJsonApiException
-	 */
-	protected function findCondition(
-		string $id,
-		Entities\Triggers\ITrigger $trigger
-	): Entities\Conditions\ICondition {
-		try {
-			$findQuery = new Queries\FindConditionsQuery();
-			$findQuery->byId(Uuid\Uuid::fromString($id));
-			$findQuery->forTrigger($trigger);
-
-			$condition = $this->conditionRepository->findOneBy($findQuery);
-
-			if ($condition === null) {
-				throw new JsonApiExceptions\JsonApiErrorException(
-					StatusCodeInterface::STATUS_NOT_FOUND,
-					$this->translator->translate('//module.base.messages.notFound.heading'),
-					$this->translator->translate('//module.base.messages.notFound.message')
-				);
-			}
-
-		} catch (Uuid\Exception\InvalidUuidStringException $ex) {
-			throw new JsonApiExceptions\JsonApiErrorException(
-				StatusCodeInterface::STATUS_NOT_FOUND,
-				$this->translator->translate('//module.base.messages.notFound.heading'),
-				$this->translator->translate('//module.base.messages.notFound.message')
-			);
-		}
-
-		return $condition;
 	}
 
 }

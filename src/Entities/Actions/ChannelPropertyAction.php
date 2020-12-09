@@ -102,6 +102,20 @@ class ChannelPropertyAction extends Action implements IChannelPropertyAction
 	/**
 	 * {@inheritDoc}
 	 */
+	public function toArray(): array
+	{
+		return array_merge(parent::toArray(), [
+			'type'     => 'channel-property',
+			'device'   => $this->getDevice(),
+			'channel'  => $this->getChannel(),
+			'property' => $this->getProperty(),
+			'value'    => $this->getValue(),
+		]);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getDevice(): string
 	{
 		return $this->device;
@@ -129,20 +143,6 @@ class ChannelPropertyAction extends Action implements IChannelPropertyAction
 	public function getValue(): string
 	{
 		return $this->value;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function toArray(): array
-	{
-		return array_merge(parent::toArray(), [
-			'type'     => 'channel-property',
-			'device'   => $this->getDevice(),
-			'channel'  => $this->getChannel(),
-			'property' => $this->getProperty(),
-			'value'    => $this->getValue(),
-		]);
 	}
 
 }

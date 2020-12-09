@@ -120,62 +120,6 @@ class ChannelPropertyTrigger extends Trigger implements IChannelPropertyTrigger
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getDevice(): string
-	{
-		return $this->device;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getChannel(): string
-	{
-		return $this->channel;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getProperty(): string
-	{
-		return $this->property;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function setOperator(Types\ConditionOperatorType $operator): void
-	{
-		$this->operator = $operator;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getOperator(): Types\ConditionOperatorType
-	{
-		return $this->operator;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function setOperand(string $operand): void
-	{
-		$this->operand = $operand;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getOperand(): string
-	{
-		return $this->operand;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function setNotifications(array $notifications = []): void
 	{
 		throw new Exceptions\InvalidStateException('Not supported by this type of trigger.');
@@ -226,6 +170,62 @@ class ChannelPropertyTrigger extends Trigger implements IChannelPropertyTrigger
 			'operand'  => $this->getOperand(),
 			'operator' => $this->getOperator()->getValue(),
 		]);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getDevice(): string
+	{
+		return $this->device;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getChannel(): string
+	{
+		return $this->channel;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getProperty(): string
+	{
+		return $this->property;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getOperand(): string
+	{
+		return $this->operand;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setOperand(string $operand): void
+	{
+		$this->operand = $operand;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getOperator(): Types\ConditionOperatorType
+	{
+		return $this->operator;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setOperator(Types\ConditionOperatorType $operator): void
+	{
+		$this->operator = $operator;
 	}
 
 }

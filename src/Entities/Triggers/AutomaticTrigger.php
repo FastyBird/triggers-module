@@ -62,23 +62,6 @@ class AutomaticTrigger extends Trigger implements IAutomaticTrigger
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setConditions(array $conditions = []): void
-	{
-		$this->conditions = new Common\Collections\ArrayCollection();
-
-		// Process all passed entities...
-		/** @var Entities\Conditions\ICondition $entity */
-		foreach ($conditions as $entity) {
-			if (!$this->conditions->contains($entity)) {
-				// ...and assign them to collection
-				$this->conditions->add($entity);
-			}
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function addCondition(Entities\Conditions\ICondition $condition): void
 	{
 		// Check if collection does not contain inserting entity
@@ -107,6 +90,23 @@ class AutomaticTrigger extends Trigger implements IAutomaticTrigger
 	public function getConditions(): array
 	{
 		return $this->conditions->toArray();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setConditions(array $conditions = []): void
+	{
+		$this->conditions = new Common\Collections\ArrayCollection();
+
+		// Process all passed entities...
+		/** @var Entities\Conditions\ICondition $entity */
+		foreach ($conditions as $entity) {
+			if (!$this->conditions->contains($entity)) {
+				// ...and assign them to collection
+				$this->conditions->add($entity);
+			}
+		}
 	}
 
 	/**

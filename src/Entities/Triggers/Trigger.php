@@ -123,49 +123,21 @@ abstract class Trigger implements ITrigger
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setName(string $name): void
+	public function addAction(Entities\Actions\IAction $action): void
 	{
-		$this->name = $name;
+		// Check if collection does not contain inserting entity
+		if (!$this->actions->contains($action)) {
+			// ...and assign it to collection
+			$this->actions->add($action);
+		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getName(): string
+	public function getActions(): array
 	{
-		return $this->name;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function setComment(?string $comment = null): void
-	{
-		$this->comment = $comment;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getComment(): ?string
-	{
-		return $this->comment;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function setEnabled(bool $enabled): void
-	{
-		$this->enabled = $enabled;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function isEnabled(): bool
-	{
-		return $this->enabled;
+		return $this->actions->toArray();
 	}
 
 	/**
@@ -183,26 +155,6 @@ abstract class Trigger implements ITrigger
 				$this->actions->add($entity);
 			}
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function addAction(Entities\Actions\IAction $action): void
-	{
-		// Check if collection does not contain inserting entity
-		if (!$this->actions->contains($action)) {
-			// ...and assign it to collection
-			$this->actions->add($action);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getActions(): array
-	{
-		return $this->actions->toArray();
 	}
 
 	/**
@@ -233,23 +185,6 @@ abstract class Trigger implements ITrigger
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setNotifications(array $notifications = []): void
-	{
-		$this->notifications = new Common\Collections\ArrayCollection();
-
-		// Process all passed entities...
-		/** @var Entities\Notifications\INotification $entity */
-		foreach ($notifications as $entity) {
-			if (!$this->notifications->contains($entity)) {
-				// ...and assign them to collection
-				$this->notifications->add($entity);
-			}
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function addNotification(Entities\Notifications\INotification $notification): void
 	{
 		// Check if collection does not contain inserting entity
@@ -265,6 +200,23 @@ abstract class Trigger implements ITrigger
 	public function getNotifications(): array
 	{
 		return $this->notifications->toArray();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setNotifications(array $notifications = []): void
+	{
+		$this->notifications = new Common\Collections\ArrayCollection();
+
+		// Process all passed entities...
+		/** @var Entities\Notifications\INotification $entity */
+		foreach ($notifications as $entity) {
+			if (!$this->notifications->contains($entity)) {
+				// ...and assign them to collection
+				$this->notifications->add($entity);
+			}
+		}
 	}
 
 	/**
@@ -304,6 +256,54 @@ abstract class Trigger implements ITrigger
 			'enabled' => $this->isEnabled(),
 			'owner'   => $this->getOwnerId(),
 		];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getName(): string
+	{
+		return $this->name;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setName(string $name): void
+	{
+		$this->name = $name;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getComment(): ?string
+	{
+		return $this->comment;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setComment(?string $comment = null): void
+	{
+		$this->comment = $comment;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function isEnabled(): bool
+	{
+		return $this->enabled;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setEnabled(bool $enabled): void
+	{
+		$this->enabled = $enabled;
 	}
 
 }

@@ -43,6 +43,24 @@ class TriggersModuleExtension extends DI\CompilerExtension implements Translatio
 {
 
 	/**
+	 * @param Nette\Configurator $config
+	 * @param string $extensionName
+	 *
+	 * @return void
+	 */
+	public static function register(
+		Nette\Configurator $config,
+		string $extensionName = 'fbTriggersModule'
+	): void {
+		$config->onCompile[] = function (
+			Nette\Configurator $config,
+			DI\Compiler $compiler
+		) use ($extensionName): void {
+			$compiler->addExtension($extensionName, new TriggersModuleExtension());
+		};
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public function loadConfiguration(): void
@@ -200,7 +218,10 @@ class TriggersModuleExtension extends DI\CompilerExtension implements Translatio
 		$ormAnnotationDriverChainService = $builder->getDefinitionByType(Persistence\Mapping\Driver\MappingDriverChain::class);
 
 		if ($ormAnnotationDriverChainService instanceof DI\Definitions\ServiceDefinition) {
-			$ormAnnotationDriverChainService->addSetup('addDriver', [$ormAnnotationDriverService, 'FastyBird\TriggersModule\Entities']);
+			$ormAnnotationDriverChainService->addSetup('addDriver', [
+				$ormAnnotationDriverService,
+				'FastyBird\TriggersModule\Entities',
+			]);
 		}
 	}
 
@@ -235,24 +256,6 @@ class TriggersModuleExtension extends DI\CompilerExtension implements Translatio
 		return [
 			__DIR__ . '/../Translations',
 		];
-	}
-
-	/**
-	 * @param Nette\Configurator $config
-	 * @param string $extensionName
-	 *
-	 * @return void
-	 */
-	public static function register(
-		Nette\Configurator $config,
-		string $extensionName = 'fbTriggersModule'
-	): void {
-		$config->onCompile[] = function (
-			Nette\Configurator $config,
-			DI\Compiler $compiler
-		) use ($extensionName): void {
-			$compiler->addExtension($extensionName, new TriggersModuleExtension());
-		};
 	}
 
 }

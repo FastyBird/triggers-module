@@ -90,11 +90,13 @@ class FindNotificationsQuery extends DoctrineOrmQuery\QueryObject
 	 *
 	 * @phpstan-param ORM\EntityRepository<T> $repository
 	 */
-	protected function doCreateCountQuery(ORM\EntityRepository $repository): ORM\QueryBuilder
+	private function createBasicDql(ORM\EntityRepository $repository): ORM\QueryBuilder
 	{
-		$qb = $this->createBasicDql($repository)->select('COUNT(n.id)');
+		$qb = $repository->createQueryBuilder('n');
+		$qb->addSelect('trigger');
+		$qb->join('n.trigger', 'trigger');
 
-		foreach ($this->select as $modifier) {
+		foreach ($this->filter as $modifier) {
 			$modifier($qb);
 		}
 
@@ -108,13 +110,11 @@ class FindNotificationsQuery extends DoctrineOrmQuery\QueryObject
 	 *
 	 * @phpstan-param ORM\EntityRepository<T> $repository
 	 */
-	private function createBasicDql(ORM\EntityRepository $repository): ORM\QueryBuilder
+	protected function doCreateCountQuery(ORM\EntityRepository $repository): ORM\QueryBuilder
 	{
-		$qb = $repository->createQueryBuilder('n');
-		$qb->addSelect('trigger');
-		$qb->join('n.trigger', 'trigger');
+		$qb = $this->createBasicDql($repository)->select('COUNT(n.id)');
 
-		foreach ($this->filter as $modifier) {
+		foreach ($this->select as $modifier) {
 			$modifier($qb);
 		}
 

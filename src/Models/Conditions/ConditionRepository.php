@@ -62,6 +62,23 @@ final class ConditionRepository implements IConditionRepository
 	}
 
 	/**
+	 * @param string $type
+	 *
+	 * @return Persistence\ObjectRepository<Entities\Conditions\Condition>
+	 *
+	 * @phpstan-template T of Entities\Conditions\Condition
+	 * @phpstan-param    class-string<T> $type
+	 */
+	private function getRepository(string $type): Persistence\ObjectRepository
+	{
+		if (!isset($this->repository[$type])) {
+			$this->repository[$type] = $this->managerRegistry->getRepository($type);
+		}
+
+		return $this->repository[$type];
+	}
+
+	/**
 	 * {@inheritDoc}
 	 *
 	 * @throws Throwable
@@ -91,23 +108,6 @@ final class ConditionRepository implements IConditionRepository
 		}
 
 		return $result;
-	}
-
-	/**
-	 * @param string $type
-	 *
-	 * @return Persistence\ObjectRepository<Entities\Conditions\Condition>
-	 *
-	 * @phpstan-template T of Entities\Conditions\Condition
-	 * @phpstan-param    class-string<T> $type
-	 */
-	private function getRepository(string $type): Persistence\ObjectRepository
-	{
-		if (!isset($this->repository[$type])) {
-			$this->repository[$type] = $this->managerRegistry->getRepository($type);
-		}
-
-		return $this->repository[$type];
 	}
 
 }

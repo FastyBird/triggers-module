@@ -103,7 +103,10 @@ class Router extends Routing\Router
 
 				$group->delete('/{' . self::URL_ITEM_ID . '}', [$this->triggersV1Controller, 'delete']);
 
-				$route = $group->get('/{' . self::URL_ITEM_ID . '}/relationships/{' . self::RELATION_ENTITY . '}', [$this->triggersV1Controller, 'readRelationship']);
+				$route = $group->get('/{' . self::URL_ITEM_ID . '}/relationships/{' . self::RELATION_ENTITY . '}', [
+					$this->triggersV1Controller,
+					'readRelationship',
+				]);
 				$route->setName('trigger.relationship');
 			});
 
@@ -124,7 +127,10 @@ class Router extends Routing\Router
 
 					$group->delete('/{' . self::URL_ITEM_ID . '}', [$this->actionsV1Controller, 'delete']);
 
-					$route = $group->get('/{' . self::URL_ITEM_ID . '}/relationships/{' . self::RELATION_ENTITY . '}', [$this->actionsV1Controller, 'readRelationship']);
+					$route = $group->get('/{' . self::URL_ITEM_ID . '}/relationships/{' . self::RELATION_ENTITY . '}', [
+						$this->actionsV1Controller,
+						'readRelationship',
+					]);
 					$route->setName('trigger.action.relationship');
 				});
 
@@ -144,7 +150,10 @@ class Router extends Routing\Router
 
 					$group->delete('/{' . self::URL_ITEM_ID . '}', [$this->notificationsV1Controller, 'delete']);
 
-					$route = $group->get('/{' . self::URL_ITEM_ID . '}/relationships/{' . self::RELATION_ENTITY . '}', [$this->notificationsV1Controller, 'readRelationship']);
+					$route = $group->get('/{' . self::URL_ITEM_ID . '}/relationships/{' . self::RELATION_ENTITY . '}', [
+						$this->notificationsV1Controller,
+						'readRelationship',
+					]);
 					$route->setName('trigger.notification.relationship');
 				});
 
@@ -164,7 +173,10 @@ class Router extends Routing\Router
 
 					$group->delete('/{' . self::URL_ITEM_ID . '}', [$this->conditionsV1Controller, 'delete']);
 
-					$route = $group->get('/{' . self::URL_ITEM_ID . '}/relationships/{' . self::RELATION_ENTITY . '}', [$this->conditionsV1Controller, 'readRelationship']);
+					$route = $group->get('/{' . self::URL_ITEM_ID . '}/relationships/{' . self::RELATION_ENTITY . '}', [
+						$this->conditionsV1Controller,
+						'readRelationship',
+					]);
 					$route->setName('trigger.condition.relationship');
 				});
 			});

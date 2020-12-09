@@ -256,24 +256,6 @@ class FindConditionsQuery extends DoctrineOrmQuery\QueryObject
 	 *
 	 * @phpstan-param ORM\EntityRepository<T> $repository
 	 */
-	protected function doCreateCountQuery(ORM\EntityRepository $repository): ORM\QueryBuilder
-	{
-		$qb = $this->createBasicDql($repository)->select('COUNT(c.id)');
-
-		foreach ($this->select as $modifier) {
-			$modifier($qb);
-		}
-
-		return $qb;
-	}
-
-	/**
-	 * @param ORM\EntityRepository<Entities\Conditions\Condition> $repository
-	 *
-	 * @return ORM\QueryBuilder
-	 *
-	 * @phpstan-param ORM\EntityRepository<T> $repository
-	 */
 	private function createBasicDql(ORM\EntityRepository $repository): ORM\QueryBuilder
 	{
 		if ($repository->getClassName() === Entities\Conditions\PropertyCondition::class) {
@@ -295,6 +277,24 @@ class FindConditionsQuery extends DoctrineOrmQuery\QueryObject
 		}
 
 		foreach ($this->filter as $modifier) {
+			$modifier($qb);
+		}
+
+		return $qb;
+	}
+
+	/**
+	 * @param ORM\EntityRepository<Entities\Conditions\Condition> $repository
+	 *
+	 * @return ORM\QueryBuilder
+	 *
+	 * @phpstan-param ORM\EntityRepository<T> $repository
+	 */
+	protected function doCreateCountQuery(ORM\EntityRepository $repository): ORM\QueryBuilder
+	{
+		$qb = $this->createBasicDql($repository)->select('COUNT(c.id)');
+
+		foreach ($this->select as $modifier) {
 			$modifier($qb);
 		}
 

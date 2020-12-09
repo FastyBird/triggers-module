@@ -132,11 +132,13 @@ class FindActionsQuery extends DoctrineOrmQuery\QueryObject
 	 *
 	 * @phpstan-param ORM\EntityRepository<T> $repository
 	 */
-	protected function doCreateCountQuery(ORM\EntityRepository $repository): ORM\QueryBuilder
+	private function createBasicDql(ORM\EntityRepository $repository): ORM\QueryBuilder
 	{
-		$qb = $this->createBasicDql($repository)->select('COUNT(a.id)');
+		$qb = $repository->createQueryBuilder('a');
+		$qb->addSelect('trigger');
+		$qb->join('a.trigger', 'trigger');
 
-		foreach ($this->select as $modifier) {
+		foreach ($this->filter as $modifier) {
 			$modifier($qb);
 		}
 
@@ -150,13 +152,11 @@ class FindActionsQuery extends DoctrineOrmQuery\QueryObject
 	 *
 	 * @phpstan-param ORM\EntityRepository<T> $repository
 	 */
-	private function createBasicDql(ORM\EntityRepository $repository): ORM\QueryBuilder
+	protected function doCreateCountQuery(ORM\EntityRepository $repository): ORM\QueryBuilder
 	{
-		$qb = $repository->createQueryBuilder('a');
-		$qb->addSelect('trigger');
-		$qb->join('a.trigger', 'trigger');
+		$qb = $this->createBasicDql($repository)->select('COUNT(a.id)');
 
-		foreach ($this->filter as $modifier) {
+		foreach ($this->select as $modifier) {
 			$modifier($qb);
 		}
 

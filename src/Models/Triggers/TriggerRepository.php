@@ -62,6 +62,23 @@ final class TriggerRepository implements ITriggerRepository
 	}
 
 	/**
+	 * @param string $type
+	 *
+	 * @return Persistence\ObjectRepository<Entities\Triggers\Trigger>
+	 *
+	 * @phpstan-template T of Entities\Triggers\Trigger
+	 * @phpstan-param    class-string<T> $type
+	 */
+	private function getRepository(string $type): Persistence\ObjectRepository
+	{
+		if (!isset($this->repository[$type])) {
+			$this->repository[$type] = $this->managerRegistry->getRepository($type);
+		}
+
+		return $this->repository[$type];
+	}
+
+	/**
 	 * {@inheritDoc}
 	 *
 	 * @throws Throwable
@@ -91,23 +108,6 @@ final class TriggerRepository implements ITriggerRepository
 		}
 
 		return $result;
-	}
-
-	/**
-	 * @param string $type
-	 *
-	 * @return Persistence\ObjectRepository<Entities\Triggers\Trigger>
-	 *
-	 * @phpstan-template T of Entities\Triggers\Trigger
-	 * @phpstan-param    class-string<T> $type
-	 */
-	private function getRepository(string $type): Persistence\ObjectRepository
-	{
-		if (!isset($this->repository[$type])) {
-			$this->repository[$type] = $this->managerRegistry->getRepository($type);
-		}
-
-		return $this->repository[$type];
 	}
 
 }

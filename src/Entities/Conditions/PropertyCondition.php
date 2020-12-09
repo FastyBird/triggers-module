@@ -69,9 +69,12 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setOperator(Types\ConditionOperatorType $operator): void
+	public function toArray(): array
 	{
-		$this->operator = $operator;
+		return array_merge(parent::toArray(), [
+			'operator' => $this->getOperator()->getValue(),
+			'operand'  => $this->getOperand(),
+		]);
 	}
 
 	/**
@@ -85,9 +88,9 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setOperand(string $operand): void
+	public function setOperator(Types\ConditionOperatorType $operator): void
 	{
-		$this->operand = $operand;
+		$this->operator = $operator;
 	}
 
 	/**
@@ -101,12 +104,9 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function toArray(): array
+	public function setOperand(string $operand): void
 	{
-		return array_merge(parent::toArray(), [
-			'operator' => $this->getOperator()->getValue(),
-			'operand'  => $this->getOperand(),
-		]);
+		$this->operand = $operand;
 	}
 
 }
