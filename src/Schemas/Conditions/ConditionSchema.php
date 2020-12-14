@@ -84,8 +84,8 @@ abstract class ConditionSchema extends JsonApiSchemas\JsonApiSchema
 			$this->router->urlFor(
 				'trigger.condition',
 				[
-					Router\Router::URL_TRIGGER_ID => $condition->getTrigger()->getPlainId(),
-					Router\Router::URL_ITEM_ID    => $condition->getPlainId(),
+					Router\Routes::URL_TRIGGER_ID => $condition->getTrigger()->getPlainId(),
+					Router\Routes::URL_ITEM_ID    => $condition->getPlainId(),
 				]
 			),
 			false
@@ -131,7 +131,7 @@ abstract class ConditionSchema extends JsonApiSchemas\JsonApiSchema
 				$this->router->urlFor(
 					'trigger',
 					[
-						Router\Router::URL_ITEM_ID => $condition->getTrigger()->getPlainId(),
+						Router\Routes::URL_ITEM_ID => $condition->getTrigger()->getPlainId(),
 					]
 				),
 				false
@@ -159,9 +159,9 @@ abstract class ConditionSchema extends JsonApiSchemas\JsonApiSchema
 				$this->router->urlFor(
 					'trigger.condition.relationship',
 					[
-						Router\Router::URL_TRIGGER_ID  => $condition->getTrigger()->getPlainId(),
-						Router\Router::URL_ITEM_ID     => $condition->getPlainId(),
-						Router\Router::RELATION_ENTITY => $name,
+						Router\Routes::URL_TRIGGER_ID  => $condition->getTrigger()->getPlainId(),
+						Router\Routes::URL_ITEM_ID     => $condition->getPlainId(),
+						Router\Routes::RELATION_ENTITY => $name,
 					]
 				),
 				false

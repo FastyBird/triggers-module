@@ -110,7 +110,7 @@ final class TriggersV1Controller extends BaseV1Controller
 		Message\ServerRequestInterface $request,
 		WebServerHttp\Response $response
 	): WebServerHttp\Response {
-		$trigger = $this->findTrigger($request->getAttribute(Router\Router::URL_ITEM_ID));
+		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_ITEM_ID));
 
 		return $response
 			->withEntity(WebServerHttp\ScalarEntity::from($trigger));
@@ -254,7 +254,7 @@ final class TriggersV1Controller extends BaseV1Controller
 		WebServerHttp\Response $response
 	): WebServerHttp\Response {
 		// At first, try to load trigger
-		$trigger = $this->findTrigger($request->getAttribute(Router\Router::URL_ITEM_ID));
+		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_ITEM_ID));
 
 		$document = $this->createDocument($request);
 
@@ -342,7 +342,7 @@ final class TriggersV1Controller extends BaseV1Controller
 		WebServerHttp\Response $response
 	): WebServerHttp\Response {
 		// At first, try to load trigger
-		$trigger = $this->findTrigger($request->getAttribute(Router\Router::URL_ITEM_ID));
+		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_ITEM_ID));
 
 		try {
 			// Start transaction connection to the database
@@ -394,9 +394,9 @@ final class TriggersV1Controller extends BaseV1Controller
 		WebServerHttp\Response $response
 	): WebServerHttp\Response {
 		// At first, try to load trigger
-		$trigger = $this->findTrigger($request->getAttribute(Router\Router::URL_ITEM_ID));
+		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_ITEM_ID));
 
-		$relationEntity = strtolower($request->getAttribute(Router\Router::RELATION_ENTITY));
+		$relationEntity = strtolower($request->getAttribute(Router\Routes::RELATION_ENTITY));
 
 		if ($relationEntity === Schemas\Triggers\TriggerSchema::RELATIONSHIPS_ACTIONS) {
 			return $response

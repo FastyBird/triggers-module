@@ -95,7 +95,7 @@ final class NotificationsV1Controller extends BaseV1Controller
 		WebServerHttp\Response $response
 	): WebServerHttp\Response {
 		// At first, try to load trigger
-		$trigger = $this->findTrigger($request->getAttribute(Router\Router::URL_TRIGGER_ID));
+		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
 		$findQuery = new Queries\FindNotificationsQuery();
 		$findQuery->forTrigger($trigger);
@@ -119,10 +119,10 @@ final class NotificationsV1Controller extends BaseV1Controller
 		WebServerHttp\Response $response
 	): WebServerHttp\Response {
 		// At first, try to load trigger
-		$trigger = $this->findTrigger($request->getAttribute(Router\Router::URL_TRIGGER_ID));
+		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
 		// & notification
-		$action = $this->findNotification($request->getAttribute(Router\Router::URL_ITEM_ID), $trigger);
+		$action = $this->findNotification($request->getAttribute(Router\Routes::URL_ITEM_ID), $trigger);
 
 		return $response
 			->withEntity(WebServerHttp\ScalarEntity::from($action));
@@ -183,7 +183,7 @@ final class NotificationsV1Controller extends BaseV1Controller
 		WebServerHttp\Response $response
 	): WebServerHttp\Response {
 		// At first, try to load trigger
-		$trigger = $this->findTrigger($request->getAttribute(Router\Router::URL_TRIGGER_ID));
+		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
 		$document = $this->createDocument($request);
 
@@ -324,10 +324,10 @@ final class NotificationsV1Controller extends BaseV1Controller
 		WebServerHttp\Response $response
 	): WebServerHttp\Response {
 		// At first, try to load trigger
-		$trigger = $this->findTrigger($request->getAttribute(Router\Router::URL_TRIGGER_ID));
+		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
 		// & notification
-		$notification = $this->findNotification($request->getAttribute(Router\Router::URL_ITEM_ID), $trigger);
+		$notification = $this->findNotification($request->getAttribute(Router\Routes::URL_ITEM_ID), $trigger);
 
 		$document = $this->createDocument($request);
 
@@ -409,10 +409,10 @@ final class NotificationsV1Controller extends BaseV1Controller
 		WebServerHttp\Response $response
 	): WebServerHttp\Response {
 		// At first, try to load trigger
-		$trigger = $this->findTrigger($request->getAttribute(Router\Router::URL_TRIGGER_ID));
+		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
 		// & notification
-		$notification = $this->findNotification($request->getAttribute(Router\Router::URL_ITEM_ID), $trigger);
+		$notification = $this->findNotification($request->getAttribute(Router\Routes::URL_ITEM_ID), $trigger);
 
 		try {
 			// Start transaction connection to the database
@@ -464,12 +464,12 @@ final class NotificationsV1Controller extends BaseV1Controller
 		WebServerHttp\Response $response
 	): WebServerHttp\Response {
 		// At first, try to load trigger
-		$trigger = $this->findTrigger($request->getAttribute(Router\Router::URL_TRIGGER_ID));
+		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
 		// & notification
-		$notification = $this->findNotification($request->getAttribute(Router\Router::URL_ITEM_ID), $trigger);
+		$notification = $this->findNotification($request->getAttribute(Router\Routes::URL_ITEM_ID), $trigger);
 
-		$relationEntity = strtolower($request->getAttribute(Router\Router::RELATION_ENTITY));
+		$relationEntity = strtolower($request->getAttribute(Router\Routes::RELATION_ENTITY));
 
 		if ($relationEntity === Schemas\Notifications\NotificationSchema::RELATIONSHIPS_TRIGGER) {
 			return $response

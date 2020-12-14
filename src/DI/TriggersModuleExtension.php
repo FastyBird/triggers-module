@@ -72,8 +72,7 @@ class TriggersModuleExtension extends DI\CompilerExtension implements Translatio
 			->setType(Middleware\AccessMiddleware::class);
 
 		$builder->addDefinition(null)
-			->setType(Router\Router::class)
-			->addSetup('registerRoutes');
+			->setType(Router\Routes::class);
 
 		// Console commands
 		$builder->addDefinition(null)

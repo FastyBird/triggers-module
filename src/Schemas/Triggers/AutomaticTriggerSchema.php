@@ -93,7 +93,7 @@ final class AutomaticTriggerSchema extends TriggerSchema
 				$this->router->urlFor(
 					'trigger.actions',
 					[
-						Router\Router::URL_TRIGGER_ID => $trigger->getPlainId(),
+						Router\Routes::URL_TRIGGER_ID => $trigger->getPlainId(),
 					]
 				),
 				true,
@@ -122,8 +122,8 @@ final class AutomaticTriggerSchema extends TriggerSchema
 				$this->router->urlFor(
 					'trigger.relationship',
 					[
-						Router\Router::URL_ITEM_ID     => $trigger->getPlainId(),
-						Router\Router::RELATION_ENTITY => $name,
+						Router\Routes::URL_ITEM_ID     => $trigger->getPlainId(),
+						Router\Routes::RELATION_ENTITY => $name,
 					]
 				),
 				false

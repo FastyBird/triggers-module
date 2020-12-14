@@ -83,8 +83,8 @@ abstract class NotificationSchema extends JsonApiSchemas\JsonApiSchema
 			$this->router->urlFor(
 				'trigger.notification',
 				[
-					Router\Router::URL_TRIGGER_ID => $notification->getTrigger()->getPlainId(),
-					Router\Router::URL_ITEM_ID    => $notification->getPlainId(),
+					Router\Routes::URL_TRIGGER_ID => $notification->getTrigger()->getPlainId(),
+					Router\Routes::URL_ITEM_ID    => $notification->getPlainId(),
 				]
 			),
 			false
@@ -130,7 +130,7 @@ abstract class NotificationSchema extends JsonApiSchemas\JsonApiSchema
 				$this->router->urlFor(
 					'trigger',
 					[
-						Router\Router::URL_ITEM_ID => $notification->getTrigger()->getPlainId(),
+						Router\Routes::URL_ITEM_ID => $notification->getTrigger()->getPlainId(),
 					]
 				),
 				false
@@ -158,9 +158,9 @@ abstract class NotificationSchema extends JsonApiSchemas\JsonApiSchema
 				$this->router->urlFor(
 					'trigger.notification.relationship',
 					[
-						Router\Router::URL_TRIGGER_ID  => $notification->getTrigger()->getPlainId(),
-						Router\Router::URL_ITEM_ID     => $notification->getPlainId(),
-						Router\Router::RELATION_ENTITY => $name,
+						Router\Routes::URL_TRIGGER_ID  => $notification->getTrigger()->getPlainId(),
+						Router\Routes::URL_ITEM_ID     => $notification->getPlainId(),
+						Router\Routes::RELATION_ENTITY => $name,
 					]
 				),
 				false

@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * RouterFactory.php
+ * Routes.php
  *
  * @license        More in license.md
  * @copyright      https://www.fastybird.com
@@ -18,8 +18,8 @@ namespace FastyBird\TriggersModule\Router;
 use FastyBird\SimpleAuth\Middleware as SimpleAuthMiddleware;
 use FastyBird\TriggersModule\Controllers;
 use FastyBird\TriggersModule\Middleware;
+use FastyBird\WebServer\Router as WebServerRouter;
 use IPub\SlimRouter\Routing;
-use Psr\Http\Message\ResponseFactoryInterface;
 
 /**
  * Module router configuration
@@ -29,7 +29,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-class Router extends Routing\Router
+class Routes implements WebServerRouter\IRoutes
 {
 
 	public const URL_ITEM_ID = 'id';
@@ -66,11 +66,8 @@ class Router extends Routing\Router
 		Controllers\ConditionsV1Controller $conditionsV1Controller,
 		Middleware\AccessMiddleware $devicesAccessControlMiddleware,
 		SimpleAuthMiddleware\AccessMiddleware $accessControlMiddleware,
-		SimpleAuthMiddleware\UserMiddleware $userMiddleware,
-		?ResponseFactoryInterface $responseFactory = null
+		SimpleAuthMiddleware\UserMiddleware $userMiddleware
 	) {
-		parent::__construct($responseFactory, null);
-
 		$this->triggersV1Controller = $triggersV1Controller;
 		$this->actionsV1Controller = $actionsV1Controller;
 		$this->notificationsV1Controller = $notificationsV1Controller;
@@ -84,9 +81,9 @@ class Router extends Routing\Router
 	/**
 	 * @return void
 	 */
-	public function registerRoutes(): void
+	public function registerRoutes(Routing\IRouter $router): void
 	{
-		$routes = $this->group('/v1', function (Routing\RouteCollector $group): void {
+		$routes = $router->group('/v1', function (Routing\RouteCollector $group): void {
 			$group->group('/triggers', function (Routing\RouteCollector $group): void {
 				/**
 				 * TRIGGERS

@@ -100,7 +100,7 @@ final class ConditionsV1Controller extends BaseV1Controller
 		WebServerHttp\Response $response
 	): WebServerHttp\Response {
 		// At first, try to load trigger
-		$trigger = $this->findTrigger($request->getAttribute(Router\Router::URL_TRIGGER_ID));
+		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
 		if (!$trigger instanceof Entities\Triggers\IAutomaticTrigger) {
 			throw new JsonApiExceptions\JsonApiErrorException(
@@ -132,7 +132,7 @@ final class ConditionsV1Controller extends BaseV1Controller
 		WebServerHttp\Response $response
 	): WebServerHttp\Response {
 		// At first, try to load trigger
-		$trigger = $this->findTrigger($request->getAttribute(Router\Router::URL_TRIGGER_ID));
+		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
 		if (!$trigger instanceof Entities\Triggers\IAutomaticTrigger) {
 			throw new JsonApiExceptions\JsonApiErrorException(
@@ -143,7 +143,7 @@ final class ConditionsV1Controller extends BaseV1Controller
 		}
 
 		// & condition
-		$condition = $this->findCondition($request->getAttribute(Router\Router::URL_ITEM_ID), $trigger);
+		$condition = $this->findCondition($request->getAttribute(Router\Routes::URL_ITEM_ID), $trigger);
 
 		return $response
 			->withEntity(WebServerHttp\ScalarEntity::from($condition));
@@ -204,7 +204,7 @@ final class ConditionsV1Controller extends BaseV1Controller
 		WebServerHttp\Response $response
 	): WebServerHttp\Response {
 		// At first, try to load trigger
-		$trigger = $this->findTrigger($request->getAttribute(Router\Router::URL_TRIGGER_ID));
+		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
 		if ($trigger instanceof Entities\Triggers\IAutomaticTrigger) {
 			$document = $this->createDocument($request);
@@ -346,10 +346,10 @@ final class ConditionsV1Controller extends BaseV1Controller
 		WebServerHttp\Response $response
 	): WebServerHttp\Response {
 		// At first, try to load trigger
-		$trigger = $this->findTrigger($request->getAttribute(Router\Router::URL_TRIGGER_ID));
+		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
 		// & condition
-		$condition = $this->findCondition($request->getAttribute(Router\Router::URL_ITEM_ID), $trigger);
+		$condition = $this->findCondition($request->getAttribute(Router\Routes::URL_ITEM_ID), $trigger);
 
 		$document = $this->createDocument($request);
 
@@ -437,10 +437,10 @@ final class ConditionsV1Controller extends BaseV1Controller
 		WebServerHttp\Response $response
 	): WebServerHttp\Response {
 		// At first, try to load trigger
-		$trigger = $this->findTrigger($request->getAttribute(Router\Router::URL_TRIGGER_ID));
+		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
 		// & condition
-		$condition = $this->findCondition($request->getAttribute(Router\Router::URL_ITEM_ID), $trigger);
+		$condition = $this->findCondition($request->getAttribute(Router\Routes::URL_ITEM_ID), $trigger);
 
 		try {
 			// Start transaction connection to the database
@@ -492,12 +492,12 @@ final class ConditionsV1Controller extends BaseV1Controller
 		WebServerHttp\Response $response
 	): WebServerHttp\Response {
 		// At first, try to load trigger
-		$trigger = $this->findTrigger($request->getAttribute(Router\Router::URL_TRIGGER_ID));
+		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
 		// & condition
-		$condition = $this->findCondition($request->getAttribute(Router\Router::URL_ITEM_ID), $trigger);
+		$condition = $this->findCondition($request->getAttribute(Router\Routes::URL_ITEM_ID), $trigger);
 
-		$relationEntity = strtolower($request->getAttribute(Router\Router::RELATION_ENTITY));
+		$relationEntity = strtolower($request->getAttribute(Router\Routes::RELATION_ENTITY));
 
 		if ($relationEntity === Schemas\Conditions\ConditionSchema::RELATIONSHIPS_TRIGGER) {
 			return $response

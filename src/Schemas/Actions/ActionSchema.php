@@ -83,8 +83,8 @@ abstract class ActionSchema extends JsonApiSchemas\JsonApiSchema
 			$this->router->urlFor(
 				'trigger.action',
 				[
-					Router\Router::URL_TRIGGER_ID => $action->getTrigger()->getPlainId(),
-					Router\Router::URL_ITEM_ID    => $action->getPlainId(),
+					Router\Routes::URL_TRIGGER_ID => $action->getTrigger()->getPlainId(),
+					Router\Routes::URL_ITEM_ID    => $action->getPlainId(),
 				]
 			),
 			false
@@ -130,7 +130,7 @@ abstract class ActionSchema extends JsonApiSchemas\JsonApiSchema
 				$this->router->urlFor(
 					'trigger',
 					[
-						Router\Router::URL_ITEM_ID => $action->getTrigger()->getPlainId(),
+						Router\Routes::URL_ITEM_ID => $action->getTrigger()->getPlainId(),
 					]
 				),
 				false
@@ -158,9 +158,9 @@ abstract class ActionSchema extends JsonApiSchemas\JsonApiSchema
 				$this->router->urlFor(
 					'trigger.action.relationship',
 					[
-						Router\Router::URL_TRIGGER_ID  => $action->getTrigger()->getPlainId(),
-						Router\Router::URL_ITEM_ID     => $action->getPlainId(),
-						Router\Router::RELATION_ENTITY => $name,
+						Router\Routes::URL_TRIGGER_ID  => $action->getTrigger()->getPlainId(),
+						Router\Routes::URL_ITEM_ID     => $action->getPlainId(),
+						Router\Routes::RELATION_ENTITY => $name,
 					]
 				),
 				false
