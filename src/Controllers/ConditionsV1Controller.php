@@ -53,7 +53,7 @@ final class ConditionsV1Controller extends BaseV1Controller
 	protected Models\Triggers\ITriggerRepository $triggerRepository;
 
 	/** @var string */
-	protected string $translationDomain = 'module.conditions';
+	protected string $translationDomain = 'triggers-module.conditions';
 
 	/** @var Models\Conditions\IConditionRepository */
 	private Models\Conditions\IConditionRepository $conditionRepository;
@@ -105,8 +105,8 @@ final class ConditionsV1Controller extends BaseV1Controller
 		if (!$trigger instanceof Entities\Triggers\IAutomaticTrigger) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_NOT_FOUND,
-				$this->translator->translate('//module.base.messages.notFound.heading'),
-				$this->translator->translate('//module.base.messages.notFound.message')
+				$this->translator->translate('//triggers-module.base.messages.notFound.heading'),
+				$this->translator->translate('//triggers-module.base.messages.notFound.message')
 			);
 		}
 
@@ -137,8 +137,8 @@ final class ConditionsV1Controller extends BaseV1Controller
 		if (!$trigger instanceof Entities\Triggers\IAutomaticTrigger) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_NOT_FOUND,
-				$this->translator->translate('//module.base.messages.notFound.heading'),
-				$this->translator->translate('//module.base.messages.notFound.message')
+				$this->translator->translate('//triggers-module.base.messages.notFound.heading'),
+				$this->translator->translate('//triggers-module.base.messages.notFound.message')
 			);
 		}
 
@@ -171,16 +171,16 @@ final class ConditionsV1Controller extends BaseV1Controller
 			if ($condition === null) {
 				throw new JsonApiExceptions\JsonApiErrorException(
 					StatusCodeInterface::STATUS_NOT_FOUND,
-					$this->translator->translate('//module.base.messages.notFound.heading'),
-					$this->translator->translate('//module.base.messages.notFound.message')
+					$this->translator->translate('//triggers-module.base.messages.notFound.heading'),
+					$this->translator->translate('//triggers-module.base.messages.notFound.message')
 				);
 			}
 
 		} catch (Uuid\Exception\InvalidUuidStringException $ex) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_NOT_FOUND,
-				$this->translator->translate('//module.base.messages.notFound.heading'),
-				$this->translator->translate('//module.base.messages.notFound.message')
+				$this->translator->translate('//triggers-module.base.messages.notFound.heading'),
+				$this->translator->translate('//triggers-module.base.messages.notFound.message')
 			);
 		}
 
@@ -225,8 +225,8 @@ final class ConditionsV1Controller extends BaseV1Controller
 				} else {
 					throw new JsonApiExceptions\JsonApiErrorException(
 						StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-						$this->translator->translate('//module.base.messages.invalidType.heading'),
-						$this->translator->translate('//module.base.messages.invalidType.message'),
+						$this->translator->translate('//triggers-module.base.messages.invalidType.heading'),
+						$this->translator->translate('//triggers-module.base.messages.invalidType.message'),
 						[
 							'pointer' => '/data/type',
 						]
@@ -239,8 +239,8 @@ final class ConditionsV1Controller extends BaseV1Controller
 			} catch (DoctrineCrudExceptions\EntityCreationException $ex) {
 				throw new JsonApiExceptions\JsonApiErrorException(
 					StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-					$this->translator->translate('//module.base.messages.missingAttribute.heading'),
-					$this->translator->translate('//module.base.messages.missingAttribute.message'),
+					$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
+					$this->translator->translate('//triggers-module.base.messages.missingAttribute.message'),
 					[
 						'pointer' => 'data/attributes/' . $ex->getField(),
 					]
@@ -263,8 +263,8 @@ final class ConditionsV1Controller extends BaseV1Controller
 				if (preg_match("%PRIMARY'%", $ex->getMessage(), $match) === 1) {
 					throw new JsonApiExceptions\JsonApiErrorException(
 						StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-						$this->translator->translate('//module.base.messages.uniqueIdentifier.heading'),
-						$this->translator->translate('//module.base.messages.uniqueIdentifier.message'),
+						$this->translator->translate('//triggers-module.base.messages.uniqueIdentifier.heading'),
+						$this->translator->translate('//triggers-module.base.messages.uniqueIdentifier.message'),
 						[
 							'pointer' => '/data/id',
 						]
@@ -277,8 +277,8 @@ final class ConditionsV1Controller extends BaseV1Controller
 					if (is_string($columnKey) && Utils\Strings::startsWith($columnKey, 'condition_')) {
 						throw new JsonApiExceptions\JsonApiErrorException(
 							StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-							$this->translator->translate('//module.base.messages.uniqueAttribute.heading'),
-							$this->translator->translate('//module.base.messages.uniqueAttribute.message'),
+							$this->translator->translate('//triggers-module.base.messages.uniqueAttribute.heading'),
+							$this->translator->translate('//triggers-module.base.messages.uniqueAttribute.message'),
 							[
 								'pointer' => '/data/attributes/' . Utils\Strings::substring($columnKey, 10),
 							]
@@ -288,8 +288,8 @@ final class ConditionsV1Controller extends BaseV1Controller
 
 				throw new JsonApiExceptions\JsonApiErrorException(
 					StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-					$this->translator->translate('//module.base.messages.uniqueAttribute.heading'),
-					$this->translator->translate('//module.base.messages.uniqueAttribute.message')
+					$this->translator->translate('//triggers-module.base.messages.uniqueAttribute.heading'),
+					$this->translator->translate('//triggers-module.base.messages.uniqueAttribute.message')
 				);
 
 			} catch (Throwable $ex) {
@@ -303,8 +303,8 @@ final class ConditionsV1Controller extends BaseV1Controller
 
 				throw new JsonApiExceptions\JsonApiErrorException(
 					StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-					$this->translator->translate('//module.base.messages.notCreated.heading'),
-					$this->translator->translate('//module.base.messages.notCreated.message')
+					$this->translator->translate('//triggers-module.base.messages.notCreated.heading'),
+					$this->translator->translate('//triggers-module.base.messages.notCreated.message')
 				);
 
 			} finally {
@@ -324,8 +324,8 @@ final class ConditionsV1Controller extends BaseV1Controller
 
 		throw new JsonApiExceptions\JsonApiErrorException(
 			StatusCodeInterface::STATUS_NOT_FOUND,
-			$this->translator->translate('//module.base.messages.notFound.heading'),
-			$this->translator->translate('//module.base.messages.notFound.message')
+			$this->translator->translate('//triggers-module.base.messages.notFound.heading'),
+			$this->translator->translate('//triggers-module.base.messages.notFound.message')
 		);
 	}
 
@@ -380,8 +380,8 @@ final class ConditionsV1Controller extends BaseV1Controller
 			} else {
 				throw new JsonApiExceptions\JsonApiErrorException(
 					StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-					$this->translator->translate('//module.base.messages.invalidType.heading'),
-					$this->translator->translate('//module.base.messages.invalidType.message'),
+					$this->translator->translate('//triggers-module.base.messages.invalidType.heading'),
+					$this->translator->translate('//triggers-module.base.messages.invalidType.message'),
 					[
 						'pointer' => '/data/type',
 					]
@@ -405,8 +405,8 @@ final class ConditionsV1Controller extends BaseV1Controller
 
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('//module.base.messages.notUpdated.heading'),
-				$this->translator->translate('//module.base.messages.notUpdated.message')
+				$this->translator->translate('//triggers-module.base.messages.notUpdated.heading'),
+				$this->translator->translate('//triggers-module.base.messages.notUpdated.message')
 			);
 
 		} finally {
@@ -462,8 +462,8 @@ final class ConditionsV1Controller extends BaseV1Controller
 
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('//module.base.messages.notUpdated.heading'),
-				$this->translator->translate('//module.base.messages.notDeleted.message')
+				$this->translator->translate('//triggers-module.base.messages.notUpdated.heading'),
+				$this->translator->translate('//triggers-module.base.messages.notDeleted.message')
 			);
 
 		} finally {

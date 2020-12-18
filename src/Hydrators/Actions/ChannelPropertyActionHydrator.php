@@ -61,8 +61,8 @@ final class ChannelPropertyActionHydrator extends ActionHydrator
 		if (!$attributes->has('device') || $attributes->get('device') === '') {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('//module.base.messages.missingAttribute.heading'),
-				$this->translator->translate('//module.base.messages.missingAttribute.message'),
+				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
+				$this->translator->translate('//triggers-module.base.messages.missingAttribute.message'),
 				[
 					'pointer' => '/data/attributes/device',
 				]
@@ -85,8 +85,8 @@ final class ChannelPropertyActionHydrator extends ActionHydrator
 		if (!$attributes->has('channel') || $attributes->get('channel') === '') {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('//module.base.messages.missingAttribute.heading'),
-				$this->translator->translate('//module.base.messages.missingAttribute.message'),
+				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
+				$this->translator->translate('//triggers-module.base.messages.missingAttribute.message'),
 				[
 					'pointer' => '/data/attributes/channel',
 				]
@@ -109,8 +109,8 @@ final class ChannelPropertyActionHydrator extends ActionHydrator
 		if (!$attributes->has('property') || $attributes->get('property') === '') {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('//module.base.messages.missingAttribute.heading'),
-				$this->translator->translate('//module.base.messages.missingAttribute.message'),
+				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
+				$this->translator->translate('//triggers-module.base.messages.missingAttribute.message'),
 				[
 					'pointer' => '/data/attributes/property',
 				]

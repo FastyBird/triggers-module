@@ -61,8 +61,8 @@ final class DevicePropertyConditionHydrator extends PropertyConditionHydrator
 		if (!$attributes->has('device') || $attributes->get('device') === '') {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('//module.base.messages.missingAttribute.heading'),
-				$this->translator->translate('//module.base.messages.missingAttribute.message'),
+				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
+				$this->translator->translate('//triggers-module.base.messages.missingAttribute.message'),
 				[
 					'pointer' => '/data/attributes/device',
 				]

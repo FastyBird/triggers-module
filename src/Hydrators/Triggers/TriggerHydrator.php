@@ -44,7 +44,7 @@ abstract class TriggerHydrator extends JsonApiHydrators\Hydrator
 	];
 
 	/** @var string */
-	protected string $translationDomain = 'module.triggers';
+	protected string $translationDomain = 'triggers-module.triggers';
 
 	/**
 	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes

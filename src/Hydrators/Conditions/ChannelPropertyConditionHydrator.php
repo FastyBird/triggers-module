@@ -62,8 +62,8 @@ final class ChannelPropertyConditionHydrator extends PropertyConditionHydrator
 		if (!$attributes->has('channel') || $attributes->get('channel') === '') {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('//module.base.messages.missingAttribute.heading'),
-				$this->translator->translate('//module.base.messages.missingAttribute.message'),
+				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
+				$this->translator->translate('//triggers-module.base.messages.missingAttribute.message'),
 				[
 					'pointer' => '/data/attributes/channel',
 				]

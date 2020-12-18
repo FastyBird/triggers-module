@@ -37,7 +37,7 @@ abstract class ActionHydrator extends JsonApiHydrators\Hydrator
 	];
 
 	/** @var string */
-	protected string $translationDomain = 'module.actions';
+	protected string $translationDomain = 'triggers-module.actions';
 
 	/**
 	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes

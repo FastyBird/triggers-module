@@ -37,7 +37,7 @@ abstract class ConditionHydrator extends JsonApiHydrators\Hydrator
 	];
 
 	/** @var string */
-	protected string $translationDomain = 'module.conditions';
+	protected string $translationDomain = 'triggers-module.conditions';
 
 	/**
 	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes
