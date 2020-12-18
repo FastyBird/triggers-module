@@ -31,16 +31,13 @@ use IPub\JsonAPIDocument;
 abstract class ConditionHydrator extends JsonApiHydrators\Hydrator
 {
 
-	/** @var string */
-	protected $entityIdentifier = self::IDENTIFIER_KEY;
-
 	/** @var string[] */
-	protected $relationships = [
+	protected array $relationships = [
 		Schemas\Conditions\ConditionSchema::RELATIONSHIPS_TRIGGER,
 	];
 
 	/** @var string */
-	protected $translationDomain = 'module.conditions';
+	protected string $translationDomain = 'module.conditions';
 
 	/**
 	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes

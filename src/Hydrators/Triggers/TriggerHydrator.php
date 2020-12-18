@@ -30,24 +30,21 @@ use IPub\JsonAPIDocument;
 abstract class TriggerHydrator extends JsonApiHydrators\Hydrator
 {
 
-	/** @var string */
-	protected $entityIdentifier = self::IDENTIFIER_KEY;
-
 	/** @var string[] */
-	protected $attributes = [
+	protected array $attributes = [
 		'name',
 		'comment',
 		'enabled',
 	];
 
 	/** @var string[] */
-	protected $relationships = [
+	protected array $relationships = [
 		Schemas\Triggers\TriggerSchema::RELATIONSHIPS_ACTIONS,
 		Schemas\Triggers\TriggerSchema::RELATIONSHIPS_NOTIFICATIONS,
 	];
 
 	/** @var string */
-	protected $translationDomain = 'module.triggers';
+	protected string $translationDomain = 'module.triggers';
 
 	/**
 	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes

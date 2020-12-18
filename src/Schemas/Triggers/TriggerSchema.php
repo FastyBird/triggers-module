@@ -41,7 +41,7 @@ abstract class TriggerSchema extends JsonApiSchemas\JsonApiSchema
 	public const RELATIONSHIPS_NOTIFICATIONS = 'notifications';
 
 	/** @var Routing\IRouter */
-	protected $router;
+	protected Routing\IRouter $router;
 
 	public function __construct(
 		Routing\IRouter $router

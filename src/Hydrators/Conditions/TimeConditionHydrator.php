@@ -35,7 +35,7 @@ final class TimeConditionHydrator extends ConditionHydrator
 {
 
 	/** @var string[] */
-	protected $attributes = [
+	protected array $attributes = [
 		'time',
 		'days',
 		'enabled',

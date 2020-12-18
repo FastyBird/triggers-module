@@ -33,7 +33,7 @@ final class EmailNotificationHydrator extends NotificationHydrator
 {
 
 	/** @var string[] */
-	protected $attributes = [
+	protected array $attributes = [
 		'email',
 		'enabled',
 	];

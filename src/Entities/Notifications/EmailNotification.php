@@ -41,7 +41,7 @@ class EmailNotification extends Notification implements IEmailNotification
 	 * @IPubDoctrine\Crud(is={"required", "writable"})
 	 * @ORM\Column(type="string", name="notification_email", length=150, nullable=false)
 	 */
-	private $email;
+	private string $email;
 
 	/**
 	 * @param string $email

@@ -54,7 +54,7 @@ abstract class Action implements IAction
 	 * @ORM\Column(type="uuid_binary", name="action_id")
 	 * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
 	 */
-	protected $id;
+	protected Uuid\UuidInterface $id;
 
 	/**
 	 * @var bool
@@ -62,7 +62,7 @@ abstract class Action implements IAction
 	 * @IPubDoctrine\Crud(is="writable")
 	 * @ORM\Column(type="boolean", name="action_enabled", length=1, nullable=false, options={"default": true})
 	 */
-	protected $enabled = true;
+	protected bool $enabled = true;
 
 	/**
 	 * @var Entities\Triggers\ITrigger
@@ -71,7 +71,7 @@ abstract class Action implements IAction
 	 * @ORM\ManyToOne(targetEntity="FastyBird\TriggersModule\Entities\Triggers\Trigger", inversedBy="actions")
 	 * @ORM\JoinColumn(name="trigger_id", referencedColumnName="trigger_id", onDelete="CASCADE")
 	 */
-	protected $trigger;
+	protected Entities\Triggers\ITrigger $trigger;
 
 	/**
 	 * @param Entities\Triggers\ITrigger $trigger

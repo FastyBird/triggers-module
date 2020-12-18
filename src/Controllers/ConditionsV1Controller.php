@@ -50,25 +50,25 @@ final class ConditionsV1Controller extends BaseV1Controller
 	use Controllers\Finders\TTriggerFinder;
 
 	/** @var Models\Triggers\ITriggerRepository */
-	protected $triggerRepository;
+	protected Models\Triggers\ITriggerRepository $triggerRepository;
 
 	/** @var string */
-	protected $translationDomain = 'module.conditions';
+	protected string $translationDomain = 'module.conditions';
 
 	/** @var Models\Conditions\IConditionRepository */
-	private $conditionRepository;
+	private Models\Conditions\IConditionRepository $conditionRepository;
 
 	/** @var Models\Conditions\IConditionsManager */
-	private $conditionsManager;
+	private Models\Conditions\IConditionsManager $conditionsManager;
 
 	/** @var Hydrators\Conditions\DevicePropertyConditionHydrator */
-	private $devicePropertyConditionHydrator;
+	private Hydrators\Conditions\DevicePropertyConditionHydrator $devicePropertyConditionHydrator;
 
 	/** @var Hydrators\Conditions\ChannelPropertyConditionHydrator */
-	private $channelPropertyConditionHydrator;
+	private Hydrators\Conditions\ChannelPropertyConditionHydrator $channelPropertyConditionHydrator;
 
 	/** @var Hydrators\Conditions\TimeConditionHydrator */
-	private $timeConditionHydrator;
+	private Hydrators\Conditions\TimeConditionHydrator $timeConditionHydrator;
 
 	public function __construct(
 		Models\Triggers\ITriggerRepository $triggerRepository,

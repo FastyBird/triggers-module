@@ -35,13 +35,13 @@ final class SmsNotificationHydrator extends NotificationHydrator
 {
 
 	/** @var string[] */
-	protected $attributes = [
+	protected array $attributes = [
 		'phone',
 		'enabled',
 	];
 
 	/** @var Phone\Phone */
-	private $phone;
+	private Phone\Phone $phone;
 
 	public function __construct(
 		Phone\Phone $phone,

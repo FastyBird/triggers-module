@@ -52,7 +52,7 @@ class ChannelPropertyTrigger extends Trigger implements IChannelPropertyTrigger
 	 * @IPubDoctrine\Crud(is="required")
 	 * @ORM\Column(type="string", name="trigger_device", length=100, nullable=false)
 	 */
-	private $device;
+	private string $device;
 
 	/**
 	 * @var string
@@ -60,7 +60,7 @@ class ChannelPropertyTrigger extends Trigger implements IChannelPropertyTrigger
 	 * @IPubDoctrine\Crud(is="required")
 	 * @ORM\Column(type="string", name="trigger_channel", length=100, nullable=false)
 	 */
-	private $channel;
+	private string $channel;
 
 	/**
 	 * @var string
@@ -68,7 +68,7 @@ class ChannelPropertyTrigger extends Trigger implements IChannelPropertyTrigger
 	 * @IPubDoctrine\Crud(is="required")
 	 * @ORM\Column(type="string", name="trigger_property", length=100, nullable=false)
 	 */
-	private $property;
+	private string $property;
 
 	/**
 	 * @var Types\ConditionOperatorType
@@ -85,7 +85,7 @@ class ChannelPropertyTrigger extends Trigger implements IChannelPropertyTrigger
 	 * @IPubDoctrine\Crud(is={"required", "writable"})
 	 * @ORM\Column(type="string", name="trigger_operand", length=100, nullable=false)
 	 */
-	private $operand;
+	private string $operand;
 
 	/**
 	 * @param string $device

@@ -36,10 +36,10 @@ class FindTriggersQuery extends DoctrineOrmQuery\QueryObject
 {
 
 	/** @var Closure[] */
-	protected $filter = [];
+	protected array $filter = [];
 
 	/** @var Closure[] */
-	protected $select = [];
+	protected array $select = [];
 
 	/**
 	 * @param Uuid\UuidInterface $id

@@ -57,7 +57,7 @@ abstract class Condition implements ICondition
 	 * @ORM\Column(type="uuid_binary", name="condition_id")
 	 * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
 	 */
-	protected $id;
+	protected Uuid\UuidInterface $id;
 
 	/**
 	 * @var bool
@@ -65,7 +65,7 @@ abstract class Condition implements ICondition
 	 * @IPubDoctrine\Crud(is="writable")
 	 * @ORM\Column(type="boolean", name="condition_enabled", length=1, nullable=false, options={"default": true})
 	 */
-	protected $enabled = true;
+	protected bool $enabled = true;
 
 	/**
 	 * @var Entities\Triggers\IAutomaticTrigger
@@ -74,7 +74,7 @@ abstract class Condition implements ICondition
 	 * @ORM\ManyToOne(targetEntity="FastyBird\TriggersModule\Entities\Triggers\AutomaticTrigger", inversedBy="conditions")
 	 * @ORM\JoinColumn(name="trigger_id", referencedColumnName="trigger_id", onDelete="CASCADE")
 	 */
-	protected $trigger;
+	protected Entities\Triggers\IAutomaticTrigger $trigger;
 
 	/**
 	 * @param Entities\Triggers\IAutomaticTrigger $trigger

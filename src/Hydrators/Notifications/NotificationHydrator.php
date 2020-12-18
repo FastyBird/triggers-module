@@ -30,16 +30,13 @@ use IPub\JsonAPIDocument;
 abstract class NotificationHydrator extends JsonApiHydrators\Hydrator
 {
 
-	/** @var string */
-	protected $entityIdentifier = self::IDENTIFIER_KEY;
-
 	/** @var string[] */
-	protected $relationships = [
+	protected array $relationships = [
 		Schemas\Notifications\NotificationSchema::RELATIONSHIPS_TRIGGER,
 	];
 
 	/** @var string */
-	protected $translationDomain = 'module.notifications';
+	protected string $translationDomain = 'module.notifications';
 
 	/**
 	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes

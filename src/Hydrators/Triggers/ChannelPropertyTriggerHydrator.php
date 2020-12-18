@@ -34,7 +34,7 @@ final class ChannelPropertyTriggerHydrator extends TriggerHydrator
 {
 
 	/** @var string[] */
-	protected $attributes = [
+	protected array $attributes = [
 		'name',
 		'comment',
 		'enabled',
@@ -46,7 +46,7 @@ final class ChannelPropertyTriggerHydrator extends TriggerHydrator
 	];
 
 	/** @var string[] */
-	protected $relationships = [
+	protected array $relationships = [
 		Schemas\Triggers\ChannelPropertyTriggerSchema::RELATIONSHIPS_ACTIONS,
 	];
 

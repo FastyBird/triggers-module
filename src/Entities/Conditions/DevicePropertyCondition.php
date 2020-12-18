@@ -46,7 +46,7 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 	 * @IPubDoctrine\Crud(is="required")
 	 * @ORM\Column(type="string", name="condition_device", length=100, nullable=false)
 	 */
-	private $device;
+	private string $device;
 
 	/**
 	 * @var string
@@ -54,7 +54,7 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 	 * @IPubDoctrine\Crud(is="required")
 	 * @ORM\Column(type="string", name="condition_property", length=100, nullable=false)
 	 */
-	private $property;
+	private string $property;
 
 	/**
 	 * @param string $device

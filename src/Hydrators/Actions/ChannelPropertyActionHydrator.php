@@ -32,7 +32,7 @@ final class ChannelPropertyActionHydrator extends ActionHydrator
 {
 
 	/** @var string[] */
-	protected $attributes = [
+	protected array $attributes = [
 		'device',
 		'channel',
 		'property',

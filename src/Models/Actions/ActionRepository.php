@@ -38,10 +38,10 @@ final class ActionRepository implements IActionRepository
 	use Nette\SmartObject;
 
 	/** @var Common\Persistence\ManagerRegistry */
-	private $managerRegistry;
+	private Common\Persistence\ManagerRegistry $managerRegistry;
 
 	/** @var Persistence\ObjectRepository<Entities\Actions\Action>[] */
-	private $repository = [];
+	private array $repository = [];
 
 	public function __construct(Common\Persistence\ManagerRegistry $managerRegistry)
 	{

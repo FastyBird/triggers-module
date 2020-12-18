@@ -42,7 +42,7 @@ class DateCondition extends Condition implements IDateCondition
 	 * @IPubDoctrine\Crud(is={"required", "writable"})
 	 * @ORM\Column(type="datetime", name="condition_date", nullable=false)
 	 */
-	private $date;
+	private DateTimeInterface $date;
 
 	/**
 	 * @param DateTimeInterface $date

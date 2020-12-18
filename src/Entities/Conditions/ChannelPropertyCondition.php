@@ -47,7 +47,7 @@ class ChannelPropertyCondition extends PropertyCondition implements IChannelProp
 	 * @IPubDoctrine\Crud(is="required")
 	 * @ORM\Column(type="string", name="condition_device", length=100, nullable=false)
 	 */
-	private $device;
+	private string $device;
 
 	/**
 	 * @var string
@@ -55,7 +55,7 @@ class ChannelPropertyCondition extends PropertyCondition implements IChannelProp
 	 * @IPubDoctrine\Crud(is="required")
 	 * @ORM\Column(type="string", name="condition_channel", length=100, nullable=false)
 	 */
-	private $channel;
+	private string $channel;
 
 	/**
 	 * @var string
@@ -63,7 +63,7 @@ class ChannelPropertyCondition extends PropertyCondition implements IChannelProp
 	 * @IPubDoctrine\Crud(is="required")
 	 * @ORM\Column(type="string", name="condition_property", length=100, nullable=false)
 	 */
-	private $property;
+	private string $property;
 
 	/**
 	 * @param string $device

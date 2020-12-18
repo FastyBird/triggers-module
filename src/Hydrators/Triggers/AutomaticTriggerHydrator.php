@@ -30,7 +30,7 @@ final class AutomaticTriggerHydrator extends TriggerHydrator
 {
 
 	/** @var string[] */
-	protected $relationships = [
+	protected array $relationships = [
 		Schemas\Triggers\AutomaticTriggerSchema::RELATIONSHIPS_CONDITIONS,
 		Schemas\Triggers\AutomaticTriggerSchema::RELATIONSHIPS_ACTIONS,
 		Schemas\Triggers\AutomaticTriggerSchema::RELATIONSHIPS_NOTIFICATIONS,

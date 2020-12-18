@@ -50,22 +50,22 @@ final class NotificationsV1Controller extends BaseV1Controller
 	use Controllers\Finders\TTriggerFinder;
 
 	/** @var Models\Triggers\ITriggerRepository */
-	protected $triggerRepository;
+	protected Models\Triggers\ITriggerRepository $triggerRepository;
 
 	/** @var string */
-	protected $translationDomain = 'module.notifications';
+	protected string $translationDomain = 'module.notifications';
 
 	/** @var Models\Notifications\INotificationRepository */
-	private $notificationRepository;
+	private Models\Notifications\INotificationRepository $notificationRepository;
 
 	/** @var Models\Notifications\INotificationsManager */
-	private $notificationsManager;
+	private Models\Notifications\INotificationsManager $notificationsManager;
 
 	/** @var Hydrators\Notifications\SmsNotificationHydrator */
-	private $smsNotificationHydrator;
+	private Hydrators\Notifications\SmsNotificationHydrator $smsNotificationHydrator;
 
 	/** @var Hydrators\Notifications\EmailNotificationHydrator */
-	private $emailNotificationHydrator;
+	private Hydrators\Notifications\EmailNotificationHydrator $emailNotificationHydrator;
 
 	public function __construct(
 		Models\Triggers\ITriggerRepository $triggerRepository,

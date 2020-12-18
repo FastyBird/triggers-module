@@ -32,7 +32,7 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 {
 
 	/** @var string[] */
-	protected $attributes = [
+	protected array $attributes = [
 		'device',
 		'property',
 		'operator',

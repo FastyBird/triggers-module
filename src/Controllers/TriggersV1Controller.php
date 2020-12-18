@@ -48,22 +48,22 @@ final class TriggersV1Controller extends BaseV1Controller
 	use Controllers\Finders\TTriggerFinder;
 
 	/** @var string */
-	protected $translationDomain = 'module.triggers';
+	protected string $translationDomain = 'module.triggers';
 
 	/** @var Models\Triggers\ITriggerRepository */
-	private $triggerRepository;
+	private Models\Triggers\ITriggerRepository $triggerRepository;
 
 	/** @var Models\Triggers\ITriggersManager */
-	private $triggersManager;
+	private Models\Triggers\ITriggersManager $triggersManager;
 
 	/** @var Hydrators\Triggers\AutomaticTriggerHydrator */
-	private $automaticTriggerHydrator;
+	private Hydrators\Triggers\AutomaticTriggerHydrator $automaticTriggerHydrator;
 
 	/** @var Hydrators\Triggers\ManualTriggerHydrator */
-	private $manualTriggerHydrator;
+	private Hydrators\Triggers\ManualTriggerHydrator $manualTriggerHydrator;
 
 	/** @var Hydrators\Triggers\ChannelPropertyTriggerHydrator */
-	private $channelPropertyTriggerHydrator;
+	private Hydrators\Triggers\ChannelPropertyTriggerHydrator $channelPropertyTriggerHydrator;
 
 	public function __construct(
 		Models\Triggers\ITriggerRepository $triggerRepository,

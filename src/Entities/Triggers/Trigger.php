@@ -60,7 +60,7 @@ abstract class Trigger implements ITrigger
 	 * @ORM\Column(type="uuid_binary", name="trigger_id")
 	 * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
 	 */
-	protected $id;
+	protected Uuid\UuidInterface $id;
 
 	/**
 	 * @var string
@@ -68,7 +68,7 @@ abstract class Trigger implements ITrigger
 	 * @IPubDoctrine\Crud(is={"required", "writable"})
 	 * @ORM\Column(type="string", name="trigger_name", length=100, nullable=false)
 	 */
-	protected $name;
+	protected string $name;
 
 	/**
 	 * @var string|null
@@ -76,7 +76,7 @@ abstract class Trigger implements ITrigger
 	 * @IPubDoctrine\Crud(is="writable")
 	 * @ORM\Column(type="text", name="trigger_comment", nullable=true, options={"default": null})
 	 */
-	protected $comment = null;
+	protected ?string $comment = null;
 
 	/**
 	 * @var bool
@@ -84,7 +84,7 @@ abstract class Trigger implements ITrigger
 	 * @IPubDoctrine\Crud(is="writable")
 	 * @ORM\Column(type="boolean", name="trigger_enabled", length=1, nullable=false, options={"default": true})
 	 */
-	protected $enabled = true;
+	protected bool $enabled = true;
 
 	/**
 	 * @var Common\Collections\Collection<int, Entities\Actions\IAction>
@@ -92,7 +92,7 @@ abstract class Trigger implements ITrigger
 	 * @IPubDoctrine\Crud(is="writable")
 	 * @ORM\OneToMany(targetEntity="FastyBird\TriggersModule\Entities\Actions\Action", mappedBy="trigger", cascade={"persist", "remove"}, orphanRemoval=true)
 	 */
-	protected $actions;
+	protected Common\Collections\Collection $actions;
 
 	/**
 	 * @var Common\Collections\Collection<int, Entities\Notifications\INotification>
@@ -100,7 +100,7 @@ abstract class Trigger implements ITrigger
 	 * @IPubDoctrine\Crud(is="writable")
 	 * @ORM\OneToMany(targetEntity="FastyBird\TriggersModule\Entities\Notifications\Notification", mappedBy="trigger", cascade={"persist", "remove"}, orphanRemoval=true)
 	 */
-	protected $notifications;
+	protected Common\Collections\Collection $notifications;
 
 	/**
 	 * @param string $name

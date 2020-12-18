@@ -50,19 +50,19 @@ final class ActionsV1Controller extends BaseV1Controller
 	use Controllers\Finders\TTriggerFinder;
 
 	/** @var Models\Triggers\ITriggerRepository */
-	protected $triggerRepository;
+	protected Models\Triggers\ITriggerRepository $triggerRepository;
 
 	/** @var string */
-	protected $translationDomain = 'module.actions';
+	protected string $translationDomain = 'module.actions';
 
 	/** @var Models\Actions\IActionRepository */
-	private $actionRepository;
+	private Models\Actions\IActionRepository $actionRepository;
 
 	/** @var Models\Actions\IActionsManager */
-	private $actionsManager;
+	private Models\Actions\IActionsManager $actionsManager;
 
 	/** @var Hydrators\Actions\ChannelPropertyActionHydrator */
-	private $channelPropertyActionHydrator;
+	private Hydrators\Actions\ChannelPropertyActionHydrator $channelPropertyActionHydrator;
 
 	public function __construct(
 		Models\Triggers\ITriggerRepository $triggerRepository,
