@@ -4,7 +4,7 @@
 # @license		More in license.md
 # @copyright	https://www.fastybird.com
 # @author		Adam Kadlec <adam.kadlec@fastybird.com>
-# @package		FastyBird:DevicesModule!
+# @package		FastyBird:TriggersModule!
 # @subpackage	config
 # @since		0.1.0
 #
@@ -36,7 +36,7 @@ extensions:
 	fbWebServer							: FastyBird\WebServer\DI\WebServerExtension
 
 contributteConsole:
-	name: FastyBird:Libraries!
+	name: FastyBird:UIModule!
 	version: '1.0'
 	catchExceptions: true
 	autoExit: true
