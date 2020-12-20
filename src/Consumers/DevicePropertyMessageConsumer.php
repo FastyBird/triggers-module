@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * DevicePropertyMessageHandler.php
+ * DevicePropertyMessageConsumer.php
  *
  * @license        More in license.md
  * @copyright      https://www.fastybird.com
@@ -34,11 +34,11 @@ use Psr\Log;
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-final class DevicePropertyMessageHandler implements ApplicationExchangeConsumer\IConsumer
+final class DevicePropertyMessageConsumer implements ApplicationExchangeConsumer\IConsumer
 {
 
 	use Nette\SmartObject;
-	use TPropertyDataMessageHandler;
+	use TPropertyDataMessageConsumer;
 
 	private const ROUTING_KEYS = [
 		ModulesMetadata\Constants::MESSAGE_BUS_DEVICES_PROPERTY_UPDATED_ENTITY_ROUTING_KEY,

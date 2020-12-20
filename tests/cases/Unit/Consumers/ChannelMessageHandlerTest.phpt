@@ -79,7 +79,7 @@ final class ChannelMessageHandlerTest extends DbTestCase
 			$publisher
 		);
 
-		$consumer = $this->getContainer()->getByType(Consumers\ChannelMessageHandler::class);
+		$consumer = $this->getContainer()->getByType(Consumers\ChannelMessageConsumer::class);
 
 		$consumer->consume($routingKey, ModulesMetadata\Constants::MODULE_DEVICES_ORIGIN, $message);
 

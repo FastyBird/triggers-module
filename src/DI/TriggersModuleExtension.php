@@ -200,16 +200,16 @@ class TriggersModuleExtension extends DI\CompilerExtension implements Translatio
 
 		// Message bus consumers
 		$builder->addDefinition(null)
-			->setType(Consumers\DeviceMessageHandler::class);
+			->setType(Consumers\DeviceMessageConsumer::class);
 
 		$builder->addDefinition(null)
-			->setType(Consumers\DevicePropertyMessageHandler::class);
+			->setType(Consumers\DevicePropertyMessageConsumer::class);
 
 		$builder->addDefinition(null)
-			->setType(Consumers\ChannelMessageHandler::class);
+			->setType(Consumers\ChannelMessageConsumer::class);
 
 		$builder->addDefinition(null)
-			->setType(Consumers\ChannelPropertyMessageHandler::class);
+			->setType(Consumers\ChannelPropertyMessageConsumer::class);
 	}
 
 	/**

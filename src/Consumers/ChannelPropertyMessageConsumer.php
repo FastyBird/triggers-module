@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * ChannelPropertyMessageHandler.php
+ * ChannelPropertyMessageConsumer.php
  *
  * @license        More in license.md
  * @copyright      https://www.fastybird.com
@@ -34,11 +34,11 @@ use Psr\Log;
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-final class ChannelPropertyMessageHandler implements ApplicationExchangeConsumer\IConsumer
+final class ChannelPropertyMessageConsumer implements ApplicationExchangeConsumer\IConsumer
 {
 
 	use Nette\SmartObject;
-	use TPropertyDataMessageHandler;
+	use TPropertyDataMessageConsumer;
 
 	private const ROUTING_KEYS = [
 		ModulesMetadata\Constants::MESSAGE_BUS_CHANNELS_PROPERTY_UPDATED_ENTITY_ROUTING_KEY,

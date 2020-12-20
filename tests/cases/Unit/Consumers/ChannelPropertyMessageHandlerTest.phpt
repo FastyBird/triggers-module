@@ -75,8 +75,8 @@ final class ChannelPropertyMessageHandlerTest extends DbTestCase
 			$publisher
 		);
 
-		/** @var Consumers\ChannelPropertyMessageHandler $consumer */
-		$consumer = $this->getContainer()->getByType(Consumers\ChannelPropertyMessageHandler::class);
+		/** @var Consumers\ChannelPropertyMessageConsumer $consumer */
+		$consumer = $this->getContainer()->getByType(Consumers\ChannelPropertyMessageConsumer::class);
 
 		$consumer->consume($routingKey, ModulesMetadata\Constants::MODULE_DEVICES_ORIGIN, $message);
 
@@ -146,8 +146,8 @@ final class ChannelPropertyMessageHandlerTest extends DbTestCase
 			$publisher
 		);
 
-		/** @var Consumers\ChannelPropertyMessageHandler $consumer */
-		$consumer = $this->getContainer()->getByType(Consumers\ChannelPropertyMessageHandler::class);
+		/** @var Consumers\ChannelPropertyMessageConsumer $consumer */
+		$consumer = $this->getContainer()->getByType(Consumers\ChannelPropertyMessageConsumer::class);
 
 		$consumer->consume($routingKey, ModulesMetadata\Constants::MODULE_DEVICES_ORIGIN, $message);
 
@@ -197,7 +197,7 @@ final class ChannelPropertyMessageHandlerTest extends DbTestCase
 			$publisher
 		);
 
-		$consumer = $this->getContainer()->getByType(Consumers\ChannelPropertyMessageHandler::class);
+		$consumer = $this->getContainer()->getByType(Consumers\ChannelPropertyMessageConsumer::class);
 
 		$consumer->consume($routingKey, ModulesMetadata\Constants::MODULE_DEVICES_ORIGIN, $message);
 	}

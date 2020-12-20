@@ -69,10 +69,10 @@ final class ServicesTest extends BaseTestCase
 		Assert::notNull($container->getByType(Subscribers\ConditionEntitySubscriber::class));
 		Assert::notNull($container->getByType(Subscribers\NotificationEntitySubscriber::class));
 
-		Assert::notNull($container->getByType(Consumers\DeviceMessageHandler::class));
-		Assert::notNull($container->getByType(Consumers\DevicePropertyMessageHandler::class));
-		Assert::notNull($container->getByType(Consumers\ChannelMessageHandler::class));
-		Assert::notNull($container->getByType(Consumers\ChannelPropertyMessageHandler::class));
+		Assert::notNull($container->getByType(Consumers\DeviceMessageConsumer::class));
+		Assert::notNull($container->getByType(Consumers\DevicePropertyMessageConsumer::class));
+		Assert::notNull($container->getByType(Consumers\ChannelMessageConsumer::class));
+		Assert::notNull($container->getByType(Consumers\ChannelPropertyMessageConsumer::class));
 	}
 
 	/**

@@ -79,7 +79,7 @@ final class DeviceMessageHandlerTest extends DbTestCase
 			$publisher
 		);
 
-		$consumer = $this->getContainer()->getByType(Consumers\DeviceMessageHandler::class);
+		$consumer = $this->getContainer()->getByType(Consumers\DeviceMessageConsumer::class);
 
 		$consumer->consume($routingKey, ModulesMetadata\Constants::MODULE_DEVICES_ORIGIN, $message);
 

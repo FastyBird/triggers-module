@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * TPropertyDataMessageHandler.php
+ * TPropertyDataMessageConsumer.php
  *
  * @license        More in license.md
  * @copyright      https://www.fastybird.com
@@ -32,7 +32,7 @@ use Psr\Log;
  * @property-read ApplicationExchangePublisher\IPublisher $publisher
  * @property-read Log\LoggerInterface $logger
  */
-trait TPropertyDataMessageHandler
+trait TPropertyDataMessageConsumer
 {
 
 	/**
