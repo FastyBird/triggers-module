@@ -18,6 +18,7 @@ namespace FastyBird\TriggersModule\DI;
 use Contributte\Translation;
 use Doctrine\Persistence;
 use FastyBird\TriggersModule\Commands;
+use FastyBird\TriggersModule\Consumers;
 use FastyBird\TriggersModule\Controllers;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Hydrators;
@@ -118,6 +119,9 @@ class TriggersModuleExtension extends DI\CompilerExtension implements Translatio
 		$builder->addDefinition(null)
 			->setType(Subscribers\NotificationEntitySubscriber::class);
 
+		$builder->addDefinition(null)
+			->setType(Subscribers\EntitiesSubscriber::class);
+
 		// API controllers
 		$builder->addDefinition(null)
 			->setType(Controllers\TriggersV1Controller::class)
@@ -193,6 +197,19 @@ class TriggersModuleExtension extends DI\CompilerExtension implements Translatio
 
 		$builder->addDefinition(null)
 			->setType(Hydrators\Notifications\SmsNotificationHydrator::class);
+
+		// Message bus consumers
+		$builder->addDefinition(null)
+			->setType(Consumers\DeviceMessageHandler::class);
+
+		$builder->addDefinition(null)
+			->setType(Consumers\DevicePropertyMessageHandler::class);
+
+		$builder->addDefinition(null)
+			->setType(Consumers\ChannelMessageHandler::class);
+
+		$builder->addDefinition(null)
+			->setType(Consumers\ChannelPropertyMessageHandler::class);
 	}
 
 	/**

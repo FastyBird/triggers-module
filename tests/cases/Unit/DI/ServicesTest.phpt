@@ -3,11 +3,13 @@
 namespace Tests\Cases;
 
 use FastyBird\TriggersModule\Commands;
+use FastyBird\TriggersModule\Consumers;
 use FastyBird\TriggersModule\Controllers;
 use FastyBird\TriggersModule\DI;
 use FastyBird\TriggersModule\Hydrators;
 use FastyBird\TriggersModule\Models;
 use FastyBird\TriggersModule\Schemas;
+use FastyBird\TriggersModule\Subscribers;
 use Nette;
 use Ninjify\Nunjuck\TestCase\BaseTestCase;
 use Tester\Assert;
@@ -61,6 +63,16 @@ final class ServicesTest extends BaseTestCase
 		Assert::notNull($container->getByType(Hydrators\Conditions\ChannelPropertyConditionHydrator::class));
 		Assert::notNull($container->getByType(Hydrators\Conditions\DevicePropertyConditionHydrator::class));
 		Assert::notNull($container->getByType(Hydrators\Conditions\TimeConditionHydrator::class));
+
+		Assert::notNull($container->getByType(Subscribers\EntitiesSubscriber::class));
+		Assert::notNull($container->getByType(Subscribers\ActionEntitySubscriber::class));
+		Assert::notNull($container->getByType(Subscribers\ConditionEntitySubscriber::class));
+		Assert::notNull($container->getByType(Subscribers\NotificationEntitySubscriber::class));
+
+		Assert::notNull($container->getByType(Consumers\DeviceMessageHandler::class));
+		Assert::notNull($container->getByType(Consumers\DevicePropertyMessageHandler::class));
+		Assert::notNull($container->getByType(Consumers\ChannelMessageHandler::class));
+		Assert::notNull($container->getByType(Consumers\ChannelPropertyMessageHandler::class));
 	}
 
 	/**

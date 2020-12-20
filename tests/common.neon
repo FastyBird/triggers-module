@@ -16,6 +16,7 @@ php:
 extensions:
 	contributteConsole					: Contributte\Console\DI\ConsoleExtension(%consoleMode%)
 	contributteTranslation				: Contributte\Translation\DI\TranslationExtension
+	contributeEvents					: Contributte\EventDispatcher\DI\EventDispatcherExtension
 	nettrineAnnotations					: Nettrine\Annotations\DI\AnnotationsExtension
 	nettrineCache						: Nettrine\Cache\DI\CacheExtension
 	nettrineDbal						: Nettrine\DBAL\DI\DbalExtension
@@ -29,6 +30,7 @@ extensions:
 	ipubDoctrineDynamicDiscriminatorMap	: IPub\DoctrineDynamicDiscriminatorMap\DI\DoctrineDynamicDiscriminatorMapExtension
 	ipubDoctrinePhone					: IPub\DoctrinePhone\DI\DoctrinePhoneExtension
 	ipubPhone							: IPub\Phone\DI\PhoneExtension
+	fbApplicationExchange				: FastyBird\ApplicationExchange\DI\ApplicationExchangeExtension
 	fbDatabase							: FastyBird\Database\DI\DatabaseExtension
 	fbDateTimeFactory					: FastyBird\DateTimeFactory\DI\DateTimeFactoryExtension
 	fbJsonApi							: FastyBird\JsonApi\DI\JsonApiExtension
