@@ -69,147 +69,147 @@ class TriggersModuleExtension extends DI\CompilerExtension implements Translatio
 		$builder = $this->getContainerBuilder();
 
 		// Http router
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('middleware.access'))
 			->setType(Middleware\AccessMiddleware::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('router.routes'))
 			->setType(Router\Routes::class);
 
 		// Console commands
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('commands.initialize'))
 			->setType(Commands\InitializeCommand::class);
 
 		// Database repositories
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('models.triggerRepository'))
 			->setType(Models\Triggers\TriggerRepository::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('models.actionRepository'))
 			->setType(Models\Actions\ActionRepository::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('models.conditionRepository'))
 			->setType(Models\Conditions\ConditionRepository::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('models.notificationRepository'))
 			->setType(Models\Notifications\NotificationRepository::class);
 
 		// Database managers
-		$builder->addDefinition($this->prefix('doctrine.triggersManager'))
+		$builder->addDefinition($this->prefix('models.triggersManager'))
 			->setType(Models\Triggers\TriggersManager::class)
 			->setArgument('entityCrud', '__placeholder__');
 
-		$builder->addDefinition($this->prefix('doctrine.actionsManager'))
+		$builder->addDefinition($this->prefix('models.actionsManager'))
 			->setType(Models\Actions\ActionsManager::class)
 			->setArgument('entityCrud', '__placeholder__');
 
-		$builder->addDefinition($this->prefix('doctrine.conditionsManager'))
+		$builder->addDefinition($this->prefix('models.conditionsManager'))
 			->setType(Models\Conditions\ConditionsManager::class)
 			->setArgument('entityCrud', '__placeholder__');
 
-		$builder->addDefinition($this->prefix('doctrine.notificationsManager'))
+		$builder->addDefinition($this->prefix('models.notificationsManager'))
 			->setType(Models\Notifications\NotificationsManager::class)
 			->setArgument('entityCrud', '__placeholder__');
 
 		// Events subscribers
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('subscribers.actionEntity'))
 			->setType(Subscribers\ActionEntitySubscriber::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('subscribers.conditionEntity'))
 			->setType(Subscribers\ConditionEntitySubscriber::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('subscribers.notificationEntity'))
 			->setType(Subscribers\NotificationEntitySubscriber::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('subscribers.entities'))
 			->setType(Subscribers\EntitiesSubscriber::class);
 
+		// Message bus consumers
+		$builder->addDefinition($this->prefix('consumers.device'))
+			->setType(Consumers\DeviceMessageConsumer::class);
+
+		$builder->addDefinition($this->prefix('consumers.deviceProperty'))
+			->setType(Consumers\DevicePropertyMessageConsumer::class);
+
+		$builder->addDefinition($this->prefix('consumers.channel'))
+			->setType(Consumers\ChannelMessageConsumer::class);
+
+		$builder->addDefinition($this->prefix('consumers.channelProperty'))
+			->setType(Consumers\ChannelPropertyMessageConsumer::class);
+
 		// API controllers
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('controllers.triggers'))
 			->setType(Controllers\TriggersV1Controller::class)
 			->addTag('nette.inject');
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('controllers.actions'))
 			->setType(Controllers\ActionsV1Controller::class)
 			->addTag('nette.inject');
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('controllers.conditions'))
 			->setType(Controllers\ConditionsV1Controller::class)
 			->addTag('nette.inject');
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('controllers.notifications'))
 			->setType(Controllers\NotificationsV1Controller::class)
 			->addTag('nette.inject');
 
 		// API schemas
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('schemas.triggers.automatic'))
 			->setType(Schemas\Triggers\AutomaticTriggerSchema::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('schemas.triggers.manual'))
 			->setType(Schemas\Triggers\ManualTriggerSchema::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('schemas.triggers.channelProperty'))
 			->setType(Schemas\Triggers\ChannelPropertyTriggerSchema::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('schemas.actions.channelProperty'))
 			->setType(Schemas\Actions\ChannelPropertyActionSchema::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('schemas.conditions.channelProperty'))
 			->setType(Schemas\Conditions\ChannelPropertyConditionSchema::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('schemas.conditions.deviceProperty'))
 			->setType(Schemas\Conditions\DevicePropertyConditionSchema::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('schemas.conditions.date'))
 			->setType(Schemas\Conditions\DateConditionSchema::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('schemas.conditions.time'))
 			->setType(Schemas\Conditions\TimeConditionSchema::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('schemas.notifications.email'))
 			->setType(Schemas\Notifications\EmailNotificationSchema::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('schemas.notifications.sms'))
 			->setType(Schemas\Notifications\SmsNotificationSchema::class);
 
 		// API hydrators
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('hydrators.triggers.automatic'))
 			->setType(Hydrators\Triggers\AutomaticTriggerHydrator::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('hydrators.triggers.manual'))
 			->setType(Hydrators\Triggers\ManualTriggerHydrator::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('hydrators.triggers.channelProperty'))
 			->setType(Hydrators\Triggers\ChannelPropertyTriggerHydrator::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('hydrators.actions.channelProperty'))
 			->setType(Hydrators\Actions\ChannelPropertyActionHydrator::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('hydrators.conditions.channelProperty'))
 			->setType(Hydrators\Conditions\ChannelPropertyConditionHydrator::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('hydrators.conditions.deviceProperty'))
 			->setType(Hydrators\Conditions\DevicePropertyConditionHydrator::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('hydrators.conditions.time'))
 			->setType(Hydrators\Conditions\TimeConditionHydrator::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('hydrators.notifications.email'))
 			->setType(Hydrators\Notifications\EmailNotificationHydrator::class);
 
-		$builder->addDefinition(null)
+		$builder->addDefinition($this->prefix('hydrators.notifications.sms'))
 			->setType(Hydrators\Notifications\SmsNotificationHydrator::class);
-
-		// Message bus consumers
-		$builder->addDefinition(null)
-			->setType(Consumers\DeviceMessageConsumer::class);
-
-		$builder->addDefinition(null)
-			->setType(Consumers\DevicePropertyMessageConsumer::class);
-
-		$builder->addDefinition(null)
-			->setType(Consumers\ChannelMessageConsumer::class);
-
-		$builder->addDefinition(null)
-			->setType(Consumers\ChannelPropertyMessageConsumer::class);
 	}
 
 	/**
@@ -251,16 +251,16 @@ class TriggersModuleExtension extends DI\CompilerExtension implements Translatio
 
 		$entityFactoryServiceName = $builder->getByType(DoctrineCrud\Crud\IEntityCrudFactory::class, true);
 
-		$triggersManagerService = $class->getMethod('createService' . ucfirst($this->name) . '__doctrine__triggersManager');
+		$triggersManagerService = $class->getMethod('createService' . ucfirst($this->name) . '__models__triggersManager');
 		$triggersManagerService->setBody('return new ' . Models\Triggers\TriggersManager::class . '($this->getService(\'' . $entityFactoryServiceName . '\')->create(\'' . Entities\Triggers\Trigger::class . '\'));');
 
-		$actionsManagerService = $class->getMethod('createService' . ucfirst($this->name) . '__doctrine__actionsManager');
+		$actionsManagerService = $class->getMethod('createService' . ucfirst($this->name) . '__models__actionsManager');
 		$actionsManagerService->setBody('return new ' . Models\Actions\ActionsManager::class . '($this->getService(\'' . $entityFactoryServiceName . '\')->create(\'' . Entities\Actions\Action::class . '\'));');
 
-		$conditionsManagerService = $class->getMethod('createService' . ucfirst($this->name) . '__doctrine__conditionsManager');
+		$conditionsManagerService = $class->getMethod('createService' . ucfirst($this->name) . '__models__conditionsManager');
 		$conditionsManagerService->setBody('return new ' . Models\Conditions\ConditionsManager::class . '($this->getService(\'' . $entityFactoryServiceName . '\')->create(\'' . Entities\Conditions\Condition::class . '\'));');
 
-		$notificationsManagerService = $class->getMethod('createService' . ucfirst($this->name) . '__doctrine__notificationsManager');
+		$notificationsManagerService = $class->getMethod('createService' . ucfirst($this->name) . '__models__notificationsManager');
 		$notificationsManagerService->setBody('return new ' . Models\Notifications\NotificationsManager::class . '($this->getService(\'' . $entityFactoryServiceName . '\')->create(\'' . Entities\Notifications\Notification::class . '\'));');
 	}
 
