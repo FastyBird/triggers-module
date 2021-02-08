@@ -33,7 +33,7 @@ use Throwable;
  *     },
  *     indexes={
  *       @ORM\Index(name="condition_device_idx", columns={"condition_device"}),
- *       @ORM\Index(name="condition_property_idx", columns={"condition_property"})
+ *       @ORM\Index(name="condition_property_idx", columns={"condition_device_property"})
  *     }
  * )
  */

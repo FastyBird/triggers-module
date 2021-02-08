@@ -33,7 +33,7 @@ use Throwable;
  *     indexes={
  *       @ORM\Index(name="action_device_idx", columns={"action_device"}),
  *       @ORM\Index(name="action_channel_idx", columns={"action_channel"}),
- *       @ORM\Index(name="action_property_idx", columns={"action_property"})
+ *       @ORM\Index(name="action_property_idx", columns={"action_channel_property"})
  *     }
  * )
  */

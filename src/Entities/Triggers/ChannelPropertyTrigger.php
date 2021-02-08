@@ -50,7 +50,7 @@ class ChannelPropertyTrigger extends Trigger implements IChannelPropertyTrigger
 	 * @var string
 	 *
 	 * @IPubDoctrine\Crud(is="required")
-	 * @ORM\Column(type="string", name="trigger_device", length=100, nullable=true)
+	 * @ORM\Column(type="string", name="trigger_channel_property_device", length=100, nullable=true)
 	 */
 	private string $device;
 
@@ -58,7 +58,7 @@ class ChannelPropertyTrigger extends Trigger implements IChannelPropertyTrigger
 	 * @var string
 	 *
 	 * @IPubDoctrine\Crud(is="required")
-	 * @ORM\Column(type="string", name="trigger_channel", length=100, nullable=true)
+	 * @ORM\Column(type="string", name="trigger_channel_property_channel", length=100, nullable=true)
 	 */
 	private string $channel;
 
@@ -66,7 +66,7 @@ class ChannelPropertyTrigger extends Trigger implements IChannelPropertyTrigger
 	 * @var string
 	 *
 	 * @IPubDoctrine\Crud(is="required")
-	 * @ORM\Column(type="string", name="trigger_property", length=100, nullable=true)
+	 * @ORM\Column(type="string", name="trigger_channel_property_property", length=100, nullable=true)
 	 */
 	private string $property;
 
@@ -75,7 +75,7 @@ class ChannelPropertyTrigger extends Trigger implements IChannelPropertyTrigger
 	 *
 	 * @IPubDoctrine\Crud(is={"required", "writable"})
 	 * @Enum(class=Types\ConditionOperatorType::class)
-	 * @ORM\Column(type="string_enum", name="trigger_operator", length=15, nullable=true)
+	 * @ORM\Column(type="string_enum", name="trigger_channel_property_operator", length=15, nullable=true)
 	 */
 	private $operator;
 
@@ -83,7 +83,7 @@ class ChannelPropertyTrigger extends Trigger implements IChannelPropertyTrigger
 	 * @var string
 	 *
 	 * @IPubDoctrine\Crud(is={"required", "writable"})
-	 * @ORM\Column(type="string", name="trigger_operand", length=100, nullable=true)
+	 * @ORM\Column(type="string", name="trigger_channel_property_operand", length=100, nullable=true)
 	 */
 	private string $operand;
 

@@ -1,4 +1,4 @@
-INSERT IGNORE INTO `fb_triggers` (`trigger_id`, `trigger_type`, `trigger_name`, `trigger_comment`, `trigger_enabled`, `trigger_device`, `trigger_channel`, `trigger_property`, `trigger_operator`, `trigger_operand`, `created_at`, `updated_at`, `params`)
+INSERT IGNORE INTO `fb_triggers` (`trigger_id`, `trigger_type`, `trigger_name`, `trigger_comment`, `trigger_enabled`, `trigger_channel_property_device`, `trigger_channel_property_channel`, `trigger_channel_property_property`, `trigger_channel_property_operator`, `trigger_channel_property_operand`, `created_at`, `updated_at`, `params`)
 VALUES (_binary 0x0B48DFBCFAC2429288DC7981A121602D, 'automatic', 'Good Evening', NULL, 1, NULL, NULL, NULL, NULL, NULL, '2020-01-27 20:49:53', '2020-01-27 20:49:53', '[]'),
        (_binary 0x1B17BCAAA19E45F098B456211CC648AE, 'automatic', 'Rise n\'Shine', NULL, 1, NULL, NULL, NULL, NULL, NULL, '2020-01-27 14:24:34', '2020-01-27 14:24:34', '[]'),
        (_binary 0x2CEA2C1B47904D828A9F902C7155AB36, 'automatic', 'House keeping', NULL, 1, NULL, NULL, NULL, NULL, NULL, '2020-01-27 14:25:19', '2020-01-27 14:25:19', '[]'),
