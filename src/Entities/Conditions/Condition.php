@@ -33,7 +33,7 @@ use Throwable;
  *       "comment"="Triggers conditions"
  *     }
  * )
- * @ORM\InheritanceType("JOINED")
+ * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="condition_type", type="string", length=20)
  * @ORM\DiscriminatorMap({
  *    "device_property"   = "FastyBird\TriggersModule\Entities\Conditions\DevicePropertyCondition",

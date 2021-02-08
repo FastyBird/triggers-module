@@ -33,7 +33,7 @@ use Throwable;
  *       "comment"="Triggers actions"
  *     }
  * )
- * @ORM\InheritanceType("JOINED")
+ * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="action_type", type="string", length=20)
  * @ORM\DiscriminatorMap({
  *    "channel_property" = "FastyBird\TriggersModule\Entities\Actions\ChannelPropertyAction"

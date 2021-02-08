@@ -43,7 +43,7 @@ class TimeCondition extends Condition implements ITimeCondition
 	 * @var DateTimeInterface
 	 *
 	 * @IPubDoctrine\Crud(is={"required", "writable"})
-	 * @ORM\Column(type="time", name="condition_time", nullable=false)
+	 * @ORM\Column(type="time", name="condition_time", nullable=true)
 	 */
 	private DateTimeInterface $time;
 
@@ -51,7 +51,7 @@ class TimeCondition extends Condition implements ITimeCondition
 	 * @var int[]|mixed[]
 	 *
 	 * @IPubDoctrine\Crud(is={"required", "writable"})
-	 * @ORM\Column(type="simple_array", name="condition_days", nullable=false)
+	 * @ORM\Column(type="simple_array", name="condition_days", nullable=true)
 	 */
 	private array $days;
 

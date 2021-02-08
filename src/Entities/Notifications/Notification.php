@@ -33,7 +33,7 @@ use Throwable;
  *       "comment"="Triggers notifications"
  *     }
  * )
- * @ORM\InheritanceType("JOINED")
+ * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="notification_type", type="string", length=20)
  * @ORM\DiscriminatorMap({
  *    "sms"     = "FastyBird\TriggersModule\Entities\Notifications\SmsNotification",
@@ -69,7 +69,7 @@ abstract class Notification implements INotification
 	 * @var Entities\Triggers\ITrigger
 	 *
 	 * @IPubDoctrine\Crud(is="required")
-	 * @ORM\ManyToOne(targetEntity="FastyBird\TriggersModule\Entities\Triggers\Trigger", inversedBy="actions")
+	 * @ORM\ManyToOne(targetEntity="FastyBird\TriggersModule\Entities\Triggers\Trigger", inversedBy="notifications")
 	 * @ORM\JoinColumn(name="trigger_id", referencedColumnName="trigger_id", onDelete="CASCADE")
 	 */
 	protected Entities\Triggers\ITrigger $trigger;

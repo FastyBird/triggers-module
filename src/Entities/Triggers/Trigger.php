@@ -35,7 +35,7 @@ use Throwable;
  *       "comment"="Actions triggers"
  *     }
  * )
- * @ORM\InheritanceType("JOINED")
+ * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="trigger_type", type="string", length=20)
  * @ORM\DiscriminatorMap({
  *    "automatic"        = "FastyBird\TriggersModule\Entities\Triggers\AutomaticTrigger",

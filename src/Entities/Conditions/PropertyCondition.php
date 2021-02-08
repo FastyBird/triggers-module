@@ -34,7 +34,7 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	 *
 	 * @IPubDoctrine\Crud(is={"required", "writable"})
 	 * @Enum(class=Types\ConditionOperatorType::class)
-	 * @ORM\Column(type="string_enum", name="condition_operator", length=15, nullable=false)
+	 * @ORM\Column(type="string_enum", name="condition_operator", length=15, nullable=true)
 	 */
 	protected $operator;
 
@@ -42,7 +42,7 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	 * @var string
 	 *
 	 * @IPubDoctrine\Crud(is={"required", "writable"})
-	 * @ORM\Column(type="string", name="condition_operand", length=20, nullable=false)
+	 * @ORM\Column(type="string", name="condition_operand", length=20, nullable=true)
 	 */
 	protected string $operand;
 

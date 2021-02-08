@@ -40,7 +40,7 @@ class SmsNotification extends Notification implements ISmsNotification
 	 * @var Phone\Entities\Phone
 	 *
 	 * @IPubDoctrine\Crud(is={"required", "writable"})
-	 * @ORM\Column(type="phone", name="notification_phone", length=150, nullable=false)
+	 * @ORM\Column(type="phone", name="notification_phone", length=150, nullable=true)
 	 */
 	private Phone\Entities\Phone $phone;
 

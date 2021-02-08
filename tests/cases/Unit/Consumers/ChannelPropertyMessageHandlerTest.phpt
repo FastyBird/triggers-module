@@ -78,7 +78,7 @@ final class ChannelPropertyMessageHandlerTest extends DbTestCase
 		/** @var Consumers\ChannelPropertyMessageConsumer $consumer */
 		$consumer = $this->getContainer()->getByType(Consumers\ChannelPropertyMessageConsumer::class);
 
-		$consumer->consume($routingKey, ModulesMetadata\Constants::MODULE_DEVICES_ORIGIN, $message);
+		$consumer->consume(ModulesMetadata\Constants::MODULE_DEVICES_ORIGIN, $routingKey, $message);
 
 		$findQuery = new Queries\FindChannelPropertyTriggersQuery();
 		$findQuery->forProperty('device-one', 'channel-one', 'button');
@@ -149,7 +149,7 @@ final class ChannelPropertyMessageHandlerTest extends DbTestCase
 		/** @var Consumers\ChannelPropertyMessageConsumer $consumer */
 		$consumer = $this->getContainer()->getByType(Consumers\ChannelPropertyMessageConsumer::class);
 
-		$consumer->consume($routingKey, ModulesMetadata\Constants::MODULE_DEVICES_ORIGIN, $message);
+		$consumer->consume(ModulesMetadata\Constants::MODULE_DEVICES_ORIGIN, $routingKey, $message);
 
 		$findQuery = new Queries\FindActionsQuery();
 		$findQuery->forChannelProperty('device-one', 'channel-four', 'switch');
@@ -199,7 +199,7 @@ final class ChannelPropertyMessageHandlerTest extends DbTestCase
 
 		$consumer = $this->getContainer()->getByType(Consumers\ChannelPropertyMessageConsumer::class);
 
-		$consumer->consume($routingKey, ModulesMetadata\Constants::MODULE_DEVICES_ORIGIN, $message);
+		$consumer->consume( ModulesMetadata\Constants::MODULE_DEVICES_ORIGIN, $routingKey, $message);
 	}
 
 }

@@ -81,7 +81,7 @@ final class DeviceMessageHandlerTest extends DbTestCase
 
 		$consumer = $this->getContainer()->getByType(Consumers\DeviceMessageConsumer::class);
 
-		$consumer->consume($routingKey, ModulesMetadata\Constants::MODULE_DEVICES_ORIGIN, $message);
+		$consumer->consume(ModulesMetadata\Constants::MODULE_DEVICES_ORIGIN, $routingKey, $message);
 
 		$findQuery = new Queries\FindChannelPropertyTriggersQuery();
 		$findQuery->forDevice('device-one');
