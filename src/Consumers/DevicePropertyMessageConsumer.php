@@ -120,7 +120,7 @@ final class DevicePropertyMessageConsumer implements ApplicationExchangeConsumer
 			$this->conditionsManager->delete($condition);
 		}
 
-		$this->logger->info('[CONSUMER] Successfully consumed device property data message');
+		$this->logger->info('[FB:TRIGGERS_NODE:CONSUMER] Successfully consumed device property data message');
 	}
 
 	/**

@@ -61,7 +61,7 @@ trait TPropertyDataMessageConsumer
 					);
 
 					if ($value !== $triggerCondition->getOperand()) {
-						$this->logger->info('[CONSUMER] Trigger do not met all conditions, skipping');
+						$this->logger->info('[FB:TRIGGERS_NODE:CONSUMER] Trigger do not met all conditions, skipping');
 
 						return;
 					}
@@ -73,7 +73,7 @@ trait TPropertyDataMessageConsumer
 					);
 
 					if ($value !== $triggerCondition->getOperand()) {
-						$this->logger->info('[CONSUMER] Trigger do not met all conditions, skipping');
+						$this->logger->info('[FB:TRIGGERS_NODE:CONSUMER] Trigger do not met all conditions, skipping');
 
 						return;
 					}
@@ -134,7 +134,7 @@ trait TPropertyDataMessageConsumer
 					]
 				);
 
-				$this->logger->info('[CONSUMER] Trigger fired command');
+				$this->logger->info('[FB:TRIGGERS_NODE:CONSUMER] Trigger fired command');
 			}
 		}
 	}
