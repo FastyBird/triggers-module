@@ -95,22 +95,20 @@ final class ChannelMessageConsumer implements ApplicationExchangeConsumer\IConsu
 
 		if ($routingKey === ModulesMetadata\Constants::MESSAGE_BUS_CHANNELS_DELETED_ENTITY_ROUTING_KEY) {
 			$this->clearChannels(
-				$message->offsetGet('device'),
-				$message->offsetGet('channel')
+				$message->offsetGet('key')
 			);
 		}
 	}
 
 	/**
-	 * @param string $device
 	 * @param string $channel
 	 *
 	 * @return void
 	 */
-	private function clearChannels(string $device, string $channel): void
+	private function clearChannels(string $channel): void
 	{
 		$findQuery = new Queries\FindChannelPropertyTriggersQuery();
-		$findQuery->forChannel($device, $channel);
+		$findQuery->forChannel($channel);
 
 		$triggers = $this->triggerRepository->findAllBy($findQuery, Entities\Triggers\ChannelPropertyTrigger::class);
 
@@ -119,7 +117,7 @@ final class ChannelMessageConsumer implements ApplicationExchangeConsumer\IConsu
 		}
 
 		$findQuery = new Queries\FindActionsQuery();
-		$findQuery->forChannel($device, $channel);
+		$findQuery->forChannel($channel);
 
 		$actions = $this->actionRepository->findAllBy($findQuery, Entities\Actions\ChannelPropertyAction::class);
 
@@ -128,7 +126,7 @@ final class ChannelMessageConsumer implements ApplicationExchangeConsumer\IConsu
 		}
 
 		$findQuery = new Queries\FindConditionsQuery();
-		$findQuery->forChannel($device, $channel);
+		$findQuery->forChannel($channel);
 
 		$conditions = $this->conditionRepository->findAllBy($findQuery, Entities\Conditions\ChannelPropertyCondition::class);
 

@@ -6,9 +6,9 @@
       "comment" : null,
       "enabled" : true,
       "name" : "This is channel trigger",
-      "device" : "device-identifier",
-      "channel" : "channel-identifier",
-      "property" : "property-identifier",
+      "device" : "pFZQ0Q",
+      "channel" : "0FZQ0Q",
+      "property" : "BFZQ0Q",
       "operator" : "eq",
       "operand" : "2"
     }

@@ -1,34 +1,7 @@
 {
-  "data" : {
-    "attributes" : {
-      "channel" : "channel-identifier",
-      "comment" : null,
-      "device" : "device-identifier",
-      "enabled" : true,
-      "name" : "This is channel trigger",
-      "operand" : "2",
-      "operator" : "eq",
-      "property" : "property-identifier"
-    },
-    "id" : "bbbf5caa-b30e-4558-b83a-699617958cea",
-    "links" : {
-      "self" : "/v1/triggers/bbbf5caa-b30e-4558-b83a-699617958cea"
-    },
-    "relationships" : {
-      "actions" : {
-        "data" : [],
-        "links" : {
-          "related" : {
-            "href" : "/v1/triggers/bbbf5caa-b30e-4558-b83a-699617958cea/actions",
-            "meta" : {
-              "count" : 0
-            }
-          },
-          "self" : "/v1/triggers/bbbf5caa-b30e-4558-b83a-699617958cea/relationships/actions"
-        }
-      }
-    },
-    "type" : "triggers-module/trigger-channel-property"
+  "meta" : {
+    "author" : "FastyBird team",
+    "copyright" : "FastyBird s.r.o"
   },
   "jsonapi" : {
     "version" : "1.1"
@@ -36,8 +9,35 @@
   "links" : {
     "self" : "/v1/triggers"
   },
-  "meta" : {
-    "author" : "FastyBird team",
-    "copyright" : "FastyBird s.r.o"
+  "data" : {
+    "type" : "triggers-module/trigger-channel-property",
+    "id" : "bbbf5caa-b30e-4558-b83a-699617958cea",
+    "attributes" : {
+      "name" : "This is channel trigger",
+      "comment" : null,
+      "enabled" : true,
+      "device" : "pFZQ0Q",
+      "channel" : "0FZQ0Q",
+      "property" : "BFZQ0Q",
+      "operator" : "eq",
+      "operand" : "2"
+    },
+    "relationships" : {
+      "actions" : {
+        "links" : {
+          "self" : "/v1/triggers/bbbf5caa-b30e-4558-b83a-699617958cea/relationships/actions",
+          "related" : {
+            "href" : "/v1/triggers/bbbf5caa-b30e-4558-b83a-699617958cea/actions",
+            "meta" : {
+              "count" : 0
+            }
+          }
+        },
+        "data" : []
+      }
+    },
+    "links" : {
+      "self" : "/v1/triggers/bbbf5caa-b30e-4558-b83a-699617958cea"
+    }
   }
 }

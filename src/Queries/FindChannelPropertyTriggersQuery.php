@@ -45,31 +45,25 @@ class FindChannelPropertyTriggersQuery extends FindTriggersQuery
 	}
 
 	/**
-	 * @param string $device
 	 * @param string $channel
 	 *
 	 * @return void
 	 */
-	public function forChannel(string $device, string $channel): void
+	public function forChannel(string $channel): void
 	{
-		$this->filter[] = function (ORM\QueryBuilder $qb) use ($device, $channel): void {
-			$qb->andWhere('cpt.device = :device')->setParameter('device', $device);
+		$this->filter[] = function (ORM\QueryBuilder $qb) use ($channel): void {
 			$qb->andWhere('cpt.channel = :channel')->setParameter('channel', $channel);
 		};
 	}
 
 	/**
-	 * @param string $device
-	 * @param string $channel
 	 * @param string $property
 	 *
 	 * @return void
 	 */
-	public function forProperty(string $device, string $channel, string $property): void
+	public function forProperty(string $property): void
 	{
-		$this->filter[] = function (ORM\QueryBuilder $qb) use ($device, $channel, $property): void {
-			$qb->andWhere('cpt.device = :device')->setParameter('device', $device);
-			$qb->andWhere('cpt.channel = :channel')->setParameter('channel', $channel);
+		$this->filter[] = function (ORM\QueryBuilder $qb) use ($property): void {
 			$qb->andWhere('cpt.property = :property')->setParameter('property', $property);
 		};
 	}

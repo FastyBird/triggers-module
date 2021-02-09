@@ -1,29 +1,7 @@
 {
-  "data" : {
-    "attributes" : {
-      "channel" : "channel-four",
-      "device" : "device-one",
-      "property" : "switch",
-      "value" : "toggle",
-      "enabled" : true
-    },
-    "id" : "4aa84028-d8b7-4128-95b2-295763634aa4",
-    "links" : {
-      "self" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions/4aa84028-d8b7-4128-95b2-295763634aa4"
-    },
-    "relationships" : {
-      "trigger" : {
-        "data" : {
-          "id" : "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
-          "type" : "triggers-module/trigger-manual"
-        },
-        "links" : {
-          "related" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
-          "self" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions/4aa84028-d8b7-4128-95b2-295763634aa4/relationships/trigger"
-        }
-      }
-    },
-    "type" : "triggers-module/action-channel-property"
+  "meta" : {
+    "author" : "FastyBird team",
+    "copyright" : "FastyBird s.r.o"
   },
   "jsonapi" : {
     "version" : "1.1"
@@ -31,8 +9,30 @@
   "links" : {
     "self" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions/4aa84028-d8b7-4128-95b2-295763634aa4"
   },
-  "meta" : {
-    "author" : "FastyBird team",
-    "copyright" : "FastyBird s.r.o"
+  "data" : {
+    "type" : "triggers-module/action-channel-property",
+    "id" : "4aa84028-d8b7-4128-95b2-295763634aa4",
+    "attributes" : {
+      "enabled" : true,
+      "device" : "cB8F0Q",
+      "channel" : "9B8F0Q",
+      "property" : "lxWQ0Q",
+      "value" : "toggle"
+    },
+    "relationships" : {
+      "trigger" : {
+        "links" : {
+          "self" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions/4aa84028-d8b7-4128-95b2-295763634aa4/relationships/trigger",
+          "related" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4"
+        },
+        "data" : {
+          "type" : "triggers-module/trigger-manual",
+          "id" : "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4"
+        }
+      }
+    },
+    "links" : {
+      "self" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions/4aa84028-d8b7-4128-95b2-295763634aa4"
+    }
   }
 }

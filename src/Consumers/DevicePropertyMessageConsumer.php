@@ -84,8 +84,7 @@ final class DevicePropertyMessageConsumer implements ApplicationExchangeConsumer
 
 		if ($routingKey === ModulesMetadata\Constants::MESSAGE_BUS_DEVICES_PROPERTY_DELETED_ENTITY_ROUTING_KEY) {
 			$this->clearProperties(
-				$message->offsetGet('device'),
-				$message->offsetGet('property')
+				$message->offsetGet('key')
 			);
 
 		} elseif ($routingKey === ModulesMetadata\Constants::MESSAGE_BUS_DEVICES_PROPERTY_UPDATED_ENTITY_ROUTING_KEY) {
@@ -96,26 +95,24 @@ final class DevicePropertyMessageConsumer implements ApplicationExchangeConsumer
 				&& $message->offsetExists('value')
 			) {
 				$this->processDeviceConditions(
-					$message->offsetGet('device'),
-					$message->offsetGet('property'),
+					$message->offsetGet('key'),
 					$message->offsetGet('value'),
 					$message->offsetExists('previous_value') ? $message->offsetGet('previous_value') : null,
-					$message->offsetGet('datatype')
+					$message->offsetGet('data_type')
 				);
 			}
 		}
 	}
 
 	/**
-	 * @param string $device
 	 * @param string $property
 	 *
 	 * @return void
 	 */
-	private function clearProperties(string $device, string $property): void
+	private function clearProperties(string $property): void
 	{
 		$findQuery = new Queries\FindConditionsQuery();
-		$findQuery->forDeviceProperty($device, $property);
+		$findQuery->forProperty($property);
 
 		$conditions = $this->conditionRepository->findAllBy($findQuery, Entities\Conditions\DevicePropertyCondition::class);
 
@@ -127,23 +124,21 @@ final class DevicePropertyMessageConsumer implements ApplicationExchangeConsumer
 	}
 
 	/**
-	 * @param string $device
 	 * @param string $property
 	 * @param mixed $value
 	 * @param mixed|null $previousValue
-	 * @param string|null $datatype
+	 * @param string|null $dataType
 	 *
 	 * @return void
 	 */
 	private function processDeviceConditions(
-		string $device,
 		string $property,
 		$value,
 		$previousValue = null,
-		?string $datatype = null
+		?string $dataType = null
 	): void {
-		$value = $this->formatValue($value, $datatype);
-		$previousValue = $this->formatValue($previousValue, $datatype);
+		$value = $this->formatValue($value, $dataType);
+		$previousValue = $this->formatValue($previousValue, $dataType);
 
 		// Previous value is same as current, skipping
 		if ($previousValue !== null && $value === $previousValue) {
@@ -151,14 +146,14 @@ final class DevicePropertyMessageConsumer implements ApplicationExchangeConsumer
 		}
 
 		$findQuery = new Queries\FindConditionsQuery();
-		$findQuery->forDeviceProperty($device, $property);
+		$findQuery->forProperty($property);
 
 		$conditions = $this->conditionRepository->findAllBy($findQuery, Entities\Conditions\DevicePropertyCondition::class);
 
 		/** @var Entities\Conditions\DevicePropertyCondition $condition */
 		foreach ($conditions as $condition) {
 			if (
-				$condition->getOperator()->equalsValue(Types\ConditionOperatorType::STATE_VALUE_EQUAL)
+				$condition->getOperator()->equalsValue(Types\ConditionOperatorType::OPERATOR_VALUE_EQUAL)
 				&& $condition->getOperand() === $value
 			) {
 				$this->processCondition($condition);

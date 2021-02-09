@@ -1,45 +1,45 @@
 {
-  "data" : [
-    {
-      "attributes" : {
-        "channel" : "channel-six",
-        "device" : "device-two",
-        "property" : "light",
-        "value" : "on",
-        "enabled" : true
-      },
-      "id" : "827d61f7-5dcf-4cab-9662-f386f6fb0bce",
-      "links" : {
-        "self" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions/827d61f7-5dcf-4cab-9662-f386f6fb0bce"
-      },
-      "relationships" : {
-        "trigger" : {
-          "data" : {
-            "id" : "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
-            "type" : "triggers-module/trigger-manual"
-          },
-          "links" : {
-            "related" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
-            "self" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions/827d61f7-5dcf-4cab-9662-f386f6fb0bce/relationships/trigger"
-          }
-        }
-      },
-      "type" : "triggers-module/action-channel-property"
-    }
-  ],
-  "jsonapi" : {
-    "version" : "1.1"
-  },
-  "links" : {
-    "first" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions?page%5Boffset%5D=0&page%5Blimit%5D=1",
-    "last" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions?page%5Boffset%5D=2&page%5Blimit%5D=1",
-    "next" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions?page%5Boffset%5D=2&page%5Blimit%5D=1",
-    "prev" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions?page%5Boffset%5D=0&page%5Blimit%5D=1",
-    "self" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions?page%5Boffset%5D=1&page%5Blimit%5D=1"
-  },
   "meta" : {
     "author" : "FastyBird team",
     "copyright" : "FastyBird s.r.o",
     "totalCount" : 3
-  }
+  },
+  "jsonapi" : {
+    "version" : "1.1"
+  },
+  "links" : {
+    "self" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions?page%5Boffset%5D=1&page%5Blimit%5D=1",
+    "first" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions?page%5Boffset%5D=0&page%5Blimit%5D=1",
+    "prev" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions?page%5Boffset%5D=0&page%5Blimit%5D=1",
+    "next" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions?page%5Boffset%5D=2&page%5Blimit%5D=1",
+    "last" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions?page%5Boffset%5D=2&page%5Blimit%5D=1"
+  },
+  "data" : [
+    {
+      "type" : "triggers-module/action-channel-property",
+      "id" : "827d61f7-5dcf-4cab-9662-f386f6fb0bce",
+      "attributes" : {
+        "enabled" : true,
+        "device" : "GB8F0Q",
+        "channel" : "jZVQ0Q",
+        "property" : "s5WQ0Q",
+        "value" : "on"
+      },
+      "relationships" : {
+        "trigger" : {
+          "links" : {
+            "self" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions/827d61f7-5dcf-4cab-9662-f386f6fb0bce/relationships/trigger",
+            "related" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4"
+          },
+          "data" : {
+            "type" : "triggers-module/trigger-manual",
+            "id" : "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4"
+          }
+        }
+      },
+      "links" : {
+        "self" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions/827d61f7-5dcf-4cab-9662-f386f6fb0bce"
+      }
+    }
+  ]
 }

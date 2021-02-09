@@ -3,9 +3,9 @@
     "id" : "05f28df9-5f19-4923-b3f8-b9090116dadc",
     "type" : "triggers-module/action-channel-property",
     "attributes" : {
-      "channel" : "channel-four",
-      "device" : "device-one",
-      "property" : "switch",
+      "device" : "cB8F0Q",
+      "channel" : "9B8F0Q",
+      "property" : "lxWQ0Q",
       "value" : "on"
     },
     "relationships" : {

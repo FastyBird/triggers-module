@@ -31,9 +31,9 @@ class ConditionOperatorType extends Consistence\Enum\Enum
 	/**
 	 * Define states
 	 */
-	public const STATE_VALUE_EQUAL = 'eq';
-	public const STATE_VALUE_ABOVE = 'above';
-	public const STATE_VALUE_BELOW = 'below';
+	public const OPERATOR_VALUE_EQUAL = 'eq';
+	public const OPERATOR_VALUE_ABOVE = 'above';
+	public const OPERATOR_VALUE_BELOW = 'below';
 
 	/**
 	 * @return string

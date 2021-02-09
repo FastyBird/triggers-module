@@ -1,30 +1,7 @@
 {
-  "data" : {
-    "attributes" : {
-      "channel" : "channel-identifier",
-      "device" : "device-identifier",
-      "operand" : "2",
-      "operator" : "eq",
-      "property" : "property-identifier",
-      "enabled" : true
-    },
-    "id" : "f333fc7a-6e23-4b2f-808d-ed35105b8430",
-    "links" : {
-      "self" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/conditions/f333fc7a-6e23-4b2f-808d-ed35105b8430"
-    },
-    "relationships" : {
-      "trigger" : {
-        "data" : {
-          "id" : "1b17bcaa-a19e-45f0-98b4-56211cc648ae",
-          "type" : "triggers-module/trigger-automatic"
-        },
-        "links" : {
-          "related" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae",
-          "self" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/conditions/f333fc7a-6e23-4b2f-808d-ed35105b8430/relationships/trigger"
-        }
-      }
-    },
-    "type" : "triggers-module/condition-channel-property"
+  "meta" : {
+    "author" : "FastyBird team",
+    "copyright" : "FastyBird s.r.o"
   },
   "jsonapi" : {
     "version" : "1.1"
@@ -32,8 +9,31 @@
   "links" : {
     "self" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/conditions"
   },
-  "meta" : {
-    "author" : "FastyBird team",
-    "copyright" : "FastyBird s.r.o"
+  "data" : {
+    "type" : "triggers-module/condition-channel-property",
+    "id" : "f333fc7a-6e23-4b2f-808d-ed35105b8430",
+    "attributes" : {
+      "enabled" : true,
+      "device" : "8TZQ0Q",
+      "channel" : "LTZQ0Q",
+      "property" : "XTZQ0Q",
+      "operator" : "eq",
+      "operand" : "2"
+    },
+    "relationships" : {
+      "trigger" : {
+        "links" : {
+          "self" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/conditions/f333fc7a-6e23-4b2f-808d-ed35105b8430/relationships/trigger",
+          "related" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae"
+        },
+        "data" : {
+          "type" : "triggers-module/trigger-automatic",
+          "id" : "1b17bcaa-a19e-45f0-98b4-56211cc648ae"
+        }
+      }
+    },
+    "links" : {
+      "self" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/conditions/f333fc7a-6e23-4b2f-808d-ed35105b8430"
+    }
   }
 }

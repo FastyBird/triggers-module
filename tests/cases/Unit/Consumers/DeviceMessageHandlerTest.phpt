@@ -39,14 +39,14 @@ final class DeviceMessageHandlerTest extends DbTestCase
 		$actionRepository = $this->getContainer()->getByType(Models\Actions\ActionRepository::class);
 
 		$findQuery = new Queries\FindChannelPropertyTriggersQuery();
-		$findQuery->forDevice('device-one');
+		$findQuery->forDevice('cB8F0Q');
 
 		$found = $triggersRepository->findAllBy($findQuery, Entities\Triggers\ChannelPropertyTrigger::class);
 
 		Assert::count(2, $found);
 
 		$findQuery = new Queries\FindActionsQuery();
-		$findQuery->forDevice('device-one');
+		$findQuery->forDevice('cB8F0Q');
 
 		$found = $actionRepository->findAllBy($findQuery, Entities\Actions\ChannelPropertyAction::class);
 
@@ -84,14 +84,14 @@ final class DeviceMessageHandlerTest extends DbTestCase
 		$consumer->consume(ModulesMetadata\Constants::MODULE_DEVICES_ORIGIN, $routingKey, $message);
 
 		$findQuery = new Queries\FindChannelPropertyTriggersQuery();
-		$findQuery->forDevice('device-one');
+		$findQuery->forDevice('cB8F0Q');
 
 		$found = $triggersRepository->findAllBy($findQuery, Entities\Triggers\ChannelPropertyTrigger::class);
 
 		Assert::count(0, $found);
 
 		$findQuery = new Queries\FindActionsQuery();
-		$findQuery->forDevice('device-one');
+		$findQuery->forDevice('cB8F0Q');
 
 		$found = $actionRepository->findAllBy($findQuery, Entities\Actions\ChannelPropertyAction::class);
 

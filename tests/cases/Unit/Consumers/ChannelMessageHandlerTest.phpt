@@ -39,18 +39,18 @@ final class ChannelMessageHandlerTest extends DbTestCase
 		$actionRepository = $this->getContainer()->getByType(Models\Actions\ActionRepository::class);
 
 		$findQuery = new Queries\FindChannelPropertyTriggersQuery();
-		$findQuery->forChannel('device-one', 'channel-one');
+		$findQuery->forChannel('zB8F0Q');
 
 		$found = $triggersRepository->findAllBy($findQuery, Entities\Triggers\ChannelPropertyTrigger::class);
 
 		Assert::count(1, $found);
 
 		$findQuery = new Queries\FindActionsQuery();
-		$findQuery->forChannel('device-one', 'channel-one');
+		$findQuery->forChannel('zB8F0Q');
 
 		$found = $actionRepository->findAllBy($findQuery, Entities\Actions\ChannelPropertyAction::class);
 
-		Assert::count(1, $found);
+		Assert::count(2, $found);
 
 		$publisher = Mockery::mock(ApplicationExchangePublisher\PublisherProxy::class);
 		$publisher
@@ -84,14 +84,14 @@ final class ChannelMessageHandlerTest extends DbTestCase
 		$consumer->consume(ModulesMetadata\Constants::MODULE_DEVICES_ORIGIN, $routingKey, $message);
 
 		$findQuery = new Queries\FindChannelPropertyTriggersQuery();
-		$findQuery->forChannel('device-one', 'channel-one');
+		$findQuery->forChannel('zB8F0Q');
 
 		$found = $triggersRepository->findAllBy($findQuery, Entities\Triggers\ChannelPropertyTrigger::class);
 
 		Assert::count(0, $found);
 
 		$findQuery = new Queries\FindActionsQuery();
-		$findQuery->forChannel('device-one', 'channel-one');
+		$findQuery->forChannel('zB8F0Q');
 
 		$found = $actionRepository->findAllBy($findQuery, Entities\Actions\ChannelPropertyAction::class);
 

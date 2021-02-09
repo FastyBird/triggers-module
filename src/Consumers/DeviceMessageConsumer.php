@@ -95,7 +95,7 @@ final class DeviceMessageConsumer implements ApplicationExchangeConsumer\IConsum
 
 		if ($routingKey === ModulesMetadata\Constants::MESSAGE_BUS_DEVICES_DELETED_ENTITY_ROUTING_KEY) {
 			$this->clearDevices(
-				$message->offsetGet('device')
+				$message->offsetGet('key')
 			);
 		}
 	}

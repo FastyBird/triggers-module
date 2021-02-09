@@ -3,8 +3,8 @@
     "id" : "f333fc7a-6e23-4b2f-808d-ed35105b8430",
     "type" : "triggers-module/condition-device-property",
     "attributes" : {
-      "device" : "device-identifier",
-      "property" : "property-identifier",
+      "device" : "RPZQ0Q",
+      "property" : "dQZQ0Q",
       "operator" : "eq",
       "operand" : "2"
     },

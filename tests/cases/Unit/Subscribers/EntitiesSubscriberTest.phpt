@@ -48,9 +48,9 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 					'enabled'  => true,
 					'owner'    => null,
 					'type'     => 'channel-property',
-					'device'   => 'device-name',
-					'channel'  => 'channel-name',
-					'property' => 'property-name',
+					'device'   => 'cB8F0Q',
+					'channel'  => '1B8F0Q',
+					'property' => 'h1WQ0Q',
 					'operand'  => '10',
 					'operator' => 'eq',
 				], $data);
@@ -67,10 +67,10 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 		);
 
 		$entity = new Entities\Triggers\ChannelPropertyTrigger(
-			'device-name',
-			'channel-name',
-			'property-name',
-			Types\ConditionOperatorType::get(Types\ConditionOperatorType::STATE_VALUE_EQUAL),
+			'cB8F0Q',
+			'1B8F0Q',
+			'h1WQ0Q',
+			Types\ConditionOperatorType::get(Types\ConditionOperatorType::OPERATOR_VALUE_EQUAL),
 			'10',
 			'Trigger name'
 		);
@@ -147,9 +147,9 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 					'enabled'  => true,
 					'owner'    => null,
 					'type'     => 'channel-property',
-					'device'   => 'device-name',
-					'channel'  => 'channel-name',
-					'property' => 'property-name',
+					'device'   => 'cB8F0Q',
+					'channel'  => '1B8F0Q',
+					'property' => 'h1WQ0Q',
 					'operand'  => '10',
 					'operator' => 'eq',
 				], $data);
@@ -166,10 +166,10 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 		);
 
 		$entity = new Entities\Triggers\ChannelPropertyTrigger(
-			'device-name',
-			'channel-name',
-			'property-name',
-			Types\ConditionOperatorType::get(Types\ConditionOperatorType::STATE_VALUE_EQUAL),
+			'cB8F0Q',
+			'1B8F0Q',
+			'h1WQ0Q',
+			Types\ConditionOperatorType::get(Types\ConditionOperatorType::OPERATOR_VALUE_EQUAL),
 			'10',
 			'Trigger name'
 		);
@@ -198,9 +198,9 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 					'enabled'  => true,
 					'owner'    => null,
 					'type'     => 'channel-property',
-					'device'   => 'device-name',
-					'channel'  => 'channel-name',
-					'property' => 'property-name',
+					'device'   => 'cB8F0Q',
+					'channel'  => '1B8F0Q',
+					'property' => 'h1WQ0Q',
 					'operand'  => '10',
 					'operator' => 'eq',
 				], $data);
@@ -210,10 +210,10 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 			->times(1);
 
 		$entity = new Entities\Triggers\ChannelPropertyTrigger(
-			'device-name',
-			'channel-name',
-			'property-name',
-			Types\ConditionOperatorType::get(Types\ConditionOperatorType::STATE_VALUE_EQUAL),
+			'cB8F0Q',
+			'1B8F0Q',
+			'h1WQ0Q',
+			Types\ConditionOperatorType::get(Types\ConditionOperatorType::OPERATOR_VALUE_EQUAL),
 			'10',
 			'Trigger name'
 		);

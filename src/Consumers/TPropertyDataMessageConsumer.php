@@ -141,13 +141,13 @@ trait TPropertyDataMessageConsumer
 
 	/**
 	 * @param mixed $value
-	 * @param string|null $datatype
+	 * @param string|null $dataType
 	 *
 	 * @return int|float|string|bool|null
 	 */
-	protected function formatValue($value, ?string $datatype)
+	protected function formatValue($value, ?string $dataType)
 	{
-		switch ($datatype) {
+		switch ($dataType) {
 			case TriggersModule\Constants::DATA_TYPE_INTEGER:
 				return (int) $value;
 

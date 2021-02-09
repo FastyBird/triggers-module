@@ -3,9 +3,9 @@
     "id" : "05f28df9-5f19-4923-b3f8-b9090116dadc",
     "type" : "triggers-module/invalid",
     "attributes" : {
-      "channel" : "channel-four",
-      "device" : "some-device",
-      "property" : "switch",
+      "device" : "JqbR0Q",
+      "channel" : "6qbR0Q",
+      "property" : "VqbR0Q",
       "value" : "on"
     },
     "relationships" : {

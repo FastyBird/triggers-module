@@ -4,7 +4,7 @@
     "type" : "triggers-module/action-channel-property",
     "attributes" : {
       "channel" : "channel-four",
-      "device" : "device-one",
+      "device" : "cB8F0Q",
       "property" : "switch",
       "value" : "toggle"
     },

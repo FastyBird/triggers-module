@@ -80,45 +80,25 @@ class FindConditionsQuery extends DoctrineOrmQuery\QueryObject
 	}
 
 	/**
-	 * @param string $device
 	 * @param string $channel
 	 *
 	 * @return void
 	 */
-	public function forChannel(string $device, string $channel): void
+	public function forChannel(string $channel): void
 	{
-		$this->filter[] = function (ORM\QueryBuilder $qb) use ($device, $channel): void {
-			$qb->andWhere('cdc.device = :device')->setParameter('device', $device);
+		$this->filter[] = function (ORM\QueryBuilder $qb) use ($channel): void {
 			$qb->andWhere('cdc.channel = :channel')->setParameter('channel', $channel);
 		};
 	}
 
 	/**
-	 * @param string $device
 	 * @param string $property
 	 *
 	 * @return void
 	 */
-	public function forDeviceProperty(string $device, string $property): void
+	public function forProperty(string $property): void
 	{
-		$this->filter[] = function (ORM\QueryBuilder $qb) use ($device, $property): void {
-			$qb->andWhere('cdc.device = :device')->setParameter('device', $device);
-			$qb->andWhere('cdc.property = :property')->setParameter('property', $property);
-		};
-	}
-
-	/**
-	 * @param string $device
-	 * @param string $channel
-	 * @param string $property
-	 *
-	 * @return void
-	 */
-	public function forChannelProperty(string $device, string $channel, string $property): void
-	{
-		$this->filter[] = function (ORM\QueryBuilder $qb) use ($device, $channel, $property): void {
-			$qb->andWhere('cdc.device = :device')->setParameter('device', $device);
-			$qb->andWhere('cdc.channel = :channel')->setParameter('channel', $channel);
+		$this->filter[] = function (ORM\QueryBuilder $qb) use ($property): void {
 			$qb->andWhere('cdc.property = :property')->setParameter('property', $property);
 		};
 	}
@@ -131,7 +111,7 @@ class FindConditionsQuery extends DoctrineOrmQuery\QueryObject
 	 */
 	public function withPropertyValue(
 		string $value,
-		string $operator = Types\ConditionOperatorType::STATE_VALUE_EQUAL
+		string $operator = Types\ConditionOperatorType::OPERATOR_VALUE_EQUAL
 	): void {
 		if (!Types\ConditionOperatorType::isValidValue($operator)) {
 			throw new Exceptions\InvalidArgumentException('Invalid operator given');
@@ -166,9 +146,9 @@ class FindConditionsQuery extends DoctrineOrmQuery\QueryObject
 					)
 					->setParameter('value', $value)
 					->setParameter('previousValue', $previousValue)
-					->setParameter('operatorAbove', Types\ConditionOperatorType::STATE_VALUE_ABOVE)
-					->setParameter('operatorBelow', Types\ConditionOperatorType::STATE_VALUE_BELOW)
-					->setParameter('operatorEqual', Types\ConditionOperatorType::STATE_VALUE_EQUAL);
+					->setParameter('operatorAbove', Types\ConditionOperatorType::OPERATOR_VALUE_ABOVE)
+					->setParameter('operatorBelow', Types\ConditionOperatorType::OPERATOR_VALUE_BELOW)
+					->setParameter('operatorEqual', Types\ConditionOperatorType::OPERATOR_VALUE_EQUAL);
 
 			} else {
 				$qb
@@ -180,9 +160,9 @@ class FindConditionsQuery extends DoctrineOrmQuery\QueryObject
 						. '(cdc.operand = :value AND cdc.operator = :operatorEqual)'
 					)
 					->setParameter('value', $value)
-					->setParameter('operatorAbove', Types\ConditionOperatorType::STATE_VALUE_ABOVE)
-					->setParameter('operatorBelow', Types\ConditionOperatorType::STATE_VALUE_BELOW)
-					->setParameter('operatorEqual', Types\ConditionOperatorType::STATE_VALUE_EQUAL);
+					->setParameter('operatorAbove', Types\ConditionOperatorType::OPERATOR_VALUE_ABOVE)
+					->setParameter('operatorBelow', Types\ConditionOperatorType::OPERATOR_VALUE_BELOW)
+					->setParameter('operatorEqual', Types\ConditionOperatorType::OPERATOR_VALUE_EQUAL);
 			}
 		};
 	}
@@ -200,7 +180,7 @@ class FindConditionsQuery extends DoctrineOrmQuery\QueryObject
 				->andWhere('cdc.operand >= :previousValue AND cdc.operand < :value AND cdc.operator = :operator')
 				->setParameter('value', $value)
 				->setParameter('previousValue', $previousValue)
-				->setParameter('operator', Types\ConditionOperatorType::STATE_VALUE_ABOVE);
+				->setParameter('operator', Types\ConditionOperatorType::OPERATOR_VALUE_ABOVE);
 		};
 	}
 
@@ -217,7 +197,7 @@ class FindConditionsQuery extends DoctrineOrmQuery\QueryObject
 				->andWhere('cdc.operand <= :previousValue AND cdc.operand > :value AND cdc.operator = :operator')
 				->setParameter('value', $value)
 				->setParameter('previousValue', $previousValue)
-				->setParameter('operator', Types\ConditionOperatorType::STATE_VALUE_BELOW);
+				->setParameter('operator', Types\ConditionOperatorType::OPERATOR_VALUE_BELOW);
 		};
 	}
 

@@ -3,9 +3,9 @@
     "id" : "f333fc7a-6e23-4b2f-808d-ed35105b8430",
     "type" : "triggers-module/condition-channel-property",
     "attributes" : {
-      "device" : "device-identifier",
-      "channel" : "channel-identifier",
-      "property" : "property-identifier",
+      "device" : "8TZQ0Q",
+      "channel" : "LTZQ0Q",
+      "property" : "XTZQ0Q",
       "operator" : "eq",
       "operand" : "2"
     },

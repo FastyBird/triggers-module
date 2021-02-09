@@ -78,31 +78,25 @@ class FindActionsQuery extends DoctrineOrmQuery\QueryObject
 	}
 
 	/**
-	 * @param string $device
 	 * @param string $channel
 	 *
 	 * @return void
 	 */
-	public function forChannel(string $device, string $channel): void
+	public function forChannel(string $channel): void
 	{
-		$this->filter[] = function (ORM\QueryBuilder $qb) use ($device, $channel): void {
-			$qb->andWhere('a.device = :device')->setParameter('device', $device);
+		$this->filter[] = function (ORM\QueryBuilder $qb) use ($channel): void {
 			$qb->andWhere('a.channel = :channel')->setParameter('channel', $channel);
 		};
 	}
 
 	/**
-	 * @param string $device
-	 * @param string $channel
 	 * @param string $property
 	 *
 	 * @return void
 	 */
-	public function forChannelProperty(string $device, string $channel, string $property): void
+	public function forChannelProperty(string $property): void
 	{
-		$this->filter[] = function (ORM\QueryBuilder $qb) use ($device, $channel, $property): void {
-			$qb->andWhere('a.device = :device')->setParameter('device', $device);
-			$qb->andWhere('a.channel = :channel')->setParameter('channel', $channel);
+		$this->filter[] = function (ORM\QueryBuilder $qb) use ($property): void {
 			$qb->andWhere('a.property = :property')->setParameter('property', $property);
 		};
 	}

@@ -14,27 +14,27 @@ require_once __DIR__ . '/../../../bootstrap.php';
 final class ConditionOperatorTypeTest extends BaseTestCase
 {
 
-	public function testCreateDatatype(): void
+	public function testCreateOperator(): void
 	{
-		$datatype = Types\ConditionOperatorType::get(Types\ConditionOperatorType::STATE_VALUE_EQUAL);
+		$operatorType = Types\ConditionOperatorType::get(Types\ConditionOperatorType::OPERATOR_VALUE_EQUAL);
 
-		Assert::type(Types\ConditionOperatorType::class, $datatype);
+		Assert::type(Types\ConditionOperatorType::class, $operatorType);
 
-		$datatype = Types\ConditionOperatorType::get(Types\ConditionOperatorType::STATE_VALUE_ABOVE);
+		$operatorType = Types\ConditionOperatorType::get(Types\ConditionOperatorType::OPERATOR_VALUE_ABOVE);
 
-		Assert::type(Types\ConditionOperatorType::class, $datatype);
+		Assert::type(Types\ConditionOperatorType::class, $operatorType);
 
-		$datatype = Types\ConditionOperatorType::get(Types\ConditionOperatorType::STATE_VALUE_BELOW);
+		$operatorType = Types\ConditionOperatorType::get(Types\ConditionOperatorType::OPERATOR_VALUE_BELOW);
 
-		Assert::type(Types\ConditionOperatorType::class, $datatype);
+		Assert::type(Types\ConditionOperatorType::class, $operatorType);
 	}
 
 	/**
 	 * @throws Consistence\Enum\InvalidEnumValueException
 	 */
-	public function testInvalidDatatype(): void
+	public function testInvalidOperator(): void
 	{
-		$datatype = Types\ConditionOperatorType::get('invalidtype');
+		$operatorType = Types\ConditionOperatorType::get('invalidtype');
 	}
 
 }

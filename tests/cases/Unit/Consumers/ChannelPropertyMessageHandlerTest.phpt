@@ -26,8 +26,6 @@ final class ChannelPropertyMessageHandlerTest extends DbTestCase
 	 * @param Utils\ArrayHash $message
 	 * @param int $publishCallCount
 	 * @param mixed[] $fixture
-	 * @param int $totalTriggersBefore
-	 * @param int $totalTriggersAfter
 	 *
 	 * @dataProvider ./../../../fixtures/Consumers/channelPropertyDeleteMessage.php
 	 */
@@ -35,19 +33,8 @@ final class ChannelPropertyMessageHandlerTest extends DbTestCase
 		string $routingKey,
 		Utils\ArrayHash $message,
 		int $publishCallCount,
-		array $fixture,
-		int $totalTriggersBefore,
-		int $totalTriggersAfter
+		array $fixture
 	): void {
-		$triggersRepository = $this->getContainer()->getByType(Models\Triggers\TriggerRepository::class);
-
-		$findQuery = new Queries\FindChannelPropertyTriggersQuery();
-		$findQuery->forProperty('device-one', 'channel-one', 'button');
-
-		$found = $triggersRepository->findAllBy($findQuery, Entities\Triggers\ChannelPropertyTrigger::class);
-
-		Assert::count($totalTriggersBefore, $found);
-
 		$publisher = Mockery::mock(ApplicationExchangePublisher\PublisherProxy::class);
 		$publisher
 			->shouldReceive('publish')
@@ -79,13 +66,6 @@ final class ChannelPropertyMessageHandlerTest extends DbTestCase
 		$consumer = $this->getContainer()->getByType(Consumers\ChannelPropertyMessageConsumer::class);
 
 		$consumer->consume(ModulesMetadata\Constants::MODULE_DEVICES_ORIGIN, $routingKey, $message);
-
-		$findQuery = new Queries\FindChannelPropertyTriggersQuery();
-		$findQuery->forProperty('device-one', 'channel-one', 'button');
-
-		$found = $triggersRepository->findAllBy($findQuery, Entities\Triggers\ChannelPropertyTrigger::class);
-
-		Assert::count($totalTriggersAfter, $found);
 	}
 
 	/**
@@ -93,10 +73,6 @@ final class ChannelPropertyMessageHandlerTest extends DbTestCase
 	 * @param Utils\ArrayHash $message
 	 * @param int $publishCallCount
 	 * @param mixed[] $fixture
-	 * @param int $totalTriggersBefore
-	 * @param int $totalTriggersAfter
-	 * @param int $totalActionsBefore
-	 * @param int $totalActionsAfter
 	 *
 	 * @dataProvider ./../../../fixtures/Consumers/channelPropertyDeleteMessage.php
 	 */
@@ -104,21 +80,8 @@ final class ChannelPropertyMessageHandlerTest extends DbTestCase
 		string $routingKey,
 		Utils\ArrayHash $message,
 		int $publishCallCount,
-		array $fixture,
-		int $totalTriggersBefore,
-		int $totalTriggersAfter,
-		int $totalActionsBefore,
-		int $totalActionsAfter
+		array $fixture
 	): void {
-		$actionRepository = $this->getContainer()->getByType(Models\Actions\ActionRepository::class);
-
-		$findQuery = new Queries\FindActionsQuery();
-		$findQuery->forChannelProperty('device-one', 'channel-four', 'switch');
-
-		$found = $actionRepository->findAllBy($findQuery, Entities\Actions\ChannelPropertyAction::class);
-
-		Assert::count($totalActionsBefore, $found);
-
 		$publisher = Mockery::mock(ApplicationExchangePublisher\PublisherProxy::class);
 		$publisher
 			->shouldReceive('publish')
@@ -150,28 +113,19 @@ final class ChannelPropertyMessageHandlerTest extends DbTestCase
 		$consumer = $this->getContainer()->getByType(Consumers\ChannelPropertyMessageConsumer::class);
 
 		$consumer->consume(ModulesMetadata\Constants::MODULE_DEVICES_ORIGIN, $routingKey, $message);
-
-		$findQuery = new Queries\FindActionsQuery();
-		$findQuery->forChannelProperty('device-one', 'channel-four', 'switch');
-
-		$found = $actionRepository->findAllBy($findQuery, Entities\Actions\ChannelPropertyAction::class);
-
-		Assert::count($totalActionsAfter, $found);
 	}
 
 	public function testProcessMessageFireAction(): void
 	{
 		$routingKey = ModulesMetadata\Constants::MESSAGE_BUS_CHANNELS_PROPERTY_UPDATED_ENTITY_ROUTING_KEY;
 		$message = Utils\ArrayHash::from([
-			'id'       => 'fe2badf6-2e85-4ef6-9009-fe247d473069',
-			'device'   => 'device-one',
-			'channel'  => 'channel-one',
-			'property' => 'button',
-			'value'    => '3',
-			'pending'  => false,
-			'datatype' => null,
-			'format'   => null,
-			'owner'    => '89ce7161-12dd-427e-9a35-92bc4390d98d',
+			'id'        => 'fe2badf6-2e85-4ef6-9009-fe247d473069',
+			'key'       => 'k7pT0Q',
+			'value'     => '3',
+			'pending'   => false,
+			'data_type' => null,
+			'format'    => null,
+			'owner'     => '89ce7161-12dd-427e-9a35-92bc4390d98d',
 		]);
 
 		$publisher = Mockery::mock(ApplicationExchangePublisher\PublisherProxy::class);
@@ -181,9 +135,9 @@ final class ChannelPropertyMessageHandlerTest extends DbTestCase
 				Assert::same(ModulesMetadata\Constants::MESSAGE_BUS_CHANNELS_PROPERTIES_DATA_ROUTING_KEY, $routingKey);
 				Assert::same(
 					[
-						'device'   => 'device-two',
-						'channel'  => 'channel-one',
-						'property' => 'switch',
+						'device'   => 'GB8F0Q',
+						'channel'  => '2B8F0Q',
+						'property' => 'h1WQ0Q',
 						'expected' => 'toggle',
 					],
 					$data
@@ -199,7 +153,7 @@ final class ChannelPropertyMessageHandlerTest extends DbTestCase
 
 		$consumer = $this->getContainer()->getByType(Consumers\ChannelPropertyMessageConsumer::class);
 
-		$consumer->consume( ModulesMetadata\Constants::MODULE_DEVICES_ORIGIN, $routingKey, $message);
+		$consumer->consume(ModulesMetadata\Constants::MODULE_DEVICES_ORIGIN, $routingKey, $message);
 	}
 
 }

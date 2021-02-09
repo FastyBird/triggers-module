@@ -33,16 +33,16 @@ final class TriggerRepositoryTest extends DbTestCase
 		Assert::same('Good Evening', $entity->getName());
 
 		$findQuery = new Queries\FindChannelPropertyTriggersQuery();
-		$findQuery->forProperty('device-one', 'channel-one', 'button');
+		$findQuery->forProperty('k7pT0Q');
 
 		/** @var Entities\Triggers\IChannelPropertyTrigger $entity */
 		$entity = $repository->findOneBy($findQuery);
 
 		Assert::true(is_object($entity));
 		Assert::type(Entities\Triggers\ChannelPropertyTrigger::class, $entity);
-		Assert::same('device-one', $entity->getDevice());
-		Assert::same('channel-one', $entity->getChannel());
-		Assert::same('button', $entity->getProperty());
+		Assert::same('cB8F0Q', $entity->getDevice());
+		Assert::same('zB8F0Q', $entity->getChannel());
+		Assert::same('k7pT0Q', $entity->getProperty());
 	}
 
 	public function testReadResultSet(): void
