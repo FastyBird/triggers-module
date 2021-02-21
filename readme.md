@@ -1,6 +1,6 @@
 # FastyBird triggers module
 
-[![Build Status](https://img.shields.io/travis/com/FastyBird/triggers-module.svg?style=flat-square)](https://travis-ci.com/FastyBird/triggers-module)
+[![Build Status](https://badgen.net/github/checks/FastyBird/triggers-module/master?cache=300&style=flast-square)](https://github.com/FastyBird/triggers-module/actions)
 [![Code coverage](https://img.shields.io/coveralls/FastyBird/triggers-module.svg?style=flat-square)](https://coveralls.io/r/FastyBird/triggers-module)
 ![PHP](https://img.shields.io/packagist/php-v/fastybird/triggers-module?style=flat-square)
 [![Licence](https://img.shields.io/packagist/l/FastyBird/triggers-module.svg?style=flat-square)](https://packagist.org/packages/FastyBird/triggers-module)
