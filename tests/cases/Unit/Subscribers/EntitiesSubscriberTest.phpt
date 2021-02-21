@@ -6,7 +6,6 @@ use Doctrine\ORM;
 use FastyBird\ApplicationExchange\Publisher as ApplicationExchangePublisher;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Subscribers;
-use FastyBird\TriggersModule\Types;
 use Mockery;
 use Ninjify\Nunjuck\TestCase\BaseMockeryTestCase;
 use stdClass;
