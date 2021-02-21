@@ -64,17 +64,6 @@ class SmsNotification extends Notification implements ISmsNotification
 	/**
 	 * {@inheritDoc}
 	 */
-	public function toArray(): array
-	{
-		return array_merge(parent::toArray(), [
-			'type'  => 'sms',
-			'phone' => $this->getPhone()->getInternationalNumber(),
-		]);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getPhone(): Phone\Entities\Phone
 	{
 		return $this->phone;
@@ -86,6 +75,17 @@ class SmsNotification extends Notification implements ISmsNotification
 	public function setPhone(Phone\Entities\Phone $phone): void
 	{
 		$this->phone = $phone;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function toArray(): array
+	{
+		return array_merge(parent::toArray(), [
+			'type'  => 'sms',
+			'phone' => $this->getPhone()->getInternationalNumber(),
+		]);
 	}
 
 }

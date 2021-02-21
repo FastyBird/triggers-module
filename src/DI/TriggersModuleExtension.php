@@ -159,9 +159,6 @@ class TriggersModuleExtension extends DI\CompilerExtension implements Translatio
 		$builder->addDefinition($this->prefix('schemas.triggers.manual'))
 			->setType(Schemas\Triggers\ManualTriggerSchema::class);
 
-		$builder->addDefinition($this->prefix('schemas.triggers.channelProperty'))
-			->setType(Schemas\Triggers\ChannelPropertyTriggerSchema::class);
-
 		$builder->addDefinition($this->prefix('schemas.actions.channelProperty'))
 			->setType(Schemas\Actions\ChannelPropertyActionSchema::class);
 
@@ -189,9 +186,6 @@ class TriggersModuleExtension extends DI\CompilerExtension implements Translatio
 
 		$builder->addDefinition($this->prefix('hydrators.triggers.manual'))
 			->setType(Hydrators\Triggers\ManualTriggerHydrator::class);
-
-		$builder->addDefinition($this->prefix('hydrators.triggers.channelProperty'))
-			->setType(Hydrators\Triggers\ChannelPropertyTriggerHydrator::class);
 
 		$builder->addDefinition($this->prefix('hydrators.actions.channelProperty'))
 			->setType(Hydrators\Actions\ChannelPropertyActionHydrator::class);

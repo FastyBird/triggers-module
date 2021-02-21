@@ -65,14 +65,6 @@ class ChannelPropertyAction extends Action implements IChannelPropertyAction
 	private string $property;
 
 	/**
-	 * @var string
-	 *
-	 * @IPubDoctrine\Crud(is={"required", "writable"})
-	 * @ORM\Column(type="string", name="action_value", length=100, nullable=false)
-	 */
-	private string $value;
-
-	/**
 	 * @param string $device
 	 * @param string $channel
 	 * @param string $property
@@ -90,13 +82,11 @@ class ChannelPropertyAction extends Action implements IChannelPropertyAction
 		Entities\Triggers\ITrigger $trigger,
 		?Uuid\UuidInterface $id = null
 	) {
-		parent::__construct($trigger, $id);
+		parent::__construct($value, $trigger, $id);
 
 		$this->device = $device;
 		$this->channel = $channel;
 		$this->property = $property;
-
-		$this->value = $value;
 	}
 
 	/**
@@ -109,7 +99,6 @@ class ChannelPropertyAction extends Action implements IChannelPropertyAction
 			'device'   => $this->getDevice(),
 			'channel'  => $this->getChannel(),
 			'property' => $this->getProperty(),
-			'value'    => $this->getValue(),
 		]);
 	}
 
@@ -135,14 +124,6 @@ class ChannelPropertyAction extends Action implements IChannelPropertyAction
 	public function getProperty(): string
 	{
 		return $this->property;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getValue(): string
-	{
-		return $this->value;
 	}
 
 }

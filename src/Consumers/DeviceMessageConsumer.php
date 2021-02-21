@@ -107,15 +107,6 @@ final class DeviceMessageConsumer implements ApplicationExchangeConsumer\IConsum
 	 */
 	private function clearDevices(string $device): void
 	{
-		$findQuery = new Queries\FindChannelPropertyTriggersQuery();
-		$findQuery->forDevice($device);
-
-		$triggers = $this->triggerRepository->findAllBy($findQuery, Entities\Triggers\ChannelPropertyTrigger::class);
-
-		foreach ($triggers as $trigger) {
-			$this->triggersManager->delete($trigger);
-		}
-
 		$findQuery = new Queries\FindActionsQuery();
 		$findQuery->forDevice($device);
 

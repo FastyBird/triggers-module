@@ -62,22 +62,17 @@ final class TriggersV1Controller extends BaseV1Controller
 	/** @var Hydrators\Triggers\ManualTriggerHydrator */
 	private Hydrators\Triggers\ManualTriggerHydrator $manualTriggerHydrator;
 
-	/** @var Hydrators\Triggers\ChannelPropertyTriggerHydrator */
-	private Hydrators\Triggers\ChannelPropertyTriggerHydrator $channelPropertyTriggerHydrator;
-
 	public function __construct(
 		Models\Triggers\ITriggerRepository $triggerRepository,
 		Models\Triggers\ITriggersManager $triggersManager,
 		Hydrators\Triggers\AutomaticTriggerHydrator $automaticTriggerHydrator,
-		Hydrators\Triggers\ManualTriggerHydrator $manualTriggerHydrator,
-		Hydrators\Triggers\ChannelPropertyTriggerHydrator $channelPropertyTriggerHydrator
+		Hydrators\Triggers\ManualTriggerHydrator $manualTriggerHydrator
 	) {
 		$this->triggerRepository = $triggerRepository;
 		$this->triggersManager = $triggersManager;
 
 		$this->automaticTriggerHydrator = $automaticTriggerHydrator;
 		$this->manualTriggerHydrator = $manualTriggerHydrator;
-		$this->channelPropertyTriggerHydrator = $channelPropertyTriggerHydrator;
 	}
 
 	/**
@@ -143,9 +138,6 @@ final class TriggersV1Controller extends BaseV1Controller
 
 			} elseif ($document->getResource()->getType() === Schemas\Triggers\ManualTriggerSchema::SCHEMA_TYPE) {
 				$trigger = $this->triggersManager->create($this->manualTriggerHydrator->hydrate($document));
-
-			} elseif ($document->getResource()->getType() === Schemas\Triggers\ChannelPropertyTriggerSchema::SCHEMA_TYPE) {
-				$trigger = $this->triggersManager->create($this->channelPropertyTriggerHydrator->hydrate($document));
 
 			} else {
 				throw new JsonApiExceptions\JsonApiErrorException(
@@ -274,12 +266,6 @@ final class TriggersV1Controller extends BaseV1Controller
 				$trigger = $this->triggersManager->update(
 					$trigger,
 					$this->manualTriggerHydrator->hydrate($document, $trigger)
-				);
-
-			} elseif ($document->getResource()->getType() === Schemas\Triggers\ChannelPropertyTriggerSchema::SCHEMA_TYPE) {
-				$trigger = $this->triggersManager->update(
-					$trigger,
-					$this->channelPropertyTriggerHydrator->hydrate($document, $trigger)
 				);
 
 			} else {

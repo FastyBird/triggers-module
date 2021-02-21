@@ -65,6 +65,14 @@ abstract class Action implements IAction
 	protected bool $enabled = true;
 
 	/**
+	 * @var string
+	 *
+	 * @IPubDoctrine\Crud(is={"required", "writable"})
+	 * @ORM\Column(type="string", name="action_value", length=100, nullable=true)
+	 */
+	protected string $value;
+
+	/**
 	 * @var Entities\Triggers\ITrigger
 	 *
 	 * @IPubDoctrine\Crud(is="required")
@@ -74,31 +82,30 @@ abstract class Action implements IAction
 	protected Entities\Triggers\ITrigger $trigger;
 
 	/**
+	 * @param string $value
 	 * @param Entities\Triggers\ITrigger $trigger
 	 * @param Uuid\UuidInterface|null $id
 	 *
 	 * @throws Throwable
 	 */
 	public function __construct(
+		string $value,
 		Entities\Triggers\ITrigger $trigger,
 		?Uuid\UuidInterface $id = null
 	) {
 		$this->id = $id ?? Uuid\Uuid::uuid4();
 
 		$this->trigger = $trigger;
+
+		$this->value = $value;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function toArray(): array
+	public function getTrigger(): Entities\Triggers\ITrigger
 	{
-		return [
-			'id'      => $this->getPlainId(),
-			'enabled' => $this->isEnabled(),
-			'trigger' => $this->getTrigger()->getPlainId(),
-			'owner'   => $this->getTrigger()->getOwnerId(),
-		];
+		return $this->trigger;
 	}
 
 	/**
@@ -120,9 +127,23 @@ abstract class Action implements IAction
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getTrigger(): Entities\Triggers\ITrigger
+	public function getValue(): string
 	{
-		return $this->trigger;
+		return $this->value;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function toArray(): array
+	{
+		return [
+			'id'      => $this->getPlainId(),
+			'enabled' => $this->isEnabled(),
+			'value'   => $this->getValue(),
+			'trigger' => $this->getTrigger()->getPlainId(),
+			'owner'   => $this->getTrigger()->getOwnerId(),
+		];
 	}
 
 }

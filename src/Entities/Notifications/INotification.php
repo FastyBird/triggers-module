@@ -32,6 +32,11 @@ interface INotification extends DatabaseEntities\IEntity,
 {
 
 	/**
+	 * @return Entities\Triggers\ITrigger
+	 */
+	public function getTrigger(): Entities\Triggers\ITrigger;
+
+	/**
 	 * @param bool $enabled
 	 *
 	 * @return void
@@ -42,11 +47,6 @@ interface INotification extends DatabaseEntities\IEntity,
 	 * @return bool
 	 */
 	public function isEnabled(): bool;
-
-	/**
-	 * @return Entities\Triggers\ITrigger
-	 */
-	public function getTrigger(): Entities\Triggers\ITrigger;
 
 	/**
 	 * @return mixed[]

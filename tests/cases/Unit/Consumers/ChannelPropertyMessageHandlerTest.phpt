@@ -133,9 +133,9 @@ final class ChannelPropertyMessageHandlerTest extends DbTestCase
 				Assert::same(
 					[
 						'device'   => 'GB8F0Q',
-						'channel'  => '2B8F0Q',
-						'property' => 'h1WQ0Q',
-						'expected' => 'toggle',
+						'channel'  => 'nTVQ0Q',
+						'property' => 'H4WQ0Q',
+						'expected' => 'off',
 					],
 					$data
 				);

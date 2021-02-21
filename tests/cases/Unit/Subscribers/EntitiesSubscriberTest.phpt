@@ -47,12 +47,7 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 					'comment'  => null,
 					'enabled'  => true,
 					'owner'    => null,
-					'type'     => 'channel-property',
-					'device'   => 'cB8F0Q',
-					'channel'  => '1B8F0Q',
-					'property' => 'h1WQ0Q',
-					'operand'  => '10',
-					'operator' => 'eq',
+					'type'     => 'manual',
 				], $data);
 
 				return true;
@@ -66,12 +61,7 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 			$entityManager
 		);
 
-		$entity = new Entities\Triggers\ChannelPropertyTrigger(
-			'cB8F0Q',
-			'1B8F0Q',
-			'h1WQ0Q',
-			Types\ConditionOperatorType::get(Types\ConditionOperatorType::OPERATOR_VALUE_EQUAL),
-			'10',
+		$entity = new Entities\Triggers\ManualTrigger(
 			'Trigger name'
 		);
 
@@ -146,12 +136,7 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 					'comment'  => null,
 					'enabled'  => true,
 					'owner'    => null,
-					'type'     => 'channel-property',
-					'device'   => 'cB8F0Q',
-					'channel'  => '1B8F0Q',
-					'property' => 'h1WQ0Q',
-					'operand'  => '10',
-					'operator' => 'eq',
+					'type'     => 'manual',
 				], $data);
 
 				return true;
@@ -165,12 +150,7 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 			$entityManager
 		);
 
-		$entity = new Entities\Triggers\ChannelPropertyTrigger(
-			'cB8F0Q',
-			'1B8F0Q',
-			'h1WQ0Q',
-			Types\ConditionOperatorType::get(Types\ConditionOperatorType::OPERATOR_VALUE_EQUAL),
-			'10',
+		$entity = new Entities\Triggers\ManualTrigger(
 			'Trigger name'
 		);
 
@@ -197,24 +177,14 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 					'comment'  => null,
 					'enabled'  => true,
 					'owner'    => null,
-					'type'     => 'channel-property',
-					'device'   => 'cB8F0Q',
-					'channel'  => '1B8F0Q',
-					'property' => 'h1WQ0Q',
-					'operand'  => '10',
-					'operator' => 'eq',
+					'type'     => 'manual',
 				], $data);
 
 				return true;
 			})
 			->times(1);
 
-		$entity = new Entities\Triggers\ChannelPropertyTrigger(
-			'cB8F0Q',
-			'1B8F0Q',
-			'h1WQ0Q',
-			Types\ConditionOperatorType::get(Types\ConditionOperatorType::OPERATOR_VALUE_EQUAL),
-			'10',
+		$entity = new Entities\Triggers\ManualTrigger(
 			'Trigger name'
 		);
 

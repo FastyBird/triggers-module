@@ -1,523 +1,359 @@
 {
-  "meta" : {
-    "author" : "FastyBird team",
-    "copyright" : "FastyBird s.r.o"
+  "meta": {
+    "author": "FastyBird team",
+    "copyright": "FastyBird s.r.o"
   },
-  "jsonapi" : {
-    "version" : "1.1"
+  "jsonapi": {
+    "version": "1.1"
   },
-  "links" : {
-    "self" : "/v1/triggers"
+  "links": {
+    "self": "/v1/triggers"
   },
-  "data" : [
+  "data": [
     {
-      "type" : "triggers-module/trigger-automatic",
-      "id" : "0b48dfbc-fac2-4292-88dc-7981a121602d",
-      "attributes" : {
-        "name" : "Good Evening",
-        "comment" : null,
-        "enabled" : true
+      "type": "triggers-module/trigger-automatic",
+      "id": "0b48dfbc-fac2-4292-88dc-7981a121602d",
+      "attributes": {
+        "name": "Good Evening",
+        "comment": null,
+        "enabled": true
       },
-      "relationships" : {
-        "conditions" : {
-          "links" : {
-            "self" : "/v1/triggers/0b48dfbc-fac2-4292-88dc-7981a121602d/relationships/conditions",
-            "related" : {
-              "href" : "/v1/triggers/0b48dfbc-fac2-4292-88dc-7981a121602d/actions",
-              "meta" : {
-                "count" : 1
+      "relationships": {
+        "conditions": {
+          "links": {
+            "self": "/v1/triggers/0b48dfbc-fac2-4292-88dc-7981a121602d/relationships/conditions",
+            "related": {
+              "href": "/v1/triggers/0b48dfbc-fac2-4292-88dc-7981a121602d/actions",
+              "meta": {
+                "count": 1
               }
             }
           },
-          "data" : [
+          "data": [
             {
-              "type" : "triggers-module/condition-time",
-              "id" : "167900e9-19f3-4712-aa4d-00b160ff06d5"
+              "type": "triggers-module/condition-time",
+              "id": "167900e9-19f3-4712-aa4d-00b160ff06d5"
             }
           ]
         },
-        "actions" : {
-          "links" : {
-            "self" : "/v1/triggers/0b48dfbc-fac2-4292-88dc-7981a121602d/relationships/actions",
-            "related" : {
-              "href" : "/v1/triggers/0b48dfbc-fac2-4292-88dc-7981a121602d/actions",
-              "meta" : {
-                "count" : 2
+        "actions": {
+          "links": {
+            "self": "/v1/triggers/0b48dfbc-fac2-4292-88dc-7981a121602d/relationships/actions",
+            "related": {
+              "href": "/v1/triggers/0b48dfbc-fac2-4292-88dc-7981a121602d/actions",
+              "meta": {
+                "count": 2
               }
             }
           },
-          "data" : [
+          "data": [
             {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "21d13f14-8be0-4625-8764-4d5b1f3b4d1e"
+              "type": "triggers-module/action-channel-property",
+              "id": "21d13f14-8be0-4625-8764-4d5b1f3b4d1e"
             },
             {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "cfca08ff-d199-48ed-9f00-8c6b840a567a"
+              "type": "triggers-module/action-channel-property",
+              "id": "cfca08ff-d199-48ed-9f00-8c6b840a567a"
             }
           ]
         },
-        "notifications" : {
-          "links" : {
-            "self" : "/v1/triggers/0b48dfbc-fac2-4292-88dc-7981a121602d/relationships/notifications",
-            "related" : {
-              "href" : "/v1/triggers/0b48dfbc-fac2-4292-88dc-7981a121602d/notifications",
-              "meta" : {
-                "count" : 0
+        "notifications": {
+          "links": {
+            "self": "/v1/triggers/0b48dfbc-fac2-4292-88dc-7981a121602d/relationships/notifications",
+            "related": {
+              "href": "/v1/triggers/0b48dfbc-fac2-4292-88dc-7981a121602d/notifications",
+              "meta": {
+                "count": 0
               }
             }
           },
-          "data" : []
+          "data": []
         }
       },
-      "links" : {
-        "self" : "/v1/triggers/0b48dfbc-fac2-4292-88dc-7981a121602d"
+      "links": {
+        "self": "/v1/triggers/0b48dfbc-fac2-4292-88dc-7981a121602d"
       }
     },
     {
-      "type" : "triggers-module/trigger-automatic",
-      "id" : "1b17bcaa-a19e-45f0-98b4-56211cc648ae",
-      "attributes" : {
-        "name" : "Rise n'Shine",
-        "comment" : null,
-        "enabled" : true
+      "type": "triggers-module/trigger-automatic",
+      "id": "1b17bcaa-a19e-45f0-98b4-56211cc648ae",
+      "attributes": {
+        "name": "Rise n'Shine",
+        "comment": null,
+        "enabled": true
       },
-      "relationships" : {
-        "conditions" : {
-          "links" : {
-            "self" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/relationships/conditions",
-            "related" : {
-              "href" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/actions",
-              "meta" : {
-                "count" : 1
+      "relationships": {
+        "conditions": {
+          "links": {
+            "self": "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/relationships/conditions",
+            "related": {
+              "href": "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/actions",
+              "meta": {
+                "count": 1
               }
             }
           },
-          "data" : [
+          "data": [
             {
-              "type" : "triggers-module/condition-time",
-              "id" : "09c453b3-c55f-4050-8f1c-b50f8d5728c2"
+              "type": "triggers-module/condition-time",
+              "id": "09c453b3-c55f-4050-8f1c-b50f8d5728c2"
             }
           ]
         },
-        "actions" : {
-          "links" : {
-            "self" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/relationships/actions",
-            "related" : {
-              "href" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/actions",
-              "meta" : {
-                "count" : 2
+        "actions": {
+          "links": {
+            "self": "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/relationships/actions",
+            "related": {
+              "href": "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/actions",
+              "meta": {
+                "count": 2
               }
             }
           },
-          "data" : [
+          "data": [
             {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "c40e6e57-4fe0-43b0-88ed-4f0374e8623d"
+              "type": "triggers-module/action-channel-property",
+              "id": "c40e6e57-4fe0-43b0-88ed-4f0374e8623d"
             },
             {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "ea072fff-125e-43b0-9d76-4a65738f4b88"
+              "type": "triggers-module/action-channel-property",
+              "id": "ea072fff-125e-43b0-9d76-4a65738f4b88"
             }
           ]
         },
-        "notifications" : {
-          "links" : {
-            "self" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/relationships/notifications",
-            "related" : {
-              "href" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/notifications",
-              "meta" : {
-                "count" : 0
+        "notifications": {
+          "links": {
+            "self": "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/relationships/notifications",
+            "related": {
+              "href": "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/notifications",
+              "meta": {
+                "count": 0
               }
             }
           },
-          "data" : []
+          "data": []
         }
       },
-      "links" : {
-        "self" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae"
+      "links": {
+        "self": "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae"
       }
     },
     {
-      "type" : "triggers-module/trigger-channel-property",
-      "id" : "1c580923-28dd-4b28-8517-bf37f0173b93",
-      "attributes" : {
-        "name" : "28bc0d38-2f7c-4a71-aa74-27b102f8df4c",
-        "comment" : "996213a4-d959-4f6c-b77c-f248ce8f8d84",
-        "enabled" : true,
-        "device" : "cB8F0Q",
-        "channel" : "zB8F0Q",
-        "property" : "k7pT0Q",
-        "operator" : "eq",
-        "operand" : "3"
+      "type": "triggers-module/trigger-automatic",
+      "id": "2cea2c1b-4790-4d82-8a9f-902c7155ab36",
+      "attributes": {
+        "name": "House keeping",
+        "comment": null,
+        "enabled": true
       },
-      "relationships" : {
-        "actions" : {
-          "links" : {
-            "self" : "/v1/triggers/1c580923-28dd-4b28-8517-bf37f0173b93/relationships/actions",
-            "related" : {
-              "href" : "/v1/triggers/1c580923-28dd-4b28-8517-bf37f0173b93/actions",
-              "meta" : {
-                "count" : 1
+      "relationships": {
+        "conditions": {
+          "links": {
+            "self": "/v1/triggers/2cea2c1b-4790-4d82-8a9f-902c7155ab36/relationships/conditions",
+            "related": {
+              "href": "/v1/triggers/2cea2c1b-4790-4d82-8a9f-902c7155ab36/actions",
+              "meta": {
+                "count": 1
               }
             }
           },
-          "data" : [
+          "data": [
             {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "5c47a7c0-99d5-4dfa-b289-edb8afe4d198"
-            }
-          ]
-        }
-      },
-      "links" : {
-        "self" : "/v1/triggers/1c580923-28dd-4b28-8517-bf37f0173b93"
-      }
-    },
-    {
-      "type" : "triggers-module/trigger-automatic",
-      "id" : "2cea2c1b-4790-4d82-8a9f-902c7155ab36",
-      "attributes" : {
-        "name" : "House keeping",
-        "comment" : null,
-        "enabled" : true
-      },
-      "relationships" : {
-        "conditions" : {
-          "links" : {
-            "self" : "/v1/triggers/2cea2c1b-4790-4d82-8a9f-902c7155ab36/relationships/conditions",
-            "related" : {
-              "href" : "/v1/triggers/2cea2c1b-4790-4d82-8a9f-902c7155ab36/actions",
-              "meta" : {
-                "count" : 1
-              }
-            }
-          },
-          "data" : [
-            {
-              "type" : "triggers-module/condition-time",
-              "id" : "2726f19c-7759-440e-b6f5-8c3306692fa2"
+              "type": "triggers-module/condition-channel-property",
+              "id": "2726f19c-7759-440e-b6f5-8c3306692fa2"
             }
           ]
         },
-        "actions" : {
-          "links" : {
-            "self" : "/v1/triggers/2cea2c1b-4790-4d82-8a9f-902c7155ab36/relationships/actions",
-            "related" : {
-              "href" : "/v1/triggers/2cea2c1b-4790-4d82-8a9f-902c7155ab36/actions",
-              "meta" : {
-                "count" : 3
+        "actions": {
+          "links": {
+            "self": "/v1/triggers/2cea2c1b-4790-4d82-8a9f-902c7155ab36/relationships/actions",
+            "related": {
+              "href": "/v1/triggers/2cea2c1b-4790-4d82-8a9f-902c7155ab36/actions",
+              "meta": {
+                "count": 1
               }
             }
           },
-          "data" : [
+          "data": [
             {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "69ced64e-6e54-41e9-8052-ba25e6199b25"
-            },
-            {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "db591645-5db7-481b-9f8f-f007c64e49de"
-            },
-            {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "dc773a4c-0930-45b0-b4ee-11a19ff5a3d7"
+              "type": "triggers-module/action-channel-property",
+              "id": "69ced64e-6e54-41e9-8052-ba25e6199b25"
             }
           ]
         },
-        "notifications" : {
-          "links" : {
-            "self" : "/v1/triggers/2cea2c1b-4790-4d82-8a9f-902c7155ab36/relationships/notifications",
-            "related" : {
-              "href" : "/v1/triggers/2cea2c1b-4790-4d82-8a9f-902c7155ab36/notifications",
-              "meta" : {
-                "count" : 0
+        "notifications": {
+          "links": {
+            "self": "/v1/triggers/2cea2c1b-4790-4d82-8a9f-902c7155ab36/relationships/notifications",
+            "related": {
+              "href": "/v1/triggers/2cea2c1b-4790-4d82-8a9f-902c7155ab36/notifications",
+              "meta": {
+                "count": 0
               }
             }
           },
-          "data" : []
+          "data": []
         }
       },
-      "links" : {
-        "self" : "/v1/triggers/2cea2c1b-4790-4d82-8a9f-902c7155ab36"
+      "links": {
+        "self": "/v1/triggers/2cea2c1b-4790-4d82-8a9f-902c7155ab36"
       }
     },
     {
-      "type" : "triggers-module/trigger-channel-property",
-      "id" : "402aabb9-b5a8-4f28-aad4-c7ec245831b2",
-      "attributes" : {
-        "name" : "7c055b2b-60c3-4017-93db-e9478d8aa662",
-        "comment" : "ade714f4-ca9b-40bc-8022-dcb3a4f1b705",
-        "enabled" : true,
-        "device" : "cB8F0Q",
-        "channel" : "1B8F0Q",
-        "property" : "w7pT0Q",
-        "operator" : "eq",
-        "operand" : "1"
+      "type": "triggers-module/trigger-manual",
+      "id": "421ca8e9-26c6-4630-89ba-c53aea9bcb1e",
+      "attributes": {
+        "name": "Movie Night",
+        "comment": null,
+        "enabled": true
       },
-      "relationships" : {
-        "actions" : {
-          "links" : {
-            "self" : "/v1/triggers/402aabb9-b5a8-4f28-aad4-c7ec245831b2/relationships/actions",
-            "related" : {
-              "href" : "/v1/triggers/402aabb9-b5a8-4f28-aad4-c7ec245831b2/actions",
-              "meta" : {
-                "count" : 1
+      "relationships": {
+        "actions": {
+          "links": {
+            "self": "/v1/triggers/421ca8e9-26c6-4630-89ba-c53aea9bcb1e/relationships/actions",
+            "related": {
+              "href": "/v1/triggers/421ca8e9-26c6-4630-89ba-c53aea9bcb1e/actions",
+              "meta": {
+                "count": 2
               }
             }
           },
-          "data" : [
+          "data": [
             {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "0dac7180-dfe1-4079-ba91-fec6eeccccdf"
-            }
-          ]
-        }
-      },
-      "links" : {
-        "self" : "/v1/triggers/402aabb9-b5a8-4f28-aad4-c7ec245831b2"
-      }
-    },
-    {
-      "type" : "triggers-module/trigger-manual",
-      "id" : "421ca8e9-26c6-4630-89ba-c53aea9bcb1e",
-      "attributes" : {
-        "name" : "Movie Night",
-        "comment" : null,
-        "enabled" : true
-      },
-      "relationships" : {
-        "actions" : {
-          "links" : {
-            "self" : "/v1/triggers/421ca8e9-26c6-4630-89ba-c53aea9bcb1e/relationships/actions",
-            "related" : {
-              "href" : "/v1/triggers/421ca8e9-26c6-4630-89ba-c53aea9bcb1e/actions",
-              "meta" : {
-                "count" : 2
-              }
-            }
-          },
-          "data" : [
-            {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "46c39a95-39eb-4216-9fa3-4d575a6295bd"
+              "type": "triggers-module/action-channel-property",
+              "id": "46c39a95-39eb-4216-9fa3-4d575a6295bd"
             },
             {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "e7496bd7-7bd6-4bd8-9abb-013261b88543"
+              "type": "triggers-module/action-channel-property",
+              "id": "e7496bd7-7bd6-4bd8-9abb-013261b88543"
             }
           ]
         },
-        "notifications" : {
-          "links" : {
-            "self" : "/v1/triggers/421ca8e9-26c6-4630-89ba-c53aea9bcb1e/relationships/notifications",
-            "related" : {
-              "href" : "/v1/triggers/421ca8e9-26c6-4630-89ba-c53aea9bcb1e/notifications",
-              "meta" : {
-                "count" : 0
+        "notifications": {
+          "links": {
+            "self": "/v1/triggers/421ca8e9-26c6-4630-89ba-c53aea9bcb1e/relationships/notifications",
+            "related": {
+              "href": "/v1/triggers/421ca8e9-26c6-4630-89ba-c53aea9bcb1e/notifications",
+              "meta": {
+                "count": 0
               }
             }
           },
-          "data" : []
+          "data": []
         }
       },
-      "links" : {
-        "self" : "/v1/triggers/421ca8e9-26c6-4630-89ba-c53aea9bcb1e"
+      "links": {
+        "self": "/v1/triggers/421ca8e9-26c6-4630-89ba-c53aea9bcb1e"
       }
     },
     {
-      "type" : "triggers-module/trigger-channel-property",
-      "id" : "917402ff-3f82-451c-892c-38f08175856a",
-      "attributes" : {
-        "name" : "28bc0d38-2f7c-4a71-aa74-27b102f8df4c",
-        "comment" : "996213a4-d959-4f6c-b77c-f248ce8f8d84",
-        "enabled" : true,
-        "device" : "GB8F0Q",
-        "channel" : "2B8F0Q",
-        "property" : "67pT0Q",
-        "operator" : "eq",
-        "operand" : "1"
+      "type": "triggers-module/trigger-manual",
+      "id": "b8bb82f3-31e2-406a-96ed-f99ebaf9947a",
+      "attributes": {
+        "name": "Bubble Bath",
+        "comment": null,
+        "enabled": true
       },
-      "relationships" : {
-        "actions" : {
-          "links" : {
-            "self" : "/v1/triggers/917402ff-3f82-451c-892c-38f08175856a/relationships/actions",
-            "related" : {
-              "href" : "/v1/triggers/917402ff-3f82-451c-892c-38f08175856a/actions",
-              "meta" : {
-                "count" : 4
+      "relationships": {
+        "actions": {
+          "links": {
+            "self": "/v1/triggers/b8bb82f3-31e2-406a-96ed-f99ebaf9947a/relationships/actions",
+            "related": {
+              "href": "/v1/triggers/b8bb82f3-31e2-406a-96ed-f99ebaf9947a/actions",
+              "meta": {
+                "count": 3
               }
             }
           },
-          "data" : [
+          "data": [
             {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "5a38d726-630f-4e36-862a-8056f6b99aff"
+              "type": "triggers-module/action-channel-property",
+              "id": "52aa8a35-1832-4317-be2c-8b8fffaae07f"
             },
             {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "66b206c9-0c52-4195-bb10-824a7af8e64e"
+              "type": "triggers-module/action-channel-property",
+              "id": "7b6398e4-d26c-4cb1-ba0c-ed1b115a6cc0"
             },
             {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "a93efa57-09ac-49a4-81e3-6b1e686173dd"
-            },
-            {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "ee2cdc9c-f6a7-4f64-bebd-eb0781a21a70"
-            }
-          ]
-        }
-      },
-      "links" : {
-        "self" : "/v1/triggers/917402ff-3f82-451c-892c-38f08175856a"
-      }
-    },
-    {
-      "type" : "triggers-module/trigger-manual",
-      "id" : "b8bb82f3-31e2-406a-96ed-f99ebaf9947a",
-      "attributes" : {
-        "name" : "Bubble Bath",
-        "comment" : null,
-        "enabled" : true
-      },
-      "relationships" : {
-        "actions" : {
-          "links" : {
-            "self" : "/v1/triggers/b8bb82f3-31e2-406a-96ed-f99ebaf9947a/relationships/actions",
-            "related" : {
-              "href" : "/v1/triggers/b8bb82f3-31e2-406a-96ed-f99ebaf9947a/actions",
-              "meta" : {
-                "count" : 3
-              }
-            }
-          },
-          "data" : [
-            {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "52aa8a35-1832-4317-be2c-8b8fffaae07f"
-            },
-            {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "7b6398e4-d26c-4cb1-ba0c-ed1b115a6cc0"
-            },
-            {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "7c14e872-e00a-432e-8b72-ad5679522cd4"
+              "type": "triggers-module/action-channel-property",
+              "id": "7c14e872-e00a-432e-8b72-ad5679522cd4"
             }
           ]
         },
-        "notifications" : {
-          "links" : {
-            "self" : "/v1/triggers/b8bb82f3-31e2-406a-96ed-f99ebaf9947a/relationships/notifications",
-            "related" : {
-              "href" : "/v1/triggers/b8bb82f3-31e2-406a-96ed-f99ebaf9947a/notifications",
-              "meta" : {
-                "count" : 0
+        "notifications": {
+          "links": {
+            "self": "/v1/triggers/b8bb82f3-31e2-406a-96ed-f99ebaf9947a/relationships/notifications",
+            "related": {
+              "href": "/v1/triggers/b8bb82f3-31e2-406a-96ed-f99ebaf9947a/notifications",
+              "meta": {
+                "count": 0
               }
             }
           },
-          "data" : []
+          "data": []
         }
       },
-      "links" : {
-        "self" : "/v1/triggers/b8bb82f3-31e2-406a-96ed-f99ebaf9947a"
+      "links": {
+        "self": "/v1/triggers/b8bb82f3-31e2-406a-96ed-f99ebaf9947a"
       }
     },
     {
-      "type" : "triggers-module/trigger-channel-property",
-      "id" : "bb268001-6db1-44f9-8014-cf2b7c284224",
-      "attributes" : {
-        "name" : "28bc0d38-2f7c-4a71-aa74-27b102f8df4c",
-        "comment" : "996213a4-d959-4f6c-b77c-f248ce8f8d84",
-        "enabled" : true,
-        "device" : "GB8F0Q",
-        "channel" : "4B8F0Q",
-        "property" : "J7pT0Q",
-        "operator" : "eq",
-        "operand" : "2"
+      "type": "triggers-module/trigger-manual",
+      "id": "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
+      "attributes": {
+        "name": "Good Night's Sleep",
+        "comment": null,
+        "enabled": true
       },
-      "relationships" : {
-        "actions" : {
-          "links" : {
-            "self" : "/v1/triggers/bb268001-6db1-44f9-8014-cf2b7c284224/relationships/actions",
-            "related" : {
-              "href" : "/v1/triggers/bb268001-6db1-44f9-8014-cf2b7c284224/actions",
-              "meta" : {
-                "count" : 1
+      "relationships": {
+        "actions": {
+          "links": {
+            "self": "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/relationships/actions",
+            "related": {
+              "href": "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions",
+              "meta": {
+                "count": 3
               }
             }
           },
-          "data" : [
+          "data": [
             {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "df5232be-45ec-49bb-af18-f138fd167ee6"
-            }
-          ]
-        }
-      },
-      "links" : {
-        "self" : "/v1/triggers/bb268001-6db1-44f9-8014-cf2b7c284224"
-      }
-    },
-    {
-      "type" : "triggers-module/trigger-manual",
-      "id" : "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
-      "attributes" : {
-        "name" : "Good Night's Sleep",
-        "comment" : null,
-        "enabled" : true
-      },
-      "relationships" : {
-        "actions" : {
-          "links" : {
-            "self" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/relationships/actions",
-            "related" : {
-              "href" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/actions",
-              "meta" : {
-                "count" : 3
-              }
-            }
-          },
-          "data" : [
-            {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "4aa84028-d8b7-4128-95b2-295763634aa4"
+              "type": "triggers-module/action-channel-property",
+              "id": "4aa84028-d8b7-4128-95b2-295763634aa4"
             },
             {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "827d61f7-5dcf-4cab-9662-f386f6fb0bce"
+              "type": "triggers-module/action-channel-property",
+              "id": "827d61f7-5dcf-4cab-9662-f386f6fb0bce"
             },
             {
-              "type" : "triggers-module/action-channel-property",
-              "id" : "d062ce8b-9543-4b9b-b6ca-51907ec0246a"
+              "type": "triggers-module/action-channel-property",
+              "id": "d062ce8b-9543-4b9b-b6ca-51907ec0246a"
             }
           ]
         },
-        "notifications" : {
-          "links" : {
-            "self" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/relationships/notifications",
-            "related" : {
-              "href" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/notifications",
-              "meta" : {
-                "count" : 2
+        "notifications": {
+          "links": {
+            "self": "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/relationships/notifications",
+            "related": {
+              "href": "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/notifications",
+              "meta": {
+                "count": 2
               }
             }
           },
-          "data" : [
+          "data": [
             {
-              "type" : "triggers-module/notification-email",
-              "id" : "05f28df9-5f19-4923-b3f8-b9090116dadc"
+              "type": "triggers-module/notification-email",
+              "id": "05f28df9-5f19-4923-b3f8-b9090116dadc"
             },
             {
-              "type" : "triggers-module/notification-sms",
-              "id" : "4fe1019c-f49e-4cbf-83e6-20b394e76317"
+              "type": "triggers-module/notification-sms",
+              "id": "4fe1019c-f49e-4cbf-83e6-20b394e76317"
             }
           ]
         }
       },
-      "links" : {
-        "self" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4"
+      "links": {
+        "self": "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4"
       }
     }
   ]

@@ -42,7 +42,7 @@ final class ActionRepositoryTest extends DbTestCase
 		$resultSet = $repository->getResultSet($findQuery);
 
 		Assert::type(DoctrineOrmQuery\ResultSet::class, $resultSet);
-		Assert::same(22, $resultSet->getTotalCount());
+		Assert::same(13, $resultSet->getTotalCount());
 	}
 
 }

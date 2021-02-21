@@ -17,13 +17,6 @@ return [
 		StatusCodeInterface::STATUS_CREATED,
 		__DIR__ . '/responses/triggers.createManual.json',
 	],
-	'createChannelProperty' => [
-		'/v1/triggers',
-		'Bearer ' . VALID_TOKEN,
-		file_get_contents(__DIR__ . '/requests/triggers.createChannelProperty.json'),
-		StatusCodeInterface::STATUS_CREATED,
-		__DIR__ . '/responses/triggers.createChannelProperty.json',
-	],
 
 	// Invalid responses
 	////////////////////

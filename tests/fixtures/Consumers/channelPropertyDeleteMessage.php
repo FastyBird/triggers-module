@@ -8,7 +8,7 @@ return [
 		ModulesMetadata\Constants::MESSAGE_BUS_CHANNELS_PROPERTY_DELETED_ENTITY_ROUTING_KEY,
 		Utils\ArrayHash::from([
 			'id'         => 'fe2badf6-2e85-4ef6-9009-fe247d473069',
-			'key'        => '9wWQ0Q',
+			'key'        => 'J0WQ0Q',
 			'identifier' => 'property-identifier',
 			'name'       => 'button',
 			'owner'      => '89ce7161-12dd-427e-9a35-92bc4390d98d',
@@ -16,15 +16,15 @@ return [
 		1,
 		[
 			'fb.bus.entity.deleted.trigger.action' => [
-				'id'       => '0dac7180-dfe1-4079-ba91-fec6eeccccdf',
+				'id'       => '52aa8a35-1832-4317-be2c-8b8fffaae07f',
 				'enabled'  => true,
-				'trigger'  => '402aabb9-b5a8-4f28-aad4-c7ec245831b2',
+				'value'    => 'on',
+				'trigger'  => 'b8bb82f3-31e2-406a-96ed-f99ebaf9947a',
 				'owner'    => null,
 				'type'     => 'channel-property',
 				'device'   => 'cB8F0Q',
 				'channel'  => 'zB8F0Q',
-				'property' => '9wWQ0Q',
-				'value'    => 'toggle',
+				'property' => 'J0WQ0Q',
 			],
 		],
 	],

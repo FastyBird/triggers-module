@@ -131,15 +131,6 @@ final class ChannelPropertyMessageConsumer implements ApplicationExchangeConsume
 	 */
 	private function clearProperties(string $property): void
 	{
-		$findQuery = new Queries\FindChannelPropertyTriggersQuery();
-		$findQuery->forProperty($property);
-
-		$triggers = $this->triggerRepository->findAllBy($findQuery, Entities\Triggers\ChannelPropertyTrigger::class);
-
-		foreach ($triggers as $trigger) {
-			$this->triggersManager->delete($trigger);
-		}
-
 		$findQuery = new Queries\FindActionsQuery();
 		$findQuery->forChannelProperty($property);
 
@@ -195,21 +186,6 @@ final class ChannelPropertyMessageConsumer implements ApplicationExchangeConsume
 				&& $condition->getOperand() === (string) $value
 			) {
 				$this->processCondition($condition);
-			}
-		}
-
-		$findQuery = new Queries\FindChannelPropertyTriggersQuery();
-		$findQuery->forProperty($property);
-
-		$triggers = $this->triggerRepository->findAllBy($findQuery, Entities\Triggers\ChannelPropertyTrigger::class);
-
-		/** @var Entities\Triggers\ChannelPropertyTrigger $trigger */
-		foreach ($triggers as $trigger) {
-			if (
-				$trigger->getOperator()->equalsValue(Types\ConditionOperatorType::OPERATOR_VALUE_EQUAL)
-				&& $trigger->getOperand() === (string) $value
-			) {
-				$this->processTrigger($trigger);
 			}
 		}
 	}

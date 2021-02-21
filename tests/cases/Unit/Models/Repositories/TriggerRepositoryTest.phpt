@@ -31,18 +31,6 @@ final class TriggerRepositoryTest extends DbTestCase
 		Assert::true(is_object($entity));
 		Assert::type(Entities\Triggers\Trigger::class, $entity);
 		Assert::same('Good Evening', $entity->getName());
-
-		$findQuery = new Queries\FindChannelPropertyTriggersQuery();
-		$findQuery->forProperty('k7pT0Q');
-
-		/** @var Entities\Triggers\IChannelPropertyTrigger $entity */
-		$entity = $repository->findOneBy($findQuery);
-
-		Assert::true(is_object($entity));
-		Assert::type(Entities\Triggers\ChannelPropertyTrigger::class, $entity);
-		Assert::same('cB8F0Q', $entity->getDevice());
-		Assert::same('zB8F0Q', $entity->getChannel());
-		Assert::same('k7pT0Q', $entity->getProperty());
 	}
 
 	public function testReadResultSet(): void
@@ -55,7 +43,7 @@ final class TriggerRepositoryTest extends DbTestCase
 		$resultSet = $repository->getResultSet($findQuery);
 
 		Assert::type(DoctrineOrmQuery\ResultSet::class, $resultSet);
-		Assert::same(10, $resultSet->getTotalCount());
+		Assert::same(6, $resultSet->getTotalCount());
 	}
 
 }

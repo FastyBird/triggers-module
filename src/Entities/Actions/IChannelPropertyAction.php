@@ -41,9 +41,4 @@ interface IChannelPropertyAction extends IAction
 	 */
 	public function getProperty(): string;
 
-	/**
-	 * @return string
-	 */
-	public function getValue(): string;
-
 }

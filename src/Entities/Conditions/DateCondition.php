@@ -64,17 +64,6 @@ class DateCondition extends Condition implements IDateCondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function toArray(): array
-	{
-		return array_merge(parent::toArray(), [
-			'type' => 'date',
-			'date' => $this->getDate()->format(DATE_ATOM),
-		]);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getDate(): DateTimeInterface
 	{
 		return $this->date;
@@ -86,6 +75,17 @@ class DateCondition extends Condition implements IDateCondition
 	public function setDate(DateTimeInterface $date): void
 	{
 		$this->date = $date;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function toArray(): array
+	{
+		return array_merge(parent::toArray(), [
+			'type' => 'date',
+			'date' => $this->getDate()->format(DATE_ATOM),
+		]);
 	}
 
 }

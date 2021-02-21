@@ -32,6 +32,11 @@ interface ICondition extends DatabaseEntities\IEntity,
 {
 
 	/**
+	 * @return Entities\Triggers\IAutomaticTrigger
+	 */
+	public function getTrigger(): Entities\Triggers\IAutomaticTrigger;
+
+	/**
 	 * @param bool $enabled
 	 *
 	 * @return void
@@ -42,11 +47,6 @@ interface ICondition extends DatabaseEntities\IEntity,
 	 * @return bool
 	 */
 	public function isEnabled(): bool;
-
-	/**
-	 * @return Entities\Triggers\IAutomaticTrigger
-	 */
-	public function getTrigger(): Entities\Triggers\IAutomaticTrigger;
 
 	/**
 	 * @return mixed[]

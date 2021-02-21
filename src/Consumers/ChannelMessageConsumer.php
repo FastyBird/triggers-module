@@ -107,15 +107,6 @@ final class ChannelMessageConsumer implements ApplicationExchangeConsumer\IConsu
 	 */
 	private function clearChannels(string $channel): void
 	{
-		$findQuery = new Queries\FindChannelPropertyTriggersQuery();
-		$findQuery->forChannel($channel);
-
-		$triggers = $this->triggerRepository->findAllBy($findQuery, Entities\Triggers\ChannelPropertyTrigger::class);
-
-		foreach ($triggers as $trigger) {
-			$this->triggersManager->delete($trigger);
-		}
-
 		$findQuery = new Queries\FindActionsQuery();
 		$findQuery->forChannel($channel);
 

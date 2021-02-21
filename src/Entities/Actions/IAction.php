@@ -32,6 +32,11 @@ interface IAction extends DatabaseEntities\IEntity,
 {
 
 	/**
+	 * @return Entities\Triggers\ITrigger
+	 */
+	public function getTrigger(): Entities\Triggers\ITrigger;
+
+	/**
 	 * @param bool $enabled
 	 *
 	 * @return void
@@ -44,9 +49,9 @@ interface IAction extends DatabaseEntities\IEntity,
 	public function isEnabled(): bool;
 
 	/**
-	 * @return Entities\Triggers\ITrigger
+	 * @return string
 	 */
-	public function getTrigger(): Entities\Triggers\ITrigger;
+	public function getValue(): string;
 
 	/**
 	 * @return mixed[]

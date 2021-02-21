@@ -78,18 +78,6 @@ class TimeCondition extends Condition implements ITimeCondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function toArray(): array
-	{
-		return array_merge(parent::toArray(), [
-			'type' => 'time',
-			'time' => $this->getTime()->format(DATE_ATOM),
-			'days' => $this->getDays(),
-		]);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getTime(): DateTimeInterface
 	{
 		return $this->time;
@@ -137,6 +125,18 @@ class TimeCondition extends Condition implements ITimeCondition
 		}
 
 		$this->days = (array) $days;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function toArray(): array
+	{
+		return array_merge(parent::toArray(), [
+			'type' => 'time',
+			'time' => $this->getTime()->format(DATE_ATOM),
+			'days' => $this->getDays(),
+		]);
 	}
 
 }

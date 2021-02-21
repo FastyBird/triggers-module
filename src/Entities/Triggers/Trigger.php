@@ -38,9 +38,8 @@ use Throwable;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="trigger_type", type="string", length=20)
  * @ORM\DiscriminatorMap({
- *    "automatic"        = "FastyBird\TriggersModule\Entities\Triggers\AutomaticTrigger",
- *    "manual"           = "FastyBird\TriggersModule\Entities\Triggers\ManualTrigger",
- *    "channel_property" = "FastyBird\TriggersModule\Entities\Triggers\ChannelPropertyTrigger"
+ *    "automatic"  = "FastyBird\TriggersModule\Entities\Triggers\AutomaticTrigger",
+ *    "manual"     = "FastyBird\TriggersModule\Entities\Triggers\ManualTrigger"
  * })
  * @ORM\MappedSuperclass
  */
@@ -118,6 +117,54 @@ abstract class Trigger implements ITrigger
 
 		$this->actions = new Common\Collections\ArrayCollection();
 		$this->notifications = new Common\Collections\ArrayCollection();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getName(): string
+	{
+		return $this->name;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setName(string $name): void
+	{
+		$this->name = $name;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getComment(): ?string
+	{
+		return $this->comment;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setComment(?string $comment = null): void
+	{
+		$this->comment = $comment;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function isEnabled(): bool
+	{
+		return $this->enabled;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setEnabled(bool $enabled): void
+	{
+		$this->enabled = $enabled;
 	}
 
 	/**
@@ -256,54 +303,6 @@ abstract class Trigger implements ITrigger
 			'enabled' => $this->isEnabled(),
 			'owner'   => $this->getOwnerId(),
 		];
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getName(): string
-	{
-		return $this->name;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function setName(string $name): void
-	{
-		$this->name = $name;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getComment(): ?string
-	{
-		return $this->comment;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function setComment(?string $comment = null): void
-	{
-		$this->comment = $comment;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function isEnabled(): bool
-	{
-		return $this->enabled;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function setEnabled(bool $enabled): void
-	{
-		$this->enabled = $enabled;
 	}
 
 }

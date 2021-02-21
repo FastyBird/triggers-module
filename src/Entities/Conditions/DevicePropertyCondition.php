@@ -83,18 +83,6 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 	/**
 	 * {@inheritDoc}
 	 */
-	public function toArray(): array
-	{
-		return array_merge(parent::toArray(), [
-			'type'     => 'device-property',
-			'device'   => $this->getDevice(),
-			'property' => $this->getProperty(),
-		]);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getDevice(): string
 	{
 		return $this->device;
@@ -106,6 +94,18 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 	public function getProperty(): string
 	{
 		return $this->property;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function toArray(): array
+	{
+		return array_merge(parent::toArray(), [
+			'type'     => 'device-property',
+			'device'   => $this->getDevice(),
+			'property' => $this->getProperty(),
+		]);
 	}
 
 }
