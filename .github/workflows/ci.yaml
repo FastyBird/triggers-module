@@ -229,6 +229,12 @@ jobs:
           mysql database: "testdb"
           mysql root password: "root"
 
+      - name: "Setup PHP with Xdebug"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "${{ matrix.php-version }}"
+          coverage: "xdebug"
+
       - name: "Setup PHP cache environment"
         id: "extcache"
         uses: "shivammathur/cache-extensions@v1"
@@ -251,9 +257,6 @@ jobs:
           extensions: "${{ env.extensions }}"
           tools: "composer:${{ env.composer-version }}"
           coverage: "${{ env.coverage }}"
-
-      - name: "Install Xdebug"
-        uses: "MilesChou/docker-xdebug@master"
 
       - name: "Setup problem matchers for PHP"
         run: 'echo "::add-matcher::${{ runner.tool_cache }}/php.json"'
