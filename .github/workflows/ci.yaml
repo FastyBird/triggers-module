@@ -115,9 +115,6 @@ jobs:
           tools: "composer:${{ env.composer-version }}"
           coverage: "${{ env.coverage }}"
 
-      - name: "Install Xdebug"
-        uses: "MilesChou/docker-xdebug@master"
-
       - name: "Setup problem matchers for PHP"
         run: 'echo "::add-matcher::${{ runner.tool_cache }}/php.json"'
 
@@ -254,6 +251,9 @@ jobs:
           extensions: "${{ env.extensions }}"
           tools: "composer:${{ env.composer-version }}"
           coverage: "${{ env.coverage }}"
+
+      - name: "Install Xdebug"
+        uses: "MilesChou/docker-xdebug@master"
 
       - name: "Setup problem matchers for PHP"
         run: 'echo "::add-matcher::${{ runner.tool_cache }}/php.json"'
