@@ -1,11 +1,11 @@
 # FastyBird triggers module
 
 [![Build Status](https://badgen.net/github/checks/FastyBird/triggers-module/master?cache=300&style=flast-square)](https://github.com/FastyBird/triggers-module/actions)
-[![Code coverage](https://img.shields.io/coveralls/FastyBird/triggers-module.svg?style=flat-square)](https://coveralls.io/r/FastyBird/triggers-module)
-![PHP](https://img.shields.io/packagist/php-v/fastybird/triggers-module?style=flat-square)
-[![Licence](https://img.shields.io/packagist/l/FastyBird/triggers-module.svg?style=flat-square)](https://packagist.org/packages/FastyBird/triggers-module)
-[![Downloads total](https://img.shields.io/packagist/dt/FastyBird/triggers-module.svg?style=flat-square)](https://packagist.org/packages/FastyBird/triggers-module)
-[![Latest stable](https://img.shields.io/packagist/v/FastyBird/triggers-module.svg?style=flat-square)](https://packagist.org/packages/FastyBird/triggers-module)
+[![Code coverage](https://badgen.net/coveralls/c/github/FastyBird/triggers-module?cache=300&style=flast-square)](https://coveralls.io/r/FastyBird/triggers-module)
+![PHP](https://badgen.net/packagist/php/FastyBird/triggers-module?cache=300&style=flast-square)
+[![Licence](https://badgen.net/packagist/license/FastyBird/triggers-module?cache=300&style=flast-square)](https://packagist.org/packages/FastyBird/triggers-module)
+[![Downloads total](https://badgen.net/packagist/dt/FastyBird/triggers-module?cache=300&style=flast-square)](https://packagist.org/packages/FastyBird/triggers-module)
+[![Latest stable](https://badgen.net/packagist/v/FastyBird/triggers-module/latest?cache=300&style=flast-square)](https://packagist.org/packages/FastyBird/triggers-module)
 [![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat-square)](https://github.com/phpstan/phpstan)
 
 ## What is FastyBird triggers module?
