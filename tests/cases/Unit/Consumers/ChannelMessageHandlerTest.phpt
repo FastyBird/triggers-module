@@ -47,7 +47,9 @@ final class ChannelMessageHandlerTest extends DbTestCase
 		$publisher = Mockery::mock(ApplicationExchangePublisher\PublisherProxy::class);
 		$publisher
 			->shouldReceive('publish')
-			->withArgs(function (string $routingKey, array $data) use ($fixture): bool {
+			->withArgs(function (string $origin, string $routingKey, array $data) use ($fixture): bool {
+				Assert::same(ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN, $origin);
+
 				if (Utils\Strings::contains($routingKey, 'created')) {
 					unset($data['id']);
 				}

@@ -4,6 +4,7 @@ namespace Tests\Cases;
 
 use Doctrine\ORM;
 use FastyBird\ApplicationExchange\Publisher as ApplicationExchangePublisher;
+use FastyBird\ModulesMetadata;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Subscribers;
 use Mockery;
@@ -37,7 +38,9 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 		$publisher = Mockery::mock(ApplicationExchangePublisher\IPublisher::class);
 		$publisher
 			->shouldReceive('publish')
-			->withArgs(function (string $key, array $data): bool {
+			->withArgs(function (string $origin, string $key, array $data): bool {
+				Assert::same(ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN, $origin);
+
 				unset($data['id']);
 
 				Assert::same('fb.bus.entity.created.trigger', $key);
@@ -126,7 +129,9 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 		$publisher = Mockery::mock(ApplicationExchangePublisher\IPublisher::class);
 		$publisher
 			->shouldReceive('publish')
-			->withArgs(function (string $key, array $data): bool {
+			->withArgs(function (string $origin, string $key, array $data): bool {
+				Assert::same(ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN, $origin);
+
 				unset($data['id']);
 
 				Assert::same('fb.bus.entity.updated.trigger', $key);
@@ -167,7 +172,9 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 		$publisher = Mockery::mock(ApplicationExchangePublisher\IPublisher::class);
 		$publisher
 			->shouldReceive('publish')
-			->withArgs(function (string $key, array $data): bool {
+			->withArgs(function (string $origin, string $key, array $data): bool {
+				Assert::same(ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN, $origin);
+
 				unset($data['id']);
 
 				Assert::same('fb.bus.entity.deleted.trigger', $key);

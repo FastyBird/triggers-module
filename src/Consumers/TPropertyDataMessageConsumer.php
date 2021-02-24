@@ -125,6 +125,7 @@ trait TPropertyDataMessageConsumer
 		foreach ($trigger->getActions() as $action) {
 			if ($action instanceof Entities\Actions\ChannelPropertyAction) {
 				$this->publisher->publish(
+					ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN,
 					ModulesMetadata\Constants::MESSAGE_BUS_CHANNELS_PROPERTIES_DATA_ROUTING_KEY,
 					[
 						'device'   => $action->getDevice(),

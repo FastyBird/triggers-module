@@ -20,6 +20,7 @@ use Doctrine\ORM;
 use Doctrine\Persistence;
 use FastyBird\ApplicationExchange\Publisher as ApplicationExchangePublisher;
 use FastyBird\Database\Entities as DatabaseEntities;
+use FastyBird\ModulesMetadata;
 use FastyBird\TriggersModule;
 use IPub\DoctrineCrud;
 use Nette;
@@ -128,7 +129,11 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 		}
 
 		if ($publishRoutingKey !== null) {
-			$this->publisher->publish($publishRoutingKey, $entity->toArray());
+			$this->publisher->publish(
+				ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN,
+				$publishRoutingKey,
+				$entity->toArray()
+			);
 		}
 	}
 

@@ -35,7 +35,9 @@ final class ChannelPropertyMessageHandlerTest extends DbTestCase
 		$publisher = Mockery::mock(ApplicationExchangePublisher\PublisherProxy::class);
 		$publisher
 			->shouldReceive('publish')
-			->withArgs(function (string $routingKey, array $data) use ($fixture): bool {
+			->withArgs(function (string $origin, string $routingKey, array $data) use ($fixture): bool {
+				Assert::same(ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN, $origin);
+
 				if (Utils\Strings::contains($routingKey, 'created')) {
 					unset($data['id']);
 				}
@@ -82,7 +84,9 @@ final class ChannelPropertyMessageHandlerTest extends DbTestCase
 		$publisher = Mockery::mock(ApplicationExchangePublisher\PublisherProxy::class);
 		$publisher
 			->shouldReceive('publish')
-			->withArgs(function (string $routingKey, array $data) use ($fixture): bool {
+			->withArgs(function (string $origin, string $routingKey, array $data) use ($fixture): bool {
+				Assert::same(ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN, $origin);
+
 				if (Utils\Strings::contains($routingKey, 'created')) {
 					unset($data['id']);
 				}
@@ -128,7 +132,9 @@ final class ChannelPropertyMessageHandlerTest extends DbTestCase
 		$publisher = Mockery::mock(ApplicationExchangePublisher\PublisherProxy::class);
 		$publisher
 			->shouldReceive('publish')
-			->withArgs(function (string $routingKey, array $data): bool {
+			->withArgs(function (string $origin, string $routingKey, array $data): bool {
+				Assert::same(ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN, $origin);
+
 				Assert::same(ModulesMetadata\Constants::MESSAGE_BUS_CHANNELS_PROPERTIES_DATA_ROUTING_KEY, $routingKey);
 				Assert::same(
 					[
