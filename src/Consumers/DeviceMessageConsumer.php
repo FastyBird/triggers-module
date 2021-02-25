@@ -134,7 +134,7 @@ final class DeviceMessageConsumer implements ApplicationExchangeConsumer\IConsum
 			$this->conditionsManager->delete($condition);
 		}
 
-		$this->logger->info('[FB:TRIGGERS_NODE:CONSUMER] Successfully consumed device entity message');
+		$this->logger->info('[FB:TRIGGERS_MODULE:CONSUMER] Successfully consumed device entity message');
 	}
 
 }

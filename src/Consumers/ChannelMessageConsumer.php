@@ -125,7 +125,7 @@ final class ChannelMessageConsumer implements ApplicationExchangeConsumer\IConsu
 			$this->conditionsManager->delete($condition);
 		}
 
-		$this->logger->info('[FB:TRIGGERS_NODE:CONSUMER] Successfully consumed channel entity message');
+		$this->logger->info('[FB:TRIGGERS_MODULE:CONSUMER] Successfully consumed channel entity message');
 	}
 
 }

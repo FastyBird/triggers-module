@@ -149,7 +149,7 @@ final class ChannelPropertyMessageConsumer implements ApplicationExchangeConsume
 			$this->conditionsManager->delete($condition);
 		}
 
-		$this->logger->info('[FB:TRIGGERS_NODE:CONSUMER] Successfully consumed channel property data message');
+		$this->logger->info('[FB:TRIGGERS_MODULE:CONSUMER] Successfully consumed channel property data message');
 	}
 
 	/**
