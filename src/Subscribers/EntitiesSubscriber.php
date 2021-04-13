@@ -81,7 +81,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 		$entity = $eventArgs->getObject();
 
 		// Check for valid entity
-		if (!$entity instanceof DatabaseEntities\IEntity) {
+		if (!$entity instanceof DatabaseEntities\IEntity || !$this->validateNamespace($entity)) {
 			return;
 		}
 
@@ -181,6 +181,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 		// Check for valid entity
 		if (
 			!$entity instanceof DatabaseEntities\IEntity
+			|| !$this->validateNamespace($entity)
 			|| $uow->isScheduledForDelete($entity)
 		) {
 			return;
@@ -211,8 +212,8 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 			$processedEntities[] = $hash;
 
 			// Check for valid entity
-			if (!$entity instanceof DatabaseEntities\IEntity) {
-				continue;
+			if (!$entity instanceof DatabaseEntities\IEntity || !$this->validateNamespace($entity)) {
+				return;
 			}
 
 			$processEntities[] = $entity;
@@ -254,6 +255,18 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 		}
 
 		return substr($class, $pos + Persistence\Proxy::MARKER_LENGTH + 2);
+	}
+
+	/**
+	 * @param object $entity
+	 *
+	 * @return bool
+	 */
+	private function validateNamespace(object $entity): bool
+	{
+		$rc = new ReflectionClass($entity);
+
+		return str_starts_with($rc->getNamespaceName(), 'FastyBird\TriggersModule');
 	}
 
 }
