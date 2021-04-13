@@ -24,6 +24,8 @@ use FastyBird\ModulesMetadata;
 use FastyBird\TriggersModule;
 use IPub\DoctrineCrud;
 use Nette;
+use ReflectionClass;
+use ReflectionException;
 
 /**
  * Doctrine entities events
@@ -264,9 +266,14 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 	 */
 	private function validateNamespace(object $entity): bool
 	{
-		$rc = new ReflectionClass($entity);
+		try {
+			$rc = new ReflectionClass($entity);
 
-		return str_starts_with($rc->getNamespaceName(), 'FastyBird\TriggersModule');
+		} catch (ReflectionException $ex) {
+			return false;
+		}
+
+		return str_starts_with($rc->getNamespaceName(), 'FastyBird\DevicesModule');
 	}
 
 }
