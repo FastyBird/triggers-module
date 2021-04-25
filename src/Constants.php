@@ -38,16 +38,6 @@ final class Constants
 	public const ROUTE_NAME_TRIGGER_RELATIONSHIP = 'trigger.relationship';
 
 	/**
-	 * Data types
-	 */
-	public const DATA_TYPE_INTEGER = 'integer';
-	public const DATA_TYPE_FLOAT = 'float';
-	public const DATA_TYPE_BOOLEAN = 'boolean';
-	public const DATA_TYPE_STRING = 'string';
-	public const DATA_TYPE_ENUM = 'enum';
-	public const DATA_TYPE_COLOR = 'color';
-
-	/**
 	 * Message bus routing keys mapping
 	 */
 	public const MESSAGE_BUS_CREATED_ENTITIES_ROUTING_KEYS_MAPPING = [

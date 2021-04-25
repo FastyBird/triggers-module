@@ -17,9 +17,9 @@ namespace FastyBird\TriggersModule\Queries;
 
 use Closure;
 use Doctrine\ORM;
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Exceptions;
-use FastyBird\TriggersModule\Types;
 use IPub\DoctrineOrmQuery;
 use Ramsey\Uuid;
 
@@ -111,9 +111,9 @@ class FindConditionsQuery extends DoctrineOrmQuery\QueryObject
 	 */
 	public function withPropertyValue(
 		string $value,
-		string $operator = Types\ConditionOperatorType::OPERATOR_VALUE_EQUAL
+		string $operator = ModulesMetadataTypes\TriggersConditionOperatorType::OPERATOR_VALUE_EQUAL
 	): void {
-		if (!Types\ConditionOperatorType::isValidValue($operator)) {
+		if (!ModulesMetadataTypes\TriggersConditionOperatorType::isValidValue($operator)) {
 			throw new Exceptions\InvalidArgumentException('Invalid operator given');
 		}
 
@@ -146,9 +146,9 @@ class FindConditionsQuery extends DoctrineOrmQuery\QueryObject
 					)
 					->setParameter('value', $value)
 					->setParameter('previousValue', $previousValue)
-					->setParameter('operatorAbove', Types\ConditionOperatorType::OPERATOR_VALUE_ABOVE)
-					->setParameter('operatorBelow', Types\ConditionOperatorType::OPERATOR_VALUE_BELOW)
-					->setParameter('operatorEqual', Types\ConditionOperatorType::OPERATOR_VALUE_EQUAL);
+					->setParameter('operatorAbove', ModulesMetadataTypes\TriggersConditionOperatorType::OPERATOR_VALUE_ABOVE)
+					->setParameter('operatorBelow', ModulesMetadataTypes\TriggersConditionOperatorType::OPERATOR_VALUE_BELOW)
+					->setParameter('operatorEqual', ModulesMetadataTypes\TriggersConditionOperatorType::OPERATOR_VALUE_EQUAL);
 
 			} else {
 				$qb
@@ -160,9 +160,9 @@ class FindConditionsQuery extends DoctrineOrmQuery\QueryObject
 						. '(cdc.operand = :value AND cdc.operator = :operatorEqual)'
 					)
 					->setParameter('value', $value)
-					->setParameter('operatorAbove', Types\ConditionOperatorType::OPERATOR_VALUE_ABOVE)
-					->setParameter('operatorBelow', Types\ConditionOperatorType::OPERATOR_VALUE_BELOW)
-					->setParameter('operatorEqual', Types\ConditionOperatorType::OPERATOR_VALUE_EQUAL);
+					->setParameter('operatorAbove', ModulesMetadataTypes\TriggersConditionOperatorType::OPERATOR_VALUE_ABOVE)
+					->setParameter('operatorBelow', ModulesMetadataTypes\TriggersConditionOperatorType::OPERATOR_VALUE_BELOW)
+					->setParameter('operatorEqual', ModulesMetadataTypes\TriggersConditionOperatorType::OPERATOR_VALUE_EQUAL);
 			}
 		};
 	}
@@ -180,7 +180,7 @@ class FindConditionsQuery extends DoctrineOrmQuery\QueryObject
 				->andWhere('cdc.operand >= :previousValue AND cdc.operand < :value AND cdc.operator = :operator')
 				->setParameter('value', $value)
 				->setParameter('previousValue', $previousValue)
-				->setParameter('operator', Types\ConditionOperatorType::OPERATOR_VALUE_ABOVE);
+				->setParameter('operator', ModulesMetadataTypes\TriggersConditionOperatorType::OPERATOR_VALUE_ABOVE);
 		};
 	}
 
@@ -197,7 +197,7 @@ class FindConditionsQuery extends DoctrineOrmQuery\QueryObject
 				->andWhere('cdc.operand <= :previousValue AND cdc.operand > :value AND cdc.operator = :operator')
 				->setParameter('value', $value)
 				->setParameter('previousValue', $previousValue)
-				->setParameter('operator', Types\ConditionOperatorType::OPERATOR_VALUE_BELOW);
+				->setParameter('operator', ModulesMetadataTypes\TriggersConditionOperatorType::OPERATOR_VALUE_BELOW);
 		};
 	}
 

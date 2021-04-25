@@ -17,7 +17,7 @@ namespace FastyBird\TriggersModule\Consumers;
 
 use FastyBird\ApplicationExchange\Publisher as ApplicationExchangePublisher;
 use FastyBird\ModulesMetadata;
-use FastyBird\TriggersModule;
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use Psr\Log;
 
@@ -142,28 +142,27 @@ trait TPropertyDataMessageConsumer
 
 	/**
 	 * @param mixed $value
-	 * @param string|null $dataType
+	 * @param ModulesMetadataTypes\DataTypeType|null $dataType
 	 *
 	 * @return int|float|string|bool|null
 	 */
-	protected function formatValue($value, ?string $dataType)
+	protected function formatValue($value, ?ModulesMetadataTypes\DataTypeType $dataType)
 	{
-		switch ($dataType) {
-			case TriggersModule\Constants::DATA_TYPE_INTEGER:
-				return (int) $value;
-
-			case TriggersModule\Constants::DATA_TYPE_FLOAT:
-				return (float) $value;
-
-			case TriggersModule\Constants::DATA_TYPE_BOOLEAN:
-				return (bool) $value;
-
-			case TriggersModule\Constants::DATA_TYPE_STRING:
-			case TriggersModule\Constants::DATA_TYPE_ENUM:
-			case TriggersModule\Constants::DATA_TYPE_COLOR:
-			default:
-				return $value;
+		if ($dataType === null) {
+			return $value;
 		}
+
+		if ($dataType->isInteger()) {
+			return (int) $value;
+
+		} elseif ($dataType->equalsValue(ModulesMetadataTypes\DataTypeType::DATA_TYPE_FLOAT)) {
+			return (float) $value;
+
+		} elseif ($dataType->equalsValue(ModulesMetadataTypes\DataTypeType::DATA_TYPE_BOOLEAN)) {
+			return (bool) $value;
+		}
+
+		return $value;
 	}
 
 }

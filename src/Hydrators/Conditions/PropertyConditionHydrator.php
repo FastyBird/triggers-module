@@ -16,7 +16,7 @@
 namespace FastyBird\TriggersModule\Hydrators\Conditions;
 
 use FastyBird\JsonApi\Exceptions as JsonApiExceptions;
-use FastyBird\TriggersModule\Types;
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use Fig\Http\Message\StatusCodeInterface;
 use IPub\JsonAPIDocument;
 
@@ -91,13 +91,13 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 	/**
 	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes
 	 *
-	 * @return Types\ConditionOperatorType
+	 * @return ModulesMetadataTypes\TriggersConditionOperatorType
 	 *
 	 * @throws JsonApiExceptions\IJsonApiException
 	 */
 	protected function hydrateOperatorAttribute(
 		JsonAPIDocument\Objects\IStandardObject $attributes
-	): Types\ConditionOperatorType {
+	): ModulesMetadataTypes\TriggersConditionOperatorType {
 		// Condition operator have to be set
 		if (!$attributes->has('operator') || $attributes->get('operator') === '') {
 			throw new JsonApiExceptions\JsonApiErrorException(
@@ -110,7 +110,7 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 			);
 
 			// ...and have to be valid value
-		} elseif (!Types\ConditionOperatorType::isValidValue($attributes->get('operator'))) {
+		} elseif (!ModulesMetadataTypes\TriggersConditionOperatorType::isValidValue($attributes->get('operator'))) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
 				$this->translator->translate('messages.invalidOperator.heading'),
@@ -121,7 +121,7 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 			);
 		}
 
-		return Types\ConditionOperatorType::get($attributes->get('operator'));
+		return ModulesMetadataTypes\TriggersConditionOperatorType::get($attributes->get('operator'));
 	}
 
 	/**

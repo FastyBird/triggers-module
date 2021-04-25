@@ -16,8 +16,8 @@
 namespace FastyBird\TriggersModule\Entities\Conditions;
 
 use Doctrine\ORM\Mapping as ORM;
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\TriggersModule\Entities;
-use FastyBird\TriggersModule\Types;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use Ramsey\Uuid;
 use Throwable;
@@ -59,7 +59,7 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 	/**
 	 * @param string $device
 	 * @param string $property
-	 * @param Types\ConditionOperatorType $operator
+	 * @param ModulesMetadataTypes\TriggersConditionOperatorType $operator
 	 * @param string $operand
 	 * @param Entities\Triggers\IAutomaticTrigger $trigger
 	 * @param Uuid\UuidInterface|null $id
@@ -69,7 +69,7 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 	public function __construct(
 		string $device,
 		string $property,
-		Types\ConditionOperatorType $operator,
+		ModulesMetadataTypes\TriggersConditionOperatorType $operator,
 		string $operand,
 		Entities\Triggers\IAutomaticTrigger $trigger,
 		?Uuid\UuidInterface $id = null

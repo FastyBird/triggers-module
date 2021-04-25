@@ -17,8 +17,8 @@ namespace FastyBird\TriggersModule\Entities\Conditions;
 
 use Consistence\Doctrine\Enum\EnumAnnotation as Enum;
 use Doctrine\ORM\Mapping as ORM;
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\TriggersModule\Entities;
-use FastyBird\TriggersModule\Types;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use Ramsey\Uuid;
 use Throwable;
@@ -30,10 +30,10 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 {
 
 	/**
-	 * @var Types\ConditionOperatorType
+	 * @var ModulesMetadataTypes\TriggersConditionOperatorType
 	 *
 	 * @IPubDoctrine\Crud(is={"required", "writable"})
-	 * @Enum(class=Types\ConditionOperatorType::class)
+	 * @Enum(class=ModulesMetadataTypes\TriggersConditionOperatorType::class)
 	 * @ORM\Column(type="string_enum", name="condition_operator", length=15, nullable=true)
 	 */
 	protected $operator;
@@ -47,7 +47,7 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	protected string $operand;
 
 	/**
-	 * @param Types\ConditionOperatorType $operator
+	 * @param ModulesMetadataTypes\TriggersConditionOperatorType $operator
 	 * @param string $operand
 	 * @param Entities\Triggers\IAutomaticTrigger $trigger
 	 * @param Uuid\UuidInterface|null $id
@@ -55,7 +55,7 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	 * @throws Throwable
 	 */
 	public function __construct(
-		Types\ConditionOperatorType $operator,
+		ModulesMetadataTypes\TriggersConditionOperatorType $operator,
 		string $operand,
 		Entities\Triggers\IAutomaticTrigger $trigger,
 		?Uuid\UuidInterface $id = null
@@ -69,7 +69,7 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getOperator(): Types\ConditionOperatorType
+	public function getOperator(): ModulesMetadataTypes\TriggersConditionOperatorType
 	{
 		return $this->operator;
 	}
@@ -77,7 +77,7 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setOperator(Types\ConditionOperatorType $operator): void
+	public function setOperator(ModulesMetadataTypes\TriggersConditionOperatorType $operator): void
 	{
 		$this->operator = $operator;
 	}

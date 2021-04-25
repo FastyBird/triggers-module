@@ -18,10 +18,10 @@ namespace FastyBird\TriggersModule\Consumers;
 use FastyBird\ApplicationExchange\Consumer as ApplicationExchangeConsumer;
 use FastyBird\ApplicationExchange\Publisher as ApplicationExchangePublisher;
 use FastyBird\ModulesMetadata;
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Models;
 use FastyBird\TriggersModule\Queries;
-use FastyBird\TriggersModule\Types;
 use Nette;
 use Nette\Utils;
 use Psr\Log;
@@ -98,7 +98,7 @@ final class DevicePropertyMessageConsumer implements ApplicationExchangeConsumer
 					$message->offsetGet('key'),
 					$message->offsetGet('value'),
 					$message->offsetExists('previous_value') ? $message->offsetGet('previous_value') : null,
-					$message->offsetGet('data_type')
+					ModulesMetadataTypes\DataTypeType::isValidValue($message->offsetGet('data_type')) ? ModulesMetadataTypes\DataTypeType::get($message->offsetGet('data_type')) : null
 				);
 			}
 		}
@@ -127,7 +127,7 @@ final class DevicePropertyMessageConsumer implements ApplicationExchangeConsumer
 	 * @param string $property
 	 * @param mixed $value
 	 * @param mixed|null $previousValue
-	 * @param string|null $dataType
+	 * @param ModulesMetadataTypes\DataTypeType|null $dataType
 	 *
 	 * @return void
 	 */
@@ -135,7 +135,7 @@ final class DevicePropertyMessageConsumer implements ApplicationExchangeConsumer
 		string $property,
 		$value,
 		$previousValue = null,
-		?string $dataType = null
+		?ModulesMetadataTypes\DataTypeType $dataType = null
 	): void {
 		$value = $this->formatValue($value, $dataType);
 		$previousValue = $this->formatValue($previousValue, $dataType);
@@ -153,7 +153,7 @@ final class DevicePropertyMessageConsumer implements ApplicationExchangeConsumer
 		/** @var Entities\Conditions\DevicePropertyCondition $condition */
 		foreach ($conditions as $condition) {
 			if (
-				$condition->getOperator()->equalsValue(Types\ConditionOperatorType::OPERATOR_VALUE_EQUAL)
+				$condition->getOperator()->equalsValue(ModulesMetadataTypes\TriggersConditionOperatorType::OPERATOR_VALUE_EQUAL)
 				&& $condition->getOperand() === $value
 			) {
 				$this->processCondition($condition);

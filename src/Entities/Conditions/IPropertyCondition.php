@@ -15,7 +15,7 @@
 
 namespace FastyBird\TriggersModule\Entities\Conditions;
 
-use FastyBird\TriggersModule\Types;
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 
 /**
  * Device or channel property condition entity interface
@@ -29,16 +29,16 @@ interface IPropertyCondition extends ICondition
 {
 
 	/**
-	 * @param Types\ConditionOperatorType $operator
+	 * @param ModulesMetadataTypes\TriggersConditionOperatorType $operator
 	 *
 	 * @return void
 	 */
-	public function setOperator(Types\ConditionOperatorType $operator): void;
+	public function setOperator(ModulesMetadataTypes\TriggersConditionOperatorType $operator): void;
 
 	/**
-	 * @return Types\ConditionOperatorType
+	 * @return ModulesMetadataTypes\TriggersConditionOperatorType
 	 */
-	public function getOperator(): Types\ConditionOperatorType;
+	public function getOperator(): ModulesMetadataTypes\TriggersConditionOperatorType;
 
 	/**
 	 * @param string $operand
