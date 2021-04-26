@@ -16,17 +16,17 @@ final class ConditionOperatorTypeTest extends BaseTestCase
 
 	public function testCreateOperator(): void
 	{
-		$operatorType = ModulesMetadataTypes\TriggersConditionOperatorType::get(ModulesMetadataTypes\TriggersConditionOperatorType::OPERATOR_VALUE_EQUAL);
+		$operatorType = ModulesMetadataTypes\TriggerConditionOperatorType::get(ModulesMetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_EQUAL);
 
-		Assert::type(ModulesMetadataTypes\TriggersConditionOperatorType::class, $operatorType);
+		Assert::type(ModulesMetadataTypes\TriggerConditionOperatorType::class, $operatorType);
 
-		$operatorType = ModulesMetadataTypes\TriggersConditionOperatorType::get(ModulesMetadataTypes\TriggersConditionOperatorType::OPERATOR_VALUE_ABOVE);
+		$operatorType = ModulesMetadataTypes\TriggerConditionOperatorType::get(ModulesMetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_ABOVE);
 
-		Assert::type(ModulesMetadataTypes\TriggersConditionOperatorType::class, $operatorType);
+		Assert::type(ModulesMetadataTypes\TriggerConditionOperatorType::class, $operatorType);
 
-		$operatorType = ModulesMetadataTypes\TriggersConditionOperatorType::get(ModulesMetadataTypes\TriggersConditionOperatorType::OPERATOR_VALUE_BELOW);
+		$operatorType = ModulesMetadataTypes\TriggerConditionOperatorType::get(ModulesMetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_BELOW);
 
-		Assert::type(ModulesMetadataTypes\TriggersConditionOperatorType::class, $operatorType);
+		Assert::type(ModulesMetadataTypes\TriggerConditionOperatorType::class, $operatorType);
 	}
 
 	/**
@@ -34,7 +34,7 @@ final class ConditionOperatorTypeTest extends BaseTestCase
 	 */
 	public function testInvalidOperator(): void
 	{
-		$operatorType = ModulesMetadataTypes\TriggersConditionOperatorType::get('invalidtype');
+		$operatorType = ModulesMetadataTypes\TriggerConditionOperatorType::get('invalidtype');
 	}
 
 }

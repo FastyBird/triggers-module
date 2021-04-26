@@ -30,10 +30,10 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 {
 
 	/**
-	 * @var ModulesMetadataTypes\TriggersConditionOperatorType
+	 * @var ModulesMetadataTypes\TriggerConditionOperatorType
 	 *
 	 * @IPubDoctrine\Crud(is={"required", "writable"})
-	 * @Enum(class=ModulesMetadataTypes\TriggersConditionOperatorType::class)
+	 * @Enum(class=ModulesMetadataTypes\TriggerConditionOperatorType::class)
 	 * @ORM\Column(type="string_enum", name="condition_operator", length=15, nullable=true)
 	 */
 	protected $operator;
@@ -47,7 +47,7 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	protected string $operand;
 
 	/**
-	 * @param ModulesMetadataTypes\TriggersConditionOperatorType $operator
+	 * @param ModulesMetadataTypes\TriggerConditionOperatorType $operator
 	 * @param string $operand
 	 * @param Entities\Triggers\IAutomaticTrigger $trigger
 	 * @param Uuid\UuidInterface|null $id
@@ -55,7 +55,7 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	 * @throws Throwable
 	 */
 	public function __construct(
-		ModulesMetadataTypes\TriggersConditionOperatorType $operator,
+		ModulesMetadataTypes\TriggerConditionOperatorType $operator,
 		string $operand,
 		Entities\Triggers\IAutomaticTrigger $trigger,
 		?Uuid\UuidInterface $id = null
@@ -69,7 +69,7 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getOperator(): ModulesMetadataTypes\TriggersConditionOperatorType
+	public function getOperator(): ModulesMetadataTypes\TriggerConditionOperatorType
 	{
 		return $this->operator;
 	}
@@ -77,7 +77,7 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setOperator(ModulesMetadataTypes\TriggersConditionOperatorType $operator): void
+	public function setOperator(ModulesMetadataTypes\TriggerConditionOperatorType $operator): void
 	{
 		$this->operator = $operator;
 	}

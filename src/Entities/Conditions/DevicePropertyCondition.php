@@ -59,7 +59,7 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 	/**
 	 * @param string $device
 	 * @param string $property
-	 * @param ModulesMetadataTypes\TriggersConditionOperatorType $operator
+	 * @param ModulesMetadataTypes\TriggerConditionOperatorType $operator
 	 * @param string $operand
 	 * @param Entities\Triggers\IAutomaticTrigger $trigger
 	 * @param Uuid\UuidInterface|null $id
@@ -69,7 +69,7 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 	public function __construct(
 		string $device,
 		string $property,
-		ModulesMetadataTypes\TriggersConditionOperatorType $operator,
+		ModulesMetadataTypes\TriggerConditionOperatorType $operator,
 		string $operand,
 		Entities\Triggers\IAutomaticTrigger $trigger,
 		?Uuid\UuidInterface $id = null

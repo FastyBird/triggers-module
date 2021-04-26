@@ -29,16 +29,16 @@ interface IPropertyCondition extends ICondition
 {
 
 	/**
-	 * @param ModulesMetadataTypes\TriggersConditionOperatorType $operator
+	 * @param ModulesMetadataTypes\TriggerConditionOperatorType $operator
 	 *
 	 * @return void
 	 */
-	public function setOperator(ModulesMetadataTypes\TriggersConditionOperatorType $operator): void;
+	public function setOperator(ModulesMetadataTypes\TriggerConditionOperatorType $operator): void;
 
 	/**
-	 * @return ModulesMetadataTypes\TriggersConditionOperatorType
+	 * @return ModulesMetadataTypes\TriggerConditionOperatorType
 	 */
-	public function getOperator(): ModulesMetadataTypes\TriggersConditionOperatorType;
+	public function getOperator(): ModulesMetadataTypes\TriggerConditionOperatorType;
 
 	/**
 	 * @param string $operand

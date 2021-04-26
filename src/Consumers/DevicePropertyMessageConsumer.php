@@ -153,7 +153,7 @@ final class DevicePropertyMessageConsumer implements ApplicationExchangeConsumer
 		/** @var Entities\Conditions\DevicePropertyCondition $condition */
 		foreach ($conditions as $condition) {
 			if (
-				$condition->getOperator()->equalsValue(ModulesMetadataTypes\TriggersConditionOperatorType::OPERATOR_VALUE_EQUAL)
+				$condition->getOperator()->equalsValue(ModulesMetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_EQUAL)
 				&& $condition->getOperand() === $value
 			) {
 				$this->processCondition($condition);

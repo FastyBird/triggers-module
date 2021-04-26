@@ -91,13 +91,13 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 	/**
 	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes
 	 *
-	 * @return ModulesMetadataTypes\TriggersConditionOperatorType
+	 * @return ModulesMetadataTypes\TriggerConditionOperatorType
 	 *
 	 * @throws JsonApiExceptions\IJsonApiException
 	 */
 	protected function hydrateOperatorAttribute(
 		JsonAPIDocument\Objects\IStandardObject $attributes
-	): ModulesMetadataTypes\TriggersConditionOperatorType {
+	): ModulesMetadataTypes\TriggerConditionOperatorType {
 		// Condition operator have to be set
 		if (!$attributes->has('operator') || $attributes->get('operator') === '') {
 			throw new JsonApiExceptions\JsonApiErrorException(
@@ -110,7 +110,7 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 			);
 
 			// ...and have to be valid value
-		} elseif (!ModulesMetadataTypes\TriggersConditionOperatorType::isValidValue($attributes->get('operator'))) {
+		} elseif (!ModulesMetadataTypes\TriggerConditionOperatorType::isValidValue($attributes->get('operator'))) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
 				$this->translator->translate('messages.invalidOperator.heading'),
@@ -121,7 +121,7 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 			);
 		}
 
-		return ModulesMetadataTypes\TriggersConditionOperatorType::get($attributes->get('operator'));
+		return ModulesMetadataTypes\TriggerConditionOperatorType::get($attributes->get('operator'));
 	}
 
 	/**

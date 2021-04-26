@@ -69,7 +69,7 @@ class ChannelPropertyCondition extends PropertyCondition implements IChannelProp
 	 * @param string $device
 	 * @param string $channel
 	 * @param string $property
-	 * @param ModulesMetadataTypes\TriggersConditionOperatorType $operator
+	 * @param ModulesMetadataTypes\TriggerConditionOperatorType $operator
 	 * @param string $operand
 	 * @param Entities\Triggers\IAutomaticTrigger $trigger
 	 * @param Uuid\UuidInterface|null $id
@@ -80,7 +80,7 @@ class ChannelPropertyCondition extends PropertyCondition implements IChannelProp
 		string $device,
 		string $channel,
 		string $property,
-		ModulesMetadataTypes\TriggersConditionOperatorType $operator,
+		ModulesMetadataTypes\TriggerConditionOperatorType $operator,
 		string $operand,
 		Entities\Triggers\IAutomaticTrigger $trigger,
 		?Uuid\UuidInterface $id = null

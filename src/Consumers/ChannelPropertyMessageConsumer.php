@@ -182,7 +182,7 @@ final class ChannelPropertyMessageConsumer implements ApplicationExchangeConsume
 		/** @var Entities\Conditions\ChannelPropertyCondition $condition */
 		foreach ($conditions as $condition) {
 			if (
-				$condition->getOperator()->equalsValue(ModulesMetadataTypes\TriggersConditionOperatorType::OPERATOR_VALUE_EQUAL)
+				$condition->getOperator()->equalsValue(ModulesMetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_EQUAL)
 				&& $condition->getOperand() === (string) $value
 			) {
 				$this->processCondition($condition);
