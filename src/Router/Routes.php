@@ -91,7 +91,7 @@ class Routes implements WebServerRouter\IRoutes
 	public function registerRoutes(Routing\IRouter $router): void
 	{
 		if ($this->usePrefix) {
-			$routes = $router->group('/' . ModulesMetadata\Constants::MODULE_DEVICES_PREFIX, function (Routing\RouteCollector $group): void {
+			$routes = $router->group('/' . ModulesMetadata\Constants::MODULE_TRIGGERS_PREFIX, function (Routing\RouteCollector $group): void {
 				$this->buildRoutes($group);
 			});
 

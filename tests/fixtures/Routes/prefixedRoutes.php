@@ -7,7 +7,7 @@ const VALID_TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJjb20uZmFzdH
 
 return [
 	'readAllValid'   => [
-		'/' . ModulesMetadata\Constants::MODULE_DEVICES_PREFIX . '/v1/triggers',
+		'/' . ModulesMetadata\Constants::MODULE_TRIGGERS_PREFIX . '/v1/triggers',
 		'Bearer ' . VALID_TOKEN,
 		StatusCodeInterface::STATUS_OK,
 	],
