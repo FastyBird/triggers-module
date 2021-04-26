@@ -86,6 +86,8 @@ class Routes implements WebServerRouter\IRoutes
 	}
 
 	/**
+	 * @param Routing\IRouter $router
+	 *
 	 * @return void
 	 */
 	public function registerRoutes(Routing\IRouter $router): void
