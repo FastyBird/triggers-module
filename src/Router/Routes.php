@@ -15,6 +15,7 @@
 
 namespace FastyBird\TriggersModule\Router;
 
+use FastyBird\ModulesMetadata;
 use FastyBird\SimpleAuth\Middleware as SimpleAuthMiddleware;
 use FastyBird\TriggersModule\Controllers;
 use FastyBird\TriggersModule\Middleware;
@@ -38,6 +39,9 @@ class Routes implements WebServerRouter\IRoutes
 
 	public const RELATION_ENTITY = 'relationEntity';
 
+	/** @var bool */
+	private bool $usePrefix;
+
 	/** @var Controllers\TriggersV1Controller */
 	private Controllers\TriggersV1Controller $triggersV1Controller;
 
@@ -60,6 +64,7 @@ class Routes implements WebServerRouter\IRoutes
 	private SimpleAuthMiddleware\UserMiddleware $userMiddleware;
 
 	public function __construct(
+		bool $usePrefix,
 		Controllers\TriggersV1Controller $triggersV1Controller,
 		Controllers\ActionsV1Controller $actionsV1Controller,
 		Controllers\NotificationsV1Controller $notificationsV1Controller,
@@ -68,6 +73,8 @@ class Routes implements WebServerRouter\IRoutes
 		SimpleAuthMiddleware\AccessMiddleware $accessControlMiddleware,
 		SimpleAuthMiddleware\UserMiddleware $userMiddleware
 	) {
+		$this->usePrefix = $usePrefix;
+
 		$this->triggersV1Controller = $triggersV1Controller;
 		$this->actionsV1Controller = $actionsV1Controller;
 		$this->notificationsV1Controller = $notificationsV1Controller;
@@ -83,7 +90,28 @@ class Routes implements WebServerRouter\IRoutes
 	 */
 	public function registerRoutes(Routing\IRouter $router): void
 	{
-		$routes = $router->group('/v1', function (Routing\RouteCollector $group): void {
+		if ($this->usePrefix) {
+			$routes = $router->group('/' . ModulesMetadata\Constants::MODULE_DEVICES_PREFIX, function (Routing\RouteCollector $group): void {
+				$this->buildRoutes($group);
+			});
+
+		} else {
+			$routes = $this->buildRoutes($router);
+		}
+
+		$routes->addMiddleware($this->accessControlMiddleware);
+		$routes->addMiddleware($this->userMiddleware);
+		$routes->addMiddleware($this->devicesAccessControlMiddleware);
+	}
+
+	/**
+	 * @param Routing\IRouter | Routing\IRouteCollector $group
+	 *
+	 * @return Routing\IRouteGroup
+	 */
+	private function buildRoutes($group): Routing\IRouteGroup
+	{
+		return $group->group('/v1', function (Routing\RouteCollector $group): void {
 			$group->group('/triggers', function (Routing\RouteCollector $group): void {
 				/**
 				 * TRIGGERS
@@ -178,10 +206,6 @@ class Routes implements WebServerRouter\IRoutes
 				});
 			});
 		});
-
-		$routes->addMiddleware($this->accessControlMiddleware);
-		$routes->addMiddleware($this->userMiddleware);
-		$routes->addMiddleware($this->devicesAccessControlMiddleware);
 	}
 
 }
