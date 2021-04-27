@@ -1,4 +1,4 @@
-# FastyBird triggers module
+# FastyBird IoT triggers module
 
 [![Build Status](https://badgen.net/github/checks/FastyBird/triggers-module/master?cache=300&style=flast-square)](https://github.com/FastyBird/triggers-module/actions)
 [![Code coverage](https://badgen.net/coveralls/c/github/FastyBird/triggers-module?cache=300&style=flast-square)](https://coveralls.io/r/FastyBird/triggers-module)
@@ -8,11 +8,11 @@
 [![Latest stable](https://badgen.net/packagist/v/FastyBird/triggers-module/latest?cache=300&style=flast-square)](https://packagist.org/packages/FastyBird/triggers-module)
 [![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat-square)](https://github.com/phpstan/phpstan)
 
-## What is FastyBird triggers module?
+## What is FastyBird IoT triggers module?
 
 Triggers module is a [Nette framework](https://nette.org) extension for managing & running automation logic and exposing it for clients.
 
-[FastyBird](https://www.fastybird.com) triggers module is an [Apache2 licensed distributed](http://www.apache.org/licenses/LICENSE-2.0) extension, developed in [PHP](https://www.php.net) with [Nette framework](https://nette.org).
+[FastyBird](https://www.fastybird.com) [IoT](https://en.wikipedia.org/wiki/Internet_of_things) triggers module is an [Apache2 licensed distributed](http://www.apache.org/licenses/LICENSE-2.0) extension, developed in [PHP](https://www.php.net) with [Nette framework](https://nette.org).
 
 ## Requirements
 
@@ -30,15 +30,11 @@ $ cd path/to/install
 
 Everything required will be then installed in the provided folder `path/to/install`
 
-This module has several console command.
-
-##### HTTP server
+Or if you already have created project you could use command:
 
 ```sh
-$ vendor/bin/fb-console fb:web-server:start
+$ composer require fastybird/triggers-module
 ```
-
-This command is to start build in web server which is listening for incoming http api request messages from clients. 
 
 ## Configuration
 
@@ -56,7 +52,14 @@ $ vendor/bin/fb-console fb:triggers-module:initialize
 
 This console command is interactive and will ask for all required information.
 
-After this step, module could be started with [server command](#http-server)
+## HTTP server
+
+This module has built-in web server for serving module api to clients. This web server could be started with command:
+```sh
+$ vendor/bin/fb-console fb:web-server:start
+```
+
+After successful start, app is listening for incoming http api request messages from clients.
 
 ## Feedback
 

@@ -38,11 +38,11 @@ extensions:
 	fbWebServer							: FastyBird\WebServer\DI\WebServerExtension
 
 contributteConsole:
-	name: FastyBird:UIModule!
+	name: FastyBird:TriggersModule!
 	version: '1.0'
 	catchExceptions: true
 	autoExit: true
-	url: http://example.com
+	url: http://triggers-module.fastybird.com
 	lazy: false
 	helperSet: \Symfony\Component\Console\Helper\HelperSet
 	helpers: []

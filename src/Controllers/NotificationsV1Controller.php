@@ -183,7 +183,7 @@ final class NotificationsV1Controller extends BaseV1Controller
 		WebServerHttp\Response $response
 	): WebServerHttp\Response {
 		// At first, try to load trigger
-		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
+		$this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
 		$document = $this->createDocument($request);
 
@@ -278,7 +278,7 @@ final class NotificationsV1Controller extends BaseV1Controller
 			);
 
 		} catch (Throwable $ex) {
-			// Log catched exception
+			// Log caught exception
 			$this->logger->error('[FB:TRIGGERS_MODULE:CONTROLLER] ' . $ex->getMessage(), [
 				'exception' => [
 					'message' => $ex->getMessage(),
@@ -367,7 +367,7 @@ final class NotificationsV1Controller extends BaseV1Controller
 			throw $ex;
 
 		} catch (Throwable $ex) {
-			// Log catched exception
+			// Log caught exception
 			$this->logger->error('[FB:TRIGGERS_MODULE:CONTROLLER] ' . $ex->getMessage(), [
 				'exception' => [
 					'message' => $ex->getMessage(),
@@ -424,7 +424,7 @@ final class NotificationsV1Controller extends BaseV1Controller
 			$this->getOrmConnection()->commit();
 
 		} catch (Throwable $ex) {
-			// Log catched exception
+			// Log caught exception
 			$this->logger->error('[FB:TRIGGERS_MODULE:CONTROLLER] ' . $ex->getMessage(), [
 				'exception' => [
 					'message' => $ex->getMessage(),

@@ -1,10 +1,11 @@
 {
   "name": "fastybird/triggers-module",
   "type": "library",
-  "description": "FastyBird IoT triggers module for triggers storage & basic automation logic",
+  "description": "FastyBird IoT module for triggers management & basic automation logic",
   "keywords": [
     "fastybird",
     "fb",
+    "iot",
     "triggers",
     "automation",
     "controlling",

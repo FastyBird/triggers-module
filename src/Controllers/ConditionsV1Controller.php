@@ -293,7 +293,7 @@ final class ConditionsV1Controller extends BaseV1Controller
 				);
 
 			} catch (Throwable $ex) {
-				// Log catched exception
+				// Log caught exception
 				$this->logger->error('[FB:TRIGGERS_MODULE:CONTROLLER] ' . $ex->getMessage(), [
 					'exception' => [
 						'message' => $ex->getMessage(),
@@ -395,7 +395,7 @@ final class ConditionsV1Controller extends BaseV1Controller
 			throw $ex;
 
 		} catch (Throwable $ex) {
-			// Log catched exception
+			// Log caught exception
 			$this->logger->error('[FB:TRIGGERS_MODULE:CONTROLLER] ' . $ex->getMessage(), [
 				'exception' => [
 					'message' => $ex->getMessage(),
@@ -452,7 +452,7 @@ final class ConditionsV1Controller extends BaseV1Controller
 			$this->getOrmConnection()->commit();
 
 		} catch (Throwable $ex) {
-			// Log catched exception
+			// Log caught exception
 			$this->logger->error('[FB:TRIGGERS_MODULE:CONTROLLER] ' . $ex->getMessage(), [
 				'exception' => [
 					'message' => $ex->getMessage(),

@@ -15,7 +15,7 @@
 
 namespace FastyBird\TriggersModule\Schemas\Conditions;
 
-use DateTime;
+use DateTimeInterface;
 use FastyBird\TriggersModule\Entities;
 use Neomerx\JsonApi;
 
@@ -64,7 +64,7 @@ final class DateConditionSchema extends ConditionSchema
 	public function getAttributes($condition, JsonApi\Contracts\Schema\ContextInterface $context): iterable
 	{
 		return array_merge((array) parent::getAttributes($condition, $context), [
-			'date' => $condition->getDate()->format(DateTime::ATOM),
+			'date' => $condition->getDate()->format(DateTimeInterface::ATOM),
 		]);
 	}
 

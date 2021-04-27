@@ -15,7 +15,6 @@
 
 namespace FastyBird\TriggersModule\Hydrators\Conditions;
 
-use DateTime;
 use DateTimeInterface;
 use FastyBird\JsonApi\Exceptions as JsonApiExceptions;
 use FastyBird\TriggersModule\Entities;
@@ -71,9 +70,9 @@ final class TimeConditionHydrator extends ConditionHydrator
 			);
 		}
 
-		$date = Utils\DateTime::createFromFormat(DateTime::ATOM, (string) $attributes->get('time'));
+		$date = Utils\DateTime::createFromFormat(DateTimeInterface::ATOM, (string) $attributes->get('time'));
 
-		if (!$date instanceof DateTimeInterface || $date->format(DateTime::ATOM) !== $attributes->get('time')) {
+		if (!$date instanceof DateTimeInterface || $date->format(DateTimeInterface::ATOM) !== $attributes->get('time')) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
 				$this->translator->translate('messages.invalidTime.heading'),
