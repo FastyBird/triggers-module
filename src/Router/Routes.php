@@ -17,6 +17,7 @@ namespace FastyBird\TriggersModule\Router;
 
 use FastyBird\ModulesMetadata;
 use FastyBird\SimpleAuth\Middleware as SimpleAuthMiddleware;
+use FastyBird\TriggersModule;
 use FastyBird\TriggersModule\Controllers;
 use FastyBird\TriggersModule\Middleware;
 use FastyBird\WebServer\Router as WebServerRouter;
@@ -119,10 +120,10 @@ class Routes implements WebServerRouter\IRoutes
 				 * TRIGGERS
 				 */
 				$route = $group->get('', [$this->triggersV1Controller, 'index']);
-				$route->setName('triggers');
+				$route->setName(TriggersModule\Constants::ROUTE_NAME_TRIGGERS);
 
 				$route = $group->get('/{' . self::URL_ITEM_ID . '}', [$this->triggersV1Controller, 'read']);
-				$route->setName('trigger');
+				$route->setName(TriggersModule\Constants::ROUTE_NAME_TRIGGER);
 
 				$group->post('', [$this->triggersV1Controller, 'create']);
 
@@ -134,7 +135,7 @@ class Routes implements WebServerRouter\IRoutes
 					$this->triggersV1Controller,
 					'readRelationship',
 				]);
-				$route->setName('trigger.relationship');
+				$route->setName(TriggersModule\Constants::ROUTE_NAME_TRIGGER_RELATIONSHIP);
 			});
 
 			$group->group('/triggers/{' . self::URL_TRIGGER_ID . '}', function (Routing\RouteCollector $group): void {
@@ -143,10 +144,10 @@ class Routes implements WebServerRouter\IRoutes
 					 * ACTIONS
 					 */
 					$route = $group->get('', [$this->actionsV1Controller, 'index']);
-					$route->setName('trigger.actions');
+					$route->setName(TriggersModule\Constants::ROUTE_NAME_TRIGGER_ACTIONS);
 
 					$route = $group->get('/{' . self::URL_ITEM_ID . '}', [$this->actionsV1Controller, 'read']);
-					$route->setName('trigger.action');
+					$route->setName(TriggersModule\Constants::ROUTE_NAME_TRIGGER_ACTION);
 
 					$group->post('', [$this->actionsV1Controller, 'create']);
 
@@ -158,7 +159,7 @@ class Routes implements WebServerRouter\IRoutes
 						$this->actionsV1Controller,
 						'readRelationship',
 					]);
-					$route->setName('trigger.action.relationship');
+					$route->setName(TriggersModule\Constants::ROUTE_NAME_TRIGGER_ACTION_RELATIONSHIP);
 				});
 
 				$group->group('/notifications', function (Routing\RouteCollector $group): void {
@@ -166,10 +167,10 @@ class Routes implements WebServerRouter\IRoutes
 					 * NOTIFICATIONS
 					 */
 					$route = $group->get('', [$this->notificationsV1Controller, 'index']);
-					$route->setName('trigger.notifications');
+					$route->setName(TriggersModule\Constants::ROUTE_NAME_TRIGGER_NOTIFICATIONS);
 
 					$route = $group->get('/{' . self::URL_ITEM_ID . '}', [$this->notificationsV1Controller, 'read']);
-					$route->setName('trigger.notification');
+					$route->setName(TriggersModule\Constants::ROUTE_NAME_TRIGGER_NOTIFICATION);
 
 					$group->post('', [$this->notificationsV1Controller, 'create']);
 
@@ -181,7 +182,7 @@ class Routes implements WebServerRouter\IRoutes
 						$this->notificationsV1Controller,
 						'readRelationship',
 					]);
-					$route->setName('trigger.notification.relationship');
+					$route->setName(TriggersModule\Constants::ROUTE_NAME_TRIGGER_NOTIFICATION_RELATIONSHIP);
 				});
 
 				$group->group('/conditions', function (Routing\RouteCollector $group): void {
@@ -189,10 +190,10 @@ class Routes implements WebServerRouter\IRoutes
 					 * CONDITIONS
 					 */
 					$route = $group->get('', [$this->conditionsV1Controller, 'index']);
-					$route->setName('trigger.conditions');
+					$route->setName(TriggersModule\Constants::ROUTE_NAME_TRIGGER_CONDITIONS);
 
 					$route = $group->get('/{' . self::URL_ITEM_ID . '}', [$this->conditionsV1Controller, 'read']);
-					$route->setName('trigger.condition');
+					$route->setName(TriggersModule\Constants::ROUTE_NAME_TRIGGER_CONDITION);
 
 					$group->post('', [$this->conditionsV1Controller, 'create']);
 
@@ -204,7 +205,7 @@ class Routes implements WebServerRouter\IRoutes
 						$this->conditionsV1Controller,
 						'readRelationship',
 					]);
-					$route->setName('trigger.condition.relationship');
+					$route->setName(TriggersModule\Constants::ROUTE_NAME_TRIGGER_CONDITION_RELATIONSHIP);
 				});
 			});
 		});

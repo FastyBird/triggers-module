@@ -28,7 +28,7 @@
           "links": {
             "self": "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/relationships/conditions",
             "related": {
-              "href": "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/actions",
+              "href": "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/conditions",
               "meta": {
                 "count": 1
               }

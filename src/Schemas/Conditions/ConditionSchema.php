@@ -16,6 +16,7 @@
 namespace FastyBird\TriggersModule\Schemas\Conditions;
 
 use FastyBird\JsonApi\Schemas as JsonApiSchemas;
+use FastyBird\TriggersModule;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Router;
 use FastyBird\TriggersModule\Schemas;
@@ -82,7 +83,7 @@ abstract class ConditionSchema extends JsonApiSchemas\JsonApiSchema
 		return new JsonApi\Schema\Link(
 			false,
 			$this->router->urlFor(
-				'trigger.condition',
+				TriggersModule\Constants::ROUTE_NAME_TRIGGER_CONDITION,
 				[
 					Router\Routes::URL_TRIGGER_ID => $condition->getTrigger()->getPlainId(),
 					Router\Routes::URL_ITEM_ID    => $condition->getPlainId(),
@@ -129,7 +130,7 @@ abstract class ConditionSchema extends JsonApiSchemas\JsonApiSchema
 			return new JsonApi\Schema\Link(
 				false,
 				$this->router->urlFor(
-					'trigger',
+					TriggersModule\Constants::ROUTE_NAME_TRIGGER,
 					[
 						Router\Routes::URL_ITEM_ID => $condition->getTrigger()->getPlainId(),
 					]
@@ -157,7 +158,7 @@ abstract class ConditionSchema extends JsonApiSchemas\JsonApiSchema
 			return new JsonApi\Schema\Link(
 				false,
 				$this->router->urlFor(
-					'trigger.condition.relationship',
+					TriggersModule\Constants::ROUTE_NAME_TRIGGER_CONDITION_RELATIONSHIP,
 					[
 						Router\Routes::URL_TRIGGER_ID  => $condition->getTrigger()->getPlainId(),
 						Router\Routes::URL_ITEM_ID     => $condition->getPlainId(),

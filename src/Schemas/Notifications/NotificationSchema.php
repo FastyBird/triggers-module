@@ -16,6 +16,7 @@
 namespace FastyBird\TriggersModule\Schemas\Notifications;
 
 use FastyBird\JsonApi\Schemas as JsonApiSchemas;
+use FastyBird\TriggersModule;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Router;
 use FastyBird\TriggersModule\Schemas;
@@ -81,7 +82,7 @@ abstract class NotificationSchema extends JsonApiSchemas\JsonApiSchema
 		return new JsonApi\Schema\Link(
 			false,
 			$this->router->urlFor(
-				'trigger.notification',
+				TriggersModule\Constants::ROUTE_NAME_TRIGGER_NOTIFICATION,
 				[
 					Router\Routes::URL_TRIGGER_ID => $notification->getTrigger()->getPlainId(),
 					Router\Routes::URL_ITEM_ID    => $notification->getPlainId(),
@@ -128,7 +129,7 @@ abstract class NotificationSchema extends JsonApiSchemas\JsonApiSchema
 			return new JsonApi\Schema\Link(
 				false,
 				$this->router->urlFor(
-					'trigger',
+					TriggersModule\Constants::ROUTE_NAME_TRIGGER,
 					[
 						Router\Routes::URL_ITEM_ID => $notification->getTrigger()->getPlainId(),
 					]
@@ -156,7 +157,7 @@ abstract class NotificationSchema extends JsonApiSchemas\JsonApiSchema
 			return new JsonApi\Schema\Link(
 				false,
 				$this->router->urlFor(
-					'trigger.notification.relationship',
+					TriggersModule\Constants::ROUTE_NAME_TRIGGER_NOTIFICATION_RELATIONSHIP,
 					[
 						Router\Routes::URL_TRIGGER_ID  => $notification->getTrigger()->getPlainId(),
 						Router\Routes::URL_ITEM_ID     => $notification->getPlainId(),

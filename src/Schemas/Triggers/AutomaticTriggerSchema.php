@@ -15,6 +15,7 @@
 
 namespace FastyBird\TriggersModule\Schemas\Triggers;
 
+use FastyBird\TriggersModule;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Router;
 use Neomerx\JsonApi;
@@ -91,7 +92,7 @@ final class AutomaticTriggerSchema extends TriggerSchema
 			return new JsonApi\Schema\Link(
 				false,
 				$this->router->urlFor(
-					'trigger.actions',
+					TriggersModule\Constants::ROUTE_NAME_TRIGGER_CONDITIONS,
 					[
 						Router\Routes::URL_TRIGGER_ID => $trigger->getPlainId(),
 					]
@@ -120,7 +121,7 @@ final class AutomaticTriggerSchema extends TriggerSchema
 			return new JsonApi\Schema\Link(
 				false,
 				$this->router->urlFor(
-					'trigger.relationship',
+					TriggersModule\Constants::ROUTE_NAME_TRIGGER_RELATIONSHIP,
 					[
 						Router\Routes::URL_ITEM_ID     => $trigger->getPlainId(),
 						Router\Routes::RELATION_ENTITY => $name,
