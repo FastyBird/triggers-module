@@ -18,7 +18,6 @@ namespace FastyBird\TriggersModule\DI;
 use Contributte\Translation;
 use Doctrine\Persistence;
 use FastyBird\TriggersModule\Commands;
-use FastyBird\TriggersModule\Consumers;
 use FastyBird\TriggersModule\Controllers;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Hydrators;
@@ -136,19 +135,6 @@ class TriggersModuleExtension extends DI\CompilerExtension implements Translatio
 
 		$builder->addDefinition($this->prefix('subscribers.entities'))
 			->setType(Subscribers\EntitiesSubscriber::class);
-
-		// Message bus consumers
-		$builder->addDefinition($this->prefix('consumers.device'))
-			->setType(Consumers\DeviceMessageConsumer::class);
-
-		$builder->addDefinition($this->prefix('consumers.deviceProperty'))
-			->setType(Consumers\DevicePropertyMessageConsumer::class);
-
-		$builder->addDefinition($this->prefix('consumers.channel'))
-			->setType(Consumers\ChannelMessageConsumer::class);
-
-		$builder->addDefinition($this->prefix('consumers.channelProperty'))
-			->setType(Consumers\ChannelPropertyMessageConsumer::class);
 
 		// API controllers
 		$builder->addDefinition($this->prefix('controllers.triggers'))

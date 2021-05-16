@@ -3,7 +3,6 @@
 namespace Tests\Cases;
 
 use FastyBird\TriggersModule\Commands;
-use FastyBird\TriggersModule\Consumers;
 use FastyBird\TriggersModule\Controllers;
 use FastyBird\TriggersModule\DI;
 use FastyBird\TriggersModule\Hydrators;
@@ -66,11 +65,6 @@ final class ServicesTest extends BaseTestCase
 		Assert::notNull($container->getByType(Subscribers\ActionEntitySubscriber::class));
 		Assert::notNull($container->getByType(Subscribers\ConditionEntitySubscriber::class));
 		Assert::notNull($container->getByType(Subscribers\NotificationEntitySubscriber::class));
-
-		Assert::notNull($container->getByType(Consumers\DeviceMessageConsumer::class));
-		Assert::notNull($container->getByType(Consumers\DevicePropertyMessageConsumer::class));
-		Assert::notNull($container->getByType(Consumers\ChannelMessageConsumer::class));
-		Assert::notNull($container->getByType(Consumers\ChannelPropertyMessageConsumer::class));
 	}
 
 	/**
