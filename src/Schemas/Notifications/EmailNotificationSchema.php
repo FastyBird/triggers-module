@@ -24,7 +24,7 @@ use Neomerx\JsonApi;
  * @package         FastyBird:TriggersModule!
  * @subpackage      Schemas
  *
- * @phpstan-extends NotificationSchema<Entities\Notifications\IEmailNotification>
+ * @phpstan-extends NotificationSchema<Entities\Notifications\EmailNotification>
  */
 final class EmailNotificationSchema extends NotificationSchema
 {
@@ -51,7 +51,7 @@ final class EmailNotificationSchema extends NotificationSchema
 	}
 
 	/**
-	 * @param Entities\Notifications\IEmailNotification $notification
+	 * @param Entities\Notifications\EmailNotification $notification
 	 * @param JsonApi\Contracts\Schema\ContextInterface $context
 	 *
 	 * @return iterable<string, string|bool>

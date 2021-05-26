@@ -29,7 +29,7 @@ use Neomerx\JsonApi;
  * @package          FastyBird:TriggersModule!
  * @subpackage       Schemas
  *
- * @phpstan-template T of Entities\Triggers\ITrigger
+ * @phpstan-template T of Entities\Triggers\Trigger
  * @phpstan-extends  JsonApiSchemas\JsonApiSchema<T>
  */
 abstract class TriggerSchema extends JsonApiSchemas\JsonApiSchema
@@ -51,7 +51,7 @@ abstract class TriggerSchema extends JsonApiSchemas\JsonApiSchema
 	}
 
 	/**
-	 * @param Entities\Triggers\ITrigger $trigger
+	 * @param Entities\Triggers\Trigger $trigger
 	 * @param JsonApi\Contracts\Schema\ContextInterface $context
 	 *
 	 * @return iterable<string, string|bool|null>
@@ -70,7 +70,7 @@ abstract class TriggerSchema extends JsonApiSchemas\JsonApiSchema
 	}
 
 	/**
-	 * @param Entities\Triggers\ITrigger $trigger
+	 * @param Entities\Triggers\Trigger $trigger
 	 *
 	 * @return JsonApi\Contracts\Schema\LinkInterface
 	 *
@@ -93,7 +93,7 @@ abstract class TriggerSchema extends JsonApiSchemas\JsonApiSchema
 	}
 
 	/**
-	 * @param Entities\Triggers\ITrigger $trigger
+	 * @param Entities\Triggers\Trigger $trigger
 	 * @param JsonApi\Contracts\Schema\ContextInterface $context
 	 *
 	 * @return iterable<string, mixed>
@@ -119,7 +119,7 @@ abstract class TriggerSchema extends JsonApiSchemas\JsonApiSchema
 	}
 
 	/**
-	 * @param Entities\Triggers\ITrigger $trigger
+	 * @param Entities\Triggers\Trigger $trigger
 	 * @param string $name
 	 *
 	 * @return JsonApi\Contracts\Schema\LinkInterface
@@ -165,7 +165,7 @@ abstract class TriggerSchema extends JsonApiSchemas\JsonApiSchema
 	}
 
 	/**
-	 * @param Entities\Triggers\ITrigger $trigger
+	 * @param Entities\Triggers\Trigger $trigger
 	 * @param string $name
 	 *
 	 * @return JsonApi\Contracts\Schema\LinkInterface

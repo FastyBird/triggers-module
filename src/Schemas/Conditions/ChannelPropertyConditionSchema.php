@@ -26,7 +26,7 @@ use Neomerx\JsonApi;
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-extends ConditionSchema<Entities\Conditions\IChannelPropertyCondition>
+ * @phpstan-extends ConditionSchema<Entities\Conditions\ChannelPropertyCondition>
  */
 final class ChannelPropertyConditionSchema extends ConditionSchema
 {
@@ -53,7 +53,7 @@ final class ChannelPropertyConditionSchema extends ConditionSchema
 	}
 
 	/**
-	 * @param Entities\Conditions\IChannelPropertyCondition $condition
+	 * @param Entities\Conditions\ChannelPropertyCondition $condition
 	 * @param JsonApi\Contracts\Schema\ContextInterface $context
 	 *
 	 * @return iterable<string, string|bool>

@@ -31,7 +31,7 @@ use Neomerx\JsonApi;
  *
  * @author           Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-template T of Entities\Actions\IAction
+ * @phpstan-template T of Entities\Actions\Action
  * @phpstan-extends  JsonApiSchemas\JsonApiSchema<T>
  */
 abstract class ActionSchema extends JsonApiSchemas\JsonApiSchema
@@ -52,7 +52,7 @@ abstract class ActionSchema extends JsonApiSchemas\JsonApiSchema
 	}
 
 	/**
-	 * @param Entities\Actions\IAction $action
+	 * @param Entities\Actions\Action $action
 	 * @param JsonApi\Contracts\Schema\ContextInterface $context
 	 *
 	 * @return iterable<string, bool>
@@ -69,7 +69,7 @@ abstract class ActionSchema extends JsonApiSchemas\JsonApiSchema
 	}
 
 	/**
-	 * @param Entities\Actions\IAction $action
+	 * @param Entities\Actions\Action $action
 	 *
 	 * @return JsonApi\Contracts\Schema\LinkInterface
 	 *
@@ -93,7 +93,7 @@ abstract class ActionSchema extends JsonApiSchemas\JsonApiSchema
 	}
 
 	/**
-	 * @param Entities\Actions\IAction $action
+	 * @param Entities\Actions\Action $action
 	 * @param JsonApi\Contracts\Schema\ContextInterface $context
 	 *
 	 * @return iterable<string, mixed>
@@ -114,7 +114,7 @@ abstract class ActionSchema extends JsonApiSchemas\JsonApiSchema
 	}
 
 	/**
-	 * @param Entities\Actions\IAction $action
+	 * @param Entities\Actions\Action $action
 	 * @param string $name
 	 *
 	 * @return JsonApi\Contracts\Schema\LinkInterface
@@ -142,7 +142,7 @@ abstract class ActionSchema extends JsonApiSchemas\JsonApiSchema
 	}
 
 	/**
-	 * @param Entities\Actions\IAction $action
+	 * @param Entities\Actions\Action $action
 	 * @param string $name
 	 *
 	 * @return JsonApi\Contracts\Schema\LinkInterface

@@ -51,7 +51,7 @@ final class ChannelPropertyActionHydrator extends ActionHydrator
 	}
 
 	/**
-	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes
+	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *
 	 * @return string
 	 *
@@ -79,7 +79,7 @@ final class ChannelPropertyActionHydrator extends ActionHydrator
 	}
 
 	/**
-	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes
+	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *
 	 * @return string
 	 *
@@ -107,7 +107,7 @@ final class ChannelPropertyActionHydrator extends ActionHydrator
 	}
 
 	/**
-	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes
+	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *
 	 * @return string
 	 *

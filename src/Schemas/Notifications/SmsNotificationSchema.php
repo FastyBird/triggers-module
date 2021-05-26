@@ -26,7 +26,7 @@ use Neomerx\JsonApi;
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-extends NotificationSchema<Entities\Notifications\ISmsNotification>
+ * @phpstan-extends NotificationSchema<Entities\Notifications\SmsNotification>
  */
 final class SmsNotificationSchema extends NotificationSchema
 {
@@ -53,7 +53,7 @@ final class SmsNotificationSchema extends NotificationSchema
 	}
 
 	/**
-	 * @param Entities\Notifications\ISmsNotification $notification
+	 * @param Entities\Notifications\SmsNotification $notification
 	 * @param JsonApi\Contracts\Schema\ContextInterface $context
 	 *
 	 * @return iterable<string, string|bool|null>

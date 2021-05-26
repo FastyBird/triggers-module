@@ -49,7 +49,7 @@ final class EmailNotificationHydrator extends NotificationHydrator
 	}
 
 	/**
-	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes
+	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *
 	 * @return string
 	 *

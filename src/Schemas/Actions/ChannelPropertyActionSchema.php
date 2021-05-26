@@ -26,7 +26,7 @@ use Neomerx\JsonApi;
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-extends ActionSchema<Entities\Actions\IChannelPropertyAction>
+ * @phpstan-extends ActionSchema<Entities\Actions\ChannelPropertyAction>
  */
 final class ChannelPropertyActionSchema extends ActionSchema
 {
@@ -53,7 +53,7 @@ final class ChannelPropertyActionSchema extends ActionSchema
 	}
 
 	/**
-	 * @param Entities\Actions\IChannelPropertyAction $action
+	 * @param Entities\Actions\ChannelPropertyAction $action
 	 * @param JsonApi\Contracts\Schema\ContextInterface $context
 	 *
 	 * @return iterable<string, string|bool>

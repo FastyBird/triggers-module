@@ -31,7 +31,7 @@ use Neomerx\JsonApi;
  *
  * @author           Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-template T of Entities\Conditions\ICondition
+ * @phpstan-template T of Entities\Conditions\Condition
  * @phpstan-extends  JsonApiSchemas\JsonApiSchema<T>
  */
 abstract class ConditionSchema extends JsonApiSchemas\JsonApiSchema
@@ -52,7 +52,7 @@ abstract class ConditionSchema extends JsonApiSchemas\JsonApiSchema
 	}
 
 	/**
-	 * @param Entities\Conditions\ICondition $condition
+	 * @param Entities\Conditions\Condition $condition
 	 * @param JsonApi\Contracts\Schema\ContextInterface $context
 	 *
 	 * @return iterable<string, bool>
@@ -70,7 +70,7 @@ abstract class ConditionSchema extends JsonApiSchemas\JsonApiSchema
 
 
 	/**
-	 * @param Entities\Conditions\ICondition $condition
+	 * @param Entities\Conditions\Condition $condition
 	 *
 	 * @return JsonApi\Contracts\Schema\LinkInterface
 	 *
@@ -94,7 +94,7 @@ abstract class ConditionSchema extends JsonApiSchemas\JsonApiSchema
 	}
 
 	/**
-	 * @param Entities\Conditions\ICondition $condition
+	 * @param Entities\Conditions\Condition $condition
 	 * @param JsonApi\Contracts\Schema\ContextInterface $context
 	 *
 	 * @return iterable<string, mixed>
@@ -115,7 +115,7 @@ abstract class ConditionSchema extends JsonApiSchemas\JsonApiSchema
 	}
 
 	/**
-	 * @param Entities\Conditions\ICondition $condition
+	 * @param Entities\Conditions\Condition $condition
 	 * @param string $name
 	 *
 	 * @return JsonApi\Contracts\Schema\LinkInterface
@@ -143,7 +143,7 @@ abstract class ConditionSchema extends JsonApiSchemas\JsonApiSchema
 	}
 
 	/**
-	 * @param Entities\Conditions\ICondition $condition
+	 * @param Entities\Conditions\Condition $condition
 	 * @param string $name
 	 *
 	 * @return JsonApi\Contracts\Schema\LinkInterface
