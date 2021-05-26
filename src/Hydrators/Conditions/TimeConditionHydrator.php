@@ -29,6 +29,8 @@ use Nette\Utils;
  * @subpackage      Hydrators
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
+ *
+ * @phpstan-extends ConditionHydrator<Entities\Conditions\TimeCondition>
  */
 final class TimeConditionHydrator extends ConditionHydrator
 {
@@ -49,7 +51,7 @@ final class TimeConditionHydrator extends ConditionHydrator
 	}
 
 	/**
-	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes
+	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *
 	 * @return DateTimeInterface
 	 *
@@ -59,7 +61,7 @@ final class TimeConditionHydrator extends ConditionHydrator
 		JsonAPIDocument\Objects\IStandardObject $attributes
 	): DateTimeInterface {
 		// Condition time have to be set
-		if (!$attributes->has('time')) {
+		if (!is_scalar($attributes->get('time')) || !$attributes->has('time')) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
 				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
@@ -87,7 +89,7 @@ final class TimeConditionHydrator extends ConditionHydrator
 	}
 
 	/**
-	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes
+	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *
 	 * @return int[]
 	 *

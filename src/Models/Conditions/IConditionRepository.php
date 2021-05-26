@@ -36,9 +36,7 @@ interface IConditionRepository
 	 *
 	 * @return Entities\Conditions\ICondition|null
 	 *
-	 * @phpstan-template T of Entities\Conditions\Condition
-	 * @phpstan-param    Queries\FindConditionsQuery<T> $queryObject
-	 * @phpstan-param    class-string<T> $type
+	 * @phpstan-param class-string $type
 	 */
 	public function findOneBy(
 		Queries\FindConditionsQuery $queryObject,
@@ -51,9 +49,7 @@ interface IConditionRepository
 	 *
 	 * @return Entities\Conditions\ICondition[]
 	 *
-	 * @phpstan-template T of Entities\Conditions\Condition
-	 * @phpstan-param    Queries\FindConditionsQuery<T> $queryObject
-	 * @phpstan-param    class-string<T> $type
+	 * @phpstan-param class-string $type
 	 */
 	public function findAllBy(
 		Queries\FindConditionsQuery $queryObject,
@@ -66,10 +62,9 @@ interface IConditionRepository
 	 *
 	 * @return DoctrineOrmQuery\ResultSet
 	 *
-	 * @phpstan-template T of Entities\Conditions\Condition
-	 * @phpstan-param    Queries\FindConditionsQuery<T> $queryObject
-	 * @phpstan-param    class-string<T> $type
-	 * @phpstan-return   DoctrineOrmQuery\ResultSet<T>
+	 * @phpstan-param class-string $type
+	 *
+	 * @phpstan-return DoctrineOrmQuery\ResultSet<Entities\Conditions\Condition>
 	 */
 	public function getResultSet(
 		Queries\FindConditionsQuery $queryObject,

@@ -36,9 +36,7 @@ interface ITriggerRepository
 	 *
 	 * @return Entities\Triggers\ITrigger|null
 	 *
-	 * @phpstan-template T of Entities\Triggers\Trigger
-	 * @phpstan-param    Queries\FindTriggersQuery<T> $queryObject
-	 * @phpstan-param    class-string<T> $type
+	 * @phpstan-param class-string $type
 	 */
 	public function findOneBy(
 		Queries\FindTriggersQuery $queryObject,
@@ -51,9 +49,7 @@ interface ITriggerRepository
 	 *
 	 * @return Entities\Triggers\ITrigger[]
 	 *
-	 * @phpstan-template T of Entities\Triggers\Trigger
-	 * @phpstan-param    Queries\FindTriggersQuery<T> $queryObject
-	 * @phpstan-param    class-string<T> $type
+	 * @phpstan-param class-string $type
 	 */
 	public function findAllBy(
 		Queries\FindTriggersQuery $queryObject,
@@ -66,10 +62,9 @@ interface ITriggerRepository
 	 *
 	 * @return DoctrineOrmQuery\ResultSet
 	 *
-	 * @phpstan-template T of Entities\Triggers\Trigger
-	 * @phpstan-param    Queries\FindTriggersQuery<T> $queryObject
-	 * @phpstan-param    class-string<T> $type
-	 * @phpstan-return   DoctrineOrmQuery\ResultSet<T>
+	 * @phpstan-param class-string $type
+	 *
+	 * @phpstan-return DoctrineOrmQuery\ResultSet<Entities\Triggers\Trigger>
 	 */
 	public function getResultSet(
 		Queries\FindTriggersQuery $queryObject,

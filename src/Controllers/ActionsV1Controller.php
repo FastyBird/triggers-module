@@ -319,7 +319,10 @@ final class ActionsV1Controller extends BaseV1Controller
 			// Start transaction connection to the database
 			$this->getOrmConnection()->beginTransaction();
 
-			if ($document->getResource()->getType() === Schemas\Actions\ChannelPropertyActionSchema::SCHEMA_TYPE) {
+			if (
+				$document->getResource()->getType() === Schemas\Actions\ChannelPropertyActionSchema::SCHEMA_TYPE
+				&& $action instanceof Entities\Actions\ChannelPropertyAction
+			) {
 				$action = $this->actionsManager->update(
 					$action,
 					$this->channelPropertyActionHydrator->hydrate($document, $action)

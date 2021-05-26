@@ -36,9 +36,7 @@ interface INotificationRepository
 	 *
 	 * @return Entities\Notifications\INotification|null
 	 *
-	 * @phpstan-template T of Entities\Notifications\Notification
-	 * @phpstan-param    Queries\FindNotificationsQuery<T> $queryObject
-	 * @phpstan-param    class-string<T> $type
+	 * @phpstan-param class-string $type
 	 */
 	public function findOneBy(
 		Queries\FindNotificationsQuery $queryObject,
@@ -51,9 +49,7 @@ interface INotificationRepository
 	 *
 	 * @return Entities\Notifications\INotification[]
 	 *
-	 * @phpstan-template T of Entities\Notifications\Notification
-	 * @phpstan-param    Queries\FindNotificationsQuery<T> $queryObject
-	 * @phpstan-param    class-string<T> $type
+	 * @phpstan-param class-string $type
 	 */
 	public function findAllBy(
 		Queries\FindNotificationsQuery $queryObject,
@@ -66,10 +62,9 @@ interface INotificationRepository
 	 *
 	 * @return DoctrineOrmQuery\ResultSet
 	 *
-	 * @phpstan-template T of Entities\Notifications\Notification
-	 * @phpstan-param    Queries\FindNotificationsQuery<T> $queryObject
-	 * @phpstan-param    class-string<T> $type
-	 * @phpstan-return   DoctrineOrmQuery\ResultSet<T>
+	 * @phpstan-param class-string $type
+	 *
+	 * @phpstan-return DoctrineOrmQuery\ResultSet<Entities\Notifications\Notification>
 	 */
 	public function getResultSet(
 		Queries\FindNotificationsQuery $queryObject,

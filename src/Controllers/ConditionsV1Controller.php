@@ -359,19 +359,28 @@ final class ConditionsV1Controller extends BaseV1Controller
 			// Start transaction connection to the database
 			$this->getOrmConnection()->beginTransaction();
 
-			if ($document->getResource()->getType() === Schemas\Conditions\DevicePropertyConditionSchema::SCHEMA_TYPE) {
+			if (
+				$document->getResource()->getType() === Schemas\Conditions\DevicePropertyConditionSchema::SCHEMA_TYPE
+				&& $condition instanceof Entities\Conditions\DevicePropertyCondition
+			) {
 				$condition = $this->conditionsManager->update(
 					$condition,
 					$this->devicePropertyConditionHydrator->hydrate($document, $condition)
 				);
 
-			} elseif ($document->getResource()->getType() === Schemas\Conditions\ChannelPropertyConditionSchema::SCHEMA_TYPE) {
+			} elseif (
+				$document->getResource()->getType() === Schemas\Conditions\ChannelPropertyConditionSchema::SCHEMA_TYPE
+				&& $condition instanceof Entities\Conditions\ChannelPropertyCondition
+			) {
 				$condition = $this->conditionsManager->update(
 					$condition,
 					$this->channelPropertyConditionHydrator->hydrate($document, $condition)
 				);
 
-			} elseif ($document->getResource()->getType() === Schemas\Conditions\TimeConditionSchema::SCHEMA_TYPE) {
+			} elseif (
+				$document->getResource()->getType() === Schemas\Conditions\TimeConditionSchema::SCHEMA_TYPE
+				&& $condition instanceof Entities\Conditions\TimeCondition
+			) {
 				$condition = $this->conditionsManager->update(
 					$condition,
 					$this->timeConditionHydrator->hydrate($document, $condition)

@@ -34,7 +34,7 @@ final class ConditionOperatorTypeTest extends BaseTestCase
 	 */
 	public function testInvalidOperator(): void
 	{
-		$operatorType = ModulesMetadataTypes\TriggerConditionOperatorType::get('invalidtype');
+		ModulesMetadataTypes\TriggerConditionOperatorType::get('invalidtype');
 	}
 
 }

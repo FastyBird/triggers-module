@@ -16,7 +16,7 @@
 namespace FastyBird\TriggersModule\Hydrators\Notifications;
 
 use Contributte\Translation;
-use Doctrine\Common;
+use Doctrine\Persistence;
 use FastyBird\JsonApi\Exceptions as JsonApiExceptions;
 use FastyBird\TriggersModule\Entities;
 use Fig\Http\Message\StatusCodeInterface;
@@ -30,6 +30,8 @@ use IPub\Phone;
  * @subpackage      Hydrators
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
+ *
+ * @phpstan-extends NotificationHydrator<Entities\Notifications\SmsNotification>
  */
 final class SmsNotificationHydrator extends NotificationHydrator
 {
@@ -45,7 +47,7 @@ final class SmsNotificationHydrator extends NotificationHydrator
 
 	public function __construct(
 		Phone\Phone $phone,
-		Common\Persistence\ManagerRegistry $managerRegistry,
+		Persistence\ManagerRegistry $managerRegistry,
 		Translation\Translator $translator
 	) {
 		parent::__construct($managerRegistry, $translator);
@@ -62,7 +64,7 @@ final class SmsNotificationHydrator extends NotificationHydrator
 	}
 
 	/**
-	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes
+	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *
 	 * @return Phone\Entities\Phone
 	 *
@@ -75,18 +77,11 @@ final class SmsNotificationHydrator extends NotificationHydrator
 		JsonAPIDocument\Objects\IStandardObject $attributes
 	): Phone\Entities\Phone {
 		// Condition operator have to be set
-		if (!$attributes->has('phone')) {
-			throw new JsonApiExceptions\JsonApiErrorException(
-				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('messages.invalidPhone.heading'),
-				$this->translator->translate('messages.invalidPhone.message'),
-				[
-					'pointer' => '/data/attributes/phone',
-				]
-			);
-		}
-
-		if (!$this->phone->isValid((string) $attributes->get('phone'), 'CZ')) {
+		if (
+			!is_scalar($attributes->get('phone'))
+			|| !$attributes->has('phone')
+			|| !$this->phone->isValid((string) $attributes->get('phone'), 'CZ')
+		) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
 				$this->translator->translate('messages.invalidPhone.heading'),

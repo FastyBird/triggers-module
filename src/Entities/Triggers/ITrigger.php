@@ -15,7 +15,6 @@
 
 namespace FastyBird\TriggersModule\Entities\Triggers;
 
-use FastyBird\Database\Entities as DatabaseEntities;
 use FastyBird\SimpleAuth\Entities as SimpleAuthEntities;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineTimestampable;
@@ -28,8 +27,8 @@ use IPub\DoctrineTimestampable;
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-interface ITrigger extends DatabaseEntities\IEntity,
-	DatabaseEntities\IEntityParams,
+interface ITrigger extends Entities\IEntity,
+	Entities\IEntityParams,
 	SimpleAuthEntities\IEntityOwner,
 	DoctrineTimestampable\Entities\IEntityCreated, DoctrineTimestampable\Entities\IEntityUpdated
 {

@@ -16,6 +16,7 @@
 namespace FastyBird\TriggersModule\Hydrators\Notifications;
 
 use FastyBird\JsonApi\Hydrators as JsonApiHydrators;
+use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Schemas;
 use IPub\JsonAPIDocument;
 
@@ -26,6 +27,9 @@ use IPub\JsonAPIDocument;
  * @subpackage      Hydrators
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
+ *
+ * @phpstan-template TEntityClass of Entities\Notifications\Notification
+ * @phpstan-extends  JsonApiHydrators\Hydrator<TEntityClass>
  */
 abstract class NotificationHydrator extends JsonApiHydrators\Hydrator
 {
@@ -39,13 +43,13 @@ abstract class NotificationHydrator extends JsonApiHydrators\Hydrator
 	protected string $translationDomain = 'triggers-module.notifications';
 
 	/**
-	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes
+	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *
 	 * @return bool
 	 */
 	protected function hydrateEnabledAttribute(JsonAPIDocument\Objects\IStandardObject $attributes): bool
 	{
-		return (bool) $attributes->get('enabled');
+		return is_scalar($attributes->get('enabled')) && (bool) $attributes->get('enabled');
 	}
 
 }

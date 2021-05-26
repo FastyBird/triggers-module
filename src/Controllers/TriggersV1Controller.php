@@ -256,13 +256,19 @@ final class TriggersV1Controller extends BaseV1Controller
 			// Start transaction connection to the database
 			$this->getOrmConnection()->beginTransaction();
 
-			if ($document->getResource()->getType() === Schemas\Triggers\AutomaticTriggerSchema::SCHEMA_TYPE) {
+			if (
+				$document->getResource()->getType() === Schemas\Triggers\AutomaticTriggerSchema::SCHEMA_TYPE
+				&& $trigger instanceof Entities\Triggers\AutomaticTrigger
+			) {
 				$trigger = $this->triggersManager->update(
 					$trigger,
 					$this->automaticTriggerHydrator->hydrate($document, $trigger)
 				);
 
-			} elseif ($document->getResource()->getType() === Schemas\Triggers\ManualTriggerSchema::SCHEMA_TYPE) {
+			} elseif (
+				$document->getResource()->getType() === Schemas\Triggers\ManualTriggerSchema::SCHEMA_TYPE
+				&& $trigger instanceof Entities\Triggers\ManualTrigger
+			) {
 				$trigger = $this->triggersManager->update(
 					$trigger,
 					$this->manualTriggerHydrator->hydrate($document, $trigger)

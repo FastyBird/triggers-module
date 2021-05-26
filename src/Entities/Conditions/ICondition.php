@@ -15,7 +15,6 @@
 
 namespace FastyBird\TriggersModule\Entities\Conditions;
 
-use FastyBird\Database\Entities as DatabaseEntities;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineTimestampable;
 
@@ -27,7 +26,7 @@ use IPub\DoctrineTimestampable;
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-interface ICondition extends DatabaseEntities\IEntity,
+interface ICondition extends Entities\IEntity,
 	DoctrineTimestampable\Entities\IEntityCreated, DoctrineTimestampable\Entities\IEntityUpdated
 {
 

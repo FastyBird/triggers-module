@@ -28,6 +28,8 @@ use Nette\Utils;
  * @subpackage      Hydrators
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
+ *
+ * @phpstan-extends NotificationHydrator<Entities\Notifications\EmailNotification>
  */
 final class EmailNotificationHydrator extends NotificationHydrator
 {
@@ -57,18 +59,11 @@ final class EmailNotificationHydrator extends NotificationHydrator
 		JsonAPIDocument\Objects\IStandardObject $attributes
 	): string {
 		// Condition operator have to be set
-		if (!$attributes->has('email')) {
-			throw new JsonApiExceptions\JsonApiErrorException(
-				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('messages.invalidEmailAddress.heading'),
-				$this->translator->translate('messages.invalidEmailAddress.message'),
-				[
-					'pointer' => '/data/attributes/email',
-				]
-			);
-		}
-
-		if (!Utils\Validators::isEmail((string) $attributes->get('email'))) {
+		if (
+			!is_scalar($attributes->get('email'))
+			|| !$attributes->has('email')
+			|| !Utils\Validators::isEmail((string) $attributes->get('email'))
+		) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
 				$this->translator->translate('messages.invalidEmailAddress.heading'),

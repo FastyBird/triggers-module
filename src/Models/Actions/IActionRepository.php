@@ -36,9 +36,7 @@ interface IActionRepository
 	 *
 	 * @return Entities\Actions\IAction|null
 	 *
-	 * @phpstan-template T of Entities\Actions\Action
-	 * @phpstan-param    Queries\FindActionsQuery<T> $queryObject
-	 * @phpstan-param    class-string<T> $type
+	 * @phpstan-param class-string $type
 	 */
 	public function findOneBy(
 		Queries\FindActionsQuery $queryObject,
@@ -51,9 +49,7 @@ interface IActionRepository
 	 *
 	 * @return Entities\Actions\IAction[]
 	 *
-	 * @phpstan-template T of Entities\Actions\Action
-	 * @phpstan-param    Queries\FindActionsQuery<T> $queryObject
-	 * @phpstan-param    class-string<T> $type
+	 * @phpstan-param class-string $type
 	 */
 	public function findAllBy(
 		Queries\FindActionsQuery $queryObject,
@@ -66,10 +62,9 @@ interface IActionRepository
 	 *
 	 * @return DoctrineOrmQuery\ResultSet
 	 *
-	 * @phpstan-template T of Entities\Actions\Action
-	 * @phpstan-param    Queries\FindActionsQuery<T> $queryObject
-	 * @phpstan-param    class-string<T> $type
-	 * @phpstan-return   DoctrineOrmQuery\ResultSet<T>
+	 * @phpstan-param class-string $type
+	 *
+	 * @phpstan-return DoctrineOrmQuery\ResultSet<Entities\Actions\Action>
 	 */
 	public function getResultSet(
 		Queries\FindActionsQuery $queryObject,

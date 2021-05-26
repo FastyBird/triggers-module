@@ -15,10 +15,7 @@
 
 namespace FastyBird\TriggersModule\Hydrators\Conditions;
 
-use FastyBird\JsonApi\Exceptions as JsonApiExceptions;
 use FastyBird\TriggersModule\Entities;
-use Fig\Http\Message\StatusCodeInterface;
-use IPub\JsonAPIDocument;
 
 /**
  * Device property condition entity hydrator
@@ -27,6 +24,8 @@ use IPub\JsonAPIDocument;
  * @subpackage      Hydrators
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
+ *
+ * @phpstan-extends PropertyConditionHydrator<Entities\Conditions\DevicePropertyCondition>
  */
 final class DevicePropertyConditionHydrator extends PropertyConditionHydrator
 {
@@ -46,30 +45,6 @@ final class DevicePropertyConditionHydrator extends PropertyConditionHydrator
 	protected function getEntityName(): string
 	{
 		return Entities\Conditions\DevicePropertyCondition::class;
-	}
-
-	/**
-	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes
-	 *
-	 * @return string
-	 *
-	 * @throws JsonApiExceptions\IJsonApiException
-	 */
-	protected function hydrateDeviceAttribute(
-		JsonAPIDocument\Objects\IStandardObject $attributes
-	): string {
-		if (!$attributes->has('device') || $attributes->get('device') === '') {
-			throw new JsonApiExceptions\JsonApiErrorException(
-				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
-				$this->translator->translate('//triggers-module.base.messages.missingAttribute.message'),
-				[
-					'pointer' => '/data/attributes/device',
-				]
-			);
-		}
-
-		return (string) $attributes->get('device');
 	}
 
 }

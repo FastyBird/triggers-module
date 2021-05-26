@@ -27,6 +27,8 @@ use IPub\JsonAPIDocument;
  * @subpackage      Hydrators
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
+ *
+ * @phpstan-extends ActionHydrator<Entities\Actions\ChannelPropertyAction>
  */
 final class ChannelPropertyActionHydrator extends ActionHydrator
 {
@@ -58,7 +60,11 @@ final class ChannelPropertyActionHydrator extends ActionHydrator
 	protected function hydrateDeviceAttribute(
 		JsonAPIDocument\Objects\IStandardObject $attributes
 	): string {
-		if (!$attributes->has('device') || $attributes->get('device') === '') {
+		if (
+			!is_scalar($attributes->get('device'))
+			|| !$attributes->has('device')
+			|| $attributes->get('device') === ''
+		) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
 				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
@@ -82,7 +88,11 @@ final class ChannelPropertyActionHydrator extends ActionHydrator
 	protected function hydrateChannelAttribute(
 		JsonAPIDocument\Objects\IStandardObject $attributes
 	): string {
-		if (!$attributes->has('channel') || $attributes->get('channel') === '') {
+		if (
+			!is_scalar($attributes->get('channel'))
+			|| !$attributes->has('channel')
+			|| $attributes->get('channel') === ''
+		) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
 				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
@@ -106,7 +116,11 @@ final class ChannelPropertyActionHydrator extends ActionHydrator
 	protected function hydratePropertyAttribute(
 		JsonAPIDocument\Objects\IStandardObject $attributes
 	): string {
-		if (!$attributes->has('property') || $attributes->get('property') === '') {
+		if (
+			!is_scalar($attributes->get('property'))
+			|| !$attributes->has('property')
+			|| $attributes->get('property') === ''
+		) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
 				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),

@@ -25,6 +25,8 @@ use FastyBird\TriggersModule\Schemas;
  * @subpackage      Hydrators
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
+ *
+ * @phpstan-extends TriggerHydrator<Entities\Triggers\AutomaticTrigger>
  */
 final class AutomaticTriggerHydrator extends TriggerHydrator
 {

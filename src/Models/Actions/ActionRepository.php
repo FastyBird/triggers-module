@@ -15,7 +15,7 @@
 
 namespace FastyBird\TriggersModule\Models\Actions;
 
-use Doctrine\Common;
+use Doctrine\ORM;
 use Doctrine\Persistence;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Exceptions;
@@ -37,13 +37,17 @@ final class ActionRepository implements IActionRepository
 
 	use Nette\SmartObject;
 
-	/** @var Common\Persistence\ManagerRegistry */
-	private Common\Persistence\ManagerRegistry $managerRegistry;
-
-	/** @var Persistence\ObjectRepository<Entities\Actions\Action>[] */
+	/**
+	 * @var ORM\EntityRepository[]
+	 *
+	 * @phpstan-var ORM\EntityRepository<Entities\Actions\Action>[]
+	 */
 	private array $repository = [];
 
-	public function __construct(Common\Persistence\ManagerRegistry $managerRegistry)
+	/** @var Persistence\ManagerRegistry */
+	private Persistence\ManagerRegistry $managerRegistry;
+
+	public function __construct(Persistence\ManagerRegistry $managerRegistry)
 	{
 		$this->managerRegistry = $managerRegistry;
 	}
@@ -59,23 +63,6 @@ final class ActionRepository implements IActionRepository
 		$action = $queryObject->fetchOne($this->getRepository($type));
 
 		return $action;
-	}
-
-	/**
-	 * @param string $type
-	 *
-	 * @return Persistence\ObjectRepository<Entities\Actions\Action>
-	 *
-	 * @phpstan-template T of Entities\Actions\Action
-	 * @phpstan-param    class-string<T> $type
-	 */
-	private function getRepository(string $type): Persistence\ObjectRepository
-	{
-		if (!isset($this->repository[$type])) {
-			$this->repository[$type] = $this->managerRegistry->getRepository($type);
-		}
-
-		return $this->repository[$type];
 	}
 
 	/**
@@ -108,6 +95,30 @@ final class ActionRepository implements IActionRepository
 		}
 
 		return $result;
+	}
+
+	/**
+	 * @param string $type
+	 *
+	 * @return ORM\EntityRepository
+	 *
+	 * @phpstan-param class-string $type
+	 *
+	 * @phpstan-return ORM\EntityRepository<Entities\Actions\Action>
+	 */
+	private function getRepository(string $type): ORM\EntityRepository
+	{
+		if (!isset($this->repository[$type])) {
+			$repository = $this->managerRegistry->getRepository($type);
+
+			if (!$repository instanceof ORM\EntityRepository) {
+				throw new Exceptions\InvalidStateException('Entity repository could not be loaded');
+			}
+
+			$this->repository[$type] = $repository;
+		}
+
+		return $this->repository[$type];
 	}
 
 }

@@ -27,6 +27,8 @@ use IPub\JsonAPIDocument;
  * @subpackage      Hydrators
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
+ *
+ * @phpstan-extends PropertyConditionHydrator<Entities\Conditions\ChannelPropertyCondition>
  */
 final class ChannelPropertyConditionHydrator extends PropertyConditionHydrator
 {
@@ -50,7 +52,7 @@ final class ChannelPropertyConditionHydrator extends PropertyConditionHydrator
 	}
 
 	/**
-	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes
+	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *
 	 * @return string
 	 *
@@ -59,7 +61,11 @@ final class ChannelPropertyConditionHydrator extends PropertyConditionHydrator
 	protected function hydrateChannelAttribute(
 		JsonAPIDocument\Objects\IStandardObject $attributes
 	): string {
-		if (!$attributes->has('channel') || $attributes->get('channel') === '') {
+		if (
+			!is_scalar($attributes->get('channel'))
+			|| !$attributes->has('channel')
+			|| $attributes->get('channel') === ''
+		) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
 				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),

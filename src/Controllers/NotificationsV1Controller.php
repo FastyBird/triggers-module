@@ -337,13 +337,19 @@ final class NotificationsV1Controller extends BaseV1Controller
 			// Start transaction connection to the database
 			$this->getOrmConnection()->beginTransaction();
 
-			if ($document->getResource()->getType() === Schemas\Notifications\SmsNotificationSchema::SCHEMA_TYPE) {
+			if (
+				$document->getResource()->getType() === Schemas\Notifications\SmsNotificationSchema::SCHEMA_TYPE
+				&& $notification instanceof Entities\Notifications\SmsNotification
+			) {
 				$notification = $this->notificationsManager->update(
 					$notification,
 					$this->smsNotificationHydrator->hydrate($document, $notification)
 				);
 
-			} elseif ($document->getResource()->getType() === Schemas\Notifications\EmailNotificationSchema::SCHEMA_TYPE) {
+			} elseif (
+				$document->getResource()->getType() === Schemas\Notifications\EmailNotificationSchema::SCHEMA_TYPE
+				&& $notification instanceof Entities\Notifications\EmailNotification
+			) {
 				$notification = $this->notificationsManager->update(
 					$notification,
 					$this->emailNotificationHydrator->hydrate($document, $notification)

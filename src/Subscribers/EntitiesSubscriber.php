@@ -19,10 +19,9 @@ use Doctrine\Common;
 use Doctrine\ORM;
 use Doctrine\Persistence;
 use FastyBird\ApplicationExchange\Publisher as ApplicationExchangePublisher;
-use FastyBird\Database\Entities as DatabaseEntities;
 use FastyBird\ModulesMetadata;
 use FastyBird\TriggersModule;
-use IPub\DoctrineCrud;
+use FastyBird\TriggersModule\Entities;
 use Nette;
 use ReflectionClass;
 use ReflectionException;
@@ -83,7 +82,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 		$entity = $eventArgs->getObject();
 
 		// Check for valid entity
-		if (!$entity instanceof DatabaseEntities\IEntity || !$this->validateNamespace($entity)) {
+		if (!$entity instanceof Entities\IEntity || !$this->validateNamespace($entity)) {
 			return;
 		}
 
@@ -91,12 +90,12 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 	}
 
 	/**
-	 * @param DatabaseEntities\IEntity $entity
+	 * @param Entities\IEntity $entity
 	 * @param string $action
 	 *
 	 * @return void
 	 */
-	private function processEntityAction(DatabaseEntities\IEntity $entity, string $action): void
+	private function processEntityAction(Entities\IEntity $entity, string $action): void
 	{
 		if (!method_exists($entity, 'toArray')) {
 			return;
@@ -140,12 +139,12 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 	}
 
 	/**
-	 * @param DatabaseEntities\IEntity $entity
+	 * @param Entities\IEntity $entity
 	 * @param string $class
 	 *
 	 * @return bool
 	 */
-	private function validateEntity(DatabaseEntities\IEntity $entity, string $class): bool
+	private function validateEntity(Entities\IEntity $entity, string $class): bool
 	{
 		$result = false;
 
@@ -182,7 +181,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 
 		// Check for valid entity
 		if (
-			!$entity instanceof DatabaseEntities\IEntity
+			!$entity instanceof Entities\IEntity
 			|| !$this->validateNamespace($entity)
 			|| $uow->isScheduledForDelete($entity)
 		) {
@@ -204,6 +203,11 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 		$processEntities = [];
 
 		foreach ($uow->getScheduledEntityDeletions() as $entity) {
+			// Check for valid entity
+			if (!$entity instanceof Entities\IEntity || !$this->validateNamespace($entity)) {
+				continue;
+			}
+
 			// Doctrine is fine deleting elements multiple times. We are not.
 			$hash = $this->getHash($entity, $uow->getEntityIdentifier($entity));
 
@@ -212,11 +216,6 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 			}
 
 			$processedEntities[] = $hash;
-
-			// Check for valid entity
-			if (!$entity instanceof DatabaseEntities\IEntity || !$this->validateNamespace($entity)) {
-				return;
-			}
 
 			$processEntities[] = $entity;
 		}
@@ -227,12 +226,12 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 	}
 
 	/**
-	 * @param DoctrineCrud\Entities\IIdentifiedEntity $entity
+	 * @param Entities\IEntity $entity
 	 * @param mixed[] $identifier
 	 *
 	 * @return string
 	 */
-	private function getHash(DoctrineCrud\Entities\IIdentifiedEntity $entity, array $identifier): string
+	private function getHash(Entities\IEntity $entity, array $identifier): string
 	{
 		return implode(
 			' ',

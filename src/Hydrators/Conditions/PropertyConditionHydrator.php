@@ -17,6 +17,7 @@ namespace FastyBird\TriggersModule\Hydrators\Conditions;
 
 use FastyBird\JsonApi\Exceptions as JsonApiExceptions;
 use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
+use FastyBird\TriggersModule\Entities;
 use Fig\Http\Message\StatusCodeInterface;
 use IPub\JsonAPIDocument;
 
@@ -27,6 +28,9 @@ use IPub\JsonAPIDocument;
  * @subpackage      Hydrators
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
+ *
+ * @phpstan-template TEntityClass of Entities\Conditions\PropertyCondition
+ * @phpstan-extends  ConditionHydrator<TEntityClass>
  */
 abstract class PropertyConditionHydrator extends ConditionHydrator
 {
@@ -41,7 +45,7 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 	];
 
 	/**
-	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes
+	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *
 	 * @return string
 	 *
@@ -50,7 +54,11 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 	protected function hydrateDeviceAttribute(
 		JsonAPIDocument\Objects\IStandardObject $attributes
 	): string {
-		if (!$attributes->has('device') || $attributes->get('device') === '') {
+		if (
+			!is_scalar($attributes->get('device'))
+			|| !$attributes->has('device')
+			|| $attributes->get('device') === ''
+		) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
 				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
@@ -65,7 +73,7 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 	}
 
 	/**
-	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes
+	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *
 	 * @return string
 	 *
@@ -74,7 +82,11 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 	protected function hydratePropertyAttribute(
 		JsonAPIDocument\Objects\IStandardObject $attributes
 	): string {
-		if (!$attributes->has('property') || $attributes->get('property') === '') {
+		if (
+			!is_scalar($attributes->get('property'))
+			|| !$attributes->has('property')
+			|| $attributes->get('property') === ''
+		) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
 				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
@@ -89,7 +101,7 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 	}
 
 	/**
-	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes
+	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *
 	 * @return ModulesMetadataTypes\TriggerConditionOperatorType
 	 *
@@ -99,7 +111,11 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 		JsonAPIDocument\Objects\IStandardObject $attributes
 	): ModulesMetadataTypes\TriggerConditionOperatorType {
 		// Condition operator have to be set
-		if (!$attributes->has('operator') || $attributes->get('operator') === '') {
+		if (
+			!is_scalar($attributes->get('operator'))
+			|| !$attributes->has('operator')
+			|| $attributes->get('operator') === ''
+		) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
 				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
@@ -125,7 +141,7 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 	}
 
 	/**
-	 * @param JsonAPIDocument\Objects\IStandardObject<mixed> $attributes
+	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *
 	 * @return string
 	 *
@@ -134,7 +150,11 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 	protected function hydrateOperandAttribute(
 		JsonAPIDocument\Objects\IStandardObject $attributes
 	): string {
-		if (!$attributes->has('operand')) {
+		if (
+			!is_scalar($attributes->get('operand'))
+			|| !$attributes->has('operand')
+			|| $attributes->get('operand') === ''
+		) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
 				$this->translator->translate('//triggers.api.base.messages.missingMandatory.heading'),
