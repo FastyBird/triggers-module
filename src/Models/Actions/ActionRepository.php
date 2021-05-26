@@ -40,7 +40,7 @@ final class ActionRepository implements IActionRepository
 	/**
 	 * @var ORM\EntityRepository[]
 	 *
-	 * @phpstan-var ORM\EntityRepository<Entities\Actions\Action>[]
+	 * @phpstan-var ORM\EntityRepository<Entities\Actions\IAction>[]
 	 */
 	private array $repository = [];
 
@@ -104,7 +104,7 @@ final class ActionRepository implements IActionRepository
 	 *
 	 * @phpstan-param class-string $type
 	 *
-	 * @phpstan-return ORM\EntityRepository<Entities\Actions\Action>
+	 * @phpstan-return ORM\EntityRepository<Entities\Actions\IAction>
 	 */
 	private function getRepository(string $type): ORM\EntityRepository
 	{

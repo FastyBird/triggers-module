@@ -25,7 +25,7 @@ use FastyBird\TriggersModule\Entities;
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-extends PropertyConditionHydrator<Entities\Conditions\DevicePropertyCondition>
+ * @phpstan-extends PropertyConditionHydrator<Entities\Conditions\IDevicePropertyCondition>
  */
 final class DevicePropertyConditionHydrator extends PropertyConditionHydrator
 {

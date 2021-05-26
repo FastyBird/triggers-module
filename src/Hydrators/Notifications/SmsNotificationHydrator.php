@@ -31,7 +31,7 @@ use IPub\Phone;
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-extends NotificationHydrator<Entities\Notifications\SmsNotification>
+ * @phpstan-extends NotificationHydrator<Entities\Notifications\ISmsNotification>
  */
 final class SmsNotificationHydrator extends NotificationHydrator
 {

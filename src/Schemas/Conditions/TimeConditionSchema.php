@@ -27,7 +27,7 @@ use Neomerx\JsonApi;
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-extends ConditionSchema<Entities\Conditions\TimeCondition>
+ * @phpstan-extends ConditionSchema<Entities\Conditions\ITimeCondition>
  */
 final class TimeConditionSchema extends ConditionSchema
 {
@@ -54,7 +54,7 @@ final class TimeConditionSchema extends ConditionSchema
 	}
 
 	/**
-	 * @param Entities\Conditions\TimeCondition $condition
+	 * @param Entities\Conditions\ITimeCondition $condition
 	 * @param JsonApi\Contracts\Schema\ContextInterface $context
 	 *
 	 * @return iterable<string, string|int[]|bool>

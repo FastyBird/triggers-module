@@ -25,7 +25,7 @@ use FastyBird\TriggersModule\Entities;
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-extends TriggerSchema<Entities\Triggers\ManualTrigger>
+ * @phpstan-extends TriggerSchema<Entities\Triggers\IManualTrigger>
  */
 final class ManualTriggerSchema extends TriggerSchema
 {

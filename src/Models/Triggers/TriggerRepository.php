@@ -40,7 +40,7 @@ final class TriggerRepository implements ITriggerRepository
 	/**
 	 * @var ORM\EntityRepository[]
 	 *
-	 * @phpstan-var ORM\EntityRepository<Entities\Triggers\Trigger>[]
+	 * @phpstan-var ORM\EntityRepository<Entities\Triggers\ITrigger>[]
 	 */
 	private array $repository = [];
 
@@ -104,7 +104,7 @@ final class TriggerRepository implements ITriggerRepository
 	 *
 	 * @phpstan-param class-string $type
 	 *
-	 * @phpstan-return ORM\EntityRepository<Entities\Triggers\Trigger>
+	 * @phpstan-return ORM\EntityRepository<Entities\Triggers\ITrigger>
 	 */
 	private function getRepository(string $type): ORM\EntityRepository
 	{

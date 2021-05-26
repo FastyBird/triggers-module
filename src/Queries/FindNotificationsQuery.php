@@ -29,7 +29,7 @@ use Ramsey\Uuid;
  *
  * @author           Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-extends DoctrineOrmQuery\QueryObject<Entities\Notifications\Notification>
+ * @phpstan-extends DoctrineOrmQuery\QueryObject<Entities\Notifications\INotification>
  */
 class FindNotificationsQuery extends DoctrineOrmQuery\QueryObject
 {
@@ -69,7 +69,7 @@ class FindNotificationsQuery extends DoctrineOrmQuery\QueryObject
 	 *
 	 * @return ORM\QueryBuilder
 	 *
-	 * @phpstan-param ORM\EntityRepository<Entities\Notifications\Notification> $repository
+	 * @phpstan-param ORM\EntityRepository<Entities\Notifications\INotification> $repository
 	 */
 	protected function doCreateQuery(ORM\EntityRepository $repository): ORM\QueryBuilder
 	{
@@ -87,7 +87,7 @@ class FindNotificationsQuery extends DoctrineOrmQuery\QueryObject
 	 *
 	 * @return ORM\QueryBuilder
 	 *
-	 * @phpstan-param ORM\EntityRepository<Entities\Notifications\Notification> $repository
+	 * @phpstan-param ORM\EntityRepository<Entities\Notifications\INotification> $repository
 	 */
 	private function createBasicDql(ORM\EntityRepository $repository): ORM\QueryBuilder
 	{
@@ -107,7 +107,7 @@ class FindNotificationsQuery extends DoctrineOrmQuery\QueryObject
 	 *
 	 * @return ORM\QueryBuilder
 	 *
-	 * @phpstan-param ORM\EntityRepository<Entities\Notifications\Notification> $repository
+	 * @phpstan-param ORM\EntityRepository<Entities\Notifications\INotification> $repository
 	 */
 	protected function doCreateCountQuery(ORM\EntityRepository $repository): ORM\QueryBuilder
 	{

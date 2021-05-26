@@ -36,12 +36,12 @@ final class ConditionsManager implements IConditionsManager
 	/**
 	 * @var Crud\IEntityCrud
 	 *
-	 * @phpstan-var Crud\IEntityCrud<Entities\Conditions\Condition>
+	 * @phpstan-var Crud\IEntityCrud<Entities\Conditions\ICondition>
 	 */
 	private Crud\IEntityCrud $entityCrud;
 
 	/**
-	 * @phpstan-param Crud\IEntityCrud<Entities\Conditions\Condition> $entityCrud
+	 * @phpstan-param Crud\IEntityCrud<Entities\Conditions\ICondition> $entityCrud
 	 */
 	public function __construct(
 		Crud\IEntityCrud $entityCrud

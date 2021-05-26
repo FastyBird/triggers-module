@@ -29,7 +29,7 @@ use Nette\Utils;
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-extends NotificationHydrator<Entities\Notifications\EmailNotification>
+ * @phpstan-extends NotificationHydrator<Entities\Notifications\IEmailNotification>
  */
 final class EmailNotificationHydrator extends NotificationHydrator
 {

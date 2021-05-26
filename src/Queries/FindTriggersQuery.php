@@ -29,7 +29,7 @@ use Ramsey\Uuid;
  *
  * @author           Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-extends DoctrineOrmQuery\QueryObject<Entities\Triggers\Trigger>
+ * @phpstan-extends DoctrineOrmQuery\QueryObject<Entities\Triggers\ITrigger>
  */
 class FindTriggersQuery extends DoctrineOrmQuery\QueryObject
 {
@@ -87,7 +87,7 @@ class FindTriggersQuery extends DoctrineOrmQuery\QueryObject
 	 *
 	 * @return ORM\QueryBuilder
 	 *
-	 * @phpstan-param ORM\EntityRepository<Entities\Triggers\Trigger> $repository
+	 * @phpstan-param ORM\EntityRepository<Entities\Triggers\ITrigger> $repository
 	 */
 	protected function doCreateQuery(ORM\EntityRepository $repository): ORM\QueryBuilder
 	{
@@ -105,7 +105,7 @@ class FindTriggersQuery extends DoctrineOrmQuery\QueryObject
 	 *
 	 * @return ORM\QueryBuilder
 	 *
-	 * @phpstan-param ORM\EntityRepository<Entities\Triggers\Trigger> $repository
+	 * @phpstan-param ORM\EntityRepository<Entities\Triggers\ITrigger> $repository
 	 */
 	protected function createBasicDql(ORM\EntityRepository $repository): ORM\QueryBuilder
 	{
@@ -123,7 +123,7 @@ class FindTriggersQuery extends DoctrineOrmQuery\QueryObject
 	 *
 	 * @return ORM\QueryBuilder
 	 *
-	 * @phpstan-param ORM\EntityRepository<Entities\Triggers\Trigger> $repository
+	 * @phpstan-param ORM\EntityRepository<Entities\Triggers\ITrigger> $repository
 	 */
 	protected function doCreateCountQuery(ORM\EntityRepository $repository): ORM\QueryBuilder
 	{

@@ -40,7 +40,7 @@ final class NotificationRepository implements INotificationRepository
 	/**
 	 * @var ORM\EntityRepository[]
 	 *
-	 * @phpstan-var ORM\EntityRepository<Entities\Notifications\Notification>[]
+	 * @phpstan-var ORM\EntityRepository<Entities\Notifications\INotification>[]
 	 */
 	private array $repository = [];
 
@@ -104,7 +104,7 @@ final class NotificationRepository implements INotificationRepository
 	 *
 	 * @phpstan-param class-string $type
 	 *
-	 * @phpstan-return ORM\EntityRepository<Entities\Notifications\Notification>
+	 * @phpstan-return ORM\EntityRepository<Entities\Notifications\INotification>
 	 */
 	private function getRepository(string $type): ORM\EntityRepository
 	{

@@ -31,7 +31,7 @@ use Ramsey\Uuid;
  *
  * @author           Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-extends DoctrineOrmQuery\QueryObject<Entities\Conditions\Condition>
+ * @phpstan-extends DoctrineOrmQuery\QueryObject<Entities\Conditions\ICondition>
  */
 class FindConditionsQuery extends DoctrineOrmQuery\QueryObject
 {
@@ -215,7 +215,7 @@ class FindConditionsQuery extends DoctrineOrmQuery\QueryObject
 	 *
 	 * @return ORM\QueryBuilder
 	 *
-	 * @phpstan-param ORM\EntityRepository<Entities\Conditions\Condition> $repository
+	 * @phpstan-param ORM\EntityRepository<Entities\Conditions\ICondition> $repository
 	 */
 	protected function doCreateQuery(ORM\EntityRepository $repository): ORM\QueryBuilder
 	{
@@ -233,7 +233,7 @@ class FindConditionsQuery extends DoctrineOrmQuery\QueryObject
 	 *
 	 * @return ORM\QueryBuilder
 	 *
-	 * @phpstan-param ORM\EntityRepository<Entities\Conditions\Condition> $repository
+	 * @phpstan-param ORM\EntityRepository<Entities\Conditions\ICondition> $repository
 	 */
 	private function createBasicDql(ORM\EntityRepository $repository): ORM\QueryBuilder
 	{
@@ -267,7 +267,7 @@ class FindConditionsQuery extends DoctrineOrmQuery\QueryObject
 	 *
 	 * @return ORM\QueryBuilder
 	 *
-	 * @phpstan-param ORM\EntityRepository<Entities\Conditions\Condition> $repository
+	 * @phpstan-param ORM\EntityRepository<Entities\Conditions\ICondition> $repository
 	 */
 	protected function doCreateCountQuery(ORM\EntityRepository $repository): ORM\QueryBuilder
 	{

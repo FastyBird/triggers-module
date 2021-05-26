@@ -28,7 +28,7 @@ use IPub\JsonAPIDocument;
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-template TEntityClass of Entities\Triggers\Trigger
+ * @phpstan-template TEntityClass of Entities\Triggers\ITrigger
  * @phpstan-extends  JsonApiHydrators\Hydrator<TEntityClass>
  */
 abstract class TriggerHydrator extends JsonApiHydrators\Hydrator

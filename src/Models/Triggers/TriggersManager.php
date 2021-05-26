@@ -36,12 +36,12 @@ final class TriggersManager implements ITriggersManager
 	/**
 	 * @var Crud\IEntityCrud
 	 *
-	 * @phpstan-var Crud\IEntityCrud<Entities\Triggers\Trigger>
+	 * @phpstan-var Crud\IEntityCrud<Entities\Triggers\ITrigger>
 	 */
 	private Crud\IEntityCrud $entityCrud;
 
 	/**
-	 * @phpstan-param Crud\IEntityCrud<Entities\Triggers\Trigger> $entityCrud
+	 * @phpstan-param Crud\IEntityCrud<Entities\Triggers\ITrigger> $entityCrud
 	 */
 	public function __construct(
 		Crud\IEntityCrud $entityCrud

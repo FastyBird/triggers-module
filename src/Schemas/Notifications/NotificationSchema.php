@@ -31,7 +31,7 @@ use Neomerx\JsonApi;
  *
  * @author           Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-template T of Entities\Notifications\Notification
+ * @phpstan-template T of Entities\Notifications\INotification
  * @phpstan-extends  JsonApiSchemas\JsonApiSchema<T>
  */
 abstract class NotificationSchema extends JsonApiSchemas\JsonApiSchema
@@ -52,7 +52,7 @@ abstract class NotificationSchema extends JsonApiSchemas\JsonApiSchema
 	}
 
 	/**
-	 * @param Entities\Notifications\Notification $notification
+	 * @param Entities\Notifications\INotification $notification
 	 * @param JsonApi\Contracts\Schema\ContextInterface $context
 	 *
 	 * @return iterable<string, bool>
@@ -69,7 +69,7 @@ abstract class NotificationSchema extends JsonApiSchemas\JsonApiSchema
 	}
 
 	/**
-	 * @param Entities\Notifications\Notification $notification
+	 * @param Entities\Notifications\INotification $notification
 	 *
 	 * @return JsonApi\Contracts\Schema\LinkInterface
 	 *
@@ -93,7 +93,7 @@ abstract class NotificationSchema extends JsonApiSchemas\JsonApiSchema
 	}
 
 	/**
-	 * @param Entities\Notifications\Notification $notification
+	 * @param Entities\Notifications\INotification $notification
 	 * @param JsonApi\Contracts\Schema\ContextInterface $context
 	 *
 	 * @return iterable<string, mixed>
@@ -114,7 +114,7 @@ abstract class NotificationSchema extends JsonApiSchemas\JsonApiSchema
 	}
 
 	/**
-	 * @param Entities\Notifications\Notification $notification
+	 * @param Entities\Notifications\INotification $notification
 	 * @param string $name
 	 *
 	 * @return JsonApi\Contracts\Schema\LinkInterface
@@ -142,7 +142,7 @@ abstract class NotificationSchema extends JsonApiSchemas\JsonApiSchema
 	}
 
 	/**
-	 * @param Entities\Notifications\Notification $notification
+	 * @param Entities\Notifications\INotification $notification
 	 * @param string $name
 	 *
 	 * @return JsonApi\Contracts\Schema\LinkInterface

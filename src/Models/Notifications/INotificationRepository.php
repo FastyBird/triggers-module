@@ -64,7 +64,7 @@ interface INotificationRepository
 	 *
 	 * @phpstan-param class-string $type
 	 *
-	 * @phpstan-return DoctrineOrmQuery\ResultSet<Entities\Notifications\Notification>
+	 * @phpstan-return DoctrineOrmQuery\ResultSet<Entities\Notifications\INotification>
 	 */
 	public function getResultSet(
 		Queries\FindNotificationsQuery $queryObject,

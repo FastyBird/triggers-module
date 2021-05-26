@@ -28,7 +28,7 @@ use IPub\JsonAPIDocument;
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-template TEntityClass of Entities\Notifications\Notification
+ * @phpstan-template TEntityClass of Entities\Notifications\INotification
  * @phpstan-extends  JsonApiHydrators\Hydrator<TEntityClass>
  */
 abstract class NotificationHydrator extends JsonApiHydrators\Hydrator

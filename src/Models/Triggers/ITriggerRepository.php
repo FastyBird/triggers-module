@@ -64,7 +64,7 @@ interface ITriggerRepository
 	 *
 	 * @phpstan-param class-string $type
 	 *
-	 * @phpstan-return DoctrineOrmQuery\ResultSet<Entities\Triggers\Trigger>
+	 * @phpstan-return DoctrineOrmQuery\ResultSet<Entities\Triggers\ITrigger>
 	 */
 	public function getResultSet(
 		Queries\FindTriggersQuery $queryObject,

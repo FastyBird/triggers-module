@@ -29,7 +29,7 @@ use IPub\JsonAPIDocument;
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-template TEntityClass of Entities\Conditions\Condition
+ * @phpstan-template TEntityClass of Entities\Conditions\ICondition
  * @phpstan-extends  JsonApiHydrators\Hydrator<TEntityClass>
  */
 abstract class ConditionHydrator extends JsonApiHydrators\Hydrator

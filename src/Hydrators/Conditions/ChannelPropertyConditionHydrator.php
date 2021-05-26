@@ -28,7 +28,7 @@ use IPub\JsonAPIDocument;
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-extends PropertyConditionHydrator<Entities\Conditions\ChannelPropertyCondition>
+ * @phpstan-extends PropertyConditionHydrator<Entities\Conditions\IChannelPropertyCondition>
  */
 final class ChannelPropertyConditionHydrator extends PropertyConditionHydrator
 {

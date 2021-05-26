@@ -29,7 +29,7 @@ use Ramsey\Uuid;
  *
  * @author           Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-extends DoctrineOrmQuery\QueryObject<Entities\Actions\Action>
+ * @phpstan-extends DoctrineOrmQuery\QueryObject<Entities\Actions\IAction>
  */
 class FindActionsQuery extends DoctrineOrmQuery\QueryObject
 {
@@ -105,7 +105,7 @@ class FindActionsQuery extends DoctrineOrmQuery\QueryObject
 	 *
 	 * @return ORM\QueryBuilder
 	 *
-	 * @phpstan-param ORM\EntityRepository<Entities\Actions\Action> $repository
+	 * @phpstan-param ORM\EntityRepository<Entities\Actions\IAction> $repository
 	 */
 	protected function doCreateQuery(ORM\EntityRepository $repository): ORM\QueryBuilder
 	{
@@ -123,7 +123,7 @@ class FindActionsQuery extends DoctrineOrmQuery\QueryObject
 	 *
 	 * @return ORM\QueryBuilder
 	 *
-	 * @phpstan-param ORM\EntityRepository<Entities\Actions\Action> $repository
+	 * @phpstan-param ORM\EntityRepository<Entities\Actions\IAction> $repository
 	 */
 	private function createBasicDql(ORM\EntityRepository $repository): ORM\QueryBuilder
 	{
@@ -143,7 +143,7 @@ class FindActionsQuery extends DoctrineOrmQuery\QueryObject
 	 *
 	 * @return ORM\QueryBuilder
 	 *
-	 * @phpstan-param ORM\EntityRepository<Entities\Actions\Action> $repository
+	 * @phpstan-param ORM\EntityRepository<Entities\Actions\IAction> $repository
 	 */
 	protected function doCreateCountQuery(ORM\EntityRepository $repository): ORM\QueryBuilder
 	{

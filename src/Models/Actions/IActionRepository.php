@@ -64,7 +64,7 @@ interface IActionRepository
 	 *
 	 * @phpstan-param class-string $type
 	 *
-	 * @phpstan-return DoctrineOrmQuery\ResultSet<Entities\Actions\Action>
+	 * @phpstan-return DoctrineOrmQuery\ResultSet<Entities\Actions\IAction>
 	 */
 	public function getResultSet(
 		Queries\FindActionsQuery $queryObject,

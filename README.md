@@ -36,7 +36,7 @@ composer require fastybird/triggers-module
 
 ## Documentation
 
-Learn how to use triggers module and manage your triggers  in [documentation](https://github.com/FastyBird/triggers-module/blob/master/.docs/en/index.md).
+Learn how to use triggers module and manage your triggers in [documentation](https://github.com/FastyBird/triggers-module/blob/master/.docs/en/index.md).
 
 ## Feedback
 

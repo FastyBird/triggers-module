@@ -36,12 +36,12 @@ final class ActionsManager implements IActionsManager
 	/**
 	 * @var Crud\IEntityCrud
 	 *
-	 * @phpstan-var Crud\IEntityCrud<Entities\Actions\Action>
+	 * @phpstan-var Crud\IEntityCrud<Entities\Actions\IAction>
 	 */
 	private Crud\IEntityCrud $entityCrud;
 
 	/**
-	 * @phpstan-param Crud\IEntityCrud<Entities\Actions\Action> $entityCrud
+	 * @phpstan-param Crud\IEntityCrud<Entities\Actions\IAction> $entityCrud
 	 */
 	public function __construct(
 		Crud\IEntityCrud $entityCrud

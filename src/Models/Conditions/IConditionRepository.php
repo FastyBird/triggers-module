@@ -64,7 +64,7 @@ interface IConditionRepository
 	 *
 	 * @phpstan-param class-string $type
 	 *
-	 * @phpstan-return DoctrineOrmQuery\ResultSet<Entities\Conditions\Condition>
+	 * @phpstan-return DoctrineOrmQuery\ResultSet<Entities\Conditions\ICondition>
 	 */
 	public function getResultSet(
 		Queries\FindConditionsQuery $queryObject,

@@ -28,7 +28,7 @@ use IPub\JsonAPIDocument;
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-extends ActionHydrator<Entities\Actions\ChannelPropertyAction>
+ * @phpstan-extends ActionHydrator<Entities\Actions\IChannelPropertyAction>
  */
 final class ChannelPropertyActionHydrator extends ActionHydrator
 {

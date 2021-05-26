@@ -40,7 +40,7 @@ final class ConditionRepository implements IConditionRepository
 	/**
 	 * @var ORM\EntityRepository[]
 	 *
-	 * @phpstan-var ORM\EntityRepository<Entities\Conditions\Condition>[]
+	 * @phpstan-var ORM\EntityRepository<Entities\Conditions\ICondition>[]
 	 */
 	private array $repository = [];
 
@@ -104,7 +104,7 @@ final class ConditionRepository implements IConditionRepository
 	 *
 	 * @phpstan-param class-string $type
 	 *
-	 * @phpstan-return ORM\EntityRepository<Entities\Conditions\Condition>
+	 * @phpstan-return ORM\EntityRepository<Entities\Conditions\ICondition>
 	 */
 	private function getRepository(string $type): ORM\EntityRepository
 	{

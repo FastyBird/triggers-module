@@ -26,7 +26,7 @@ use Neomerx\JsonApi;
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-extends ConditionSchema<Entities\Conditions\DevicePropertyCondition>
+ * @phpstan-extends ConditionSchema<Entities\Conditions\IDevicePropertyCondition>
  */
 final class DevicePropertyConditionSchema extends ConditionSchema
 {
@@ -53,7 +53,7 @@ final class DevicePropertyConditionSchema extends ConditionSchema
 	}
 
 	/**
-	 * @param Entities\Conditions\DevicePropertyCondition $condition
+	 * @param Entities\Conditions\IDevicePropertyCondition $condition
 	 * @param JsonApi\Contracts\Schema\ContextInterface $context
 	 *
 	 * @return iterable<string, string|bool>

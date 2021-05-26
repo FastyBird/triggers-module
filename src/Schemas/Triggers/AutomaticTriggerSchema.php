@@ -28,7 +28,7 @@ use Neomerx\JsonApi;
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-extends TriggerSchema<Entities\Triggers\AutomaticTrigger>
+ * @phpstan-extends TriggerSchema<Entities\Triggers\IAutomaticTrigger>
  */
 final class AutomaticTriggerSchema extends TriggerSchema
 {
@@ -60,7 +60,7 @@ final class AutomaticTriggerSchema extends TriggerSchema
 	}
 
 	/**
-	 * @param Entities\Triggers\AutomaticTrigger $trigger
+	 * @param Entities\Triggers\IAutomaticTrigger $trigger
 	 * @param JsonApi\Contracts\Schema\ContextInterface $context
 	 *
 	 * @return iterable<string, mixed>
@@ -79,7 +79,7 @@ final class AutomaticTriggerSchema extends TriggerSchema
 	}
 
 	/**
-	 * @param Entities\Triggers\AutomaticTrigger $trigger
+	 * @param Entities\Triggers\IAutomaticTrigger $trigger
 	 * @param string $name
 	 *
 	 * @return JsonApi\Contracts\Schema\LinkInterface
@@ -108,7 +108,7 @@ final class AutomaticTriggerSchema extends TriggerSchema
 	}
 
 	/**
-	 * @param Entities\Triggers\AutomaticTrigger $trigger
+	 * @param Entities\Triggers\IAutomaticTrigger $trigger
 	 * @param string $name
 	 *
 	 * @return JsonApi\Contracts\Schema\LinkInterface

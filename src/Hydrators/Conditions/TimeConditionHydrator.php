@@ -30,7 +30,7 @@ use Nette\Utils;
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-extends ConditionHydrator<Entities\Conditions\TimeCondition>
+ * @phpstan-extends ConditionHydrator<Entities\Conditions\ITimeCondition>
  */
 final class TimeConditionHydrator extends ConditionHydrator
 {

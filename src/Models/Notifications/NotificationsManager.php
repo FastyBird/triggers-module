@@ -36,12 +36,12 @@ final class NotificationsManager implements INotificationsManager
 	/**
 	 * @var Crud\IEntityCrud
 	 *
-	 * @phpstan-var Crud\IEntityCrud<Entities\Notifications\Notification>
+	 * @phpstan-var Crud\IEntityCrud<Entities\Notifications\INotification>
 	 */
 	private Crud\IEntityCrud $entityCrud;
 
 	/**
-	 * @phpstan-param Crud\IEntityCrud<Entities\Notifications\Notification> $entityCrud
+	 * @phpstan-param Crud\IEntityCrud<Entities\Notifications\INotification> $entityCrud
 	 */
 	public function __construct(
 		Crud\IEntityCrud $entityCrud
