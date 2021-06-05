@@ -85,7 +85,7 @@ export default class Notification extends Model implements NotificationInterface
     })
   }
 
-  static async add(trigger: TriggerInterface, data: CreateSmsNotificationInterface | CreateEmailNotificationInterface, id?: string, draft = true): Promise<Item<Notification>> {
+  static async add(trigger: TriggerInterface, data: CreateSmsNotificationInterface | CreateEmailNotificationInterface, id?: string | null, draft = true): Promise<Item<Notification>> {
     return await Notification.dispatch('add', {
       trigger,
       id,

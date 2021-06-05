@@ -21,6 +21,7 @@ declare module '@vuex-orm/core' {
 }
 
 // Re-export models types
+export * from '@/lib/types'
 export * from '@/lib/actions/types'
 export * from '@/lib/conditions/types'
 export * from '@/lib/notifications/types'

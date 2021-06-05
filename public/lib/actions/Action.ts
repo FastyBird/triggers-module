@@ -86,7 +86,7 @@ export default class Action extends Model implements ActionInterface {
     })
   }
 
-  static async add(trigger: TriggerInterface, data: CreateDevicePropertyActionInterface | CreateChannelPropertyActionInterface, id?: string, draft = true): Promise<Item<Action>> {
+  static async add(trigger: TriggerInterface, data: CreateDevicePropertyActionInterface | CreateChannelPropertyActionInterface, id?: string | null, draft = true): Promise<Item<Action>> {
     return await Action.dispatch('add', {
       trigger,
       id,

@@ -200,7 +200,7 @@ export default class Trigger extends Model implements TriggerInterface {
     return await Trigger.dispatch('fetch')
   }
 
-  static async add(data: CreateAutomaticTriggerInterface | CreateManualTriggerInterface, id?: string, draft = true): Promise<Item<Trigger>> {
+  static async add(data: CreateAutomaticTriggerInterface | CreateManualTriggerInterface, id?: string | null, draft = true): Promise<Item<Trigger>> {
     return await Trigger.dispatch('add', {
       id,
       draft,

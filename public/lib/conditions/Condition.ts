@@ -113,7 +113,7 @@ export default class Condition extends Model implements ConditionInterface {
     })
   }
 
-  static async add(trigger: TriggerInterface, data: CreateTimeConditionInterface | CreateDateConditionInterface | CreateChannelPropertyConditionInterface | CreateDevicePropertyConditionInterface, id?: string, draft = true): Promise<Item<Condition>> {
+  static async add(trigger: TriggerInterface, data: CreateTimeConditionInterface | CreateDateConditionInterface | CreateChannelPropertyConditionInterface | CreateDevicePropertyConditionInterface, id?: string | null, draft = true): Promise<Item<Condition>> {
     return await Condition.dispatch('add', {
       trigger,
       id,

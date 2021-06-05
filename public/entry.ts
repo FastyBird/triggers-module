@@ -20,7 +20,7 @@ const install: InstallFunction = function installVuexOrmWamp(components: Compone
     components.Model.prototype.$triggersModuleOrigin = config.originName
   } else {
     // @ts-ignore
-    components.Model.prototype.$triggersModuleOrigin = ModuleOrigin.MODULE_DEVICES_ORIGIN
+    components.Model.prototype.$triggersModuleOrigin = ModuleOrigin.MODULE_TRIGGERS_ORIGIN
   }
 
   config.database.register(Trigger, triggers)
