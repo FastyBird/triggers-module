@@ -109,7 +109,7 @@ export default class Trigger extends Model implements TriggerInterface {
       if (schedule !== null) {
         if (schedule.days.length === 7) {
           // @ts-ignore
-          days.push(storeInstance.$i18n.t('triggers.texts.everyday').toString())
+          days.push(storeInstance.$i18n.t('triggersModule.description.everyday').toString())
         } else {
           days = []
 
@@ -117,44 +117,44 @@ export default class Trigger extends Model implements TriggerInterface {
             switch (day) {
               case 1:
                 // @ts-ignore
-                days.push(storeInstance.$i18n.t('application.days.mon.short').toString())
+                days.push(storeInstance.$i18n.t('triggersModule.description.days.mon').toString())
                 break
 
               case 2:
                 // @ts-ignore
-                days.push(storeInstance.$i18n.t('application.days.tue.short').toString())
+                days.push(storeInstance.$i18n.t('triggersModule.description.days.tue').toString())
                 break
 
               case 3:
                 // @ts-ignore
-                days.push(storeInstance.$i18n.t('application.days.wed.short').toString())
+                days.push(storeInstance.$i18n.t('triggersModule.description.days.wed').toString())
                 break
 
               case 4:
                 // @ts-ignore
-                days.push(storeInstance.$i18n.t('application.days.thu.short').toString())
+                days.push(storeInstance.$i18n.t('triggersModule.description.days.thu').toString())
                 break
 
               case 5:
                 // @ts-ignore
-                days.push(storeInstance.$i18n.t('application.days.fri.short').toString())
+                days.push(storeInstance.$i18n.t('triggersModule.description.days.fri').toString())
                 break
 
               case 6:
                 // @ts-ignore
-                days.push(storeInstance.$i18n.t('application.days.sat.short').toString())
+                days.push(storeInstance.$i18n.t('triggersModule.description.days.sat').toString())
                 break
 
               case 7:
                 // @ts-ignore
-                days.push(storeInstance.$i18n.t('application.days.sun.short').toString())
+                days.push(storeInstance.$i18n.t('triggersModule.description.days.sun').toString())
                 break
             }
           }
         }
 
         // @ts-ignore
-        return storeInstance.$i18n.t('triggers.headings.scheduledTrigger', {
+        return storeInstance.$i18n.t('triggersModule.description.scheduledTrigger', {
           days: days.join(', '),
           // @ts-ignore
           time: storeInstance.$dateFns.format(new Date(schedule.time), get(storeInstance.getters['session/getAccount'](), 'timeFormat', 'HH:mm')),
@@ -163,7 +163,7 @@ export default class Trigger extends Model implements TriggerInterface {
     }
 
     // @ts-ignore
-    return this.isAutomatic ? storeInstance.$i18n.t('triggers.headings.automaticTrigger').toString() : storeInstance.$i18n.t('triggers.headings.manualTrigger').toString()
+    return this.isAutomatic ? storeInstance.$i18n.t('triggersModule.description.automaticTrigger').toString() : storeInstance.$i18n.t('triggersModule.description.manualTrigger').toString()
   }
 
   get isAutomatic(): boolean {

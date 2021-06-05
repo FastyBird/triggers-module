@@ -1,0 +1,19 @@
+export default {
+  triggersModule: {
+    description: {
+      automaticTrigger: 'Automatic trigger',
+      manualTrigger: 'Manual trigger',
+      scheduledTrigger: '{days}, {time}',
+      everyday: 'Everyday',
+      days: {
+        mon: 'Mon',
+        tue: 'Tue',
+        wed: 'Wed',
+        thu: 'Thu',
+        fri: 'Fri',
+        sat: 'Sat',
+        sun: 'Sun',
+      },
+    },
+  },
+}
