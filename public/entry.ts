@@ -45,5 +45,7 @@ export {
   Trigger,
 }
 
+export * from '@/lib/errors'
+
 // Re-export plugin typing
 export * from '@/types/triggers-module'
