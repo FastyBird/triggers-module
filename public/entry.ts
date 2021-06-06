@@ -1,20 +1,20 @@
-// Import library
 import { ModuleOrigin } from '@fastybird/modules-metadata'
+import { Plugin } from '@vuex-orm/core/dist/src/plugins/use'
 
-import Trigger from '@/lib/triggers/Trigger'
-import triggers from '@/lib/triggers'
-import Condition from '@/lib/conditions/Condition'
-import conditions from '@/lib/conditions'
-import Action from '@/lib/actions/Action'
-import actions from '@/lib/actions'
-import Notification from '@/lib/notifications/Notification'
-import notifications from '@/lib/notifications'
+import Trigger from '@/lib/models/triggers/Trigger'
+import triggers from '@/lib/models/triggers'
+import Condition from '@/lib/models/conditions/Condition'
+import conditions from '@/lib/models/conditions'
+import Action from '@/lib/models/actions/Action'
+import actions from '@/lib/models/actions'
+import Notification from '@/lib/models/notifications/Notification'
+import notifications from '@/lib/models/notifications'
 
 // Import typing
-import { ComponentsInterface, GlobalConfigInterface, InstallFunction } from '@/types/triggers-module'
+import { ComponentsInterface, GlobalConfigInterface } from '@/types/triggers-module'
 
 // install function executed by VuexORM.use()
-const install: InstallFunction = function installVuexOrmWamp(components: ComponentsInterface, config: GlobalConfigInterface) {
+const install: Plugin = function installVuexOrmWamp(components: ComponentsInterface, config: GlobalConfigInterface) {
   if (typeof config.originName !== 'undefined') {
     // @ts-ignore
     components.Model.prototype.$triggersModuleOrigin = config.originName

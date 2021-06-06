@@ -16,9 +16,9 @@ import { v4 as uuid } from 'uuid'
 import { AxiosResponse } from 'axios'
 import uniq from 'lodash/uniq'
 
-import Trigger from '@/lib/triggers/Trigger'
-import { TriggerInterface } from '@/lib/triggers/types'
-import Action from '@/lib/actions/Action'
+import Trigger from '@/lib/models/triggers/Trigger'
+import { TriggerInterface } from '@/lib/models/triggers/types'
+import Action from '@/lib/models/actions/Action'
 import {
   ActionInterface,
   ActionResponseInterface,
@@ -27,7 +27,7 @@ import {
   CreateDevicePropertyActionInterface,
   UpdateChannelPropertyActionInterface,
   UpdateDevicePropertyActionInterface,
-} from '@/lib/actions/types'
+} from '@/lib/models/actions/types'
 
 import {
   ApiError,
@@ -35,7 +35,7 @@ import {
 } from '@/lib/errors'
 import {
   JsonApiModelPropertiesMapper,
-  JsonApiPropertiesMapper,
+  JsonApiJsonPropertiesMapper,
 } from '@/lib/jsonapi'
 import {
   ActionJsonModelInterface,
@@ -44,15 +44,15 @@ import {
 } from '@/lib/types'
 
 interface SemaphoreFetchingState {
-  items: Array<string>
-  item: Array<string>
+  items: string[]
+  item: string[]
 }
 
 interface SemaphoreState {
   fetching: SemaphoreFetchingState
-  creating: Array<string>
-  updating: Array<string>
-  deleting: Array<string>
+  creating: string[]
+  updating: string[]
+  deleting: string[]
 }
 
 interface ActionState {
@@ -66,11 +66,11 @@ interface SemaphoreAction {
 
 const jsonApiFormatter = new Jsona({
   modelPropertiesMapper: new JsonApiModelPropertiesMapper(),
-  jsonPropertiesMapper: new JsonApiPropertiesMapper(),
+  jsonPropertiesMapper: new JsonApiJsonPropertiesMapper(),
 })
 
 const apiOptions = {
-  dataTransformer: (result: AxiosResponse<ActionResponseInterface> | AxiosResponse<ActionsResponseInterface>): ActionJsonModelInterface | Array<ActionJsonModelInterface> => <ActionJsonModelInterface | Array<ActionJsonModelInterface>>jsonApiFormatter.deserialize(result.data),
+  dataTransformer: (result: AxiosResponse<ActionResponseInterface> | AxiosResponse<ActionsResponseInterface>): ActionJsonModelInterface | ActionJsonModelInterface[] => jsonApiFormatter.deserialize(result.data) as ActionJsonModelInterface | ActionJsonModelInterface[],
 }
 
 const jsonSchemaValidator = new Ajv()
@@ -90,7 +90,7 @@ const moduleState: ActionState = {
 }
 
 const moduleActions: ActionTree<ActionState, any> = {
-  async get({state, commit}, payload: { trigger: TriggerInterface, id: string }): Promise<boolean> {
+  async get({ state, commit }, payload: { trigger: TriggerInterface, id: string }): Promise<boolean> {
     if (state.semaphore.fetching.item.includes(payload.id)) {
       return false
     }
@@ -121,7 +121,7 @@ const moduleActions: ActionTree<ActionState, any> = {
     }
   },
 
-  async add({commit}, payload: { trigger: TriggerInterface, id?: string | null, draft?: boolean, data: CreateDevicePropertyActionInterface | CreateChannelPropertyActionInterface }): Promise<Item<Action>> {
+  async add({ commit }, payload: { trigger: TriggerInterface, id?: string | null, draft?: boolean, data: CreateDevicePropertyActionInterface | CreateChannelPropertyActionInterface }): Promise<Item<Action>> {
     const id = typeof payload.id !== 'undefined' && payload.id !== null && payload.id !== '' ? payload.id : uuid().toString()
     const draft = typeof payload.draft !== 'undefined' ? payload.draft : false
 
@@ -132,7 +132,7 @@ const moduleActions: ActionTree<ActionState, any> = {
 
     try {
       await Action.insert({
-        data: Object.assign({}, payload.data, {id, draft, triggerId: payload.trigger.id}),
+        data: Object.assign({}, payload.data, { id, draft, triggerId: payload.trigger.id }),
       })
     } catch (e) {
       commit('CLEAR_SEMAPHORE', {
@@ -292,7 +292,7 @@ const moduleActions: ActionTree<ActionState, any> = {
     }
   },
 
-  async save({state, commit}, payload: { action: ActionInterface }): Promise<Item<Action>> {
+  async save({ state, commit }, payload: { action: ActionInterface }): Promise<Item<Action>> {
     if (state.semaphore.updating.includes(payload.action.id)) {
       throw new Error('triggers-module.actions.save.inProgress')
     }
@@ -341,7 +341,7 @@ const moduleActions: ActionTree<ActionState, any> = {
     }
   },
 
-  async remove({state, commit}, payload: { action: ActionInterface }): Promise<boolean> {
+  async remove({ state, commit }, payload: { action: ActionInterface }): Promise<boolean> {
     if (state.semaphore.deleting.includes(payload.action.id)) {
       throw new Error('triggers-module.actions.delete.inProgress')
     }
@@ -412,7 +412,7 @@ const moduleActions: ActionTree<ActionState, any> = {
     }
   },
 
-  async socketData({state, commit}, payload: { origin: string, routingKey: string, data: string }): Promise<boolean> {
+  async socketData({ state, commit }, payload: { origin: string, routingKey: string, data: string }): Promise<boolean> {
     if (payload.origin !== ModuleOrigin.MODULE_TRIGGERS_ORIGIN) {
       return false
     }
@@ -512,7 +512,7 @@ const moduleActions: ActionTree<ActionState, any> = {
     }
   },
 
-  reset({commit}): void {
+  reset({ commit }): void {
     commit('RESET_STATE')
   },
 }

@@ -9,7 +9,7 @@ import {
 import {
   TriggerInterface,
   TriggerEntityTypes,
-} from '@/lib/triggers/types'
+} from '@/lib/models/triggers/types'
 
 // ENTITY TYPES
 // ============
@@ -36,7 +36,7 @@ export interface ActionInterface {
   property: string
 
   // Relations
-  relationshipNames: Array<string>
+  relationshipNames: string[]
 
   triggerId: string
 
@@ -85,7 +85,7 @@ export interface ActionResponseInterface extends TJsonApiBody {
 }
 
 export interface ActionsResponseInterface extends TJsonApiBody {
-  data: Array<ActionDataResponseInterface>
+  data: ActionDataResponseInterface[]
 }
 
 // CREATE ENTITY INTERFACES

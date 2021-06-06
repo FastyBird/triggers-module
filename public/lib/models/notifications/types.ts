@@ -9,7 +9,7 @@ import {
 import {
   TriggerInterface,
   TriggerEntityTypes,
-} from '@/lib/triggers/types'
+} from '@/lib/models/triggers/types'
 
 // ENTITY TYPES
 // ============
@@ -37,7 +37,7 @@ export interface NotificationInterface {
   phone?: string
 
   // Relations
-  relationshipNames: Array<string>
+  relationshipNames: string[]
 
   triggerId: string
 
@@ -86,7 +86,7 @@ export interface NotificationResponseInterface extends TJsonApiBody {
 }
 
 export interface NotificationsResponseInterface extends TJsonApiBody {
-  data: Array<NotificationDataResponseInterface>
+  data: NotificationDataResponseInterface[]
 }
 
 // CREATE ENTITY INTERFACES

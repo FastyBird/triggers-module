@@ -10,17 +10,17 @@ import {
   ActionInterface,
   ActionEntityTypes,
   ActionCreateInterface,
-} from '@/lib/actions/types'
+} from '@/lib/models/actions/types'
 import {
   NotificationInterface,
   NotificationEntityTypes,
   NotificationCreateInterface,
-} from '@/lib/notifications/types'
+} from '@/lib/models/notifications/types'
 import {
   ConditionInterface,
   ConditionEntityTypes,
   ConditionCreateInterface,
-} from '@/lib/conditions/types'
+} from '@/lib/models/conditions/types'
 
 // ENTITY TYPES
 // ============
@@ -46,11 +46,11 @@ export interface TriggerInterface {
   owner: string | null
 
   // Relations
-  relationshipNames: Array<string>
+  relationshipNames: string[]
 
-  actions: Array<ActionInterface>
-  notifications: Array<NotificationInterface>
-  conditions: Array<ConditionInterface>
+  actions: ActionInterface[]
+  notifications: NotificationInterface[]
+  conditions: ConditionInterface[]
 
   // Entity transformers
   isEnabled: boolean
@@ -80,7 +80,7 @@ interface TriggerConditionRelationshipResponseInterface extends TJsonApiRelation
 }
 
 interface TriggerConditionsRelationshipsResponseInterface extends TJsonApiRelation {
-  data: Array<TriggerConditionRelationshipResponseInterface>
+  data: TriggerConditionRelationshipResponseInterface[]
 }
 
 interface TriggerNotificationRelationshipResponseInterface extends TJsonApiRelationshipData {
@@ -89,7 +89,7 @@ interface TriggerNotificationRelationshipResponseInterface extends TJsonApiRelat
 }
 
 interface TriggerNotificationsRelationshipsResponseInterface extends TJsonApiRelation {
-  data: Array<TriggerNotificationRelationshipResponseInterface>
+  data: TriggerNotificationRelationshipResponseInterface[]
 }
 
 interface TriggerActionRelationshipResponseInterface extends TJsonApiRelationshipData {
@@ -98,7 +98,7 @@ interface TriggerActionRelationshipResponseInterface extends TJsonApiRelationshi
 }
 
 interface TriggerActionsRelationshipsResponseInterface extends TJsonApiRelation {
-  data: Array<TriggerActionRelationshipResponseInterface>
+  data: TriggerActionRelationshipResponseInterface[]
 }
 
 interface TriggerRelationshipsResponseInterface extends TJsonApiRelationships {
@@ -122,7 +122,7 @@ export interface TriggerResponseInterface extends TJsonApiBody {
 }
 
 export interface TriggersResponseInterface extends TJsonApiBody {
-  data: Array<TriggerDataResponseInterface>
+  data: TriggerDataResponseInterface[]
 }
 
 // CREATE ENTITY INTERFACES
@@ -135,14 +135,14 @@ export interface TriggerCreateInterface {
   comment?: string | null
   enabled?: boolean
 
-  actions: Array<ActionCreateInterface>
-  notifications: Array<NotificationCreateInterface>
+  actions: ActionCreateInterface[]
+  notifications: NotificationCreateInterface[]
 }
 
 export type CreateManualTriggerInterface = TriggerCreateInterface
 
 export interface CreateAutomaticTriggerInterface extends TriggerCreateInterface {
-  conditions: Array<ConditionCreateInterface>
+  conditions: ConditionCreateInterface[]
 }
 
 // UPDATE ENTITY INTERFACES

@@ -1,8 +1,4 @@
 import { Database, Model } from '@vuex-orm/core'
-import { Plugin } from '@vuex-orm/core/dist/src/plugins/use'
-
-export interface InstallFunction extends Plugin {
-}
 
 export interface GlobalConfigInterface {
   database: Database
@@ -14,6 +10,7 @@ export interface ComponentsInterface {
 }
 
 declare module '@vuex-orm/core' {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Model {
     // Exchange origin name
     const $triggersModuleOrigin: string
@@ -22,7 +19,7 @@ declare module '@vuex-orm/core' {
 
 // Re-export models types
 export * from '@/lib/types'
-export * from '@/lib/actions/types'
-export * from '@/lib/conditions/types'
-export * from '@/lib/notifications/types'
-export * from '@/lib/triggers/types'
+export * from '@/lib/models/actions/types'
+export * from '@/lib/models/conditions/types'
+export * from '@/lib/models/notifications/types'
+export * from '@/lib/models/triggers/types'

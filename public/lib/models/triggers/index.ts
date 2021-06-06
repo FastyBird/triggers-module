@@ -21,7 +21,7 @@ import { AxiosResponse } from 'axios'
 import get from 'lodash/get'
 import uniq from 'lodash/uniq'
 
-import Trigger from '@/lib/triggers/Trigger'
+import Trigger from '@/lib/models/triggers/Trigger'
 import {
   CreateAutomaticTriggerInterface,
   CreateManualTriggerInterface,
@@ -30,15 +30,15 @@ import {
   TriggerResponseInterface,
   TriggersResponseInterface,
   TriggerUpdateInterface,
-} from '@/lib/triggers/types'
-import Action from '@/lib/actions/Action'
+} from '@/lib/models/triggers/types'
+import Action from '@/lib/models/actions/Action'
 import {
   ActionEntityTypes,
   ActionInterface,
   CreateChannelPropertyActionInterface,
   CreateDevicePropertyActionInterface,
-} from '@/lib/actions/types'
-import Condition from '@/lib/conditions/Condition'
+} from '@/lib/models/actions/types'
+import Condition from '@/lib/models/conditions/Condition'
 import {
   ConditionEntityTypes,
   ConditionInterface,
@@ -46,14 +46,14 @@ import {
   CreateDateConditionInterface,
   CreateDevicePropertyConditionInterface,
   CreateTimeConditionInterface,
-} from '@/lib/conditions/types'
-import Notification from '@/lib/notifications/Notification'
+} from '@/lib/models/conditions/types'
+import Notification from '@/lib/models/notifications/Notification'
 import {
   CreateEmailNotificationInterface,
   CreateSmsNotificationInterface,
   NotificationEntityTypes,
   NotificationInterface,
-} from '@/lib/notifications/types'
+} from '@/lib/models/notifications/types'
 
 import {
   ApiError,
@@ -61,7 +61,7 @@ import {
 } from '@/lib/errors'
 import {
   JsonApiModelPropertiesMapper,
-  JsonApiPropertiesMapper,
+  JsonApiJsonPropertiesMapper,
 } from '@/lib/jsonapi'
 import {
   ModuleApiPrefix,
@@ -71,14 +71,14 @@ import {
 
 interface SemaphoreFetchingState {
   items: boolean
-  item: Array<string>
+  item: string[]
 }
 
 interface SemaphoreState {
   fetching: SemaphoreFetchingState
-  creating: Array<string>
-  updating: Array<string>
-  deleting: Array<string>
+  creating: string[]
+  updating: string[]
+  deleting: string[]
 }
 
 interface TriggerState {
@@ -93,11 +93,11 @@ interface SemaphoreAction {
 
 const jsonApiFormatter = new Jsona({
   modelPropertiesMapper: new JsonApiModelPropertiesMapper(),
-  jsonPropertiesMapper: new JsonApiPropertiesMapper(),
+  jsonPropertiesMapper: new JsonApiJsonPropertiesMapper(),
 })
 
 const apiOptions = {
-  dataTransformer: (result: AxiosResponse<TriggerResponseInterface> | AxiosResponse<TriggersResponseInterface>): TriggerJsonModelInterface | Array<TriggerJsonModelInterface> => <TriggerJsonModelInterface | Array<TriggerJsonModelInterface>>jsonApiFormatter.deserialize(result.data),
+  dataTransformer: (result: AxiosResponse<TriggerResponseInterface> | AxiosResponse<TriggersResponseInterface>): TriggerJsonModelInterface | TriggerJsonModelInterface[] => jsonApiFormatter.deserialize(result.data) as TriggerJsonModelInterface | TriggerJsonModelInterface[],
 }
 
 const jsonSchemaValidator = new Ajv()
@@ -217,7 +217,7 @@ const moduleGetters: GetterTree<TriggerState, any> = {
 }
 
 const moduleActions: ActionTree<TriggerState, any> = {
-  async get({state, commit}, payload: { id: string }): Promise<boolean> {
+  async get({ state, commit }, payload: { id: string }): Promise<boolean> {
     if (state.semaphore.fetching.item.includes(payload.id)) {
       return false
     }
@@ -248,7 +248,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
     }
   },
 
-  async fetch({state, commit}): Promise<boolean> {
+  async fetch({ state, commit }): Promise<boolean> {
     if (state.semaphore.fetching.items) {
       return false
     }
@@ -279,10 +279,10 @@ const moduleActions: ActionTree<TriggerState, any> = {
     }
   },
 
-  async add({commit}, payload: { id?: string | null, draft?: boolean, data: CreateManualTriggerInterface | CreateAutomaticTriggerInterface }): Promise<Item<Trigger>> {
-    const actions: Array<CreateDevicePropertyActionInterface | CreateChannelPropertyActionInterface> = []
-    const conditions: Array<CreateDevicePropertyConditionInterface | CreateChannelPropertyConditionInterface | CreateDateConditionInterface | CreateTimeConditionInterface> = []
-    const notifications: Array<CreateSmsNotificationInterface | CreateEmailNotificationInterface> = []
+  async add({ commit }, payload: { id?: string | null, draft?: boolean, data: CreateManualTriggerInterface | CreateAutomaticTriggerInterface }): Promise<Item<Trigger>> {
+    const actions: (CreateDevicePropertyActionInterface | CreateChannelPropertyActionInterface)[] = []
+    const conditions: (CreateDevicePropertyConditionInterface | CreateChannelPropertyConditionInterface | CreateDateConditionInterface | CreateTimeConditionInterface)[] = []
+    const notifications: (CreateSmsNotificationInterface | CreateEmailNotificationInterface)[] = []
 
     for (const actionData of payload.data.actions) {
       if (actionData.type === ActionEntityTypes.DEVICE_PROPERTY) {
@@ -327,7 +327,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
 
     try {
       await Trigger.insert({
-        data: Object.assign({}, payload.data, {id, draft}),
+        data: Object.assign({}, payload.data, { id, draft }),
       })
     } catch (e) {
       commit('CLEAR_SEMAPHORE', {
@@ -378,7 +378,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
           throw new Error('triggers-module.triggers.create.failed')
         }
 
-        const promises: Array<Promise<any>> = []
+        const promises: Promise<any>[] = []
 
         actions
           .forEach((action): void => {
@@ -517,7 +517,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
     }
   },
 
-  async save({state, commit}, payload: { trigger: TriggerInterface }): Promise<Item<Trigger>> {
+  async save({ state, commit }, payload: { trigger: TriggerInterface }): Promise<Item<Trigger>> {
     if (state.semaphore.updating.includes(payload.trigger.id)) {
       throw new Error('triggers-module.triggers.save.inProgress')
     }
@@ -560,7 +560,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
         .first()
 
       if (createdTrigger !== null) {
-        const promises: Array<Promise<any>> = []
+        const promises: Promise<any>[] = []
 
         createdTrigger.actions
           .forEach((action): void => {
@@ -607,7 +607,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
     }
   },
 
-  async remove({state, commit}, payload: { trigger: TriggerInterface }): Promise<boolean> {
+  async remove({ state, commit }, payload: { trigger: TriggerInterface }): Promise<boolean> {
     if (state.semaphore.deleting.includes(payload.trigger.id)) {
       throw new Error('triggers-module.triggers.delete.inProgress')
     }
@@ -744,7 +744,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
     })
   },
 
-  async socketData({state, commit}, payload: { origin: string, routingKey: string, data: string }): Promise<boolean> {
+  async socketData({ state, commit }, payload: { origin: string, routingKey: string, data: string }): Promise<boolean> {
     if (payload.origin !== ModuleOrigin.MODULE_TRIGGERS_ORIGIN) {
       return false
     }
@@ -839,7 +839,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
     }
   },
 
-  reset({commit}): void {
+  reset({ commit }): void {
     commit('RESET_STATE')
 
     Action.reset()

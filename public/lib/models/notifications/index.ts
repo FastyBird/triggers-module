@@ -1,9 +1,9 @@
 import { Item } from '@vuex-orm/core'
 import * as exchangeEntitySchema
-  from '@fastybird/modules-metadata/resources/schemas/triggers-module/entity.condition.json'
+  from '@fastybird/modules-metadata/resources/schemas/triggers-module/entity.notification.json'
 import {
   ModuleOrigin,
-  ConditionEntity as ExchangeEntity,
+  NotificationEntity as ExchangeEntity,
   TriggersModule as RoutingKeys,
 } from '@fastybird/modules-metadata'
 
@@ -17,22 +17,18 @@ import { v4 as uuid } from 'uuid'
 import { AxiosResponse } from 'axios'
 import uniq from 'lodash/uniq'
 
-import Trigger from '@/lib/triggers/Trigger'
-import { TriggerInterface } from '@/lib/triggers/types'
-import Condition from '@/lib/conditions/Condition'
+import Trigger from '@/lib/models/triggers/Trigger'
+import { TriggerInterface } from '@/lib/models/triggers/types'
+import Notification from '@/lib/models/notifications/Notification'
 import {
-  ConditionInterface,
-  ConditionResponseInterface,
-  ConditionsResponseInterface,
-  CreateChannelPropertyConditionInterface,
-  CreateDateConditionInterface,
-  CreateDevicePropertyConditionInterface,
-  CreateTimeConditionInterface,
-  UpdateChannelPropertyConditionInterface,
-  UpdateDateConditionInterface,
-  UpdateDevicePropertyConditionInterface,
-  UpdateTimeConditionInterface,
-} from '@/lib/conditions/types'
+  CreateEmailNotificationInterface,
+  CreateSmsNotificationInterface,
+  NotificationInterface,
+  NotificationResponseInterface,
+  NotificationsResponseInterface,
+  UpdateEmailNotificationInterface,
+  UpdateSmsNotificationInterface,
+} from '@/lib/models/notifications/types'
 
 import {
   ApiError,
@@ -40,47 +36,47 @@ import {
 } from '@/lib/errors'
 import {
   JsonApiModelPropertiesMapper,
-  JsonApiPropertiesMapper,
+  JsonApiJsonPropertiesMapper,
 } from '@/lib/jsonapi'
 import {
-  ConditionJsonModelInterface,
   ModuleApiPrefix,
+  NotificationJsonModelInterface,
   SemaphoreTypes,
 } from '@/lib/types'
 
 interface SemaphoreFetchingState {
-  items: Array<string>
-  item: Array<string>
+  items: string[]
+  item: string[]
 }
 
 interface SemaphoreState {
   fetching: SemaphoreFetchingState
-  creating: Array<string>
-  updating: Array<string>
-  deleting: Array<string>
+  creating: string[]
+  updating: string[]
+  deleting: string[]
 }
 
-interface ConditionState {
+interface NotificationState {
   semaphore: SemaphoreState
 }
 
-interface SemaphoreCondition {
+interface SemaphoreNotification {
   type: SemaphoreTypes
   id: string
 }
 
 const jsonApiFormatter = new Jsona({
   modelPropertiesMapper: new JsonApiModelPropertiesMapper(),
-  jsonPropertiesMapper: new JsonApiPropertiesMapper(),
+  jsonPropertiesMapper: new JsonApiJsonPropertiesMapper(),
 })
 
 const apiOptions = {
-  dataTransformer: (result: AxiosResponse<ConditionResponseInterface> | AxiosResponse<ConditionsResponseInterface>): ConditionJsonModelInterface | Array<ConditionJsonModelInterface> => <ConditionJsonModelInterface | Array<ConditionJsonModelInterface>>jsonApiFormatter.deserialize(result.data),
+  dataTransformer: (result: AxiosResponse<NotificationResponseInterface> | AxiosResponse<NotificationsResponseInterface>): NotificationJsonModelInterface | NotificationJsonModelInterface[] => jsonApiFormatter.deserialize(result.data) as NotificationJsonModelInterface | NotificationJsonModelInterface[],
 }
 
 const jsonSchemaValidator = new Ajv()
 
-const moduleState: ConditionState = {
+const moduleState: NotificationState = {
 
   semaphore: {
     fetching: {
@@ -94,8 +90,8 @@ const moduleState: ConditionState = {
 
 }
 
-const moduleActions: ActionTree<ConditionState, any> = {
-  async get({state, commit}, payload: { trigger: TriggerInterface, id: string }): Promise<boolean> {
+const moduleActions: ActionTree<NotificationState, any> = {
+  async get({ state, commit }, payload: { trigger: TriggerInterface, id: string }): Promise<boolean> {
     if (state.semaphore.fetching.item.includes(payload.id)) {
       return false
     }
@@ -106,17 +102,17 @@ const moduleActions: ActionTree<ConditionState, any> = {
     })
 
     try {
-      await Condition.api().get(
-        `${ModuleApiPrefix}/v1/triggers/${payload.trigger.id}/conditions/${payload.id}`,
+      await Notification.api().get(
+        `${ModuleApiPrefix}/v1/triggers/${payload.trigger.id}/notifications/${payload.id}`,
         apiOptions,
       )
 
       return true
     } catch (e) {
       throw new ApiError(
-        'triggers-module.conditions.get.failed',
+        'triggers-module.notifications.get.failed',
         e,
-        'Fetching condition failed.',
+        'Fetching notification failed.',
       )
     } finally {
       commit('CLEAR_SEMAPHORE', {
@@ -126,7 +122,7 @@ const moduleActions: ActionTree<ConditionState, any> = {
     }
   },
 
-  async add({commit}, payload: { trigger: TriggerInterface, id?: string | null, draft?: boolean, data: CreateDevicePropertyConditionInterface | CreateChannelPropertyConditionInterface | CreateDateConditionInterface | CreateTimeConditionInterface }): Promise<Item<Condition>> {
+  async add({ commit }, payload: { trigger: TriggerInterface, id?: string | null, draft?: boolean, data: CreateSmsNotificationInterface | CreateEmailNotificationInterface }): Promise<Item<Notification>> {
     const id = typeof payload.id !== 'undefined' && payload.id !== null && payload.id !== '' ? payload.id : uuid().toString()
     const draft = typeof payload.draft !== 'undefined' ? payload.draft : false
 
@@ -136,8 +132,8 @@ const moduleActions: ActionTree<ConditionState, any> = {
     })
 
     try {
-      await Condition.insert({
-        data: Object.assign({}, payload.data, {id, draft, triggerId: payload.trigger.id}),
+      await Notification.insert({
+        data: Object.assign({}, payload.data, { id, draft, triggerId: payload.trigger.id }),
       })
     } catch (e) {
       commit('CLEAR_SEMAPHORE', {
@@ -146,23 +142,23 @@ const moduleActions: ActionTree<ConditionState, any> = {
       })
 
       throw new OrmError(
-        'triggers-module.conditions.create.failed',
+        'triggers-module.notifications.create.failed',
         e,
-        'Create new condition failed.',
+        'Create new notification failed.',
       )
     }
 
-    const createdEntity = Condition.find(id)
+    const createdEntity = Notification.find(id)
 
     if (createdEntity === null) {
-      await Condition.delete(id)
+      await Notification.delete(id)
 
       commit('CLEAR_SEMAPHORE', {
         type: SemaphoreTypes.CREATING,
         id,
       })
 
-      throw new Error('triggers-module.conditions.create.failed')
+      throw new Error('triggers-module.notifications.create.failed')
     }
 
     if (draft) {
@@ -171,26 +167,26 @@ const moduleActions: ActionTree<ConditionState, any> = {
         id,
       })
 
-      return Condition.find(id)
+      return Notification.find(id)
     } else {
       try {
-        await Condition.api().post(
-          `${ModuleApiPrefix}/v1/triggers/${payload.trigger.id}/conditions`,
+        await Notification.api().post(
+          `${ModuleApiPrefix}/v1/triggers/${payload.trigger.id}/notifications`,
           jsonApiFormatter.serialize({
             stuff: createdEntity,
           }),
           apiOptions,
         )
 
-        return Condition.find(id)
+        return Notification.find(id)
       } catch (e) {
         // Entity could not be created on api, we have to remove it from database
-        await Condition.delete(id)
+        await Notification.delete(id)
 
         throw new ApiError(
-          'triggers-module.conditions.create.failed',
+          'triggers-module.notifications.create.failed',
           e,
-          'Create new condition failed.',
+          'Create new notification failed.',
         )
       } finally {
         commit('CLEAR_SEMAPHORE', {
@@ -201,191 +197,191 @@ const moduleActions: ActionTree<ConditionState, any> = {
     }
   },
 
-  async edit({ state, commit }, payload: { condition: ConditionInterface, data: UpdateDevicePropertyConditionInterface | UpdateChannelPropertyConditionInterface | UpdateDateConditionInterface | UpdateTimeConditionInterface }): Promise<Item<Condition>> {
-    if (state.semaphore.updating.includes(payload.condition.id)) {
-      throw new Error('triggers-module.conditions.update.inProgress')
+  async edit({ state, commit }, payload: { notification: NotificationInterface, data: UpdateSmsNotificationInterface | UpdateEmailNotificationInterface }): Promise<Item<Notification>> {
+    if (state.semaphore.updating.includes(payload.notification.id)) {
+      throw new Error('triggers-module.notifications.update.inProgress')
     }
 
-    if (!Condition.query().where('id', payload.condition.id).exists()) {
-      throw new Error('triggers-module.conditions.update.failed')
+    if (!Notification.query().where('id', payload.notification.id).exists()) {
+      throw new Error('triggers-module.notifications.update.failed')
     }
 
     commit('SET_SEMAPHORE', {
       type: SemaphoreTypes.UPDATING,
-      id: payload.condition.id,
+      id: payload.notification.id,
     })
 
     try {
-      await Condition.update({
-        where: payload.condition.id,
+      await Notification.update({
+        where: payload.notification.id,
         data: payload.data,
       })
     } catch (e) {
       commit('CLEAR_SEMAPHORE', {
         type: SemaphoreTypes.UPDATING,
-        id: payload.condition.id,
+        id: payload.notification.id,
       })
 
       throw new OrmError(
-        'triggers-module.conditions.update.failed',
+        'triggers-module.notifications.update.failed',
         e,
-        'Edit condition failed.',
+        'Edit notification failed.',
       )
     }
 
-    const updatedEntity = Condition.find(payload.condition.id)
+    const updatedEntity = Notification.find(payload.notification.id)
 
     if (updatedEntity === null) {
-      const trigger = Trigger.find(payload.condition.triggerId)
+      const trigger = Trigger.find(payload.notification.triggerId)
 
       if (trigger !== null) {
         // Updated entity could not be loaded from database
-        await Condition.get(
+        await Notification.get(
           trigger,
-          payload.condition.id,
+          payload.notification.id,
         )
       }
 
       commit('CLEAR_SEMAPHORE', {
         type: SemaphoreTypes.UPDATING,
-        id: payload.condition.id,
+        id: payload.notification.id,
       })
 
-      throw new Error('triggers-module.conditions.update.failed')
+      throw new Error('triggers-module.notifications.update.failed')
     }
 
     if (updatedEntity.draft) {
       commit('CLEAR_SEMAPHORE', {
         type: SemaphoreTypes.UPDATING,
-        id: payload.condition.id,
+        id: payload.notification.id,
       })
 
-      return Condition.find(payload.condition.id)
+      return Notification.find(payload.notification.id)
     } else {
       try {
-        await Condition.api().patch(
-          `${ModuleApiPrefix}/v1/triggers/${updatedEntity.triggerId}/conditions/${updatedEntity.id}`,
+        await Notification.api().patch(
+          `${ModuleApiPrefix}/v1/triggers/${updatedEntity.triggerId}/notifications/${updatedEntity.id}`,
           jsonApiFormatter.serialize({
             stuff: updatedEntity,
           }),
           apiOptions,
         )
 
-        return Condition.find(payload.condition.id)
+        return Notification.find(payload.notification.id)
       } catch (e) {
-        const trigger = Trigger.find(payload.condition.triggerId)
+        const trigger = Trigger.find(payload.notification.triggerId)
 
         if (trigger !== null) {
           // Updating entity on api failed, we need to refresh entity
-          await Condition.get(
+          await Notification.get(
             trigger,
-            payload.condition.id,
+            payload.notification.id,
           )
         }
 
         throw new ApiError(
-          'triggers-module.conditions.update.failed',
+          'triggers-module.notifications.update.failed',
           e,
-          'Edit condition failed.',
+          'Edit notification failed.',
         )
       } finally {
         commit('CLEAR_SEMAPHORE', {
           type: SemaphoreTypes.UPDATING,
-          id: payload.condition.id,
+          id: payload.notification.id,
         })
       }
     }
   },
 
-  async save({state, commit}, payload: { condition: ConditionInterface }): Promise<Item<Condition>> {
-    if (state.semaphore.updating.includes(payload.condition.id)) {
-      throw new Error('triggers-module.conditions.save.inProgress')
+  async save({ state, commit }, payload: { notification: NotificationInterface }): Promise<Item<Notification>> {
+    if (state.semaphore.updating.includes(payload.notification.id)) {
+      throw new Error('triggers-module.notifications.save.inProgress')
     }
 
-    if (!Condition.query().where('id', payload.condition.id).where('draft', true).exists()) {
-      throw new Error('triggers-module.conditions.save.failed')
+    if (!Notification.query().where('id', payload.notification.id).where('draft', true).exists()) {
+      throw new Error('triggers-module.notifications.save.failed')
     }
 
     commit('SET_SEMAPHORE', {
       type: SemaphoreTypes.UPDATING,
-      id: payload.condition.id,
+      id: payload.notification.id,
     })
 
-    const entityToSave = Condition.find(payload.condition.id)
+    const entityToSave = Notification.find(payload.notification.id)
 
     if (entityToSave === null) {
       commit('CLEAR_SEMAPHORE', {
         type: SemaphoreTypes.UPDATING,
-        id: payload.condition.id,
+        id: payload.notification.id,
       })
 
-      throw new Error('triggers-module.conditions.save.failed')
+      throw new Error('triggers-module.notifications.save.failed')
     }
 
     try {
-      await Condition.api().post(
-        `${ModuleApiPrefix}/v1/triggers/${entityToSave.triggerId}/conditions`,
+      await Notification.api().patch(
+        `${ModuleApiPrefix}/v1/triggers/${entityToSave.triggerId}/notifications`,
         jsonApiFormatter.serialize({
           stuff: entityToSave,
         }),
         apiOptions,
       )
 
-      return Condition.find(payload.condition.id)
+      return Notification.find(payload.notification.id)
     } catch (e) {
       throw new ApiError(
-        'triggers-module.conditions.save.failed',
+        'triggers-module.notifications.save.failed',
         e,
-        'Save draft condition failed.',
+        'Save draft notification failed.',
       )
     } finally {
       commit('CLEAR_SEMAPHORE', {
         type: SemaphoreTypes.UPDATING,
-        id: payload.condition.id,
+        id: payload.notification.id,
       })
     }
   },
 
-  async remove({state, commit}, payload: { condition: ConditionInterface }): Promise<boolean> {
-    if (state.semaphore.deleting.includes(payload.condition.id)) {
-      throw new Error('triggers-module.conditions.delete.inProgress')
+  async remove({ state, commit }, payload: { notification: NotificationInterface }): Promise<boolean> {
+    if (state.semaphore.deleting.includes(payload.notification.id)) {
+      throw new Error('triggers-module.notifications.delete.inProgress')
     }
 
-    if (!Condition.query().where('id', payload.condition.id).exists()) {
-      throw new Error('triggers-module.conditions.delete.failed')
+    if (!Notification.query().where('id', payload.notification.id).exists()) {
+      throw new Error('triggers-module.notifications.delete.failed')
     }
 
     commit('SET_SEMAPHORE', {
       type: SemaphoreTypes.DELETING,
-      id: payload.condition.id,
+      id: payload.notification.id,
     })
 
     try {
-      await Condition.delete(payload.condition.id)
+      await Notification.delete(payload.notification.id)
     } catch (e) {
       commit('CLEAR_SEMAPHORE', {
         type: SemaphoreTypes.DELETING,
-        id: payload.condition.id,
+        id: payload.notification.id,
       })
 
       throw new OrmError(
-        'triggers-module.conditions.delete.failed',
+        'triggers-module.notifications.delete.failed',
         e,
-        'Delete condition failed.',
+        'Delete notification failed.',
       )
     }
 
-    if (payload.condition.draft) {
+    if (payload.notification.draft) {
       commit('CLEAR_SEMAPHORE', {
         type: SemaphoreTypes.DELETING,
-        id: payload.condition.id,
+        id: payload.notification.id,
       })
 
       return true
     } else {
       try {
-        await Condition.api().delete(
-          `${ModuleApiPrefix}/v1/triggers/${payload.condition.triggerId}/conditions/${payload.condition.id}`,
+        await Notification.api().delete(
+          `${ModuleApiPrefix}/v1/triggers/${payload.notification.triggerId}/notifications/${payload.notification.id}`,
           {
             save: false,
           },
@@ -393,40 +389,40 @@ const moduleActions: ActionTree<ConditionState, any> = {
 
         return true
       } catch (e) {
-        const trigger = await Trigger.find(payload.condition.triggerId)
+        const trigger = await Trigger.find(payload.notification.triggerId)
 
         if (trigger !== null) {
           // Replacing backup failed, we need to refresh whole list
-          await Condition.get(
+          await Notification.get(
             trigger,
-            payload.condition.id,
+            payload.notification.id,
           )
         }
 
         throw new ApiError(
-          'triggers-module.conditions.delete.failed',
+          'triggers-module.notifications.delete.failed',
           e,
-          'Delete condition failed.',
+          'Delete notification failed.',
         )
       } finally {
         commit('CLEAR_SEMAPHORE', {
           type: SemaphoreTypes.DELETING,
-          id: payload.condition.id,
+          id: payload.notification.id,
         })
       }
     }
   },
 
-  async socketData({state, commit}, payload: { origin: string, routingKey: string, data: string }): Promise<boolean> {
+  async socketData({ state, commit }, payload: { origin: string, routingKey: string, data: string }): Promise<boolean> {
     if (payload.origin !== ModuleOrigin.MODULE_TRIGGERS_ORIGIN) {
       return false
     }
 
     if (
       ![
-        RoutingKeys.TRIGGERS_CONDITIONS_CREATED_ENTITY,
-        RoutingKeys.TRIGGERS_CONDITIONS_UPDATED_ENTITY,
-        RoutingKeys.TRIGGERS_CONDITIONS_DELETED_ENTITY,
+        RoutingKeys.TRIGGERS_NOTIFICATIONS_CREATED_ENTITY,
+        RoutingKeys.TRIGGERS_NOTIFICATIONS_UPDATED_ENTITY,
+        RoutingKeys.TRIGGERS_NOTIFICATIONS_DELETED_ENTITY,
       ].includes(payload.routingKey as RoutingKeys)
     ) {
       return false
@@ -438,25 +434,25 @@ const moduleActions: ActionTree<ConditionState, any> = {
 
     if (validate(body)) {
       if (
-        !Condition.query().where('id', body.id).exists() &&
-        (payload.routingKey === RoutingKeys.TRIGGERS_CONDITIONS_UPDATED_ENTITY || payload.routingKey === RoutingKeys.TRIGGERS_CONDITIONS_DELETED_ENTITY)
+        !Notification.query().where('id', body.id).exists() &&
+        (payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_UPDATED_ENTITY || payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_DELETED_ENTITY)
       ) {
-        throw new Error('triggers-module.conditions.update.failed')
+        throw new Error('triggers-module.notifications.update.failed')
       }
 
-      if (payload.routingKey === RoutingKeys.TRIGGERS_CONDITIONS_DELETED_ENTITY) {
+      if (payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_DELETED_ENTITY) {
         commit('SET_SEMAPHORE', {
           type: SemaphoreTypes.DELETING,
           id: body.id,
         })
 
         try {
-          await Condition.delete(body.id)
+          await Notification.delete(body.id)
         } catch (e) {
           throw new OrmError(
-            'triggers-module.conditions.delete.failed',
+            'triggers-module.notifications.delete.failed',
             e,
-            'Delete condition failed.',
+            'Delete notification failed.',
           )
         } finally {
           commit('CLEAR_SEMAPHORE', {
@@ -465,12 +461,12 @@ const moduleActions: ActionTree<ConditionState, any> = {
           })
         }
       } else {
-        if (payload.routingKey === RoutingKeys.TRIGGERS_CONDITIONS_UPDATED_ENTITY && state.semaphore.updating.includes(body.id)) {
+        if (payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_UPDATED_ENTITY && state.semaphore.updating.includes(body.id)) {
           return true
         }
 
         commit('SET_SEMAPHORE', {
-          type: payload.routingKey === RoutingKeys.TRIGGERS_CONDITIONS_UPDATED_ENTITY ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING,
+          type: payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_UPDATED_ENTITY ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING,
           id: body.id,
         })
 
@@ -484,7 +480,7 @@ const moduleActions: ActionTree<ConditionState, any> = {
           })
 
         try {
-          await Condition.insertOrUpdate({
+          await Notification.insertOrUpdate({
             data: entityData,
           })
         } catch (e) {
@@ -492,20 +488,20 @@ const moduleActions: ActionTree<ConditionState, any> = {
 
           if (trigger !== null) {
             // Updating entity on api failed, we need to refresh entity
-            await Condition.get(
+            await Notification.get(
               trigger,
               body.id,
             )
           }
 
           throw new OrmError(
-            'triggers-module.conditions.update.failed',
+            'triggers-module.notifications.update.failed',
             e,
-            'Edit condition failed.',
+            'Edit notification failed.',
           )
         } finally {
           commit('CLEAR_SEMAPHORE', {
-            type: payload.routingKey === RoutingKeys.TRIGGERS_CONDITIONS_UPDATED_ENTITY ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING,
+            type: payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_UPDATED_ENTITY ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING,
             id: body.id,
           })
         }
@@ -517,13 +513,13 @@ const moduleActions: ActionTree<ConditionState, any> = {
     }
   },
 
-  reset({commit}): void {
+  reset({ commit }): void {
     commit('RESET_STATE')
   },
 }
 
-const moduleMutations: MutationTree<ConditionState> = {
-  ['SET_SEMAPHORE'](state: ConditionState, action: SemaphoreCondition): void {
+const moduleMutations: MutationTree<NotificationState> = {
+  ['SET_SEMAPHORE'](state: NotificationState, action: SemaphoreNotification): void {
     switch (action.type) {
       case SemaphoreTypes.FETCHING:
         state.semaphore.fetching.items.push(action.id)
@@ -562,7 +558,7 @@ const moduleMutations: MutationTree<ConditionState> = {
     }
   },
 
-  ['CLEAR_SEMAPHORE'](state: ConditionState, action: SemaphoreCondition): void {
+  ['CLEAR_SEMAPHORE'](state: NotificationState, action: SemaphoreNotification): void {
     switch (action.type) {
       case SemaphoreTypes.FETCHING:
         // Process all semaphore items
@@ -626,13 +622,13 @@ const moduleMutations: MutationTree<ConditionState> = {
     }
   },
 
-  ['RESET_STATE'](state: ConditionState): void {
+  ['RESET_STATE'](state: NotificationState): void {
     Object.assign(state, moduleState)
   },
 }
 
 export default {
-  state: (): ConditionState => (moduleState),
+  state: (): NotificationState => (moduleState),
   actions: moduleActions,
   mutations: moduleMutations,
 }

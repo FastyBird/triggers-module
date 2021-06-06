@@ -4,8 +4,8 @@ import {
   Model,
 } from '@vuex-orm/core'
 
-import Trigger from '@/lib/triggers/Trigger'
-import { TriggerInterface } from '@/lib/triggers/types'
+import Trigger from '@/lib/models/triggers/Trigger'
+import { TriggerInterface } from '@/lib/models/triggers/types'
 import {
   CreateEmailNotificationInterface,
   CreateSmsNotificationInterface,
@@ -13,13 +13,13 @@ import {
   NotificationInterface,
   UpdateEmailNotificationInterface,
   UpdateSmsNotificationInterface,
-} from '@/lib/notifications/types'
+} from '@/lib/models/notifications/types'
 
 // ENTITY MODEL
 // ============
 export default class Notification extends Model implements NotificationInterface {
   static get entity(): string {
-    return 'notification'
+    return 'triggers_notification'
   }
 
   static fields(): Fields {
@@ -57,7 +57,7 @@ export default class Notification extends Model implements NotificationInterface
 
   phone!: string
 
-  relationshipNames!: Array<string>
+  relationshipNames!: string[]
 
   trigger!: TriggerInterface | null
   triggerBackward!: TriggerInterface | null

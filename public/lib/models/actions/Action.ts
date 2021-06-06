@@ -4,8 +4,8 @@ import {
   Model,
 } from '@vuex-orm/core'
 
-import Trigger from '@/lib/triggers/Trigger'
-import { TriggerInterface } from '@/lib/triggers/types'
+import Trigger from '@/lib/models/triggers/Trigger'
+import { TriggerInterface } from '@/lib/models/triggers/types'
 import {
   ActionEntityTypes,
   ActionInterface,
@@ -13,13 +13,13 @@ import {
   CreateDevicePropertyActionInterface,
   UpdateChannelPropertyActionInterface,
   UpdateDevicePropertyActionInterface,
-} from '@/lib/actions/types'
+} from '@/lib/models/actions/types'
 
 // ENTITY MODEL
 // ============
 export default class Action extends Model implements ActionInterface {
   static get entity(): string {
-    return 'action'
+    return 'triggers_action'
   }
 
   static fields(): Fields {
@@ -58,7 +58,7 @@ export default class Action extends Model implements ActionInterface {
   channel!: string
   property!: string
 
-  relationshipNames!: Array<string>
+  relationshipNames!: string[]
 
   trigger!: TriggerInterface | null
   triggerBackward!: TriggerInterface | null

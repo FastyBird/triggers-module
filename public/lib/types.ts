@@ -2,10 +2,10 @@ import { ModulePrefix } from '@fastybird/modules-metadata'
 
 import { TJsonaModel } from 'jsona/lib/JsonaTypes'
 
-import { TriggerEntityTypes } from '@/lib/triggers/types'
-import { ActionEntityTypes } from '@/lib/actions/types'
-import { ConditionEntityTypes } from '@/lib/conditions/types'
-import { NotificationEntityTypes } from '@/lib/notifications/types'
+import { TriggerEntityTypes } from '@/lib/models/triggers/types'
+import { ActionEntityTypes } from '@/lib/models/actions/types'
+import { ConditionEntityTypes } from '@/lib/models/conditions/types'
+import { NotificationEntityTypes } from '@/lib/models/notifications/types'
 
 export interface TriggerJsonModelInterface extends TJsonaModel {
   id: string

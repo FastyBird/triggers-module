@@ -13,23 +13,23 @@ import {
   TriggerEntityTypes,
   TriggerInterface,
   TriggerUpdateInterface,
-} from '@/lib/triggers/types'
+} from '@/lib/models/triggers/types'
 
-import Action from '@/lib/actions/Action'
-import { ActionInterface } from '@/lib/actions/types'
-import Condition from '@/lib/conditions/Condition'
+import Action from '@/lib/models/actions/Action'
+import { ActionInterface } from '@/lib/models/actions/types'
+import Condition from '@/lib/models/conditions/Condition'
 import {
   ConditionEntityTypes,
   ConditionInterface,
-} from '@/lib/conditions/types'
-import Notification from '@/lib/notifications/Notification'
-import { NotificationInterface } from '@/lib/notifications/types'
+} from '@/lib/models/conditions/types'
+import Notification from '@/lib/models/notifications/Notification'
+import { NotificationInterface } from '@/lib/models/notifications/types'
 
 // ENTITY MODEL
 // ============
 export default class Trigger extends Model implements TriggerInterface {
   static get entity(): string {
-    return 'trigger'
+    return 'triggers_trigger'
   }
 
   static fields(): Fields {
@@ -72,11 +72,11 @@ export default class Trigger extends Model implements TriggerInterface {
 
   owner!: string | null
 
-  relationshipNames!: Array<string>
+  relationshipNames!: string[]
 
-  actions!: Array<ActionInterface>
-  conditions!: Array<ConditionInterface>
-  notifications!: Array<NotificationInterface>
+  actions!: ActionInterface[]
+  conditions!: ConditionInterface[]
+  notifications!: NotificationInterface[]
 
   get isEnabled(): boolean {
     return this.enabled
@@ -98,7 +98,7 @@ export default class Trigger extends Model implements TriggerInterface {
     }
 
     if (this.isTime) {
-      let days: Array<string> = []
+      let days: string[] = []
 
       const schedule = Condition
         .query()

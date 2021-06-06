@@ -5,8 +5,8 @@ import {
 } from '@vuex-orm/core'
 import { TriggerConditionOperator } from '@fastybird/modules-metadata'
 
-import Trigger from '@/lib/triggers/Trigger'
-import { TriggerInterface } from '@/lib/triggers/types'
+import Trigger from '@/lib/models/triggers/Trigger'
+import { TriggerInterface } from '@/lib/models/triggers/types'
 import {
   ConditionEntityTypes,
   ConditionInterface,
@@ -18,13 +18,13 @@ import {
   UpdateDateConditionInterface,
   UpdateDevicePropertyConditionInterface,
   UpdateTimeConditionInterface,
-} from '@/lib/conditions/types'
+} from '@/lib/models/conditions/types'
 
 // ENTITY MODEL
 // ============
 export default class Condition extends Model implements ConditionInterface {
   static get entity(): string {
-    return 'condition'
+    return 'triggers_condition'
   }
 
   static fields(): Fields {
@@ -73,11 +73,11 @@ export default class Condition extends Model implements ConditionInterface {
   property!: string
 
   time!: string
-  days!: Array<number>
+  days!: number[]
 
   date!: string
 
-  relationshipNames!: Array<string>
+  relationshipNames!: string[]
 
   trigger!: TriggerInterface | null
   triggerBackward!: TriggerInterface | null

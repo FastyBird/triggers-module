@@ -11,7 +11,7 @@ import {
 import {
   TriggerInterface,
   TriggerEntityTypes,
-} from '@/lib/triggers/types'
+} from '@/lib/models/triggers/types'
 
 // ENTITY TYPES
 // ============
@@ -43,13 +43,13 @@ export interface ConditionInterface {
 
   // Time conditions specific
   time?: string
-  days?: Array<number>
+  days?: number[]
 
   // Date conditions specific
   date?: string
 
   // Relations
-  relationshipNames: Array<string>
+  relationshipNames: string[]
 
   triggerId: string
 
@@ -77,7 +77,7 @@ interface ConditionAttributesResponseInterface {
 
   // Time conditions specific
   time?: string
-  days?: Array<number>
+  days?: number[]
 
   // Date conditions specific
   date?: string
@@ -108,7 +108,7 @@ export interface ConditionResponseInterface extends TJsonApiBody {
 }
 
 export interface ConditionsResponseInterface extends TJsonApiBody {
-  data: Array<ConditionDataResponseInterface>
+  data: ConditionDataResponseInterface[]
 }
 
 // CREATE ENTITY INTERFACES
@@ -141,7 +141,7 @@ export interface CreateDateConditionInterface extends ConditionCreateInterface {
 
 export interface CreateTimeConditionInterface extends ConditionCreateInterface {
   time: string
-  days: Array<number>
+  days: number[]
 }
 
 // UPDATE ENTITY INTERFACES
@@ -167,5 +167,5 @@ export interface UpdateDateConditionInterface extends ConditionUpdateInterface {
 
 export interface UpdateTimeConditionInterface extends ConditionUpdateInterface {
   time?: string
-  days?: Array<number>
+  days?: number[]
 }
