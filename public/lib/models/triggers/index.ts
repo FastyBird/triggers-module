@@ -280,9 +280,9 @@ const moduleActions: ActionTree<TriggerState, any> = {
   },
 
   async add({ commit }, payload: { id?: string | null, draft?: boolean, data: CreateManualTriggerInterface | CreateAutomaticTriggerInterface }): Promise<Item<Trigger>> {
-    const actions: (CreateDevicePropertyActionInterface | CreateChannelPropertyActionInterface)[] = []
-    const conditions: (CreateDevicePropertyConditionInterface | CreateChannelPropertyConditionInterface | CreateDateConditionInterface | CreateTimeConditionInterface)[] = []
-    const notifications: (CreateSmsNotificationInterface | CreateEmailNotificationInterface)[] = []
+    const actions: CreateDevicePropertyActionInterface[] | CreateChannelPropertyActionInterface[] = []
+    const conditions: CreateDevicePropertyConditionInterface[] | CreateChannelPropertyConditionInterface[] | CreateDateConditionInterface[] | CreateTimeConditionInterface[] = []
+    const notifications: CreateSmsNotificationInterface[] | CreateEmailNotificationInterface[] = []
 
     for (const actionData of payload.data.actions) {
       if (actionData.type === ActionEntityTypes.DEVICE_PROPERTY) {
