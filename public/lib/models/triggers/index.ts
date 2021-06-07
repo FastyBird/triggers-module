@@ -731,7 +731,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
           trigger: payload.trigger.id,
         },
       })
-        .then((response: RpCallResponse): void => {
+        .then((response: RpCallResponse<{ data: string }>): void => {
           if (get(response.data, 'response') === 'accepted') {
             resolve(true)
           } else {
