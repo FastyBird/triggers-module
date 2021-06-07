@@ -723,7 +723,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
     }
 
     return new Promise((resolve, reject) => {
-      Trigger.wamp().call({
+      Trigger.wamp().call<{ data: string }>({
         routing_key: RoutingKeys.TRIGGER_CONTROLS,
         origin: Trigger.$triggersModuleOrigin,
         data: {
