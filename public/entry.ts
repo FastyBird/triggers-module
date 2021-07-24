@@ -17,10 +17,10 @@ import { ComponentsInterface, GlobalConfigInterface } from '@/types/triggers-mod
 const install: Plugin = function installVuexOrmWamp(components: ComponentsInterface, config: GlobalConfigInterface) {
   if (typeof config.originName !== 'undefined') {
     // @ts-ignore
-    components.Model.prototype.$triggersModuleOrigin = config.originName
+    components.Model.$triggersModuleOrigin = config.originName
   } else {
     // @ts-ignore
-    components.Model.prototype.$triggersModuleOrigin = ModuleOrigin.MODULE_TRIGGERS_ORIGIN
+    components.Model.$triggersModuleOrigin = ModuleOrigin.MODULE_TRIGGERS_ORIGIN
   }
 
   config.database.register(Trigger, triggers)
