@@ -12,6 +12,11 @@
 [![Downloads total](https://badgen.net/npm/dt/@fastybird/triggers-module?cache=300&style=flast-square)](https://www.npmjs.com/package/@fastybird/triggers-module)
 ![Types](https://badgen.net/npm/types/@fastybird/triggers-module?cache=300&style=flast-square)
 
+![Python](https://badgen.net/pypi/python/fastybird-triggers-module?cache=300&style=flat-square)
+[![Licence](https://badgen.net/pypi/license/fastybird-triggers-module?cache=300&style=flast-square)](https://github.com/FastyBird/triggers-module/blob/master/LICENSE.md)
+[![Latest stable](https://badgen.net/pypi/v/fastybird-triggers-module?cache=300&style=flast-square)](https://pypi.org/project/fastybird-triggers-module/)
+[![Black](https://img.shields.io/badge/Black-enabled-brightgreen.svg?style=flat-square)](https://github.com/psf/black)
+
 ## What is FastyBird IoT triggers module?
 
 Triggers module is a combined [Nette framework](https://nette.org) extension and [Vex ORM](https://vuex-orm.org) plugin for managing application automation & notifications.
@@ -26,6 +31,7 @@ Triggers module is a combined [Nette framework](https://nette.org) extension and
 - User access check & validation
 - Multilingual
 - JS integration via [Vex ORM](https://vuex-orm.org) plugin
+- Python integration via [PonyORM](https://ponyorm.org)
 
 ## Requirements
 
@@ -55,6 +61,22 @@ or if you prefer npm:
 
 ```sh
 npm install @fastybird/triggers-module
+```
+
+#### Python project:
+
+The best way to install **fastybird-triggers-module** is using [pip](https://pip.pypa.io/):
+
+```sh
+pip install fastybird-triggers-module
+```
+
+#### Python project:
+
+The best way to install **fastybird-triggers-module** is using [pip](https://pip.pypa.io/):
+
+```sh
+pip install fastybird-triggers-module
 ```
 
 ## Documentation

@@ -48,6 +48,14 @@ or if you prefer npm:
 npm install @fastybird/triggers-module
 ```
 
+### Python project:
+
+The best way to install **fastybird-triggers-module** is using [pip](https://pip.pypa.io/):
+
+```sh
+pip install fastybird-triggers-module
+```
+
 ## Configuration
 
 This module is dependent on other Nette extensions. All this extensions have to enabled and configured in NEON configuration file.
@@ -97,4 +105,23 @@ export default {
     VuexORM.install(database),
   ],
 }
+```
+
+## Registering PonyORM models
+
+This module has all entities configured for Python PonyORM. Registration needs just database instance:
+
+```python
+from pony.orm import Database
+from triggers_module.models import define_entities
+
+db: Database = Database()
+
+TriggerEntity, ManualTriggerEntity, AutomaticTriggerEntity, \
+    ActionEntity, PropertyActionEntity, DevicePropertyActionEntity, ChannelPropertyActionEntity, \
+    NotificationEntity, EmailNotificationEntity, SmsNotificationEntity, \
+    ConditionEntity, TimeConditionEntity, DateConditionEntity, \
+    PropertyConditionEntity, ChannelPropertyConditionEntity, DevicePropertyConditionEntity, \
+    triggers_repository \
+    = define_entities(db)
 ```
