@@ -14,14 +14,14 @@
 #     See the License for the specific language governing permissions and
 #     limitations under the License.
 
-# App dependencies
+# Library dependencies
 import uuid
 import datetime
 from modules_metadata.triggers_module import TriggerConditionOperator
 from pony.orm import core as orm, Database, PrimaryKey, Required, Optional, Set, Discriminator, Json
 from typing import List
 
-# App libs
+# Library libs
 from triggers_module.items import (
     TriggerItem,
     DevicePropertyConditionItem,

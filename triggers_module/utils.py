@@ -14,7 +14,7 @@
 #     See the License for the specific language governing permissions and
 #     limitations under the License.
 
-# App dependencies
+# Library dependencies
 from devices_module.items import DevicePropertyItem, ChannelPropertyItem
 from modules_metadata.types import DataType
 

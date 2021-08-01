@@ -14,14 +14,14 @@
 #     See the License for the specific language governing permissions and
 #     limitations under the License.
 
-# App dependencies
+# Library dependencies
 import uuid
 from abc import ABC
 from devices_module.items import DevicePropertyItem, ChannelPropertyItem
 from modules_metadata.triggers_module import TriggerConditionOperator
 from typing import Dict
 
-# App libs
+# Library libs
 from triggers_module.utils import PropertiesUtils
 
 
