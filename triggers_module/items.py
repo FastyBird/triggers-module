@@ -281,13 +281,13 @@ class PropertyConditionItem(ABC):
         # Reset actual status
         self.__is_fulfilled = False
 
-        if self.__operator == TriggerConditionOperator.OPERATOR_VALUE_EQUAL:
+        if self.__operator == TriggerConditionOperator.EQUAL:
             self.__is_fulfilled = normalized_operand == normalized_value
 
-        elif self.__operator == TriggerConditionOperator.OPERATOR_VALUE_ABOVE:
+        elif self.__operator == TriggerConditionOperator.ABOVE:
             self.__is_fulfilled = normalized_operand < normalized_value
 
-        elif self.__operator == TriggerConditionOperator.OPERATOR_VALUE_BELOW:
+        elif self.__operator == TriggerConditionOperator.BELOW:
             self.__is_fulfilled = normalized_operand > normalized_value
 
         return self.__is_fulfilled
