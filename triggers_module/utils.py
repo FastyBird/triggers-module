@@ -14,25 +14,30 @@
 #     See the License for the specific language governing permissions and
 #     limitations under the License.
 
+"""
+Module utilities
+"""
+
 # Library dependencies
 from devices_module.items import DevicePropertyItem, ChannelPropertyItem
 from modules_metadata.types import DataType
 
 
-#
-# Properties utils
-#
-# @package        FastyBird:TriggersModule!
-# @subpackage     Utils
-#
-# @author         Adam Kadlec <adam.kadlec@fastybird.com>
-#
 class PropertiesUtils:
+    """
+    Properties utils
+
+    @package        FastyBird:TriggersModule!
+    @module         utils
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
     @staticmethod
     def normalize_value(
         item: DevicePropertyItem or ChannelPropertyItem,
         value: int or float or str or bool or None,
     ) -> int or float or str or bool or None:
+        """Normalize property value based on property data type"""
         if value is None:
             return None
 
@@ -40,23 +45,24 @@ class PropertiesUtils:
             if item.data_type == DataType.DATA_TYPE_INT:
                 return int(value)
 
-            elif item.data_type == DataType.DATA_TYPE_FLOAT:
+            if item.data_type == DataType.DATA_TYPE_FLOAT:
                 return float(value)
 
-            elif item.data_type == DataType.DATA_TYPE_STRING:
+            if item.data_type == DataType.DATA_TYPE_STRING:
                 return str(value)
 
-            elif item.data_type == DataType.DATA_TYPE_BOOLEAN:
+            if item.data_type == DataType.DATA_TYPE_BOOLEAN:
                 value = str(value)
 
                 return value.lower() in ["true", "1", "t", "y", "yes", "on"]
 
-            elif item.data_type == DataType.DATA_TYPE_ENUM:
-                if item.get_format() is not None and len(item.get_format()) > 0:
-                    if str(value) in item.get_format():
-                        return str(value)
+            if item.data_type == DataType.DATA_TYPE_ENUM:
+                if (
+                    item.get_format() is not None and len(item.get_format()) > 0
+                    and str(value) in item.get_format()
+                ):
+                    return str(value)
 
-                    else:
-                        return None
+                return None
 
         return value

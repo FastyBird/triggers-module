@@ -14,26 +14,30 @@
 #     See the License for the specific language governing permissions and
 #     limitations under the License.
 
+"""
+Entities cache to prevent database overloading
+"""
+
 # Library dependencies
 import uuid
 from abc import ABC
+from typing import Dict
 from devices_module.items import DevicePropertyItem, ChannelPropertyItem
 from modules_metadata.triggers_module import TriggerConditionOperator
-from typing import Dict
 
 # Library libs
 from triggers_module.utils import PropertiesUtils
 
 
-#
-# Trigger item
-#
-# @package        FastyBird:TriggersModule!
-# @subpackage     Items
-#
-# @author         Adam Kadlec <adam.kadlec@fastybird.com>
-#
 class TriggerItem:
+    """
+    Trigger entity item
+
+    @package        FastyBird:TriggersModule!
+    @module         items
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
     __trigger_id: uuid.UUID
 
     __device_property_conditions: Dict[str, "DevicePropertyConditionItem"] = dict()
@@ -63,18 +67,21 @@ class TriggerItem:
 
     @property
     def trigger_id(self) -> uuid.UUID:
+        """Trigger identifier"""
         return self.__trigger_id
 
     # -----------------------------------------------------------------------------
 
     @property
     def is_fulfilled(self) -> bool:
+        """Flag informing that trigger conditions are fulfilled"""
         return self.__is_fulfilled
 
     # -----------------------------------------------------------------------------
 
     @property
     def is_triggered(self) -> bool:
+        """Flag informing that trigger actions are triggered"""
         return self.__is_triggered
 
     # -----------------------------------------------------------------------------
@@ -83,7 +90,11 @@ class TriggerItem:
     def actions(
         self,
     ) -> Dict[str, "DevicePropertyConditionItem" or "ChannelPropertyConditionItem"]:
-        return {**self.__device_property_actions, **self.__channel_property_actions}
+        """All trigger actions"""
+        return {
+            **self.__device_property_actions,
+            **self.__channel_property_actions,
+        }
 
     # -----------------------------------------------------------------------------
 
@@ -91,6 +102,7 @@ class TriggerItem:
     def conditions(
         self,
     ) -> Dict[str, "DevicePropertyConditionItem" or "ChannelPropertyConditionItem"]:
+        """All trigger conditions"""
         return {
             **self.__device_property_conditions,
             **self.__channel_property_conditions,
@@ -103,6 +115,7 @@ class TriggerItem:
         condition_id: str,
         condition: "DevicePropertyConditionItem" or "ChannelPropertyConditionItem",
     ) -> None:
+        """Assign condition to trigger"""
         if isinstance(condition, DevicePropertyConditionItem):
             self.__device_property_conditions[condition_id] = condition
 
@@ -116,6 +129,7 @@ class TriggerItem:
         action_id: str,
         action: "DevicePropertyActionItem" or "ChannelPropertyActionItem",
     ) -> None:
+        """Assign action to trigger"""
         if isinstance(action, DevicePropertyActionItem):
             self.__device_property_actions[action_id] = action
 
@@ -125,6 +139,7 @@ class TriggerItem:
     # -----------------------------------------------------------------------------
 
     def check_property_item(self, item: DevicePropertyItem or ChannelPropertyItem, value: str) -> None:
+        """Check property against trigger actions and conditions"""
         if isinstance(item, DevicePropertyItem):
             for condition in self.__device_property_conditions.values():
                 if condition.device_property == item.key:
@@ -149,6 +164,7 @@ class TriggerItem:
     # -----------------------------------------------------------------------------
 
     def __check_fulfillment(self) -> None:
+        """Check if all trigger conditions are fulfiller"""
         self.__is_fulfilled = True
 
         for condition in self.__device_property_conditions.values():
@@ -162,6 +178,7 @@ class TriggerItem:
     # -----------------------------------------------------------------------------
 
     def __check_triggers(self) -> None:
+        """Check if trigger has actions to be triggered"""
         self.__is_triggered = True
 
         for action in self.__device_property_actions.values():
@@ -173,15 +190,15 @@ class TriggerItem:
                 self.__is_triggered = False
 
 
-#
-# Property condition
-#
-# @package        FastyBird:TriggersModule!
-# @subpackage     Items
-#
-# @author         Adam Kadlec <adam.kadlec@fastybird.com>
-#
 class PropertyConditionItem(ABC):
+    """
+    Base property condition entity item
+
+    @package        FastyBird:TriggersModule!
+    @module         items
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
     __condition_id: uuid.UUID
     __enabled: bool
 
@@ -215,36 +232,49 @@ class PropertyConditionItem(ABC):
     # -----------------------------------------------------------------------------
 
     @property
+    def device(self) -> str:
+        """Device key"""
+        return self.__device
+
+    # -----------------------------------------------------------------------------
+
+    @property
     def condition_id(self) -> uuid.UUID:
+        """Condition identifier"""
         return self.__condition_id
 
     # -----------------------------------------------------------------------------
 
     @property
     def enabled(self) -> bool:
+        """Flag informing if condition is enabled"""
         return self.__enabled
 
     # -----------------------------------------------------------------------------
 
     @property
     def operator(self) -> TriggerConditionOperator:
+        """Condition operator"""
         return self.__operator
 
     # -----------------------------------------------------------------------------
 
     @property
     def operand(self) -> str:
+        """Condition operand"""
         return self.__operand
 
     # -----------------------------------------------------------------------------
 
     @property
     def is_fulfilled(self) -> bool:
+        """Flag informing that condition has met all conditions"""
         return self.__is_fulfilled
 
     # -----------------------------------------------------------------------------
 
     def validate(self, item: DevicePropertyItem or ChannelPropertyItem, value: str) -> bool:
+        """Property value validation"""
         normalized_value = PropertiesUtils.normalize_value(item, value)
         normalized_operand = PropertiesUtils.normalize_value(item, self.operand)
 
@@ -263,15 +293,15 @@ class PropertyConditionItem(ABC):
         return self.__is_fulfilled
 
 
-#
-# Device property condition
-#
-# @package        FastyBird:TriggersModule!
-# @subpackage     Items
-#
-# @author         Adam Kadlec <adam.kadlec@fastybird.com>
-#
 class DevicePropertyConditionItem(PropertyConditionItem):
+    """
+    Device property condition entity item
+
+    @package        FastyBird:TriggersModule!
+    @module         items
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
     __device_property: str
 
     # -----------------------------------------------------------------------------
@@ -293,23 +323,25 @@ class DevicePropertyConditionItem(PropertyConditionItem):
 
     @property
     def device_property(self) -> str:
+        """Device property key"""
         return self.__device_property
 
     # -----------------------------------------------------------------------------
 
     def validate(self, item: DevicePropertyItem, value: str) -> bool:
+        """Device property value validation"""
         return super().validate(item, value)
 
 
-#
-# Channel property condition
-#
-# @package        FastyBird:TriggersModule!
-# @subpackage     Items
-#
-# @author         Adam Kadlec <adam.kadlec@fastybird.com>
-#
 class ChannelPropertyConditionItem(PropertyConditionItem):
+    """
+    Channel property condition entity item
+
+    @package        FastyBird:TriggersModule!
+    @module         items
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
     __channel_property: str
     __channel: str
 
@@ -333,24 +365,33 @@ class ChannelPropertyConditionItem(PropertyConditionItem):
     # -----------------------------------------------------------------------------
 
     @property
+    def channel(self) -> str:
+        """Channel key"""
+        return self.__channel
+
+    # -----------------------------------------------------------------------------
+
+    @property
     def channel_property(self) -> str:
+        """Channel property key"""
         return self.__channel_property
 
     # -----------------------------------------------------------------------------
 
     def validate(self, item: ChannelPropertyItem, value: str) -> bool:
+        """Channel property value validation"""
         return super().validate(item, value)
 
 
-#
-# Channel property action
-#
-# @package        FastyBird:TriggersModule!
-# @subpackage     Items
-#
-# @author         Adam Kadlec <adam.kadlec@fastybird.com>
-#
 class PropertyActionItem(ABC):
+    """
+    Base property action entity item
+
+    @package        FastyBird:TriggersModule!
+    @module         items
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
     __action_id: uuid.UUID
     __enabled: bool
 
@@ -375,30 +416,42 @@ class PropertyActionItem(ABC):
     # -----------------------------------------------------------------------------
 
     @property
+    def device(self) -> str:
+        """Device key"""
+        return self.__device
+
+    # -----------------------------------------------------------------------------
+
+    @property
     def action_id(self) -> uuid.UUID:
+        """Action identifier"""
         return self.__action_id
 
     # -----------------------------------------------------------------------------
 
     @property
     def enabled(self) -> bool:
+        """Flag informing if action is enabled"""
         return self.__enabled
 
     # -----------------------------------------------------------------------------
 
     @property
     def value(self) -> str:
+        """Action property value to be set"""
         return self.__value
 
     # -----------------------------------------------------------------------------
 
     @property
     def is_triggered(self) -> bool:
+        """Flag informing that action is ready to be triggered"""
         return self.__is_triggered
 
     # -----------------------------------------------------------------------------
 
     def validate(self, item: DevicePropertyItem or ChannelPropertyItem, value: str) -> bool:
+        """Property value validation"""
         if self.__value == "toggle":
             self.__is_triggered = False
 
@@ -410,15 +463,15 @@ class PropertyActionItem(ABC):
         return self.__is_triggered
 
 
-#
-# Device property action
-#
-# @package        FastyBird:TriggersModule!
-# @subpackage     Items
-#
-# @author         Adam Kadlec <adam.kadlec@fastybird.com>
-#
 class DevicePropertyActionItem(PropertyActionItem):
+    """
+    Device property action entity item
+
+    @package        FastyBird:TriggersModule!
+    @module         items
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
     __device_property: str
 
     # -----------------------------------------------------------------------------
@@ -439,23 +492,25 @@ class DevicePropertyActionItem(PropertyActionItem):
 
     @property
     def device_property(self) -> str:
+        """Device property key"""
         return self.__device_property
 
     # -----------------------------------------------------------------------------
 
     def validate(self, item: DevicePropertyItem, value: str) -> bool:
+        """Device property value validation"""
         return super().validate(item, value)
 
 
-#
-# Channel property action
-#
-# @package        FastyBird:TriggersModule!
-# @subpackage     Items
-#
-# @author         Adam Kadlec <adam.kadlec@fastybird.com>
-#
 class ChannelPropertyActionItem(PropertyActionItem):
+    """
+    Channel property action entity item
+
+    @package        FastyBird:TriggersModule!
+    @module         items
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
     __channel_property: str
     __channel: str
 
@@ -478,10 +533,19 @@ class ChannelPropertyActionItem(PropertyActionItem):
     # -----------------------------------------------------------------------------
 
     @property
+    def channel(self) -> str:
+        """Channel key"""
+        return self.__channel
+
+    # -----------------------------------------------------------------------------
+
+    @property
     def channel_property(self) -> str:
+        """Channel property key"""
         return self.__channel_property
 
     # -----------------------------------------------------------------------------
 
     def validate(self, item: ChannelPropertyItem, value: str) -> bool:
+        """Channel property value validation"""
         return super().validate(item, value)
