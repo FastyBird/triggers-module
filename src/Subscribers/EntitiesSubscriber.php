@@ -110,6 +110,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 						$publishRoutingKey = $routingKey;
 					}
 				}
+
 				break;
 
 			case self::ACTION_UPDATED:
@@ -118,6 +119,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 						$publishRoutingKey = $routingKey;
 					}
 				}
+
 				break;
 
 			case self::ACTION_DELETED:
@@ -126,6 +128,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 						$publishRoutingKey = $routingKey;
 					}
 				}
+
 				break;
 		}
 

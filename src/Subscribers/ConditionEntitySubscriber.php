@@ -73,7 +73,6 @@ final class ConditionEntitySubscriber implements Common\EventSubscriber
 							) {
 								throw new Exceptions\UniqueConditionConstraint('Not same property in trigger conditions');
 							}
-
 						} elseif (
 							$condition instanceof Entities\Conditions\IChannelPropertyCondition
 							&& $object instanceof Entities\Conditions\IChannelPropertyCondition

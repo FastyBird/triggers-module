@@ -149,7 +149,6 @@ final class ActionsV1Controller extends BaseV1Controller
 					$this->translator->translate('//triggers-module.base.messages.notFound.message')
 				);
 			}
-
 		} catch (Uuid\Exception\InvalidUuidStringException $ex) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_NOT_FOUND,

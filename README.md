@@ -1,27 +1,28 @@
 # FastyBird IoT triggers module
 
-[![Build Status](https://badgen.net/github/checks/FastyBird/triggers-module/master?cache=300&style=flast-square)](https://github.com/FastyBird/triggers-module/actions)
-[![Code coverage](https://badgen.net/coveralls/c/github/FastyBird/triggers-module?cache=300&style=flast-square)](https://coveralls.io/r/FastyBird/triggers-module)
-![PHP](https://badgen.net/packagist/php/FastyBird/triggers-module?cache=300&style=flast-square)
-[![Licence](https://badgen.net/packagist/license/FastyBird/triggers-module?cache=300&style=flast-square)](https://packagist.org/packages/FastyBird/triggers-module)
-[![Downloads total](https://badgen.net/packagist/dt/FastyBird/triggers-module?cache=300&style=flast-square)](https://packagist.org/packages/FastyBird/triggers-module)
-[![Latest stable](https://badgen.net/packagist/v/FastyBird/triggers-module/latest?cache=300&style=flast-square)](https://packagist.org/packages/FastyBird/triggers-module)
-[![PHPStan](https://img.shields.io/badge/PHPStan-enabled-brightgreen.svg?style=flat-square)](https://github.com/phpstan/phpstan)
+[![Build Status](https://badgen.net/github/checks/FastyBird/triggers-module/master?cache=300&style=flat-square)](https://github.com/FastyBird/triggers-module/actions)
+[![Licence](https://badgen.net/github/license/FastyBird/triggers-module?cache=300&style=flat-square)](https://github.com/FastyBird/triggers-module/blob/master/LICENSE.md)
 
-[![Latest stable](https://badgen.net/npm/v/@fastybird/triggers-module?cache=300&style=flast-square)](https://www.npmjs.com/package/@fastybird/triggers-module)
-[![Downloads total](https://badgen.net/npm/dt/@fastybird/triggers-module?cache=300&style=flast-square)](https://www.npmjs.com/package/@fastybird/triggers-module)
-![Types](https://badgen.net/npm/types/@fastybird/triggers-module?cache=300&style=flast-square)
+![PHP](https://badgen.net/packagist/php/FastyBird/triggers-module?cache=300&style=flat-square)
+[![PHP code coverage](https://badgen.net/coveralls/c/github/FastyBird/triggers-module?cache=300&style=flat-square)](https://coveralls.io/r/FastyBird/triggers-module)
+[![PHP latest stable](https://badgen.net/packagist/v/FastyBird/triggers-module/latest?cache=300&style=flat-square)](https://packagist.org/packages/FastyBird/triggers-module)
+[![PHP downloads total](https://badgen.net/packagist/dt/FastyBird/triggers-module?cache=300&style=flat-square)](https://packagist.org/packages/FastyBird/triggers-module)
+[![PHPStan](https://img.shields.io/badge/phpstan-enabled-brightgreen.svg?style=flat-square)](https://github.com/phpstan/phpstan)
+
+[![JS latest stable](https://badgen.net/npm/v/@fastybird/triggers-module?cache=300&style=flat-square)](https://www.npmjs.com/package/@fastybird/triggers-module)
+[![JS downloads total](https://badgen.net/npm/dt/@fastybird/triggers-module?cache=300&style=flat-square)](https://www.npmjs.com/package/@fastybird/triggers-module)
+![Types](https://badgen.net/npm/types/@fastybird/triggers-module?cache=300&style=flat-square)
 
 ![Python](https://badgen.net/pypi/python/fastybird-triggers-module?cache=300&style=flat-square)
-[![Licence](https://badgen.net/pypi/license/fastybird-triggers-module?cache=300&style=flast-square)](https://github.com/FastyBird/triggers-module/blob/master/LICENSE.md)
-[![Latest stable](https://badgen.net/pypi/v/fastybird-triggers-module?cache=300&style=flast-square)](https://pypi.org/project/fastybird-triggers-module/)
-[![Black](https://img.shields.io/badge/Black-enabled-brightgreen.svg?style=flat-square)](https://github.com/psf/black)
+[![Python latest stable](https://badgen.net/pypi/v/fastybird-triggers-module?cache=300&style=flat-square)](https://pypi.org/project/fastybird-triggers-module/)
+[![Python downloads month](https://img.shields.io/pypi/dm/fastybird-triggers-module?cache=300&style=flat-square)](https://pypi.org/project/fastybird-triggers-module/)
+[![Black](https://img.shields.io/badge/black-enabled-brightgreen.svg?style=flat-square)](https://github.com/psf/black)
 
 ## What is FastyBird IoT triggers module?
 
-Triggers module is a combined [Nette framework](https://nette.org) extension and [Vex ORM](https://vuex-orm.org) plugin for managing application automation & notifications.
+Triggers module is a combined [Nette framework](https://nette.org) extension and [Vex ORM](https://vuex-orm.org) plugin and also [Python](https://python.org) module for managing application automation & notifications.
 
-[FastyBird](https://www.fastybird.com) [IoT](https://en.wikipedia.org/wiki/Internet_of_things) triggers module is an [Apache2 licensed](http://www.apache.org/licenses/LICENSE-2.0) distributed extension, developed in [PHP](https://www.php.net) with [Nette framework](https://nette.org) and in [Typescript](https://www.typescriptlang.org).
+[FastyBird](https://www.fastybird.com) [IoT](https://en.wikipedia.org/wiki/Internet_of_things) triggers module is an [Apache2 licensed](http://www.apache.org/licenses/LICENSE-2.0) distributed extension, developed in [PHP](https://www.php.net) with [Nette framework](https://nette.org), in [Typescript](https://www.typescriptlang.org) and also in [Python](https://python.org).
 
 ### Features:
 

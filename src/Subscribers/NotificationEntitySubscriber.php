@@ -70,7 +70,6 @@ final class NotificationEntitySubscriber implements Common\EventSubscriber
 						throw new Exceptions\UniqueNotificationNumberConstraint('Not same phone number in trigger');
 					}
 				}
-
 			} elseif ($object instanceof Entities\Notifications\IEmailNotification) {
 				$trigger = $object->getTrigger();
 

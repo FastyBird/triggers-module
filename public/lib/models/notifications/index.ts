@@ -420,9 +420,9 @@ const moduleActions: ActionTree<NotificationState, any> = {
 
     if (
       ![
-        RoutingKeys.TRIGGERS_NOTIFICATIONS_CREATED_ENTITY,
-        RoutingKeys.TRIGGERS_NOTIFICATIONS_UPDATED_ENTITY,
-        RoutingKeys.TRIGGERS_NOTIFICATIONS_DELETED_ENTITY,
+        RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_CREATED,
+        RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_UPDATED,
+        RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_DELETED,
       ].includes(payload.routingKey as RoutingKeys)
     ) {
       return false
@@ -435,12 +435,12 @@ const moduleActions: ActionTree<NotificationState, any> = {
     if (validate(body)) {
       if (
         !Notification.query().where('id', body.id).exists() &&
-        (payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_UPDATED_ENTITY || payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_DELETED_ENTITY)
+        (payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_UPDATED || payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_DELETED)
       ) {
         throw new Error('triggers-module.notifications.update.failed')
       }
 
-      if (payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_DELETED_ENTITY) {
+      if (payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_DELETED) {
         commit('SET_SEMAPHORE', {
           type: SemaphoreTypes.DELETING,
           id: body.id,
@@ -461,12 +461,12 @@ const moduleActions: ActionTree<NotificationState, any> = {
           })
         }
       } else {
-        if (payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_UPDATED_ENTITY && state.semaphore.updating.includes(body.id)) {
+        if (payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_UPDATED && state.semaphore.updating.includes(body.id)) {
           return true
         }
 
         commit('SET_SEMAPHORE', {
-          type: payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_UPDATED_ENTITY ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING,
+          type: payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING,
           id: body.id,
         })
 
@@ -501,7 +501,7 @@ const moduleActions: ActionTree<NotificationState, any> = {
           )
         } finally {
           commit('CLEAR_SEMAPHORE', {
-            type: payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_UPDATED_ENTITY ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING,
+            type: payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING,
             id: body.id,
           })
         }
