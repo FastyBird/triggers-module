@@ -124,7 +124,7 @@ final class ActionsV1Controller extends BaseV1Controller
 	}
 
 	/**
-	 * @param string $id
+	 * @param non-empty-string $id
 	 * @param Entities\Triggers\ITrigger $trigger
 	 *
 	 * @return Entities\Actions\IAction
