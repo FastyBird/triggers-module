@@ -471,11 +471,21 @@ const moduleActions: ActionTree<ActionState, any> = {
 
         const entityData: { [index: string]: any } = {}
 
+        const camelRegex = new RegExp('_([a-z0-9])', 'g')
+
         Object.keys(body)
           .forEach((attrName) => {
-            const kebabName = attrName.replace(/([a-z][A-Z0-9])/g, g => `${g[0]}_${g[1].toLowerCase()}`)
+            const camelName = attrName.replace(camelRegex, g => g[1].toUpperCase())
 
-            entityData[kebabName] = body[attrName]
+            if (camelName === 'trigger') {
+              const trigger = Trigger.query().where('id', body[attrName]).first()
+
+              if (trigger !== null) {
+                entityData.triggerId = trigger.id
+              }
+            } else {
+              entityData[camelName] = body[attrName]
+            }
           })
 
         try {

@@ -42,7 +42,7 @@ export class JsonApiModelPropertiesMapper extends ModelPropertiesMapper implemen
     Object.keys(model)
       .forEach((attrName) => {
         if (!exceptProps.includes(attrName)) {
-          const kebabName = attrName.replace(/([a-z][A-Z0-9])/g, g => `${g[0]}_${g[1].toLowerCase()}`)
+          const snakeName = attrName.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)
 
           let jsonAttributes = model[attrName]
 
@@ -66,7 +66,7 @@ export class JsonApiModelPropertiesMapper extends ModelPropertiesMapper implemen
             })
           }
 
-          attributes[kebabName] = jsonAttributes
+          attributes[snakeName] = jsonAttributes
         }
       })
 
@@ -87,11 +87,11 @@ export class JsonApiModelPropertiesMapper extends ModelPropertiesMapper implemen
 
     relationshipNames
       .forEach((relationName: string) => {
-        const kebabName = relationName.replace(/([a-z][A-Z0-9])/g, g => `${g[0]}_${g[1].toLowerCase()}`)
+        const snakeName = relationName.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)
 
         if (model[relationName] !== undefined) {
           if (Array.isArray(model[relationName])) {
-            relationships[kebabName] = model[relationName]
+            relationships[snakeName] = model[relationName]
               .map((item: TJsonaModel) => {
                 return {
                   id: item.id,
@@ -99,7 +99,7 @@ export class JsonApiModelPropertiesMapper extends ModelPropertiesMapper implemen
                 }
               })
           } else if (typeof model[relationName] === 'object' && model[relationName] !== null) {
-            relationships[kebabName] = {
+            relationships[snakeName] = {
               id: model[relationName].id,
               type: model[relationName].type,
             }
