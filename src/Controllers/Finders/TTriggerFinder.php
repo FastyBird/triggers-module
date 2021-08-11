@@ -31,7 +31,7 @@ trait TTriggerFinder
 {
 
 	/**
-	 * @param non-empty-string $id
+	 * @param string $id
 	 *
 	 * @return Entities\Triggers\ITrigger
 	 *
