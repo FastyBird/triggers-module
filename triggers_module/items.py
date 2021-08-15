@@ -24,6 +24,7 @@ from abc import ABC
 from typing import Dict
 from devices_module.items import DevicePropertyItem, ChannelPropertyItem
 from modules_metadata.triggers_module import TriggerConditionOperator
+from modules_metadata.types import SwitchPayload
 
 # Library libs
 from triggers_module.utils import PropertiesUtils
@@ -138,25 +139,30 @@ class TriggerItem:
 
     # -----------------------------------------------------------------------------
 
-    def check_property_item(self, item: DevicePropertyItem or ChannelPropertyItem, value: str) -> None:
+    def check_property_item(
+        self,
+        item: DevicePropertyItem or ChannelPropertyItem,
+        previous_value: str or None,
+        actual_value: str,
+    ) -> None:
         """Check property against trigger actions and conditions"""
         if isinstance(item, DevicePropertyItem):
             for condition in self.__device_property_conditions.values():
                 if condition.device_property == item.key:
-                    condition.validate(item, value)
+                    condition.validate(item, previous_value, actual_value)
 
             for action in self.__device_property_actions.values():
                 if action.device_property == item.key:
-                    action.validate(item, value)
+                    action.validate(item, previous_value, actual_value)
 
         elif isinstance(item, ChannelPropertyItem):
             for condition in self.__channel_property_conditions.values():
                 if condition.channel_property == item.key:
-                    condition.validate(item, value)
+                    condition.validate(item, previous_value, actual_value)
 
             for action in self.__channel_property_actions.values():
                 if action.channel_property == item.key:
-                    action.validate(item, value)
+                    action.validate(item, previous_value, actual_value)
 
         self.__check_fulfillment()
         self.__check_triggers()
@@ -273,9 +279,17 @@ class PropertyConditionItem(ABC):
 
     # -----------------------------------------------------------------------------
 
-    def validate(self, item: DevicePropertyItem or ChannelPropertyItem, value: str) -> bool:
+    def validate(
+        self,
+        item: DevicePropertyItem or ChannelPropertyItem,
+        previous_value: str or None,
+        actual_value: str
+    ) -> bool:
+        if previous_value is not None and previous_value == actual_value:
+            return False
+
         """Property value validation"""
-        normalized_value = PropertiesUtils.normalize_value(item, value)
+        normalized_value = PropertiesUtils.normalize_value(item, actual_value)
         normalized_operand = PropertiesUtils.normalize_value(item, self.operand)
 
         # Reset actual status
@@ -328,9 +342,14 @@ class DevicePropertyConditionItem(PropertyConditionItem):
 
     # -----------------------------------------------------------------------------
 
-    def validate(self, item: DevicePropertyItem, value: str) -> bool:
+    def validate(
+        self,
+        item: DevicePropertyItem,
+        previous_value: str or None,
+        actual_value: str
+    ) -> bool:
         """Device property value validation"""
-        return super().validate(item, value)
+        return super().validate(item, previous_value, actual_value)
 
 
 class ChannelPropertyConditionItem(PropertyConditionItem):
@@ -378,9 +397,14 @@ class ChannelPropertyConditionItem(PropertyConditionItem):
 
     # -----------------------------------------------------------------------------
 
-    def validate(self, item: ChannelPropertyItem, value: str) -> bool:
+    def validate(
+        self,
+        item: ChannelPropertyItem,
+        previous_value: str or None,
+        actual_value: str
+    ) -> bool:
         """Channel property value validation"""
-        return super().validate(item, value)
+        return super().validate(item, previous_value, actual_value)
 
 
 class PropertyActionItem(ABC):
@@ -396,6 +420,7 @@ class PropertyActionItem(ABC):
     __enabled: bool
 
     __value: str
+    __actual_value: str or None = None
 
     __device: str
 
@@ -450,15 +475,26 @@ class PropertyActionItem(ABC):
 
     # -----------------------------------------------------------------------------
 
-    def validate(self, item: DevicePropertyItem or ChannelPropertyItem, value: str) -> bool:
+    def validate(
+        self,
+        item: DevicePropertyItem or ChannelPropertyItem,
+        previous_value: str or None,
+        actual_value: str
+    ) -> bool:
         """Property value validation"""
-        if self.__value == "toggle":
+        if self.__value == SwitchPayload(SwitchPayload.TOGGLE).value:
             self.__is_triggered = False
+
+            if self.__actual_value is None:
+                self.__actual_value = actual_value
+
+            elif self.__actual_value == actual_value:
+                self.__is_triggered = True
 
         else:
             self.__is_triggered = PropertiesUtils.normalize_value(
                 item, self.__value
-            ) == PropertiesUtils.normalize_value(item, value)
+            ) == PropertiesUtils.normalize_value(item, actual_value)
 
         return self.__is_triggered
 
@@ -497,9 +533,14 @@ class DevicePropertyActionItem(PropertyActionItem):
 
     # -----------------------------------------------------------------------------
 
-    def validate(self, item: DevicePropertyItem, value: str) -> bool:
+    def validate(
+        self,
+        item: DevicePropertyItem,
+        previous_value: str or None,
+        actual_value: str
+    ) -> bool:
         """Device property value validation"""
-        return super().validate(item, value)
+        return super().validate(item, previous_value, actual_value)
 
 
 class ChannelPropertyActionItem(PropertyActionItem):
@@ -546,6 +587,11 @@ class ChannelPropertyActionItem(PropertyActionItem):
 
     # -----------------------------------------------------------------------------
 
-    def validate(self, item: ChannelPropertyItem, value: str) -> bool:
+    def validate(
+        self,
+        item: ChannelPropertyItem,
+        previous_value: str or None,
+        actual_value: str
+    ) -> bool:
         """Channel property value validation"""
-        return super().validate(item, value)
+        return super().validate(item, previous_value, actual_value)
