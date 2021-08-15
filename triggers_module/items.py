@@ -21,7 +21,7 @@ Entities cache to prevent database overloading
 # Library dependencies
 import uuid
 from abc import ABC
-from typing import Dict
+from typing import Dict, Tuple
 from devices_module.items import DevicePropertyItem, ChannelPropertyItem
 from modules_metadata.triggers_module import TriggerConditionOperator
 from modules_metadata.types import SwitchPayload
@@ -47,9 +47,6 @@ class TriggerItem:
     __device_property_actions: Dict[str, "DevicePropertyActionItem"] = dict()
     __channel_property_actions: Dict[str, "ChannelPropertyActionItem"] = dict()
 
-    __is_fulfilled = False
-    __is_triggered = False
-
     # -----------------------------------------------------------------------------
 
     def __init__(self, trigger_id: uuid.UUID) -> None:
@@ -61,29 +58,12 @@ class TriggerItem:
         self.__device_property_conditions = dict()
         self.__channel_property_conditions = dict()
 
-        self.__is_fulfilled = False
-        self.__is_triggered = False
-
     # -----------------------------------------------------------------------------
 
     @property
     def trigger_id(self) -> uuid.UUID:
         """Trigger identifier"""
         return self.__trigger_id
-
-    # -----------------------------------------------------------------------------
-
-    @property
-    def is_fulfilled(self) -> bool:
-        """Flag informing that trigger conditions are fulfilled"""
-        return self.__is_fulfilled
-
-    # -----------------------------------------------------------------------------
-
-    @property
-    def is_triggered(self) -> bool:
-        """Flag informing that trigger actions are triggered"""
-        return self.__is_triggered
 
     # -----------------------------------------------------------------------------
 
@@ -144,56 +124,61 @@ class TriggerItem:
         item: DevicePropertyItem or ChannelPropertyItem,
         previous_value: str or None,
         actual_value: str,
-    ) -> None:
+    ) -> Tuple[bool, bool]:
+        is_condition: bool = False
+
         """Check property against trigger actions and conditions"""
         if isinstance(item, DevicePropertyItem):
             for condition in self.__device_property_conditions.values():
                 if condition.device_property == item.key:
+                    is_condition = True
+
                     condition.validate(item, previous_value, actual_value)
 
             for action in self.__device_property_actions.values():
                 if action.device_property == item.key:
-                    action.validate(item, previous_value, actual_value)
+                    action.validate(item, actual_value)
 
         elif isinstance(item, ChannelPropertyItem):
             for condition in self.__channel_property_conditions.values():
                 if condition.channel_property == item.key:
+                    is_condition = True
+
                     condition.validate(item, previous_value, actual_value)
 
             for action in self.__channel_property_actions.values():
                 if action.channel_property == item.key:
-                    action.validate(item, previous_value, actual_value)
+                    action.validate(item, actual_value)
 
-        self.__check_fulfillment()
-        self.__check_triggers()
+        return (self.__check_fulfillment() if is_condition is True else False), self.__check_triggers()
 
     # -----------------------------------------------------------------------------
 
-    def __check_fulfillment(self) -> None:
+    def __check_fulfillment(self) -> bool:
         """Check if all trigger conditions are fulfiller"""
-        self.__is_fulfilled = True
-
         for condition in self.__device_property_conditions.values():
             if condition.enabled and condition.is_fulfilled is False:
-                self.__is_fulfilled = False
+                return False
 
         for condition in self.__channel_property_conditions.values():
             if condition.enabled and condition.is_fulfilled is False:
-                self.__is_fulfilled = False
+                return False
+
+        return True
 
     # -----------------------------------------------------------------------------
 
-    def __check_triggers(self) -> None:
+    def __check_triggers(self) -> bool:
         """Check if trigger has actions to be triggered"""
-        self.__is_triggered = True
-
         for action in self.__device_property_actions.values():
             if action.enabled and action.is_triggered is False:
-                self.__is_triggered = False
+                return False
 
         for action in self.__channel_property_actions.values():
             if action.enabled and action.is_triggered is False:
-                self.__is_triggered = False
+                return False
+
+        return True
 
 
 class PropertyConditionItem(ABC):
@@ -478,18 +463,11 @@ class PropertyActionItem(ABC):
     def validate(
         self,
         item: DevicePropertyItem or ChannelPropertyItem,
-        previous_value: str or None,  # pylint: disable=unused-argument
         actual_value: str
     ) -> bool:
         """Property value validation"""
         if self.__value == SwitchPayload(SwitchPayload.TOGGLE).value:
             self.__is_triggered = False
-
-            if self.__actual_value is None:
-                self.__actual_value = actual_value
-
-            elif self.__actual_value == actual_value:
-                self.__is_triggered = True
 
         else:
             self.__is_triggered = PropertiesUtils.normalize_value(
@@ -536,11 +514,10 @@ class DevicePropertyActionItem(PropertyActionItem):
     def validate(
         self,
         item: DevicePropertyItem,
-        previous_value: str or None,
         actual_value: str
     ) -> bool:
         """Device property value validation"""
-        return super().validate(item, previous_value, actual_value)
+        return super().validate(item, actual_value)
 
 
 class ChannelPropertyActionItem(PropertyActionItem):
@@ -590,8 +567,7 @@ class ChannelPropertyActionItem(PropertyActionItem):
     def validate(
         self,
         item: ChannelPropertyItem,
-        previous_value: str or None,
         actual_value: str
     ) -> bool:
         """Channel property value validation"""
-        return super().validate(item, previous_value, actual_value)
+        return super().validate(item, actual_value)

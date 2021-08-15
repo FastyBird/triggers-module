@@ -1,6 +1,6 @@
 {
   "name": "@fastybird/triggers-module",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "description": "Triggers module data model plugin",
   "keywords": [
     "triggers",
