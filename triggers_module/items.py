@@ -125,9 +125,9 @@ class TriggerItem:
         previous_value: str or None,
         actual_value: str,
     ) -> Tuple[bool, bool]:
+        """Check property against trigger actions and conditions"""
         is_condition: bool = False
 
-        """Check property against trigger actions and conditions"""
         if isinstance(item, DevicePropertyItem):
             for condition in self.__device_property_conditions.values():
                 if condition.device_property == item.key:
@@ -405,7 +405,6 @@ class PropertyActionItem(ABC):
     __enabled: bool
 
     __value: str
-    __actual_value: str or None = None
 
     __device: str
 
