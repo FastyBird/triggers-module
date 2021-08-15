@@ -285,10 +285,10 @@ class PropertyConditionItem(ABC):
         previous_value: str or None,
         actual_value: str
     ) -> bool:
+        """Property value validation"""
         if previous_value is not None and previous_value == actual_value:
             return False
 
-        """Property value validation"""
         normalized_value = PropertiesUtils.normalize_value(item, actual_value)
         normalized_operand = PropertiesUtils.normalize_value(item, self.operand)
 
@@ -478,7 +478,7 @@ class PropertyActionItem(ABC):
     def validate(
         self,
         item: DevicePropertyItem or ChannelPropertyItem,
-        previous_value: str or None,
+        previous_value: str or None,  # pylint: disable=unused-argument
         actual_value: str
     ) -> bool:
         """Property value validation"""
