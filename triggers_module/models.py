@@ -343,7 +343,7 @@ def define_entities(db: Database):  # pylint: disable=invalid-name
         @orm.db_session
         def initialize(self) -> None:
             """Initialize repository by fetching entities from database"""
-            self.__items = []
+            items: List[TriggerItem] = []
 
             for trigger in TriggerEntity.select():
                 record = TriggerItem(trigger.trigger_id)
@@ -403,7 +403,9 @@ def define_entities(db: Database):  # pylint: disable=invalid-name
                             ),
                         )
 
-                self.__items.append(record)
+                items.append(record)
+
+            self.__items = items
 
         # -----------------------------------------------------------------------------
 

@@ -41,22 +41,22 @@ class TriggerItem:
     """
     __trigger_id: uuid.UUID
 
-    __device_property_conditions: Dict[str, "DevicePropertyConditionItem"] = dict()
-    __channel_property_conditions: Dict[str, "ChannelPropertyConditionItem"] = dict()
+    __device_property_conditions: Dict[str, "DevicePropertyConditionItem"] = {}
+    __channel_property_conditions: Dict[str, "ChannelPropertyConditionItem"] = {}
 
-    __device_property_actions: Dict[str, "DevicePropertyActionItem"] = dict()
-    __channel_property_actions: Dict[str, "ChannelPropertyActionItem"] = dict()
+    __device_property_actions: Dict[str, "DevicePropertyActionItem"] = {}
+    __channel_property_actions: Dict[str, "ChannelPropertyActionItem"] = {}
 
     # -----------------------------------------------------------------------------
 
     def __init__(self, trigger_id: uuid.UUID) -> None:
         self.__trigger_id = trigger_id
 
-        self.__device_property_actions = dict()
-        self.__channel_property_actions = dict()
+        self.__device_property_actions = {}
+        self.__channel_property_actions = {}
 
-        self.__device_property_conditions = dict()
-        self.__channel_property_conditions = dict()
+        self.__device_property_conditions = {}
+        self.__channel_property_conditions = {}
 
     # -----------------------------------------------------------------------------
 
