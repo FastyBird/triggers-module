@@ -34,419 +34,429 @@ from triggers_module.items import (
     ChannelPropertyActionItem,
 )
 
+# Create triggers module database accessor
+db: Database = Database()
 
-def define_entities(db: Database):  # pylint: disable=invalid-name
-    """Register all module entities and initialize repositories cache"""
 
-    class TriggerEntity(db.Entity):
-        """
-        Base trigger entity
+class TriggerEntity(db.Entity):
+    """
+    Base trigger entity
 
-        @package        FastyBird:TriggersModule!
-        @module         models
+    @package        FastyBird:TriggersModule!
+    @module         models
 
-        @author         Adam Kadlec <adam.kadlec@fastybird.com>
-        """
-        _table_: str = "fb_triggers"
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    _table_: str = "fb_triggers"
 
-        type = Discriminator(str, column="trigger_type")
-        _discriminator_: str = "trigger"
+    type = Discriminator(str, column="trigger_type")
+    _discriminator_: str = "trigger"
 
-        trigger_id: uuid.UUID = PrimaryKey(uuid.UUID, default=uuid.uuid4, column="trigger_id")
-        name: str or None = Required(str, column="trigger_name", max_len=100, nullable=False)
-        comment: str or None = Optional(str, column="trigger_comment", nullable=True, default=None)
-        enabled: bool = Required(bool, column="trigger_enabled", nullable=False, default=True)
-        params: Json or None = Optional(Json, column="params", nullable=True)
-        created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
-        updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
+    trigger_id: uuid.UUID = PrimaryKey(uuid.UUID, default=uuid.uuid4, column="trigger_id")
+    name: str or None = Required(str, column="trigger_name", max_len=100, nullable=False)
+    comment: str or None = Optional(str, column="trigger_comment", nullable=True, default=None)
+    enabled: bool = Required(bool, column="trigger_enabled", nullable=False, default=True)
+    params: Json or None = Optional(Json, column="params", nullable=True)
+    created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
+    updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
 
-        actions: List["ActionEntity"] = Set("ActionEntity", reverse="trigger")
-        notifications: List["NotificationEntity"] = Set("NotificationEntity", reverse="trigger")
+    actions: List["ActionEntity"] = Set("ActionEntity", reverse="trigger")
+    notifications: List["NotificationEntity"] = Set("NotificationEntity", reverse="trigger")
 
-        def before_insert(self) -> None:
-            """Before insert entity hook"""
-            self.created_at = datetime.datetime.now()
+    def before_insert(self) -> None:
+        """Before insert entity hook"""
+        self.created_at = datetime.datetime.now()
 
-        def before_update(self) -> None:
-            """Before update entity hook"""
-            self.updated_at = datetime.datetime.now()
+    def before_update(self) -> None:
+        """Before update entity hook"""
+        self.updated_at = datetime.datetime.now()
 
-    class ManualTriggerEntity(TriggerEntity):
-        """
-        Manual trigger entity
 
-        @package        FastyBird:TriggersModule!
-        @module         models
+class ManualTriggerEntity(TriggerEntity):
+    """
+    Manual trigger entity
 
-        @author         Adam Kadlec <adam.kadlec@fastybird.com>
-        """
-        _discriminator_: str = "manual"
+    @package        FastyBird:TriggersModule!
+    @module         models
 
-    class AutomaticTriggerEntity(TriggerEntity):
-        """
-        Automatic trigger entity
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    _discriminator_: str = "manual"
 
-        @package        FastyBird:TriggersModule!
-        @module         models
 
-        @author         Adam Kadlec <adam.kadlec@fastybird.com>
-        """
-        _discriminator_: str = "automatic"
+class AutomaticTriggerEntity(TriggerEntity):
+    """
+    Automatic trigger entity
 
-        conditions: List["ConditionEntity"] = Set("ConditionEntity", reverse="trigger")
+    @package        FastyBird:TriggersModule!
+    @module         models
 
-    class ActionEntity(db.Entity):
-        """
-        Base action entity
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    _discriminator_: str = "automatic"
 
-        @package        FastyBird:TriggersModule!
-        @module         models
+    conditions: List["ConditionEntity"] = Set("ConditionEntity", reverse="trigger")
 
-        @author         Adam Kadlec <adam.kadlec@fastybird.com>
-        """
-        _table_: str = "fb_actions"
 
-        type = Discriminator(str, column="action_type")
+class ActionEntity(db.Entity):
+    """
+    Base action entity
 
-        action_id: uuid.UUID = PrimaryKey(uuid.UUID, default=uuid.uuid4, column="action_id")
-        enabled: bool = Required(bool, column="action_enabled", nullable=False, default=True)
-        created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
-        updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
+    @package        FastyBird:TriggersModule!
+    @module         models
 
-        trigger: TriggerEntity = Required("TriggerEntity", reverse="actions", column="trigger_id", nullable=False)
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    _table_: str = "fb_actions"
 
-        def before_insert(self) -> None:
-            """Before insert entity hook"""
-            self.created_at = datetime.datetime.now()
+    type = Discriminator(str, column="action_type")
 
-        def before_update(self) -> None:
-            """Before update entity hook"""
-            self.updated_at = datetime.datetime.now()
+    action_id: uuid.UUID = PrimaryKey(uuid.UUID, default=uuid.uuid4, column="action_id")
+    enabled: bool = Required(bool, column="action_enabled", nullable=False, default=True)
+    created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
+    updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
 
-    class PropertyActionEntity(ActionEntity):
-        """
-        Property action entity
+    trigger: TriggerEntity = Required("TriggerEntity", reverse="actions", column="trigger_id", nullable=False)
 
-        @package        FastyBird:TriggersModule!
-        @module         models
+    def before_insert(self) -> None:
+        """Before insert entity hook"""
+        self.created_at = datetime.datetime.now()
 
-        @author         Adam Kadlec <adam.kadlec@fastybird.com>
-        """
-        device: str = Required(str, column="action_device", max_len=100, nullable=True)
+    def before_update(self) -> None:
+        """Before update entity hook"""
+        self.updated_at = datetime.datetime.now()
 
-        value: str = Required(str, column="action_value", max_len=100, nullable=True)
 
-    class DevicePropertyActionEntity(PropertyActionEntity):
-        """
-        Device property action entity
+class PropertyActionEntity(ActionEntity):
+    """
+    Property action entity
 
-        @package        FastyBird:TriggersModule!
-        @module         models
+    @package        FastyBird:TriggersModule!
+    @module         models
 
-        @author         Adam Kadlec <adam.kadlec@fastybird.com>
-        """
-        _discriminator_: str = "device_property"
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    device: str = Required(str, column="action_device", max_len=100, nullable=True)
 
-        device_property: str = Required(str, column="action_device_property", max_len=100, nullable=True)
+    value: str = Required(str, column="action_value", max_len=100, nullable=True)
 
-    class ChannelPropertyActionEntity(PropertyActionEntity):
-        """
-        Channel property action entity
 
-        @package        FastyBird:TriggersModule!
-        @module         models
+class DevicePropertyActionEntity(PropertyActionEntity):
+    """
+    Device property action entity
 
-        @author         Adam Kadlec <adam.kadlec@fastybird.com>
-        """
-        _discriminator_: str = "channel_property"
+    @package        FastyBird:TriggersModule!
+    @module         models
 
-        channel: str = Required(str, column="action_channel", max_len=100, nullable=True)
-        channel_property: str = Required(str, column="action_channel_property", max_len=100, nullable=True)
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    _discriminator_: str = "device_property"
 
-    class NotificationEntity(db.Entity):
-        """
-        Base notification entity
+    device_property: str = Required(str, column="action_device_property", max_len=100, nullable=True)
 
-        @package        FastyBird:TriggersModule!
-        @module         models
 
-        @author         Adam Kadlec <adam.kadlec@fastybird.com>
-        """
-        _table_: str = "fb_notifications"
+class ChannelPropertyActionEntity(PropertyActionEntity):
+    """
+    Channel property action entity
 
-        type = Discriminator(str, column="notification_type")
+    @package        FastyBird:TriggersModule!
+    @module         models
 
-        notification_id: uuid.UUID = PrimaryKey(uuid.UUID, default=uuid.uuid4, column="notification_id")
-        enabled: bool = Required(bool, column="notification_enabled", nullable=False, default=True)
-        created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
-        updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    _discriminator_: str = "channel_property"
 
-        trigger: TriggerEntity = Required("TriggerEntity", reverse="notifications", column="trigger_id", nullable=False)
+    channel: str = Required(str, column="action_channel", max_len=100, nullable=True)
+    channel_property: str = Required(str, column="action_channel_property", max_len=100, nullable=True)
 
-        def before_insert(self) -> None:
-            """Before insert entity hook"""
-            self.created_at = datetime.datetime.now()
 
-        def before_update(self) -> None:
-            """Before update entity hook"""
-            self.updated_at = datetime.datetime.now()
+class NotificationEntity(db.Entity):
+    """
+    Base notification entity
 
-    class EmailNotificationEntity(NotificationEntity):
-        """
-        Email notification entity
+    @package        FastyBird:TriggersModule!
+    @module         models
 
-        @package        FastyBird:TriggersModule!
-        @module         models
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    _table_: str = "fb_notifications"
 
-        @author         Adam Kadlec <adam.kadlec@fastybird.com>
-        """
-        _discriminator_: str = "email"
+    type = Discriminator(str, column="notification_type")
 
-        email: str = Required(str, column="notification_email", max_len=150, nullable=True)
+    notification_id: uuid.UUID = PrimaryKey(uuid.UUID, default=uuid.uuid4, column="notification_id")
+    enabled: bool = Required(bool, column="notification_enabled", nullable=False, default=True)
+    created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
+    updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
 
-    class SmsNotificationEntity(NotificationEntity):
-        """
-        SMS notification entity
+    trigger: TriggerEntity = Required("TriggerEntity", reverse="notifications", column="trigger_id", nullable=False)
 
-        @package        FastyBird:TriggersModule!
-        @module         models
+    def before_insert(self) -> None:
+        """Before insert entity hook"""
+        self.created_at = datetime.datetime.now()
 
-        @author         Adam Kadlec <adam.kadlec@fastybird.com>
-        """
-        _discriminator_: str = "sms"
+    def before_update(self) -> None:
+        """Before update entity hook"""
+        self.updated_at = datetime.datetime.now()
 
-        phone: str = Required(str, column="notification_phone", max_len=150, nullable=True)
 
-    class ConditionEntity(db.Entity):
-        """
-        Base condition entity
+class EmailNotificationEntity(NotificationEntity):
+    """
+    Email notification entity
 
-        @package        FastyBird:TriggersModule!
-        @module         models
+    @package        FastyBird:TriggersModule!
+    @module         models
 
-        @author         Adam Kadlec <adam.kadlec@fastybird.com>
-        """
-        _table_: str = "fb_conditions"
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    _discriminator_: str = "email"
 
-        type = Discriminator(str, column="condition_type")
+    email: str = Required(str, column="notification_email", max_len=150, nullable=True)
 
-        condition_id: uuid.UUID = PrimaryKey(uuid.UUID, default=uuid.uuid4, column="condition_id")
-        enabled: bool = Required(bool, column="condition_enabled", nullable=False, default=True)
-        created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
-        updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
 
-        trigger: AutomaticTriggerEntity = Required(
-            "AutomaticTriggerEntity",
-            reverse="conditions",
-            column="trigger_id",
-            nullable=False,
-        )
+class SmsNotificationEntity(NotificationEntity):
+    """
+    SMS notification entity
 
-        def before_insert(self) -> None:
-            """Before insert entity hook"""
-            self.created_at = datetime.datetime.now()
+    @package        FastyBird:TriggersModule!
+    @module         models
 
-        def before_update(self) -> None:
-            """Before update entity hook"""
-            self.updated_at = datetime.datetime.now()
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    _discriminator_: str = "sms"
 
-    class PropertyConditionEntity(ConditionEntity):
-        """
-        Property condition entity
+    phone: str = Required(str, column="notification_phone", max_len=150, nullable=True)
 
-        @package        FastyBird:TriggersModule!
-        @module         models
 
-        @author         Adam Kadlec <adam.kadlec@fastybird.com>
-        """
-        operator: TriggerConditionOperator = Required(TriggerConditionOperator, column="condition_operator",
-                                                      nullable=True)
-        operand: str = Required(str, column="condition_operand", max_len=100, nullable=True)
+class ConditionEntity(db.Entity):
+    """
+    Base condition entity
 
-        device: str = Required(str, column="condition_device", max_len=100, nullable=True)
+    @package        FastyBird:TriggersModule!
+    @module         models
 
-    class DevicePropertyConditionEntity(PropertyConditionEntity):
-        """
-        Device property condition entity
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    _table_: str = "fb_conditions"
 
-        @package        FastyBird:TriggersModule!
-        @module         models
+    type = Discriminator(str, column="condition_type")
 
-        @author         Adam Kadlec <adam.kadlec@fastybird.com>
-        """
-        _discriminator_: str = "device_property"
+    condition_id: uuid.UUID = PrimaryKey(uuid.UUID, default=uuid.uuid4, column="condition_id")
+    enabled: bool = Required(bool, column="condition_enabled", nullable=False, default=True)
+    created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
+    updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
 
-        device_property: str = Required(str, column="condition_device_property", max_len=100, nullable=True)
+    trigger: AutomaticTriggerEntity = Required(
+        "AutomaticTriggerEntity",
+        reverse="conditions",
+        column="trigger_id",
+        nullable=False,
+    )
 
-    class ChannelPropertyConditionEntity(PropertyConditionEntity):
-        """
-        Channel property condition entity
+    def before_insert(self) -> None:
+        """Before insert entity hook"""
+        self.created_at = datetime.datetime.now()
 
-        @package        FastyBird:TriggersModule!
-        @module         models
+    def before_update(self) -> None:
+        """Before update entity hook"""
+        self.updated_at = datetime.datetime.now()
 
-        @author         Adam Kadlec <adam.kadlec@fastybird.com>
-        """
-        _discriminator_: str = "channel_property"
 
-        channel: str = Required(str, column="condition_channel", max_len=100, nullable=True)
-        channel_property: str = Required(str, column="condition_channel_property", max_len=100, nullable=True)
+class PropertyConditionEntity(ConditionEntity):
+    """
+    Property condition entity
 
-    class TimeConditionEntity(ConditionEntity):
-        """
-        Time property condition entity
+    @package        FastyBird:TriggersModule!
+    @module         models
 
-        @package        FastyBird:TriggersModule!
-        @module         models
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    operator: TriggerConditionOperator = Required(TriggerConditionOperator, column="condition_operator",
+                                                  nullable=True)
+    operand: str = Required(str, column="condition_operand", max_len=100, nullable=True)
 
-        @author         Adam Kadlec <adam.kadlec@fastybird.com>
-        """
-        _discriminator_: str = "time"
+    device: str = Required(str, column="condition_device", max_len=100, nullable=True)
 
-        time: datetime.timedelta = Required(datetime.timedelta, column="condition_time", nullable=True)
-        days: str = Required(str, column="condition_days", max_len=100, nullable=True)
 
-    class DateConditionEntity(ConditionEntity):
-        """
-        Date property condition entity
+class DevicePropertyConditionEntity(PropertyConditionEntity):
+    """
+    Device property condition entity
 
-        @package        FastyBird:TriggersModule!
-        @module         models
+    @package        FastyBird:TriggersModule!
+    @module         models
 
-        @author         Adam Kadlec <adam.kadlec@fastybird.com>
-        """
-        _discriminator_: str = "date"
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    _discriminator_: str = "device_property"
 
-        date: datetime.datetime = Required(datetime.datetime, column="condition_date", nullable=True)
+    device_property: str = Required(str, column="condition_device_property", max_len=100, nullable=True)
 
-    class TriggersRepository:
-        """
-        Triggers repository
 
-        @package        FastyBird:DevicesModule!
-        @module         models
+class ChannelPropertyConditionEntity(PropertyConditionEntity):
+    """
+    Channel property condition entity
 
-        @author         Adam Kadlec <adam.kadlec@fastybird.com>
-        """
-        __items: List[TriggerItem] or None = None
+    @package        FastyBird:TriggersModule!
+    @module         models
 
-        __iterator_index = 0
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    _discriminator_: str = "channel_property"
 
-        # -----------------------------------------------------------------------------
+    channel: str = Required(str, column="condition_channel", max_len=100, nullable=True)
+    channel_property: str = Required(str, column="condition_channel_property", max_len=100, nullable=True)
 
-        def clear(self) -> None:
-            """Clear items cache"""
-            self.__items = None
 
-        # -----------------------------------------------------------------------------
+class TimeConditionEntity(ConditionEntity):
+    """
+    Time property condition entity
 
-        @orm.db_session
-        def initialize(self) -> None:
-            """Initialize repository by fetching entities from database"""
-            items: List[TriggerItem] = []
+    @package        FastyBird:TriggersModule!
+    @module         models
 
-            for trigger in TriggerEntity.select():
-                record = TriggerItem(trigger.trigger_id)
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    _discriminator_: str = "time"
 
-                if isinstance(trigger, AutomaticTriggerEntity):
-                    for condition in trigger.conditions:
-                        if isinstance(condition, DevicePropertyConditionEntity):
-                            record.add_condition(
-                                condition.condition_id.__str__(),
-                                DevicePropertyConditionItem(
-                                    condition.condition_id,
-                                    condition.enabled,
-                                    condition.operator,
-                                    condition.operand,
-                                    condition.device_property,
-                                    condition.device,
-                                ),
-                            )
+    time: datetime.timedelta = Required(datetime.timedelta, column="condition_time", nullable=True)
+    days: str = Required(str, column="condition_days", max_len=100, nullable=True)
 
-                        elif isinstance(condition, ChannelPropertyConditionEntity):
-                            record.add_condition(
-                                condition.condition_id.__str__(),
-                                ChannelPropertyConditionItem(
-                                    condition.condition_id,
-                                    condition.enabled,
-                                    condition.operator,
-                                    condition.operand,
-                                    condition.channel_property,
-                                    condition.channel,
-                                    condition.device,
-                                ),
-                            )
 
-                for action in trigger.actions:
-                    if isinstance(action, ChannelPropertyActionEntity):
-                        record.add_action(
-                            action.action_id.__str__(),
-                            ChannelPropertyActionItem(
-                                action.action_id,
-                                action.enabled,
-                                action.value,
-                                action.channel_property,
-                                action.channel,
-                                action.device,
+class DateConditionEntity(ConditionEntity):
+    """
+    Date property condition entity
+
+    @package        FastyBird:TriggersModule!
+    @module         models
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    _discriminator_: str = "date"
+
+    date: datetime.datetime = Required(datetime.datetime, column="condition_date", nullable=True)
+
+
+class TriggersRepository:
+    """
+    Triggers repository
+
+    @package        FastyBird:DevicesModule!
+    @module         models
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    __items: List[TriggerItem] or None = None
+
+    __iterator_index = 0
+
+    # -----------------------------------------------------------------------------
+
+    def clear(self) -> None:
+        """Clear items cache"""
+        self.__items = None
+
+    # -----------------------------------------------------------------------------
+
+    @orm.db_session
+    def initialize(self) -> None:
+        """Initialize repository by fetching entities from database"""
+        items: List[TriggerItem] = []
+
+        for trigger in TriggerEntity.select():
+            record = TriggerItem(trigger.trigger_id)
+
+            if isinstance(trigger, AutomaticTriggerEntity):
+                for condition in trigger.conditions:
+                    if isinstance(condition, DevicePropertyConditionEntity):
+                        record.add_condition(
+                            condition.condition_id.__str__(),
+                            DevicePropertyConditionItem(
+                                condition.condition_id,
+                                condition.enabled,
+                                condition.operator,
+                                condition.operand,
+                                condition.device_property,
+                                condition.device,
                             ),
                         )
 
-                    elif isinstance(action, DevicePropertyActionEntity):
-                        record.add_action(
-                            action.action_id.__str__(),
-                            DevicePropertyActionItem(
-                                action.action_id,
-                                action.enabled,
-                                action.value,
-                                action.device_property,
-                                action.device,
+                    elif isinstance(condition, ChannelPropertyConditionEntity):
+                        record.add_condition(
+                            condition.condition_id.__str__(),
+                            ChannelPropertyConditionItem(
+                                condition.condition_id,
+                                condition.enabled,
+                                condition.operator,
+                                condition.operand,
+                                condition.channel_property,
+                                condition.channel,
+                                condition.device,
                             ),
                         )
 
-                items.append(record)
+            for action in trigger.actions:
+                if isinstance(action, ChannelPropertyActionEntity):
+                    record.add_action(
+                        action.action_id.__str__(),
+                        ChannelPropertyActionItem(
+                            action.action_id,
+                            action.enabled,
+                            action.value,
+                            action.channel_property,
+                            action.channel,
+                            action.device,
+                        ),
+                    )
 
-            self.__items = items
+                elif isinstance(action, DevicePropertyActionEntity):
+                    record.add_action(
+                        action.action_id.__str__(),
+                        DevicePropertyActionItem(
+                            action.action_id,
+                            action.enabled,
+                            action.value,
+                            action.device_property,
+                            action.device,
+                        ),
+                    )
 
-        # -----------------------------------------------------------------------------
+            items.append(record)
 
-        def __iter__(self) -> "TriggersRepository":
-            # Reset index for nex iteration
-            self.__iterator_index = 0
+        self.__items = items
 
-            return self
+    # -----------------------------------------------------------------------------
 
-        # -----------------------------------------------------------------------------
+    def __iter__(self) -> "TriggersRepository":
+        # Reset index for nex iteration
+        self.__iterator_index = 0
 
-        def __len__(self):
-            if self.__items is None:
-                self.initialize()
+        return self
 
-            return len(self.__items)
+    # -----------------------------------------------------------------------------
 
-        # -----------------------------------------------------------------------------
+    def __len__(self):
+        if self.__items is None:
+            self.initialize()
 
-        def __next__(self) -> TriggerItem:
-            if self.__items is None:
-                self.initialize()
+        return len(self.__items)
 
-            if self.__iterator_index < len(self.__items):
-                result: TriggerItem = self.__items[self.__iterator_index]
+    # -----------------------------------------------------------------------------
 
-                self.__iterator_index += 1
+    def __next__(self) -> TriggerItem:
+        if self.__items is None:
+            self.initialize()
 
-                return result
+        if self.__iterator_index < len(self.__items):
+            result: TriggerItem = self.__items[self.__iterator_index]
 
-            # Reset index for nex iteration
-            self.__iterator_index = 0
+            self.__iterator_index += 1
 
-            # End of iteration
-            raise StopIteration
+            return result
 
-    triggers_repository = TriggersRepository()
+        # Reset index for nex iteration
+        self.__iterator_index = 0
 
-    return TriggerEntity, ManualTriggerEntity, AutomaticTriggerEntity, \
-           ActionEntity, PropertyActionEntity, DevicePropertyActionEntity, ChannelPropertyActionEntity, \
-           NotificationEntity, EmailNotificationEntity, SmsNotificationEntity, \
-           ConditionEntity, TimeConditionEntity, DateConditionEntity, \
-           PropertyConditionEntity, ChannelPropertyConditionEntity, DevicePropertyConditionEntity, \
-           triggers_repository
+        # End of iteration
+        raise StopIteration
+
+
+triggers_repository = TriggersRepository()
