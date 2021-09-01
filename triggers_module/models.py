@@ -21,7 +21,7 @@ Module models definitions
 # Library dependencies
 import uuid
 import datetime
-from typing import List
+from typing import List, Tuple, Dict
 from application_events.database import (
     DatabaseEntityCreatedEvent,
     DatabaseEntityUpdatedEvent,
@@ -148,6 +148,26 @@ class TriggerEntity(db.Entity, EntityEventMixin, EntityCreatedMixin, EntityUpdat
     actions: List["ActionEntity"] = Set("ActionEntity", reverse="trigger")
     notifications: List["NotificationEntity"] = Set("NotificationEntity", reverse="trigger")
 
+    # -----------------------------------------------------------------------------
+
+    def to_dict(
+        self,
+        only: Tuple = None,  # pylint: disable=unused-argument
+        exclude: Tuple = None,  # pylint: disable=unused-argument
+        with_collections: bool = False,  # pylint: disable=unused-argument
+        with_lazy: bool = False,  # pylint: disable=unused-argument
+        related_objects: bool = False,  # pylint: disable=unused-argument
+    ) -> Dict[str, str or int or bool or None]:
+        """Transform entity to dictionary"""
+        return {
+            "id": self.trigger_id.__str__(),
+            "type": self.type,
+            "name": self.name,
+            "comment": self.comment,
+            "enabled": self.enabled,
+            "params": self.params,
+        }
+
 
 class ManualTriggerEntity(TriggerEntity):
     """
@@ -193,6 +213,24 @@ class ActionEntity(db.Entity, EntityEventMixin, EntityCreatedMixin, EntityUpdate
 
     trigger: TriggerEntity = Required("TriggerEntity", reverse="actions", column="trigger_id", nullable=False)
 
+    # -----------------------------------------------------------------------------
+
+    def to_dict(
+        self,
+        only: Tuple = None,  # pylint: disable=unused-argument
+        exclude: Tuple = None,  # pylint: disable=unused-argument
+        with_collections: bool = False,  # pylint: disable=unused-argument
+        with_lazy: bool = False,  # pylint: disable=unused-argument
+        related_objects: bool = False,  # pylint: disable=unused-argument
+    ) -> Dict[str, str or int or bool or None]:
+        """Transform entity to dictionary"""
+        return {
+            "id": self.action_id.__str__(),
+            "type": self.type,
+            "enabled": self.enabled,
+            "trigger": self.trigger.trigger_id.__str__(),
+        }
+
 
 class PropertyActionEntity(ActionEntity):
     """
@@ -206,6 +244,22 @@ class PropertyActionEntity(ActionEntity):
     device: str = Required(str, column="action_device", max_len=100, nullable=True)
 
     value: str = Required(str, column="action_value", max_len=100, nullable=True)
+
+    # -----------------------------------------------------------------------------
+
+    def to_dict(
+        self,
+        only: Tuple = None,
+        exclude: Tuple = None,
+        with_collections: bool = False,
+        with_lazy: bool = False,
+        related_objects: bool = False,
+    ) -> Dict[str, str or int or bool or None]:
+        """Transform entity to dictionary"""
+        return {**{
+            "device": self.device,
+            "value": self.value,
+        }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
 
 
 class DevicePropertyActionEntity(PropertyActionEntity):
@@ -221,6 +275,21 @@ class DevicePropertyActionEntity(PropertyActionEntity):
 
     device_property: str = Required(str, column="action_device_property", max_len=100, nullable=True)
 
+    # -----------------------------------------------------------------------------
+
+    def to_dict(
+        self,
+        only: Tuple = None,
+        exclude: Tuple = None,
+        with_collections: bool = False,
+        with_lazy: bool = False,
+        related_objects: bool = False,
+    ) -> Dict[str, str or int or bool or None]:
+        """Transform entity to dictionary"""
+        return {**{
+            "property": self.device_property,
+        }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
+
 
 class ChannelPropertyActionEntity(PropertyActionEntity):
     """
@@ -235,6 +304,22 @@ class ChannelPropertyActionEntity(PropertyActionEntity):
 
     channel: str = Required(str, column="action_channel", max_len=100, nullable=True)
     channel_property: str = Required(str, column="action_channel_property", max_len=100, nullable=True)
+
+    # -----------------------------------------------------------------------------
+
+    def to_dict(
+        self,
+        only: Tuple = None,
+        exclude: Tuple = None,
+        with_collections: bool = False,
+        with_lazy: bool = False,
+        related_objects: bool = False,
+    ) -> Dict[str, str or int or bool or None]:
+        """Transform entity to dictionary"""
+        return {**{
+            "channel": self.channel,
+            "property": self.channel_property,
+        }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
 
 
 class NotificationEntity(db.Entity, EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin):
@@ -255,6 +340,24 @@ class NotificationEntity(db.Entity, EntityEventMixin, EntityCreatedMixin, Entity
 
     trigger: TriggerEntity = Required("TriggerEntity", reverse="notifications", column="trigger_id", nullable=False)
 
+    # -----------------------------------------------------------------------------
+
+    def to_dict(
+        self,
+        only: Tuple = None,  # pylint: disable=unused-argument
+        exclude: Tuple = None,  # pylint: disable=unused-argument
+        with_collections: bool = False,  # pylint: disable=unused-argument
+        with_lazy: bool = False,  # pylint: disable=unused-argument
+        related_objects: bool = False,  # pylint: disable=unused-argument
+    ) -> Dict[str, str or int or bool or None]:
+        """Transform entity to dictionary"""
+        return {
+            "id": self.notification_id.__str__(),
+            "type": self.type,
+            "enabled": self.enabled,
+            "trigger": self.trigger.trigger_id.__str__(),
+        }
+
 
 class EmailNotificationEntity(NotificationEntity):
     """
@@ -269,6 +372,21 @@ class EmailNotificationEntity(NotificationEntity):
 
     email: str = Required(str, column="notification_email", max_len=150, nullable=True)
 
+    # -----------------------------------------------------------------------------
+
+    def to_dict(
+        self,
+        only: Tuple = None,
+        exclude: Tuple = None,
+        with_collections: bool = False,
+        with_lazy: bool = False,
+        related_objects: bool = False,
+    ) -> Dict[str, str or int or bool or None]:
+        """Transform entity to dictionary"""
+        return {**{
+            "email": self.email,
+        }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
+
 
 class SmsNotificationEntity(NotificationEntity):
     """
@@ -282,6 +400,21 @@ class SmsNotificationEntity(NotificationEntity):
     _discriminator_: str = "sms"
 
     phone: str = Required(str, column="notification_phone", max_len=150, nullable=True)
+
+    # -----------------------------------------------------------------------------
+
+    def to_dict(
+        self,
+        only: Tuple = None,
+        exclude: Tuple = None,
+        with_collections: bool = False,
+        with_lazy: bool = False,
+        related_objects: bool = False,
+    ) -> Dict[str, str or int or bool or None]:
+        """Transform entity to dictionary"""
+        return {**{
+            "phone": self.phone,
+        }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
 
 
 class ConditionEntity(db.Entity, EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin):
@@ -307,6 +440,24 @@ class ConditionEntity(db.Entity, EntityEventMixin, EntityCreatedMixin, EntityUpd
         nullable=False,
     )
 
+    # -----------------------------------------------------------------------------
+
+    def to_dict(
+        self,
+        only: Tuple = None,  # pylint: disable=unused-argument
+        exclude: Tuple = None,  # pylint: disable=unused-argument
+        with_collections: bool = False,  # pylint: disable=unused-argument
+        with_lazy: bool = False,  # pylint: disable=unused-argument
+        related_objects: bool = False,  # pylint: disable=unused-argument
+    ) -> Dict[str, str or int or bool or None]:
+        """Transform entity to dictionary"""
+        return {
+            "id": self.condition_id.__str__(),
+            "type": self.type,
+            "enabled": self.enabled,
+            "trigger": self.trigger.trigger_id.__str__(),
+        }
+
 
 class PropertyConditionEntity(ConditionEntity):
     """
@@ -323,6 +474,23 @@ class PropertyConditionEntity(ConditionEntity):
 
     device: str = Required(str, column="condition_device", max_len=100, nullable=True)
 
+    # -----------------------------------------------------------------------------
+
+    def to_dict(
+        self,
+        only: Tuple = None,
+        exclude: Tuple = None,
+        with_collections: bool = False,
+        with_lazy: bool = False,
+        related_objects: bool = False,
+    ) -> Dict[str, str or int or bool or None]:
+        """Transform entity to dictionary"""
+        return {**{
+            "operator": self.operator,
+            "operand": self.operand,
+            "device": self.device,
+        }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
+
 
 class DevicePropertyConditionEntity(PropertyConditionEntity):
     """
@@ -336,6 +504,21 @@ class DevicePropertyConditionEntity(PropertyConditionEntity):
     _discriminator_: str = "device_property"
 
     device_property: str = Required(str, column="condition_device_property", max_len=100, nullable=True)
+
+    # -----------------------------------------------------------------------------
+
+    def to_dict(
+        self,
+        only: Tuple = None,
+        exclude: Tuple = None,
+        with_collections: bool = False,
+        with_lazy: bool = False,
+        related_objects: bool = False,
+    ) -> Dict[str, str or int or bool or None]:
+        """Transform entity to dictionary"""
+        return {**{
+            "property": self.device_property,
+        }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
 
 
 class ChannelPropertyConditionEntity(PropertyConditionEntity):
@@ -352,6 +535,22 @@ class ChannelPropertyConditionEntity(PropertyConditionEntity):
     channel: str = Required(str, column="condition_channel", max_len=100, nullable=True)
     channel_property: str = Required(str, column="condition_channel_property", max_len=100, nullable=True)
 
+    # -----------------------------------------------------------------------------
+
+    def to_dict(
+        self,
+        only: Tuple = None,
+        exclude: Tuple = None,
+        with_collections: bool = False,
+        with_lazy: bool = False,
+        related_objects: bool = False,
+    ) -> Dict[str, str or int or bool or None]:
+        """Transform entity to dictionary"""
+        return {**{
+            "channel": self.channel,
+            "property": self.channel_property,
+        }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
+
 
 class TimeConditionEntity(ConditionEntity):
     """
@@ -367,6 +566,22 @@ class TimeConditionEntity(ConditionEntity):
     time: datetime.timedelta = Required(datetime.timedelta, column="condition_time", nullable=True)
     days: str = Required(str, column="condition_days", max_len=100, nullable=True)
 
+    # -----------------------------------------------------------------------------
+
+    def to_dict(
+        self,
+        only: Tuple = None,
+        exclude: Tuple = None,
+        with_collections: bool = False,
+        with_lazy: bool = False,
+        related_objects: bool = False,
+    ) -> Dict[str, str or int or bool or None]:
+        """Transform entity to dictionary"""
+        return {**{
+            "time": self.time,
+            "days": self.days,
+        }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
+
 
 class DateConditionEntity(ConditionEntity):
     """
@@ -380,6 +595,21 @@ class DateConditionEntity(ConditionEntity):
     _discriminator_: str = "date"
 
     date: datetime.datetime = Required(datetime.datetime, column="condition_date", nullable=True)
+
+    # -----------------------------------------------------------------------------
+
+    def to_dict(
+        self,
+        only: Tuple = None,
+        exclude: Tuple = None,
+        with_collections: bool = False,
+        with_lazy: bool = False,
+        related_objects: bool = False,
+    ) -> Dict[str, str or int or bool or None]:
+        """Transform entity to dictionary"""
+        return {**{
+            "date": self.date,
+        }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
 
 
 class TriggersRepository:
