@@ -125,7 +125,7 @@ class EntityEventMixin(db.Entity):
         )
 
 
-class TriggerEntity(db.Entity, EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin):
+class TriggerEntity(EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin, db.Entity):
     """
     Base trigger entity
 
@@ -195,7 +195,7 @@ class AutomaticTriggerEntity(TriggerEntity):
     conditions: List["ConditionEntity"] = Set("ConditionEntity", reverse="trigger")
 
 
-class ActionEntity(db.Entity, EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin):
+class ActionEntity(EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin, db.Entity):
     """
     Base action entity
 
@@ -322,7 +322,7 @@ class ChannelPropertyActionEntity(PropertyActionEntity):
         }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
 
 
-class NotificationEntity(db.Entity, EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin):
+class NotificationEntity(EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin, db.Entity):
     """
     Base notification entity
 
@@ -417,7 +417,7 @@ class SmsNotificationEntity(NotificationEntity):
         }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
 
 
-class ConditionEntity(db.Entity, EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin):
+class ConditionEntity(EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin, db.Entity):
     """
     Base condition entity
 
