@@ -7,7 +7,6 @@ import {
 import { format as dateFormat } from 'date-fns'
 
 import Trigger from '@/lib/models/triggers/Trigger'
-import { TriggerEntityTypes } from '@/lib/models/triggers/types'
 import { ConditionEntityTypes } from '@/lib/models/conditions/types'
 import { RelationInterface } from '@/lib/types'
 
@@ -17,12 +16,10 @@ export class JsonApiModelPropertiesMapper extends ModelPropertiesMapper implemen
   getAttributes(model: TJsonaModel): { [index: string]: any } {
     const exceptProps = ['id', '$id', 'type', 'draft', RELATIONSHIP_NAMES_PROP]
 
+    exceptProps.push('triggerId')
+    exceptProps.push('triggerBackward')
+
     if (
-      model.type !== TriggerEntityTypes.AUTOMATIC &&
-      model.type !== TriggerEntityTypes.MANUAL
-    ) {
-      exceptProps.push('triggerId')
-    } else if (
       model.type === ConditionEntityTypes.DATE ||
       model.type === ConditionEntityTypes.TIME
     ) {

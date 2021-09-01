@@ -22,7 +22,14 @@ Module models definitions
 import uuid
 import datetime
 from typing import List
+from application_events.database import (
+    DatabaseEntityCreatedEvent,
+    DatabaseEntityUpdatedEvent,
+    DatabaseEntityDeletedEvent,
+)
+from application_events.dispatcher import app_dispatcher
 from modules_metadata.triggers_module import TriggerConditionOperator
+from modules_metadata.types import ModuleOrigin
 from pony.orm import core as orm, Database, PrimaryKey, Required, Optional, Set, Discriminator, Json
 
 # Library libs
@@ -38,7 +45,87 @@ from triggers_module.items import (
 db: Database = Database()
 
 
-class TriggerEntity(db.Entity):
+class EntityCreatedMixin(orm.Entity):
+    """
+    Entity created field mixin
+
+    @package        FastyBird:TriggersModule!
+    @module         models
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
+
+    # -----------------------------------------------------------------------------
+
+    def before_insert(self) -> None:
+        """Before insert entity hook"""
+        self.created_at = datetime.datetime.now()
+
+
+class EntityUpdatedMixin(orm.Entity):
+    """
+    Entity updated field mixin
+
+    @package        FastyBird:TriggersModule!
+    @module         models
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
+
+    # -----------------------------------------------------------------------------
+
+    def before_update(self) -> None:
+        """Before update entity hook"""
+        self.updated_at = datetime.datetime.now()
+
+
+class EntityEventMixin(orm.Entity):
+    """
+    Entity event mixin
+
+    @package        FastyBird:TriggersModule!
+    @module         models
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    def after_insert(self) -> None:
+        """After insert entity hook"""
+        app_dispatcher.dispatch(
+            DatabaseEntityCreatedEvent.EVENT_NAME,
+            DatabaseEntityCreatedEvent(
+                ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE),
+                self,
+            ),
+        )
+
+    # -----------------------------------------------------------------------------
+
+    def after_update(self) -> None:
+        """After update entity hook"""
+        app_dispatcher.dispatch(
+            DatabaseEntityUpdatedEvent.EVENT_NAME,
+            DatabaseEntityUpdatedEvent(
+                ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE),
+                self,
+            ),
+        )
+
+    # -----------------------------------------------------------------------------
+
+    def after_delete(self) -> None:
+        """After delete entity hook"""
+        app_dispatcher.dispatch(
+            DatabaseEntityDeletedEvent.EVENT_NAME,
+            DatabaseEntityDeletedEvent(
+                ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE),
+                self,
+            ),
+        )
+
+
+class TriggerEntity(db.Entity, EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin):
     """
     Base trigger entity
 
@@ -57,19 +144,9 @@ class TriggerEntity(db.Entity):
     comment: str or None = Optional(str, column="trigger_comment", nullable=True, default=None)
     enabled: bool = Required(bool, column="trigger_enabled", nullable=False, default=True)
     params: Json or None = Optional(Json, column="params", nullable=True)
-    created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
-    updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
 
     actions: List["ActionEntity"] = Set("ActionEntity", reverse="trigger")
     notifications: List["NotificationEntity"] = Set("NotificationEntity", reverse="trigger")
-
-    def before_insert(self) -> None:
-        """Before insert entity hook"""
-        self.created_at = datetime.datetime.now()
-
-    def before_update(self) -> None:
-        """Before update entity hook"""
-        self.updated_at = datetime.datetime.now()
 
 
 class ManualTriggerEntity(TriggerEntity):
@@ -98,7 +175,7 @@ class AutomaticTriggerEntity(TriggerEntity):
     conditions: List["ConditionEntity"] = Set("ConditionEntity", reverse="trigger")
 
 
-class ActionEntity(db.Entity):
+class ActionEntity(db.Entity, EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin):
     """
     Base action entity
 
@@ -113,18 +190,8 @@ class ActionEntity(db.Entity):
 
     action_id: uuid.UUID = PrimaryKey(uuid.UUID, default=uuid.uuid4, column="action_id")
     enabled: bool = Required(bool, column="action_enabled", nullable=False, default=True)
-    created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
-    updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
 
     trigger: TriggerEntity = Required("TriggerEntity", reverse="actions", column="trigger_id", nullable=False)
-
-    def before_insert(self) -> None:
-        """Before insert entity hook"""
-        self.created_at = datetime.datetime.now()
-
-    def before_update(self) -> None:
-        """Before update entity hook"""
-        self.updated_at = datetime.datetime.now()
 
 
 class PropertyActionEntity(ActionEntity):
@@ -170,7 +237,7 @@ class ChannelPropertyActionEntity(PropertyActionEntity):
     channel_property: str = Required(str, column="action_channel_property", max_len=100, nullable=True)
 
 
-class NotificationEntity(db.Entity):
+class NotificationEntity(db.Entity, EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin):
     """
     Base notification entity
 
@@ -185,18 +252,8 @@ class NotificationEntity(db.Entity):
 
     notification_id: uuid.UUID = PrimaryKey(uuid.UUID, default=uuid.uuid4, column="notification_id")
     enabled: bool = Required(bool, column="notification_enabled", nullable=False, default=True)
-    created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
-    updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
 
     trigger: TriggerEntity = Required("TriggerEntity", reverse="notifications", column="trigger_id", nullable=False)
-
-    def before_insert(self) -> None:
-        """Before insert entity hook"""
-        self.created_at = datetime.datetime.now()
-
-    def before_update(self) -> None:
-        """Before update entity hook"""
-        self.updated_at = datetime.datetime.now()
 
 
 class EmailNotificationEntity(NotificationEntity):
@@ -227,7 +284,7 @@ class SmsNotificationEntity(NotificationEntity):
     phone: str = Required(str, column="notification_phone", max_len=150, nullable=True)
 
 
-class ConditionEntity(db.Entity):
+class ConditionEntity(db.Entity, EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin):
     """
     Base condition entity
 
@@ -242,8 +299,6 @@ class ConditionEntity(db.Entity):
 
     condition_id: uuid.UUID = PrimaryKey(uuid.UUID, default=uuid.uuid4, column="condition_id")
     enabled: bool = Required(bool, column="condition_enabled", nullable=False, default=True)
-    created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
-    updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
 
     trigger: AutomaticTriggerEntity = Required(
         "AutomaticTriggerEntity",
@@ -251,14 +306,6 @@ class ConditionEntity(db.Entity):
         column="trigger_id",
         nullable=False,
     )
-
-    def before_insert(self) -> None:
-        """Before insert entity hook"""
-        self.created_at = datetime.datetime.now()
-
-    def before_update(self) -> None:
-        """Before update entity hook"""
-        self.updated_at = datetime.datetime.now()
 
 
 class PropertyConditionEntity(ConditionEntity):
@@ -339,7 +386,7 @@ class TriggersRepository:
     """
     Triggers repository
 
-    @package        FastyBird:DevicesModule!
+    @package        FastyBird:TriggersModule!
     @module         models
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
