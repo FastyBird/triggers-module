@@ -45,42 +45,6 @@ from triggers_module.items import (
 db: Database = Database()
 
 
-class EntityCreatedMixin:
-    """
-    Entity created field mixin
-
-    @package        FastyBird:TriggersModule!
-    @module         models
-
-    @author         Adam Kadlec <adam.kadlec@fastybird.com>
-    """
-    created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
-
-    # -----------------------------------------------------------------------------
-
-    def before_insert(self) -> None:
-        """Before insert entity hook"""
-        self.created_at = datetime.datetime.now()
-
-
-class EntityUpdatedMixin:
-    """
-    Entity updated field mixin
-
-    @package        FastyBird:TriggersModule!
-    @module         models
-
-    @author         Adam Kadlec <adam.kadlec@fastybird.com>
-    """
-    updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
-
-    # -----------------------------------------------------------------------------
-
-    def before_update(self) -> None:
-        """Before update entity hook"""
-        self.updated_at = datetime.datetime.now()
-
-
 class EntityEventMixin:
     """
     Entity event mixin
@@ -128,7 +92,7 @@ class EntityEventMixin:
             )
 
 
-class TriggerEntity(EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin, db.Entity):
+class TriggerEntity(EntityEventMixin, db.Entity):
     """
     Base trigger entity
 
@@ -147,6 +111,8 @@ class TriggerEntity(EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin, db
     comment: str or None = Optional(str, column="trigger_comment", nullable=True, default=None)
     enabled: bool = Required(bool, column="trigger_enabled", nullable=False, default=True)
     params: Json or None = Optional(Json, column="params", nullable=True)
+    created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
+    updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
 
     actions: List["ActionEntity"] = Set("ActionEntity", reverse="trigger")
     notifications: List["NotificationEntity"] = Set("NotificationEntity", reverse="trigger")
@@ -170,6 +136,18 @@ class TriggerEntity(EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin, db
             "enabled": self.enabled,
             "params": self.params,
         }
+
+    # -----------------------------------------------------------------------------
+
+    def before_insert(self) -> None:
+        """Before insert entity hook"""
+        self.created_at = datetime.datetime.now()
+
+    # -----------------------------------------------------------------------------
+
+    def before_update(self) -> None:
+        """Before update entity hook"""
+        self.updated_at = datetime.datetime.now()
 
 
 class ManualTriggerEntity(TriggerEntity):
@@ -198,7 +176,7 @@ class AutomaticTriggerEntity(TriggerEntity):
     conditions: List["ConditionEntity"] = Set("ConditionEntity", reverse="trigger")
 
 
-class ActionEntity(EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin, db.Entity):
+class ActionEntity(EntityEventMixin, db.Entity):
     """
     Base action entity
 
@@ -213,6 +191,8 @@ class ActionEntity(EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin, db.
 
     action_id: uuid.UUID = PrimaryKey(uuid.UUID, default=uuid.uuid4, column="action_id")
     enabled: bool = Required(bool, column="action_enabled", nullable=False, default=True)
+    created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
+    updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
 
     trigger: TriggerEntity = Required("TriggerEntity", reverse="actions", column="trigger_id", nullable=False)
 
@@ -233,6 +213,18 @@ class ActionEntity(EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin, db.
             "enabled": self.enabled,
             "trigger": self.trigger.trigger_id.__str__(),
         }
+
+    # -----------------------------------------------------------------------------
+
+    def before_insert(self) -> None:
+        """Before insert entity hook"""
+        self.created_at = datetime.datetime.now()
+
+    # -----------------------------------------------------------------------------
+
+    def before_update(self) -> None:
+        """Before update entity hook"""
+        self.updated_at = datetime.datetime.now()
 
 
 class PropertyActionEntity(ActionEntity):
@@ -325,7 +317,7 @@ class ChannelPropertyActionEntity(PropertyActionEntity):
         }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
 
 
-class NotificationEntity(EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin, db.Entity):
+class NotificationEntity(EntityEventMixin, db.Entity):
     """
     Base notification entity
 
@@ -340,6 +332,8 @@ class NotificationEntity(EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixi
 
     notification_id: uuid.UUID = PrimaryKey(uuid.UUID, default=uuid.uuid4, column="notification_id")
     enabled: bool = Required(bool, column="notification_enabled", nullable=False, default=True)
+    created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
+    updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
 
     trigger: TriggerEntity = Required("TriggerEntity", reverse="notifications", column="trigger_id", nullable=False)
 
@@ -360,6 +354,18 @@ class NotificationEntity(EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixi
             "enabled": self.enabled,
             "trigger": self.trigger.trigger_id.__str__(),
         }
+
+    # -----------------------------------------------------------------------------
+
+    def before_insert(self) -> None:
+        """Before insert entity hook"""
+        self.created_at = datetime.datetime.now()
+
+    # -----------------------------------------------------------------------------
+
+    def before_update(self) -> None:
+        """Before update entity hook"""
+        self.updated_at = datetime.datetime.now()
 
 
 class EmailNotificationEntity(NotificationEntity):
@@ -420,7 +426,7 @@ class SmsNotificationEntity(NotificationEntity):
         }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
 
 
-class ConditionEntity(EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin, db.Entity):
+class ConditionEntity(EntityEventMixin, db.Entity):
     """
     Base condition entity
 
@@ -435,6 +441,8 @@ class ConditionEntity(EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin, 
 
     condition_id: uuid.UUID = PrimaryKey(uuid.UUID, default=uuid.uuid4, column="condition_id")
     enabled: bool = Required(bool, column="condition_enabled", nullable=False, default=True)
+    created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
+    updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
 
     trigger: AutomaticTriggerEntity = Required(
         "AutomaticTriggerEntity",
@@ -460,6 +468,18 @@ class ConditionEntity(EntityEventMixin, EntityCreatedMixin, EntityUpdatedMixin, 
             "enabled": self.enabled,
             "trigger": self.trigger.trigger_id.__str__(),
         }
+
+    # -----------------------------------------------------------------------------
+
+    def before_insert(self) -> None:
+        """Before insert entity hook"""
+        self.created_at = datetime.datetime.now()
+
+    # -----------------------------------------------------------------------------
+
+    def before_update(self) -> None:
+        """Before update entity hook"""
+        self.updated_at = datetime.datetime.now()
 
 
 class PropertyConditionEntity(ConditionEntity):
