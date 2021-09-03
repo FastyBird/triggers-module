@@ -63,8 +63,8 @@ final class DevicePropertyConditionSchema extends ConditionSchema
 	public function getAttributes($condition, JsonApi\Contracts\Schema\ContextInterface $context): iterable
 	{
 		return array_merge((array) parent::getAttributes($condition, $context), [
-			'device'   => $condition->getDevice(),
-			'property' => $condition->getProperty(),
+			'device'   => $condition->getDevice()->toString(),
+			'property' => $condition->getProperty()->toString(),
 			'operator' => $condition->getOperator()->getValue(),
 			'operand'  => $condition->getOperand(),
 		]);

@@ -236,7 +236,7 @@ class PropertyActionEntity(ActionEntity):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    device: str = Required(str, column="action_device", max_len=100, nullable=True)
+    device: uuid.UUID = Required(uuid.UUID, column="action_device", nullable=True)
 
     value: str = Required(str, column="action_value", max_len=100, nullable=True)
 
@@ -252,7 +252,7 @@ class PropertyActionEntity(ActionEntity):
     ) -> Dict[str, str or int or bool or None]:
         """Transform entity to dictionary"""
         return {**{
-            "device": self.device,
+            "device": self.device.__str__(),
             "value": self.value,
         }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
 
@@ -268,7 +268,7 @@ class DevicePropertyActionEntity(PropertyActionEntity):
     """
     _discriminator_: str = "device_property"
 
-    device_property: str = Required(str, column="action_device_property", max_len=100, nullable=True)
+    device_property: uuid.UUID = Required(uuid.UUID, column="action_device_property", nullable=True)
 
     # -----------------------------------------------------------------------------
 
@@ -282,7 +282,7 @@ class DevicePropertyActionEntity(PropertyActionEntity):
     ) -> Dict[str, str or int or bool or None]:
         """Transform entity to dictionary"""
         return {**{
-            "property": self.device_property,
+            "property": self.device_property.__str__(),
         }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
 
 
@@ -297,8 +297,8 @@ class ChannelPropertyActionEntity(PropertyActionEntity):
     """
     _discriminator_: str = "channel_property"
 
-    channel: str = Required(str, column="action_channel", max_len=100, nullable=True)
-    channel_property: str = Required(str, column="action_channel_property", max_len=100, nullable=True)
+    channel: uuid.UUID = Required(uuid.UUID, column="action_channel", nullable=True)
+    channel_property: uuid.UUID = Required(uuid.UUID, column="action_channel_property", nullable=True)
 
     # -----------------------------------------------------------------------------
 
@@ -312,8 +312,8 @@ class ChannelPropertyActionEntity(PropertyActionEntity):
     ) -> Dict[str, str or int or bool or None]:
         """Transform entity to dictionary"""
         return {**{
-            "channel": self.channel,
-            "property": self.channel_property,
+            "channel": self.channel.__str__(),
+            "property": self.channel_property.__str__(),
         }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
 
 
@@ -495,7 +495,7 @@ class PropertyConditionEntity(ConditionEntity):
                                                   nullable=True)
     operand: str = Required(str, column="condition_operand", max_len=100, nullable=True)
 
-    device: str = Required(str, column="condition_device", max_len=100, nullable=True)
+    device: uuid.UUID = Required(uuid.UUID, column="condition_device", nullable=True)
 
     # -----------------------------------------------------------------------------
 
@@ -511,7 +511,7 @@ class PropertyConditionEntity(ConditionEntity):
         return {**{
             "operator": self.operator,
             "operand": self.operand,
-            "device": self.device,
+            "device": self.device.__str__(),
         }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
 
 
@@ -526,7 +526,7 @@ class DevicePropertyConditionEntity(PropertyConditionEntity):
     """
     _discriminator_: str = "device_property"
 
-    device_property: str = Required(str, column="condition_device_property", max_len=100, nullable=True)
+    device_property: uuid.UUID = Required(uuid.UUID, column="condition_device_property", nullable=True)
 
     # -----------------------------------------------------------------------------
 
@@ -540,7 +540,7 @@ class DevicePropertyConditionEntity(PropertyConditionEntity):
     ) -> Dict[str, str or int or bool or None]:
         """Transform entity to dictionary"""
         return {**{
-            "property": self.device_property,
+            "property": self.device_property.__str__(),
         }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
 
 
@@ -555,8 +555,8 @@ class ChannelPropertyConditionEntity(PropertyConditionEntity):
     """
     _discriminator_: str = "channel_property"
 
-    channel: str = Required(str, column="condition_channel", max_len=100, nullable=True)
-    channel_property: str = Required(str, column="condition_channel_property", max_len=100, nullable=True)
+    channel: uuid.UUID = Required(uuid.UUID, column="condition_channel", nullable=True)
+    channel_property: uuid.UUID = Required(uuid.UUID, column="condition_channel_property", nullable=True)
 
     # -----------------------------------------------------------------------------
 
@@ -570,8 +570,8 @@ class ChannelPropertyConditionEntity(PropertyConditionEntity):
     ) -> Dict[str, str or int or bool or None]:
         """Transform entity to dictionary"""
         return {**{
-            "channel": self.channel,
-            "property": self.channel_property,
+            "channel": self.channel.__str__(),
+            "property": self.channel_property.__str__(),
         }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
 
 

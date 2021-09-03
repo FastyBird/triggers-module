@@ -19,6 +19,7 @@ use FastyBird\JsonApi\Exceptions as JsonApiExceptions;
 use FastyBird\TriggersModule\Entities;
 use Fig\Http\Message\StatusCodeInterface;
 use IPub\JsonAPIDocument;
+use Ramsey\Uuid;
 
 /**
  * Channel property action entity hydrator
@@ -53,17 +54,18 @@ final class ChannelPropertyActionHydrator extends ActionHydrator
 	/**
 	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *
-	 * @return string
+	 * @return Uuid\UuidInterface
 	 *
 	 * @throws JsonApiExceptions\IJsonApiException
 	 */
 	protected function hydrateDeviceAttribute(
 		JsonAPIDocument\Objects\IStandardObject $attributes
-	): string {
+	): Uuid\UuidInterface {
 		if (
 			!is_scalar($attributes->get('device'))
 			|| !$attributes->has('device')
 			|| $attributes->get('device') === ''
+			|| !Uuid\Uuid::isValid((string) $attributes->get('device'))
 		) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
@@ -75,23 +77,24 @@ final class ChannelPropertyActionHydrator extends ActionHydrator
 			);
 		}
 
-		return (string) $attributes->get('device');
+		return Uuid\Uuid::fromString((string) $attributes->get('device'));
 	}
 
 	/**
 	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *
-	 * @return string
+	 * @return Uuid\UuidInterface
 	 *
 	 * @throws JsonApiExceptions\IJsonApiException
 	 */
 	protected function hydrateChannelAttribute(
 		JsonAPIDocument\Objects\IStandardObject $attributes
-	): string {
+	): Uuid\UuidInterface {
 		if (
 			!is_scalar($attributes->get('channel'))
 			|| !$attributes->has('channel')
 			|| $attributes->get('channel') === ''
+			|| !Uuid\Uuid::isValid((string) $attributes->get('channel'))
 		) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
@@ -103,23 +106,24 @@ final class ChannelPropertyActionHydrator extends ActionHydrator
 			);
 		}
 
-		return (string) $attributes->get('channel');
+		return Uuid\Uuid::fromString((string) $attributes->get('channel'));
 	}
 
 	/**
 	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *
-	 * @return string
+	 * @return Uuid\UuidInterface
 	 *
 	 * @throws JsonApiExceptions\IJsonApiException
 	 */
 	protected function hydratePropertyAttribute(
 		JsonAPIDocument\Objects\IStandardObject $attributes
-	): string {
+	): Uuid\UuidInterface {
 		if (
 			!is_scalar($attributes->get('property'))
 			|| !$attributes->has('property')
 			|| $attributes->get('property') === ''
+			|| !Uuid\Uuid::isValid((string) $attributes->get('property'))
 		) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
@@ -131,7 +135,37 @@ final class ChannelPropertyActionHydrator extends ActionHydrator
 			);
 		}
 
-		return (string) $attributes->get('property');
+		return Uuid\Uuid::fromString((string) $attributes->get('property'));
+	}
+
+	/**
+	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
+	 *
+	 * @return string
+	 *
+	 * @throws JsonApiExceptions\IJsonApiException
+	 */
+	protected function hydrateValueAttribute(
+		JsonAPIDocument\Objects\IStandardObject $attributes
+	): string {
+		if (
+			!is_scalar($attributes->get('value'))
+			|| !$attributes->has('value')
+			|| $attributes->get('value') === ''
+		) {
+			throw new JsonApiExceptions\JsonApiErrorException(
+				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
+				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
+				$this->translator->translate('//triggers-module.base.messages.missingAttribute.message'),
+				[
+					'pointer' => '/data/attributes/value',
+				]
+			);
+		}
+
+		$value = $attributes->get('value');
+
+		return is_bool($value) ? ($value ? 'true' : 'false') : (string) $value;
 	}
 
 }

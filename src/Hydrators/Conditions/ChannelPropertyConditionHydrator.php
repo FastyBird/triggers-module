@@ -19,6 +19,7 @@ use FastyBird\JsonApi\Exceptions as JsonApiExceptions;
 use FastyBird\TriggersModule\Entities;
 use Fig\Http\Message\StatusCodeInterface;
 use IPub\JsonAPIDocument;
+use Ramsey\Uuid;
 
 /**
  * Channel property condition entity hydrator
@@ -54,17 +55,18 @@ final class ChannelPropertyConditionHydrator extends PropertyConditionHydrator
 	/**
 	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *
-	 * @return string
+	 * @return Uuid\UuidInterface
 	 *
 	 * @throws JsonApiExceptions\IJsonApiException
 	 */
 	protected function hydrateChannelAttribute(
 		JsonAPIDocument\Objects\IStandardObject $attributes
-	): string {
+	): Uuid\UuidInterface {
 		if (
 			!is_scalar($attributes->get('channel'))
 			|| !$attributes->has('channel')
 			|| $attributes->get('channel') === ''
+			|| !Uuid\Uuid::isValid((string) $attributes->get('channel'))
 		) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
@@ -76,7 +78,7 @@ final class ChannelPropertyConditionHydrator extends PropertyConditionHydrator
 			);
 		}
 
-		return (string) $attributes->get('channel');
+		return Uuid\Uuid::fromString((string) $attributes->get('channel'));
 	}
 
 }

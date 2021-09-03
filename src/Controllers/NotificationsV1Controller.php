@@ -213,6 +213,16 @@ final class NotificationsV1Controller extends BaseV1Controller
 		} catch (JsonApiExceptions\IJsonApiException $ex) {
 			throw $ex;
 
+		} catch (DoctrineCrudExceptions\MissingRequiredFieldException $ex) {
+			throw new JsonApiExceptions\JsonApiErrorException(
+				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
+				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
+				$this->translator->translate('//triggers-module.base.messages.missingAttribute.message'),
+				[
+					'pointer' => 'data/attributes/' . $ex->getField(),
+				]
+			);
+
 		} catch (DoctrineCrudExceptions\EntityCreationException $ex) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,

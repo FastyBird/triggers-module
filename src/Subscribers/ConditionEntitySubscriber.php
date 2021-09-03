@@ -68,8 +68,8 @@ final class ConditionEntitySubscriber implements Common\EventSubscriber
 							&& $object instanceof Entities\Conditions\IDevicePropertyCondition
 						) {
 							if (
-								$condition->getDevice() === $object->getDevice()
-								&& $condition->getProperty() === $object->getProperty()
+								$condition->getDevice()->equals($object->getDevice())
+								&& $condition->getProperty()->equals($object->getProperty())
 							) {
 								throw new Exceptions\UniqueConditionConstraint('Not same property in trigger conditions');
 							}
@@ -78,9 +78,9 @@ final class ConditionEntitySubscriber implements Common\EventSubscriber
 							&& $object instanceof Entities\Conditions\IChannelPropertyCondition
 						) {
 							if (
-								$condition->getDevice() === $object->getDevice()
-								&& $condition->getChannel() === $object->getChannel()
-								&& $condition->getProperty() === $object->getProperty()
+								$condition->getDevice()->equals($object->getDevice())
+								&& $condition->getChannel()->equals($object->getChannel())
+								&& $condition->getProperty()->equals($object->getProperty())
 							) {
 								throw new Exceptions\UniqueConditionConstraint('Not same property in trigger conditions');
 							}

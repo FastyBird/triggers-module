@@ -15,6 +15,8 @@
 
 namespace FastyBird\TriggersModule\Entities\Actions;
 
+use Ramsey\Uuid;
+
 /**
  * Channel state action entity interface
  *
@@ -27,18 +29,18 @@ interface IChannelPropertyAction extends IAction
 {
 
 	/**
-	 * @return string
+	 * @return Uuid\UuidInterface
 	 */
-	public function getDevice(): string;
+	public function getDevice(): Uuid\UuidInterface;
 
 	/**
-	 * @return string
+	 * @return Uuid\UuidInterface
 	 */
-	public function getChannel(): string;
+	public function getChannel(): Uuid\UuidInterface;
 
 	/**
-	 * @return string
+	 * @return Uuid\UuidInterface
 	 */
-	public function getProperty(): string;
+	public function getProperty(): Uuid\UuidInterface;
 
 }

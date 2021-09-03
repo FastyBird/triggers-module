@@ -65,38 +65,38 @@ class FindActionsQuery extends DoctrineOrmQuery\QueryObject
 	}
 
 	/**
-	 * @param string $device
+	 * @param Uuid\UuidInterface $device
 	 *
 	 * @return void
 	 */
-	public function forDevice(string $device): void
+	public function forDevice(Uuid\UuidInterface $device): void
 	{
 		$this->filter[] = function (ORM\QueryBuilder $qb) use ($device): void {
-			$qb->andWhere('a.device = :device')->setParameter('device', $device);
+			$qb->andWhere('a.device = :device')->setParameter('device', $device, Uuid\Doctrine\UuidBinaryType::NAME);
 		};
 	}
 
 	/**
-	 * @param string $channel
+	 * @param Uuid\UuidInterface $channel
 	 *
 	 * @return void
 	 */
-	public function forChannel(string $channel): void
+	public function forChannel(Uuid\UuidInterface $channel): void
 	{
 		$this->filter[] = function (ORM\QueryBuilder $qb) use ($channel): void {
-			$qb->andWhere('a.channel = :channel')->setParameter('channel', $channel);
+			$qb->andWhere('a.channel = :channel')->setParameter('channel', $channel, Uuid\Doctrine\UuidBinaryType::NAME);
 		};
 	}
 
 	/**
-	 * @param string $property
+	 * @param Uuid\UuidInterface $property
 	 *
 	 * @return void
 	 */
-	public function forChannelProperty(string $property): void
+	public function forProperty(Uuid\UuidInterface $property): void
 	{
 		$this->filter[] = function (ORM\QueryBuilder $qb) use ($property): void {
-			$qb->andWhere('a.property = :property')->setParameter('property', $property);
+			$qb->andWhere('a.property = :property')->setParameter('property', $property, Uuid\Doctrine\UuidBinaryType::NAME);
 		};
 	}
 

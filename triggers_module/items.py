@@ -21,13 +21,9 @@ Entities cache to prevent database overloading
 # Library dependencies
 import uuid
 from abc import ABC
-from typing import Dict, Tuple
-from devices_module.items import DevicePropertyItem, ChannelPropertyItem
+from typing import Dict
 from modules_metadata.triggers_module import TriggerConditionOperator
 from modules_metadata.types import SwitchPayload
-
-# Library libs
-from triggers_module.utils import PropertiesUtils
 
 
 class TriggerItem:
@@ -117,69 +113,6 @@ class TriggerItem:
         elif isinstance(action, ChannelPropertyActionItem):
             self.__channel_property_actions[action_id] = action
 
-    # -----------------------------------------------------------------------------
-
-    def check_property_item(
-        self,
-        item: DevicePropertyItem or ChannelPropertyItem,
-        previous_value: str or None,
-        actual_value: str,
-    ) -> Tuple[bool, bool]:
-        """Check property against trigger actions and conditions"""
-        is_condition: bool = False
-
-        if isinstance(item, DevicePropertyItem):
-            for condition in self.__device_property_conditions.values():
-                if condition.device_property == item.key:
-                    is_condition = True
-
-                    condition.validate(item, previous_value, actual_value)
-
-            for action in self.__device_property_actions.values():
-                if action.device_property == item.key:
-                    action.validate(item, actual_value)
-
-        elif isinstance(item, ChannelPropertyItem):
-            for condition in self.__channel_property_conditions.values():
-                if condition.channel_property == item.key:
-                    is_condition = True
-
-                    condition.validate(item, previous_value, actual_value)
-
-            for action in self.__channel_property_actions.values():
-                if action.channel_property == item.key:
-                    action.validate(item, actual_value)
-
-        return (self.__check_fulfillment() if is_condition is True else False), self.__check_triggers()
-
-    # -----------------------------------------------------------------------------
-
-    def __check_fulfillment(self) -> bool:
-        """Check if all trigger conditions are fulfiller"""
-        for condition in self.__device_property_conditions.values():
-            if condition.enabled and condition.is_fulfilled is False:
-                return False
-
-        for condition in self.__channel_property_conditions.values():
-            if condition.enabled and condition.is_fulfilled is False:
-                return False
-
-        return True
-
-    # -----------------------------------------------------------------------------
-
-    def __check_triggers(self) -> bool:
-        """Check if trigger has actions to be triggered"""
-        for action in self.__device_property_actions.values():
-            if action.enabled and action.is_triggered is False:
-                return False
-
-        for action in self.__channel_property_actions.values():
-            if action.enabled and action.is_triggered is False:
-                return False
-
-        return True
-
 
 class PropertyConditionItem(ABC):
     """
@@ -196,7 +129,7 @@ class PropertyConditionItem(ABC):
     __operator: TriggerConditionOperator
     __operand: str
 
-    __device: str
+    __device: uuid.UUID
 
     __is_fulfilled: bool = False
 
@@ -208,7 +141,7 @@ class PropertyConditionItem(ABC):
         enabled: bool,
         operator: TriggerConditionOperator,
         operand: str,
-        device: str,
+        device: uuid.UUID,
     ) -> None:
         self.__condition_id = condition_id
         self.__enabled = enabled
@@ -223,8 +156,8 @@ class PropertyConditionItem(ABC):
     # -----------------------------------------------------------------------------
 
     @property
-    def device(self) -> str:
-        """Device key"""
+    def device(self) -> uuid.UUID:
+        """Device identifier"""
         return self.__device
 
     # -----------------------------------------------------------------------------
@@ -266,7 +199,6 @@ class PropertyConditionItem(ABC):
 
     def validate(
         self,
-        item: DevicePropertyItem or ChannelPropertyItem,
         previous_value: str or None,
         actual_value: str
     ) -> bool:
@@ -274,20 +206,17 @@ class PropertyConditionItem(ABC):
         if previous_value is not None and previous_value == actual_value:
             return False
 
-        normalized_value = PropertiesUtils.normalize_value(item, actual_value)
-        normalized_operand = PropertiesUtils.normalize_value(item, self.operand)
-
         # Reset actual status
         self.__is_fulfilled = False
 
         if self.__operator == TriggerConditionOperator.EQUAL:
-            self.__is_fulfilled = normalized_operand == normalized_value
+            self.__is_fulfilled = self.operand == actual_value
 
         elif self.__operator == TriggerConditionOperator.ABOVE:
-            self.__is_fulfilled = normalized_operand < normalized_value
+            self.__is_fulfilled = self.operand < actual_value
 
         elif self.__operator == TriggerConditionOperator.BELOW:
-            self.__is_fulfilled = normalized_operand > normalized_value
+            self.__is_fulfilled = self.operand > actual_value
 
         return self.__is_fulfilled
 
@@ -301,7 +230,7 @@ class DevicePropertyConditionItem(PropertyConditionItem):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    __device_property: str
+    __device_property: uuid.UUID
 
     # -----------------------------------------------------------------------------
 
@@ -311,8 +240,8 @@ class DevicePropertyConditionItem(PropertyConditionItem):
         enabled: bool,
         operator: TriggerConditionOperator,
         operand: str,
-        device_property: str,
-        device: str,
+        device_property: uuid.UUID,
+        device: uuid.UUID,
     ) -> None:
         super().__init__(condition_id, enabled, operator, operand, device)
 
@@ -321,20 +250,19 @@ class DevicePropertyConditionItem(PropertyConditionItem):
     # -----------------------------------------------------------------------------
 
     @property
-    def device_property(self) -> str:
-        """Device property key"""
+    def device_property(self) -> uuid.UUID:
+        """Device property identifier"""
         return self.__device_property
 
     # -----------------------------------------------------------------------------
 
     def validate(
         self,
-        item: DevicePropertyItem,
         previous_value: str or None,
         actual_value: str
     ) -> bool:
         """Device property value validation"""
-        return super().validate(item, previous_value, actual_value)
+        return super().validate(previous_value, actual_value)
 
 
 class ChannelPropertyConditionItem(PropertyConditionItem):
@@ -346,8 +274,8 @@ class ChannelPropertyConditionItem(PropertyConditionItem):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    __channel_property: str
-    __channel: str
+    __channel_property: uuid.UUID
+    __channel: uuid.UUID
 
     # -----------------------------------------------------------------------------
 
@@ -357,9 +285,9 @@ class ChannelPropertyConditionItem(PropertyConditionItem):
         enabled: bool,
         operator: TriggerConditionOperator,
         operand: str,
-        channel_property: str,
-        channel: str,
-        device: str,
+        channel_property: uuid.UUID,
+        channel: uuid.UUID,
+        device: uuid.UUID,
     ) -> None:
         super().__init__(condition_id, enabled, operator, operand, device)
 
@@ -369,27 +297,26 @@ class ChannelPropertyConditionItem(PropertyConditionItem):
     # -----------------------------------------------------------------------------
 
     @property
-    def channel(self) -> str:
-        """Channel key"""
+    def channel(self) -> uuid.UUID:
+        """Channel identifier"""
         return self.__channel
 
     # -----------------------------------------------------------------------------
 
     @property
-    def channel_property(self) -> str:
-        """Channel property key"""
+    def channel_property(self) -> uuid.UUID:
+        """Channel property identifier"""
         return self.__channel_property
 
     # -----------------------------------------------------------------------------
 
     def validate(
         self,
-        item: ChannelPropertyItem,
         previous_value: str or None,
         actual_value: str
     ) -> bool:
         """Channel property value validation"""
-        return super().validate(item, previous_value, actual_value)
+        return super().validate(previous_value, actual_value)
 
 
 class PropertyActionItem(ABC):
@@ -406,13 +333,13 @@ class PropertyActionItem(ABC):
 
     __value: str
 
-    __device: str
+    __device: uuid.UUID
 
     __is_triggered: bool = False
 
     # -----------------------------------------------------------------------------
 
-    def __init__(self, action_id: uuid.UUID, enabled: bool, value: str, device: str) -> None:
+    def __init__(self, action_id: uuid.UUID, enabled: bool, value: str, device: uuid.UUID) -> None:
         self.__action_id = action_id
         self.__enabled = enabled
 
@@ -425,8 +352,8 @@ class PropertyActionItem(ABC):
     # -----------------------------------------------------------------------------
 
     @property
-    def device(self) -> str:
-        """Device key"""
+    def device(self) -> uuid.UUID:
+        """Device identifier"""
         return self.__device
 
     # -----------------------------------------------------------------------------
@@ -461,7 +388,6 @@ class PropertyActionItem(ABC):
 
     def validate(
         self,
-        item: DevicePropertyItem or ChannelPropertyItem,
         actual_value: str
     ) -> bool:
         """Property value validation"""
@@ -469,9 +395,7 @@ class PropertyActionItem(ABC):
             self.__is_triggered = False
 
         else:
-            self.__is_triggered = PropertiesUtils.normalize_value(
-                item, self.__value
-            ) == PropertiesUtils.normalize_value(item, actual_value)
+            self.__is_triggered = self.__value == actual_value
 
         return self.__is_triggered
 
@@ -485,7 +409,7 @@ class DevicePropertyActionItem(PropertyActionItem):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    __device_property: str
+    __device_property: uuid.UUID
 
     # -----------------------------------------------------------------------------
 
@@ -494,8 +418,8 @@ class DevicePropertyActionItem(PropertyActionItem):
         action_id: uuid.UUID,
         enabled: bool,
         value: str,
-        device_property: str,
-        device: str,
+        device_property: uuid.UUID,
+        device: uuid.UUID,
     ) -> None:
         super().__init__(action_id, enabled, value, device)
 
@@ -504,19 +428,18 @@ class DevicePropertyActionItem(PropertyActionItem):
     # -----------------------------------------------------------------------------
 
     @property
-    def device_property(self) -> str:
-        """Device property key"""
+    def device_property(self) -> uuid.UUID:
+        """Device property identifier"""
         return self.__device_property
 
     # -----------------------------------------------------------------------------
 
     def validate(
         self,
-        item: DevicePropertyItem,
         actual_value: str
     ) -> bool:
         """Device property value validation"""
-        return super().validate(item, actual_value)
+        return super().validate(actual_value)
 
 
 class ChannelPropertyActionItem(PropertyActionItem):
@@ -528,8 +451,8 @@ class ChannelPropertyActionItem(PropertyActionItem):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    __channel_property: str
-    __channel: str
+    __channel_property: uuid.UUID
+    __channel: uuid.UUID
 
     # -----------------------------------------------------------------------------
 
@@ -538,9 +461,9 @@ class ChannelPropertyActionItem(PropertyActionItem):
         action_id: uuid.UUID,
         enabled: bool,
         value: str,
-        channel_property: str,
-        channel: str,
-        device: str,
+        channel_property: uuid.UUID,
+        channel: uuid.UUID,
+        device: uuid.UUID,
     ) -> None:
         super().__init__(action_id, enabled, value, device)
 
@@ -550,23 +473,22 @@ class ChannelPropertyActionItem(PropertyActionItem):
     # -----------------------------------------------------------------------------
 
     @property
-    def channel(self) -> str:
-        """Channel key"""
+    def channel(self) -> uuid.UUID:
+        """Channel identifier"""
         return self.__channel
 
     # -----------------------------------------------------------------------------
 
     @property
-    def channel_property(self) -> str:
-        """Channel property key"""
+    def channel_property(self) -> uuid.UUID:
+        """Channel property identifier"""
         return self.__channel_property
 
     # -----------------------------------------------------------------------------
 
     def validate(
         self,
-        item: ChannelPropertyItem,
         actual_value: str
     ) -> bool:
         """Channel property value validation"""
-        return super().validate(item, actual_value)
+        return super().validate(actual_value)

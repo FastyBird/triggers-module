@@ -3,9 +3,9 @@
     "id" : "05f28df9-5f19-4923-b3f8-b9090116dadc",
     "type" : "triggers-module/action-channel-property",
     "attributes" : {
-      "device" : "cB8F0Q",
-      "channel" : "9B8F0Q",
-      "property" : "lxWQ0Q",
+      "device" : "a830828c-6768-4274-b909-20ce0e222347",
+      "channel" : "4f692f94-5be6-4384-94a7-60c424a5f723",
+      "property" : "7bc1fc81-8ace-409d-b044-810140e2361a",
       "value" : "on"
     },
     "relationships" : {

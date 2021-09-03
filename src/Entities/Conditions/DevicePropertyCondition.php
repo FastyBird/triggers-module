@@ -41,24 +41,24 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 {
 
 	/**
-	 * @var string
+	 * @var Uuid\UuidInterface
 	 *
 	 * @IPubDoctrine\Crud(is="required")
-	 * @ORM\Column(type="string", name="condition_device", length=100, nullable=true)
+	 * @ORM\Column(type="uuid_binary", name="condition_device", nullable=true)
 	 */
-	private string $device;
+	private Uuid\UuidInterface $device;
 
 	/**
-	 * @var string
+	 * @var Uuid\UuidInterface
 	 *
 	 * @IPubDoctrine\Crud(is="required")
-	 * @ORM\Column(type="string", name="condition_device_property", length=100, nullable=true)
+	 * @ORM\Column(type="uuid_binary", name="condition_device_property", nullable=true)
 	 */
-	private string $property;
+	private Uuid\UuidInterface $property;
 
 	/**
-	 * @param string $device
-	 * @param string $property
+	 * @param Uuid\UuidInterface $device
+	 * @param Uuid\UuidInterface $property
 	 * @param ModulesMetadataTypes\TriggerConditionOperatorType $operator
 	 * @param string $operand
 	 * @param Entities\Triggers\IAutomaticTrigger $trigger
@@ -67,8 +67,8 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 	 * @throws Throwable
 	 */
 	public function __construct(
-		string $device,
-		string $property,
+		Uuid\UuidInterface $device,
+		Uuid\UuidInterface $property,
 		ModulesMetadataTypes\TriggerConditionOperatorType $operator,
 		string $operand,
 		Entities\Triggers\IAutomaticTrigger $trigger,
@@ -83,7 +83,7 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getDevice(): string
+	public function getDevice(): Uuid\UuidInterface
 	{
 		return $this->device;
 	}
@@ -91,7 +91,7 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getProperty(): string
+	public function getProperty(): Uuid\UuidInterface
 	{
 		return $this->property;
 	}
@@ -103,8 +103,8 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 	{
 		return array_merge(parent::toArray(), [
 			'type'     => 'device-property',
-			'device'   => $this->getDevice(),
-			'property' => $this->getProperty(),
+			'device'   => $this->getDevice()->toString(),
+			'property' => $this->getProperty()->toString(),
 		]);
 	}
 

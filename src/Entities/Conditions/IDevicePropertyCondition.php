@@ -15,6 +15,8 @@
 
 namespace FastyBird\TriggersModule\Entities\Conditions;
 
+use Ramsey\Uuid;
+
 /**
  * Device state condition entity interface
  *
@@ -27,13 +29,13 @@ interface IDevicePropertyCondition extends IPropertyCondition
 {
 
 	/**
-	 * @return string
+	 * @return Uuid\UuidInterface
 	 */
-	public function getDevice(): string;
+	public function getDevice(): Uuid\UuidInterface;
 
 	/**
-	 * @return string
+	 * @return Uuid\UuidInterface
 	 */
-	public function getProperty(): string;
+	public function getProperty(): Uuid\UuidInterface;
 
 }

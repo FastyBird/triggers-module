@@ -63,9 +63,9 @@ final class ChannelPropertyConditionSchema extends ConditionSchema
 	public function getAttributes($condition, JsonApi\Contracts\Schema\ContextInterface $context): iterable
 	{
 		return array_merge((array) parent::getAttributes($condition, $context), [
-			'device'   => $condition->getDevice(),
-			'channel'  => $condition->getChannel(),
-			'property' => $condition->getProperty(),
+			'device'   => $condition->getDevice()->toString(),
+			'channel'  => $condition->getChannel()->toString(),
+			'property' => $condition->getProperty()->toString(),
 			'operator' => $condition->getOperator()->getValue(),
 			'operand'  => $condition->getOperand(),
 		]);

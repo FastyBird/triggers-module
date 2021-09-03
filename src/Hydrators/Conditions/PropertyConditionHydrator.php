@@ -20,6 +20,7 @@ use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use Fig\Http\Message\StatusCodeInterface;
 use IPub\JsonAPIDocument;
+use Ramsey\Uuid;
 
 /**
  * Property condition entity hydrator
@@ -47,17 +48,18 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 	/**
 	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *
-	 * @return string
+	 * @return Uuid\UuidInterface
 	 *
 	 * @throws JsonApiExceptions\IJsonApiException
 	 */
 	protected function hydrateDeviceAttribute(
 		JsonAPIDocument\Objects\IStandardObject $attributes
-	): string {
+	): Uuid\UuidInterface {
 		if (
 			!is_scalar($attributes->get('device'))
 			|| !$attributes->has('device')
 			|| $attributes->get('device') === ''
+			|| !Uuid\Uuid::isValid((string) $attributes->get('device'))
 		) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
@@ -69,23 +71,24 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 			);
 		}
 
-		return (string) $attributes->get('device');
+		return Uuid\Uuid::fromString((string) $attributes->get('device'));
 	}
 
 	/**
 	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *
-	 * @return string
+	 * @return Uuid\UuidInterface
 	 *
 	 * @throws JsonApiExceptions\IJsonApiException
 	 */
 	protected function hydratePropertyAttribute(
 		JsonAPIDocument\Objects\IStandardObject $attributes
-	): string {
+	): Uuid\UuidInterface {
 		if (
 			!is_scalar($attributes->get('property'))
 			|| !$attributes->has('property')
 			|| $attributes->get('property') === ''
+			|| !Uuid\Uuid::isValid((string) $attributes->get('property'))
 		) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
@@ -97,7 +100,7 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 			);
 		}
 
-		return (string) $attributes->get('property');
+		return Uuid\Uuid::fromString((string) $attributes->get('property'));
 	}
 
 	/**
@@ -157,15 +160,17 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 		) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('//triggers.api.base.messages.missingMandatory.heading'),
-				$this->translator->translate('//triggers.api.base.messages.missingMandatory.message'),
+				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
+				$this->translator->translate('//triggers-module.base.messages.missingAttribute.message'),
 				[
 					'pointer' => '/data/attributes/operand',
 				]
 			);
 		}
 
-		return (string) $attributes->get('operand');
+		$operand = $attributes->get('operand');
+
+		return is_bool($operand) ? ($operand ? 'true' : 'false') : (string) $operand;
 	}
 
 }

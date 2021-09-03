@@ -65,9 +65,9 @@ final class ActionEntitySubscriber implements Common\EventSubscriber
 					if (!$action->getId()->equals($object->getId())) {
 						if (
 							$action instanceof Entities\Actions\IChannelPropertyAction
-							&& $action->getDevice() === $object->getDevice()
-							&& $action->getChannel() === $object->getChannel()
-							&& $action->getProperty() === $object->getProperty()
+							&& $action->getDevice()->equals($object->getDevice())
+							&& $action->getChannel()->equals($object->getChannel())
+							&& $action->getProperty()->equals($object->getProperty())
 						) {
 							throw new Exceptions\UniqueActionConstraint('Not same property in trigger actions');
 						}
