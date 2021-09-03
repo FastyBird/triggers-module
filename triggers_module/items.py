@@ -36,6 +36,7 @@ class TriggerItem:
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
     __trigger_id: uuid.UUID
+    __enabled: bool
 
     __device_property_conditions: Dict[str, "DevicePropertyConditionItem"] = {}
     __channel_property_conditions: Dict[str, "ChannelPropertyConditionItem"] = {}
@@ -45,8 +46,9 @@ class TriggerItem:
 
     # -----------------------------------------------------------------------------
 
-    def __init__(self, trigger_id: uuid.UUID) -> None:
+    def __init__(self, trigger_id: uuid.UUID, enabled: bool) -> None:
         self.__trigger_id = trigger_id
+        self.__enabled = enabled
 
         self.__device_property_actions = {}
         self.__channel_property_actions = {}
@@ -60,6 +62,13 @@ class TriggerItem:
     def trigger_id(self) -> uuid.UUID:
         """Trigger identifier"""
         return self.__trigger_id
+
+    # -----------------------------------------------------------------------------
+
+    @property
+    def enabled(self) -> bool:
+        """Flag informing if trigger is enabled"""
+        return self.__enabled
 
     # -----------------------------------------------------------------------------
 

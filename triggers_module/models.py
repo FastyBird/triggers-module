@@ -662,7 +662,7 @@ class TriggersRepository:
         items: List[TriggerItem] = []
 
         for trigger in TriggerEntity.select():
-            record = TriggerItem(trigger.trigger_id)
+            record = TriggerItem(trigger.trigger_id, trigger.enabled)
 
             if isinstance(trigger, AutomaticTriggerEntity):
                 for condition in trigger.conditions:
