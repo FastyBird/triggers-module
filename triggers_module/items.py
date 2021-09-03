@@ -254,16 +254,6 @@ class DevicePropertyConditionItem(PropertyConditionItem):
         """Device property identifier"""
         return self.__device_property
 
-    # -----------------------------------------------------------------------------
-
-    def validate(
-        self,
-        previous_value: str or None,
-        actual_value: str
-    ) -> bool:
-        """Device property value validation"""
-        return super().validate(previous_value, actual_value)
-
 
 class ChannelPropertyConditionItem(PropertyConditionItem):
     """
@@ -307,16 +297,6 @@ class ChannelPropertyConditionItem(PropertyConditionItem):
     def channel_property(self) -> uuid.UUID:
         """Channel property identifier"""
         return self.__channel_property
-
-    # -----------------------------------------------------------------------------
-
-    def validate(
-        self,
-        previous_value: str or None,
-        actual_value: str
-    ) -> bool:
-        """Channel property value validation"""
-        return super().validate(previous_value, actual_value)
 
 
 class PropertyActionItem(ABC):
@@ -432,15 +412,6 @@ class DevicePropertyActionItem(PropertyActionItem):
         """Device property identifier"""
         return self.__device_property
 
-    # -----------------------------------------------------------------------------
-
-    def validate(
-        self,
-        actual_value: str
-    ) -> bool:
-        """Device property value validation"""
-        return super().validate(actual_value)
-
 
 class ChannelPropertyActionItem(PropertyActionItem):
     """
@@ -483,12 +454,3 @@ class ChannelPropertyActionItem(PropertyActionItem):
     def channel_property(self) -> uuid.UUID:
         """Channel property identifier"""
         return self.__channel_property
-
-    # -----------------------------------------------------------------------------
-
-    def validate(
-        self,
-        actual_value: str
-    ) -> bool:
-        """Channel property value validation"""
-        return super().validate(actual_value)
