@@ -170,7 +170,7 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 
 		$operand = $attributes->get('operand');
 
-		return is_bool($operand) ? ($operand ? 'true' : 'false') : (string) $operand;
+		return is_bool($operand) ? ($operand ? 'true' : 'false') : strtolower((string) $operand);
 	}
 
 }

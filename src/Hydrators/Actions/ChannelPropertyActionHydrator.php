@@ -165,7 +165,7 @@ final class ChannelPropertyActionHydrator extends ActionHydrator
 
 		$value = $attributes->get('value');
 
-		return is_bool($value) ? ($value ? 'true' : 'false') : (string) $value;
+		return is_bool($value) ? ($value ? 'true' : 'false') : strtolower((string) $value);
 	}
 
 }
