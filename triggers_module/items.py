@@ -207,10 +207,10 @@ class PropertyConditionItem(ABC):
         if self.__operator == TriggerConditionOperator.EQUAL:
             return self.operand == actual_value
 
-        elif self.__operator == TriggerConditionOperator.ABOVE:
+        if self.__operator == TriggerConditionOperator.ABOVE:
             return self.operand < actual_value
 
-        elif self.__operator == TriggerConditionOperator.BELOW:
+        if self.__operator == TriggerConditionOperator.BELOW:
             return self.operand > actual_value
 
         return False
@@ -358,8 +358,7 @@ class PropertyActionItem(ABC):
         if self.__value == SwitchPayload(SwitchPayload.TOGGLE).value:
             return False
 
-        else:
-            return self.__value == actual_value
+        return self.__value == actual_value
 
 
 class DevicePropertyActionItem(PropertyActionItem):
