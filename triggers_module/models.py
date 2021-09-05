@@ -21,6 +21,7 @@ Module models definitions
 # Library dependencies
 import uuid
 import datetime
+from enum import Enum
 from typing import List, Tuple, Dict
 from application_events.database import (
     DatabaseEntityCreatedEvent,
@@ -31,8 +32,11 @@ from application_events.dispatcher import app_dispatcher
 from modules_metadata.triggers_module import TriggerConditionOperator
 from modules_metadata.types import ModuleOrigin
 from pony.orm import core as orm, Database, PrimaryKey, Required, Optional, Set, Discriminator, Json
+from pony.orm.dbproviders.mysql import MySQLProvider
+from pony.orm.dbproviders.sqlite import SQLiteProvider
 
 # Library libs
+from triggers_module.converters import EnumConverter
 from triggers_module.items import (
     TriggerItem,
     DevicePropertyConditionItem,
@@ -43,6 +47,10 @@ from triggers_module.items import (
 
 # Create triggers module database accessor
 db: Database = Database()
+
+# Add ENUM converter
+MySQLProvider.converter_classes.append((Enum, EnumConverter))
+SQLiteProvider.converter_classes.append((Enum, EnumConverter))
 
 
 class EntityEventMixin:
@@ -644,9 +652,21 @@ class TriggersRepository:
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    __items: List[TriggerItem] or None = None
+    __items: Dict[str, TriggerItem] or None = None
 
     __iterator_index = 0
+
+    # -----------------------------------------------------------------------------
+
+    def get_trigger_by_id(self, trigger_id: uuid.UUID) -> TriggerItem or None:
+        """Find connector in cache by provided identifier"""
+        if self.__items is None:
+            self.initialize()
+
+        if trigger_id.__str__() in self.__items:
+            return self.__items[trigger_id.__str__()]
+
+        return None
 
     # -----------------------------------------------------------------------------
 
@@ -659,7 +679,7 @@ class TriggersRepository:
     @orm.db_session
     def initialize(self) -> None:
         """Initialize repository by fetching entities from database"""
-        items: List[TriggerItem] = []
+        items: Dict[str, TriggerItem] = {}
 
         for trigger in TriggerEntity.select():
             record = TriggerItem(trigger.trigger_id, trigger.enabled)
@@ -719,7 +739,7 @@ class TriggersRepository:
                         ),
                     )
 
-            items.append(record)
+            items[trigger.trigger_id.__str__()] = record
 
         self.__items = items
 
@@ -737,7 +757,7 @@ class TriggersRepository:
         if self.__items is None:
             self.initialize()
 
-        return len(self.__items)
+        return len(self.__items.values())
 
     # -----------------------------------------------------------------------------
 
@@ -745,8 +765,10 @@ class TriggersRepository:
         if self.__items is None:
             self.initialize()
 
-        if self.__iterator_index < len(self.__items):
-            result: TriggerItem = self.__items[self.__iterator_index]
+        if self.__iterator_index < len(self.__items.values()):
+            items: List[TriggerItem] = list(self.__items.values())
+
+            result: TriggerItem = items[self.__iterator_index]
 
             self.__iterator_index += 1
 
