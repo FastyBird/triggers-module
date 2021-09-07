@@ -781,7 +781,7 @@ class ActionsRepository:
         if self.__items is None:
             self.initialize()
 
-        actions: List[DevicePropertyActionItem or ChannelPropertyActionItem] = list()
+        actions: List[DevicePropertyActionItem or ChannelPropertyActionItem] = []
 
         for action in self.__items.values():
             if action.trigger_id.__eq__(trigger_id):
@@ -918,7 +918,7 @@ class ConditionsRepository:
         if self.__items is None:
             self.initialize()
 
-        conditions: List[ConditionItem] = list()
+        conditions: List[ConditionItem] = []
 
         for condition in self.__items.values():
             if condition.trigger_id.__eq__(trigger_id):

@@ -99,6 +99,13 @@ class ConditionItem(ABC):
         """Condition identifier"""
         return self.__trigger_id
 
+    # -----------------------------------------------------------------------------
+
+    @property
+    def enabled(self) -> bool:
+        """Flag informing if condition is enabled"""
+        return self.__enabled
+
 
 class PropertyConditionItem(ConditionItem):
     """
@@ -109,10 +116,6 @@ class PropertyConditionItem(ConditionItem):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    __condition_id: uuid.UUID
-    __trigger_id: uuid.UUID
-    __enabled: bool
-
     __operator: TriggerConditionOperator
     __operand: str
 
@@ -261,6 +264,14 @@ class ChannelPropertyConditionItem(PropertyConditionItem):
 
 
 class TimeConditionItem(ConditionItem):
+    """
+    Time condition entity item
+
+    @package        FastyBird:TriggersModule!
+    @module         items
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
     __time: datetime.timedelta
     __days: List[int]
 
@@ -295,6 +306,14 @@ class TimeConditionItem(ConditionItem):
 
 
 class DateConditionItem(ConditionItem):
+    """
+    Date condition entity item
+
+    @package        FastyBird:TriggersModule!
+    @module         items
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
     __date: datetime.datetime
 
     # -----------------------------------------------------------------------------
@@ -337,7 +356,14 @@ class PropertyActionItem(ABC):
 
     # -----------------------------------------------------------------------------
 
-    def __init__(self, action_id: uuid.UUID, trigger_id: uuid.UUID, enabled: bool, value: str, device: uuid.UUID) -> None:
+    def __init__(
+        self,
+        action_id: uuid.UUID,
+        trigger_id: uuid.UUID,
+        enabled: bool,
+        value: str,
+        device: uuid.UUID,
+    ) -> None:
         self.__action_id = action_id
         self.__trigger_id = trigger_id
         self.__enabled = enabled
