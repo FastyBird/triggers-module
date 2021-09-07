@@ -19,9 +19,10 @@ Entities cache to prevent database overloading
 """
 
 # Library dependencies
+import datetime
 import uuid
 from abc import ABC
-from typing import Dict
+from typing import List
 from modules_metadata.triggers_module import TriggerConditionOperator
 from modules_metadata.types import SwitchPayload
 
@@ -38,23 +39,11 @@ class TriggerItem:
     __trigger_id: uuid.UUID
     __enabled: bool
 
-    __device_property_conditions: Dict[str, "DevicePropertyConditionItem"] = {}
-    __channel_property_conditions: Dict[str, "ChannelPropertyConditionItem"] = {}
-
-    __device_property_actions: Dict[str, "DevicePropertyActionItem"] = {}
-    __channel_property_actions: Dict[str, "ChannelPropertyActionItem"] = {}
-
     # -----------------------------------------------------------------------------
 
     def __init__(self, trigger_id: uuid.UUID, enabled: bool) -> None:
         self.__trigger_id = trigger_id
         self.__enabled = enabled
-
-        self.__device_property_actions = {}
-        self.__channel_property_actions = {}
-
-        self.__device_property_conditions = {}
-        self.__channel_property_conditions = {}
 
     # -----------------------------------------------------------------------------
 
@@ -70,60 +59,48 @@ class TriggerItem:
         """Flag informing if trigger is enabled"""
         return self.__enabled
 
+
+class ConditionItem(ABC):
+    """
+    Base condition entity item
+
+    @package        FastyBird:TriggersModule!
+    @module         items
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    __condition_id: uuid.UUID
+    __trigger_id: uuid.UUID
+    __enabled: bool
+
+    # -----------------------------------------------------------------------------
+
+    def __init__(
+        self,
+        condition_id: uuid.UUID,
+        trigger_id: uuid.UUID,
+        enabled: bool,
+    ) -> None:
+        self.__condition_id = condition_id
+        self.__trigger_id = trigger_id
+        self.__enabled = enabled
+
     # -----------------------------------------------------------------------------
 
     @property
-    def actions(
-        self,
-    ) -> Dict[str, "DevicePropertyConditionItem" or "ChannelPropertyConditionItem"]:
-        """All trigger actions"""
-        return {
-            **self.__device_property_actions,
-            **self.__channel_property_actions,
-        }
+    def condition_id(self) -> uuid.UUID:
+        """Condition identifier"""
+        return self.__condition_id
 
     # -----------------------------------------------------------------------------
 
     @property
-    def conditions(
-        self,
-    ) -> Dict[str, "DevicePropertyConditionItem" or "ChannelPropertyConditionItem"]:
-        """All trigger conditions"""
-        return {
-            **self.__device_property_conditions,
-            **self.__channel_property_conditions,
-        }
-
-    # -----------------------------------------------------------------------------
-
-    def add_condition(
-        self,
-        condition_id: str,
-        condition: "DevicePropertyConditionItem" or "ChannelPropertyConditionItem",
-    ) -> None:
-        """Assign condition to trigger"""
-        if isinstance(condition, DevicePropertyConditionItem):
-            self.__device_property_conditions[condition_id] = condition
-
-        elif isinstance(condition, ChannelPropertyConditionItem):
-            self.__channel_property_conditions[condition_id] = condition
-
-    # -----------------------------------------------------------------------------
-
-    def add_action(
-        self,
-        action_id: str,
-        action: "DevicePropertyActionItem" or "ChannelPropertyActionItem",
-    ) -> None:
-        """Assign action to trigger"""
-        if isinstance(action, DevicePropertyActionItem):
-            self.__device_property_actions[action_id] = action
-
-        elif isinstance(action, ChannelPropertyActionItem):
-            self.__channel_property_actions[action_id] = action
+    def trigger_id(self) -> uuid.UUID:
+        """Condition identifier"""
+        return self.__trigger_id
 
 
-class PropertyConditionItem(ABC):
+class PropertyConditionItem(ConditionItem):
     """
     Base property condition entity item
 
@@ -133,6 +110,7 @@ class PropertyConditionItem(ABC):
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
     __condition_id: uuid.UUID
+    __trigger_id: uuid.UUID
     __enabled: bool
 
     __operator: TriggerConditionOperator
@@ -145,13 +123,13 @@ class PropertyConditionItem(ABC):
     def __init__(
         self,
         condition_id: uuid.UUID,
+        trigger_id: uuid.UUID,
         enabled: bool,
         operator: TriggerConditionOperator,
         operand: str,
         device: uuid.UUID,
     ) -> None:
-        self.__condition_id = condition_id
-        self.__enabled = enabled
+        super().__init__(condition_id, trigger_id, enabled)
 
         self.__operator = operator
         self.__operand = operand
@@ -164,20 +142,6 @@ class PropertyConditionItem(ABC):
     def device(self) -> uuid.UUID:
         """Device identifier"""
         return self.__device
-
-    # -----------------------------------------------------------------------------
-
-    @property
-    def condition_id(self) -> uuid.UUID:
-        """Condition identifier"""
-        return self.__condition_id
-
-    # -----------------------------------------------------------------------------
-
-    @property
-    def enabled(self) -> bool:
-        """Flag informing if condition is enabled"""
-        return self.__enabled
 
     # -----------------------------------------------------------------------------
 
@@ -232,13 +196,14 @@ class DevicePropertyConditionItem(PropertyConditionItem):
     def __init__(
         self,
         condition_id: uuid.UUID,
+        trigger_id: uuid.UUID,
         enabled: bool,
         operator: TriggerConditionOperator,
         operand: str,
         device_property: uuid.UUID,
         device: uuid.UUID,
     ) -> None:
-        super().__init__(condition_id, enabled, operator, operand, device)
+        super().__init__(condition_id, trigger_id, enabled, operator, operand, device)
 
         self.__device_property = device_property
 
@@ -267,6 +232,7 @@ class ChannelPropertyConditionItem(PropertyConditionItem):
     def __init__(
         self,
         condition_id: uuid.UUID,
+        trigger_id: uuid.UUID,
         enabled: bool,
         operator: TriggerConditionOperator,
         operand: str,
@@ -274,7 +240,7 @@ class ChannelPropertyConditionItem(PropertyConditionItem):
         channel: uuid.UUID,
         device: uuid.UUID,
     ) -> None:
-        super().__init__(condition_id, enabled, operator, operand, device)
+        super().__init__(condition_id, trigger_id, enabled, operator, operand, device)
 
         self.__channel_property = channel_property
         self.__channel = channel
@@ -294,6 +260,64 @@ class ChannelPropertyConditionItem(PropertyConditionItem):
         return self.__channel_property
 
 
+class TimeConditionItem(ConditionItem):
+    __time: datetime.timedelta
+    __days: List[int]
+
+    # -----------------------------------------------------------------------------
+
+    def __init__(
+        self,
+        condition_id: uuid.UUID,
+        trigger_id: uuid.UUID,
+        enabled: bool,
+        time: datetime.timedelta,
+        days: str,
+    ) -> None:
+        super().__init__(condition_id, trigger_id, enabled)
+
+        self.__time = time
+        self.__days = [int(x) for x in days.split(",")]
+
+    # -----------------------------------------------------------------------------
+
+    @property
+    def time(self) -> datetime.timedelta:
+        """Condition time"""
+        return self.__time
+
+    # -----------------------------------------------------------------------------
+
+    @property
+    def days(self) -> List[int]:
+        """Condition days"""
+        return self.__days
+
+
+class DateConditionItem(ConditionItem):
+    __date: datetime.datetime
+
+    # -----------------------------------------------------------------------------
+
+    def __init__(
+        self,
+        condition_id: uuid.UUID,
+        trigger_id: uuid.UUID,
+        enabled: bool,
+        date: datetime.datetime,
+    ) -> None:
+        super().__init__(condition_id, trigger_id, enabled)
+
+        self.__date = date
+
+    # -----------------------------------------------------------------------------
+
+    @property
+    def date(self) -> datetime.datetime:
+        """Condition date"""
+        return self.__date
+
+
 class PropertyActionItem(ABC):
     """
     Base property action entity item
@@ -304,6 +328,7 @@ class PropertyActionItem(ABC):
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
     __action_id: uuid.UUID
+    __trigger_id: uuid.UUID
     __enabled: bool
 
     __value: str
@@ -312,8 +337,9 @@ class PropertyActionItem(ABC):
 
     # -----------------------------------------------------------------------------
 
-    def __init__(self, action_id: uuid.UUID, enabled: bool, value: str, device: uuid.UUID) -> None:
+    def __init__(self, action_id: uuid.UUID, trigger_id: uuid.UUID, enabled: bool, value: str, device: uuid.UUID) -> None:
         self.__action_id = action_id
+        self.__trigger_id = trigger_id
         self.__enabled = enabled
 
         self.__value = value
@@ -333,6 +359,13 @@ class PropertyActionItem(ABC):
     def action_id(self) -> uuid.UUID:
         """Action identifier"""
         return self.__action_id
+
+    # -----------------------------------------------------------------------------
+
+    @property
+    def trigger_id(self) -> uuid.UUID:
+        """Action trigger identifier"""
+        return self.__trigger_id
 
     # -----------------------------------------------------------------------------
 
@@ -377,12 +410,13 @@ class DevicePropertyActionItem(PropertyActionItem):
     def __init__(
         self,
         action_id: uuid.UUID,
+        trigger_id: uuid.UUID,
         enabled: bool,
         value: str,
         device_property: uuid.UUID,
         device: uuid.UUID,
     ) -> None:
-        super().__init__(action_id, enabled, value, device)
+        super().__init__(action_id, trigger_id, enabled, value, device)
 
         self.__device_property = device_property
 
@@ -411,13 +445,14 @@ class ChannelPropertyActionItem(PropertyActionItem):
     def __init__(
         self,
         action_id: uuid.UUID,
+        trigger_id: uuid.UUID,
         enabled: bool,
         value: str,
         channel_property: uuid.UUID,
         channel: uuid.UUID,
         device: uuid.UUID,
     ) -> None:
-        super().__init__(action_id, enabled, value, device)
+        super().__init__(action_id, trigger_id, enabled, value, device)
 
         self.__channel_property = channel_property
         self.__channel = channel

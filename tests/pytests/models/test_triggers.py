@@ -30,7 +30,7 @@ class TestTriggersRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     def test_get_item(self) -> None:
-        trigger_item = triggers_repository.get_trigger_by_id(
+        trigger_item = triggers_repository.get_by_id(
             uuid.UUID("c64ba1c4-0eda-4cab-87a0-4d634f7b67f4", version=4)
         )
 
