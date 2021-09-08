@@ -121,6 +121,8 @@ class PropertyConditionItem(ConditionItem):
 
     __device: uuid.UUID
 
+    __is_fulfilled: bool = False
+
     # -----------------------------------------------------------------------------
 
     def __init__(
@@ -150,15 +152,22 @@ class PropertyConditionItem(ConditionItem):
 
     @property
     def operator(self) -> TriggerConditionOperator:
-        """Condition operator"""
+        """Property condition operator"""
         return self.__operator
 
     # -----------------------------------------------------------------------------
 
     @property
     def operand(self) -> str:
-        """Condition operand"""
+        """Property condition operand"""
         return self.__operand
+
+    # -----------------------------------------------------------------------------
+
+    @property
+    def is_fulfilled(self) -> bool:
+        """Property condition is fulfilled flag"""
+        return self.__is_fulfilled
 
     # -----------------------------------------------------------------------------
 
@@ -169,18 +178,28 @@ class PropertyConditionItem(ConditionItem):
     ) -> bool:
         """Property value validation"""
         if previous_value is not None and previous_value == actual_value:
-            return False
+            self.__is_fulfilled = False
+
+            return self.is_fulfilled
 
         if self.__operator == TriggerConditionOperator.EQUAL:
-            return self.operand == actual_value
+            self.__is_fulfilled = self.operand == actual_value
+
+            return self.is_fulfilled
 
         if self.__operator == TriggerConditionOperator.ABOVE:
-            return self.operand < actual_value
+            self.__is_fulfilled = self.operand < actual_value
+
+            return self.is_fulfilled
 
         if self.__operator == TriggerConditionOperator.BELOW:
-            return self.operand > actual_value
+            self.__is_fulfilled = self.operand > actual_value
 
-        return False
+            return self.is_fulfilled
+
+        self.__is_fulfilled = False
+
+        return self.is_fulfilled
 
 
 class DevicePropertyConditionItem(PropertyConditionItem):
@@ -301,7 +320,7 @@ class TimeConditionItem(ConditionItem):
 
     @property
     def days(self) -> List[int]:
-        """Condition days"""
+        """Condition days array"""
         return self.__days
 
 
@@ -337,9 +356,9 @@ class DateConditionItem(ConditionItem):
         return self.__date
 
 
-class PropertyActionItem(ABC):
+class ActionItem(ABC):
     """
-    Base property action entity item
+    Base action entity item
 
     @package        FastyBird:TriggersModule!
     @module         items
@@ -350,10 +369,6 @@ class PropertyActionItem(ABC):
     __trigger_id: uuid.UUID
     __enabled: bool
 
-    __value: str
-
-    __device: uuid.UUID
-
     # -----------------------------------------------------------------------------
 
     def __init__(
@@ -361,23 +376,10 @@ class PropertyActionItem(ABC):
         action_id: uuid.UUID,
         trigger_id: uuid.UUID,
         enabled: bool,
-        value: str,
-        device: uuid.UUID,
     ) -> None:
         self.__action_id = action_id
         self.__trigger_id = trigger_id
         self.__enabled = enabled
-
-        self.__value = value
-
-        self.__device = device
-
-    # -----------------------------------------------------------------------------
-
-    @property
-    def device(self) -> uuid.UUID:
-        """Device identifier"""
-        return self.__device
 
     # -----------------------------------------------------------------------------
 
@@ -400,6 +402,45 @@ class PropertyActionItem(ABC):
         """Flag informing if action is enabled"""
         return self.__enabled
 
+
+class PropertyActionItem(ActionItem):
+    """
+    Base property action entity item
+
+    @package        FastyBird:TriggersModule!
+    @module         items
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    __value: str
+
+    __device: uuid.UUID
+
+    __is_triggered: bool = False
+
+    # -----------------------------------------------------------------------------
+
+    def __init__(
+        self,
+        action_id: uuid.UUID,
+        trigger_id: uuid.UUID,
+        enabled: bool,
+        value: str,
+        device: uuid.UUID,
+    ) -> None:
+        super().__init__(action_id, trigger_id, enabled)
+
+        self.__value = value
+
+        self.__device = device
+
+    # -----------------------------------------------------------------------------
+
+    @property
+    def device(self) -> uuid.UUID:
+        """Device identifier"""
+        return self.__device
+
     # -----------------------------------------------------------------------------
 
     @property
@@ -409,15 +450,26 @@ class PropertyActionItem(ABC):
 
     # -----------------------------------------------------------------------------
 
+    @property
+    def is_triggered(self) -> bool:
+        """Action property is triggered flag"""
+        return self.__is_triggered
+
+    # -----------------------------------------------------------------------------
+
     def validate(
         self,
         actual_value: str
     ) -> bool:
         """Property value validation"""
         if self.__value == SwitchPayload(SwitchPayload.TOGGLE).value:
-            return False
+            self.__is_triggered = False
 
-        return self.__value == actual_value
+            return self.is_triggered
+
+        self.__is_triggered = self.__value == actual_value
+
+        return self.is_triggered
 
 
 class DevicePropertyActionItem(PropertyActionItem):
