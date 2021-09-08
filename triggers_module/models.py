@@ -803,7 +803,16 @@ class ActionsRepository:
         items: Dict[str, PropertyActionItem] = {}
 
         for action in ActionEntity.select():
+            is_triggered: bool = False
+
             if isinstance(action, ChannelPropertyActionEntity):
+                if (
+                    self.__items is not None
+                    and action.action_id.__str__() in self.__items
+                    and isinstance(self.__items[action.action_id.__str__()], ChannelPropertyActionItem)
+                ):
+                    is_triggered = self.__items[action.action_id.__str__()].is_triggered
+
                 items[action.action_id.__str__()] = ChannelPropertyActionItem(
                     action_id=action.action_id,
                     trigger_id=action.trigger.trigger_id,
@@ -812,9 +821,17 @@ class ActionsRepository:
                     channel_property=action.channel_property,
                     channel=action.channel,
                     device=action.device,
+                    is_triggered=is_triggered,
                 )
 
             elif isinstance(action, DevicePropertyActionEntity):
+                if (
+                    self.__items is not None
+                    and action.action_id.__str__() in self.__items
+                    and isinstance(self.__items[action.action_id.__str__()], DevicePropertyActionItem)
+                ):
+                    is_triggered = self.__items[action.action_id.__str__()].is_triggered
+
                 items[action.action_id.__str__()] = DevicePropertyActionItem(
                     action_id=action.action_id,
                     trigger_id=action.trigger.trigger_id,
@@ -822,6 +839,7 @@ class ActionsRepository:
                     value=action.value,
                     device_property=action.device_property,
                     device=action.device,
+                    is_triggered=is_triggered,
                 )
 
         self.__items = items
@@ -940,7 +958,16 @@ class ConditionsRepository:
         items: Dict[str, ConditionItem] = {}
 
         for condition in ConditionEntity.select():
+            is_fulfilled: bool = False
+
             if isinstance(condition, ChannelPropertyConditionEntity):
+                if (
+                    self.__items is not None
+                    and condition.condition_id.__str__() in self.__items
+                    and isinstance(self.__items[condition.condition_id.__str__()], ChannelPropertyConditionItem)
+                ):
+                    is_fulfilled = self.__items[condition.condition_id.__str__()].is_fulfilled
+
                 items[condition.condition_id.__str__()] = ChannelPropertyConditionItem(
                     condition_id=condition.condition_id,
                     trigger_id=condition.trigger.trigger_id,
@@ -950,9 +977,17 @@ class ConditionsRepository:
                     channel_property=condition.channel_property,
                     channel=condition.channel,
                     device=condition.device,
+                    is_fulfilled=is_fulfilled,
                 )
 
             elif isinstance(condition, DevicePropertyConditionEntity):
+                if (
+                    self.__items is not None
+                    and condition.condition_id.__str__() in self.__items
+                    and isinstance(self.__items[condition.condition_id.__str__()], DevicePropertyConditionItem)
+                ):
+                    is_fulfilled = self.__items[condition.condition_id.__str__()].is_fulfilled
+
                 items[condition.condition_id.__str__()] = DevicePropertyConditionItem(
                     condition_id=condition.condition_id,
                     trigger_id=condition.trigger.trigger_id,
@@ -961,6 +996,7 @@ class ConditionsRepository:
                     operand=condition.operand,
                     device_property=condition.device_property,
                     device=condition.device,
+                    is_fulfilled=is_fulfilled,
                 )
 
             elif isinstance(condition, TimeConditionEntity):

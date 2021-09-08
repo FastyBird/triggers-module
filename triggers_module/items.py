@@ -133,6 +133,7 @@ class PropertyConditionItem(ConditionItem):
         operator: TriggerConditionOperator,
         operand: str,
         device: uuid.UUID,
+        is_fulfilled: bool = False,
     ) -> None:
         super().__init__(condition_id, trigger_id, enabled)
 
@@ -140,6 +141,8 @@ class PropertyConditionItem(ConditionItem):
         self.__operand = operand
 
         self.__device = device
+
+        self.__is_fulfilled = is_fulfilled
 
     # -----------------------------------------------------------------------------
 
@@ -224,8 +227,9 @@ class DevicePropertyConditionItem(PropertyConditionItem):
         operand: str,
         device_property: uuid.UUID,
         device: uuid.UUID,
+        is_fulfilled: bool = False,
     ) -> None:
-        super().__init__(condition_id, trigger_id, enabled, operator, operand, device)
+        super().__init__(condition_id, trigger_id, enabled, operator, operand, device, is_fulfilled)
 
         self.__device_property = device_property
 
@@ -261,8 +265,9 @@ class ChannelPropertyConditionItem(PropertyConditionItem):
         channel_property: uuid.UUID,
         channel: uuid.UUID,
         device: uuid.UUID,
+        is_fulfilled: bool = False,
     ) -> None:
-        super().__init__(condition_id, trigger_id, enabled, operator, operand, device)
+        super().__init__(condition_id, trigger_id, enabled, operator, operand, device, is_fulfilled)
 
         self.__channel_property = channel_property
         self.__channel = channel
@@ -427,12 +432,15 @@ class PropertyActionItem(ActionItem):
         enabled: bool,
         value: str,
         device: uuid.UUID,
+        is_triggered: bool = False
     ) -> None:
         super().__init__(action_id, trigger_id, enabled)
 
         self.__value = value
 
         self.__device = device
+
+        self.__is_triggered = is_triggered
 
     # -----------------------------------------------------------------------------
 
@@ -493,8 +501,9 @@ class DevicePropertyActionItem(PropertyActionItem):
         value: str,
         device_property: uuid.UUID,
         device: uuid.UUID,
+        is_triggered: bool = False,
     ) -> None:
-        super().__init__(action_id, trigger_id, enabled, value, device)
+        super().__init__(action_id, trigger_id, enabled, value, device, is_triggered)
 
         self.__device_property = device_property
 
@@ -529,8 +538,9 @@ class ChannelPropertyActionItem(PropertyActionItem):
         channel_property: uuid.UUID,
         channel: uuid.UUID,
         device: uuid.UUID,
+        is_triggered: bool = False,
     ) -> None:
-        super().__init__(action_id, trigger_id, enabled, value, device)
+        super().__init__(action_id, trigger_id, enabled, value, device, is_triggered)
 
         self.__channel_property = channel_property
         self.__channel = channel
