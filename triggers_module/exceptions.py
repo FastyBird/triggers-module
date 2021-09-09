@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 #     Copyright 2021. FastyBird s.r.o.
 #
 #     Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +15,16 @@
 #     limitations under the License.
 
 """
-Triggers module
+Package exceptions classes
 """
 
-__version__ = "0.2.6"
+
+class HandleExchangeDataException(Exception):
+    """
+    Exception raised when received exchange message could not be handled
+
+    @package        FastyBird:TriggersModule!
+    @module         exceptions
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
