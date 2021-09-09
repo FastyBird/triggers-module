@@ -67,7 +67,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 		return [
 			ORM\Events::onFlush,
 			ORM\Events::postPersist,
-			ORM\Events::postFlush,
+			ORM\Events::postUpdate,
 		];
 	}
 
@@ -167,7 +167,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 	 *
 	 * @return void
 	 */
-	public function postFlush(ORM\Event\LifecycleEventArgs $eventArgs): void
+	public function postUpdate(ORM\Event\LifecycleEventArgs $eventArgs): void
 	{
 		$uow = $this->entityManager->getUnitOfWork();
 
