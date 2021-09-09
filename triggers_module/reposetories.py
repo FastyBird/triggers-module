@@ -26,6 +26,7 @@ import modules_metadata.exceptions as metadata_exceptions
 from modules_metadata.loader import load_schema
 from modules_metadata.routing import RoutingKey
 from modules_metadata.validator import validate
+from modules_metadata.triggers_module import TriggerConditionOperator
 from modules_metadata.types import ModuleOrigin
 from pony.orm import core as orm
 
@@ -716,7 +717,7 @@ class ConditionsRepository:
                 condition_id=item.condition_id,
                 trigger_id=item.trigger_id,
                 enabled=data.get("enabled", item.enabled),
-                operator=data.get("operator", item.operator),
+                operator=TriggerConditionOperator(data.get("operator", item.operator.value)),
                 operand=data.get("operand", item.operand),
                 device_property=item.device_property,
                 device=item.device,
@@ -728,7 +729,7 @@ class ConditionsRepository:
                 condition_id=item.condition_id,
                 trigger_id=item.trigger_id,
                 enabled=data.get("enabled", item.enabled),
-                operator=data.get("operator", item.operator),
+                operator=TriggerConditionOperator(data.get("operator", item.operator.value)),
                 operand=data.get("operand", item.operand),
                 channel_property=item.channel_property,
                 channel=item.channel,

@@ -86,6 +86,7 @@ class TestConditionsRepository(DbTestCase):
         self.assertIsInstance(condition_item, PropertyConditionItem)
         self.assertIsInstance(condition_item, ChannelPropertyConditionItem)
         self.assertEqual("2726f19c-7759-440e-b6f5-8c3306692fa2", condition_item.condition_id.__str__())
+        self.assertIsInstance(condition_item.operator, TriggerConditionOperator)
 
     # -----------------------------------------------------------------------------
 
@@ -127,6 +128,7 @@ class TestConditionsRepository(DbTestCase):
         self.assertEqual("2726f19c-7759-440e-b6f5-8c3306692fa2", condition_item.condition_id.__str__())
         self.assertTrue(condition_item.enabled)
         self.assertEqual("1", condition_item.operand)
+        self.assertIsInstance(condition_item.operator, TriggerConditionOperator)
 
     # -----------------------------------------------------------------------------
 
