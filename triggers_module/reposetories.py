@@ -248,13 +248,13 @@ class ActionsRepository:
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    __items: Dict[str, DevicePropertyActionItem or ChannelPropertyActionItem] or None = None
+    __items: Dict[str, ActionItem] or None = None
 
     __iterator_index = 0
 
     # -----------------------------------------------------------------------------
 
-    def get_by_id(self, action_id: uuid.UUID) -> DevicePropertyActionItem or ChannelPropertyActionItem or None:
+    def get_by_id(self, action_id: uuid.UUID) -> ActionItem or None:
         """Find action in cache by provided identifier"""
         if self.__items is None:
             self.initialize()
@@ -285,12 +285,33 @@ class ActionsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def get_all_for_trigger(self, trigger_id: uuid.UUID) -> List[DevicePropertyActionItem or ChannelPropertyActionItem]:
-        """Find all actions in cache for provided trigger identifier"""
+    def get_all_by_property_identifier(
+            self,
+            property_id: uuid.UUID,
+    ) -> List[DevicePropertyConditionItem or ChannelPropertyConditionItem]:
+        """Find actions in cache by provided property identifier"""
         if self.__items is None:
             self.initialize()
 
         actions: List[DevicePropertyActionItem or ChannelPropertyActionItem] = []
+
+        for action in self.__items.values():
+            if isinstance(action, DevicePropertyActionItem) and action.device_property.__eq__(property_id):
+                actions.append(action)
+
+            if isinstance(action, ChannelPropertyActionItem) and action.channel_property.__eq__(property_id):
+                actions.append(action)
+
+        return actions
+
+    # -----------------------------------------------------------------------------
+
+    def get_all_for_trigger(self, trigger_id: uuid.UUID) -> List[ActionItem]:
+        """Find all actions in cache for provided trigger identifier"""
+        if self.__items is None:
+            self.initialize()
+
+        actions: List[ActionItem] = []
 
         for action in self.__items.values():
             if action.trigger_id.__eq__(trigger_id):
@@ -385,7 +406,7 @@ class ActionsRepository:
     @orm.db_session
     def initialize(self) -> None:
         """Initialize repository by fetching entities from database"""
-        items: Dict[str, PropertyActionItem] = {}
+        items: Dict[str, ActionItem] = {}
 
         for action in ActionEntity.select():
             if self.__items is None or action.action_id.__str__() not in self.__items:
@@ -538,6 +559,27 @@ class ConditionsRepository:
                 return condition
 
         return None
+
+    # -----------------------------------------------------------------------------
+
+    def get_all_by_property_identifier(
+            self,
+            property_id: uuid.UUID,
+    ) -> List[DevicePropertyConditionItem or ChannelPropertyConditionItem]:
+        """Find conditions in cache by provided property identifier"""
+        if self.__items is None:
+            self.initialize()
+
+        conditions: List[DevicePropertyConditionItem or ChannelPropertyConditionItem] = []
+
+        for condition in self.__items.values():
+            if isinstance(condition, DevicePropertyConditionItem) and condition.device_property.__eq__(property_id):
+                conditions.append(condition)
+
+            if isinstance(condition, ChannelPropertyConditionItem) and condition.channel_property.__eq__(property_id):
+                conditions.append(condition)
+
+        return conditions
 
     # -----------------------------------------------------------------------------
 
