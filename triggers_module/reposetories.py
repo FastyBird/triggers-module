@@ -321,6 +321,26 @@ class ActionsRepository:
 
     # -----------------------------------------------------------------------------
 
+    def validate_property_action(
+            self,
+            action_id: uuid.UUID,
+            actual_value: str
+    ) -> bool:
+        """Validate action by id and property value"""
+        action = self.get_by_id(action_id)
+
+        if action is None or not isinstance(action, (DevicePropertyActionItem, ChannelPropertyActionItem)):
+            return False
+
+        result: bool = action.validate(actual_value)
+
+        # Replace action to keep stored validation result
+        self.__items[action.action_id.__str__()] = action
+
+        return result
+
+    # -----------------------------------------------------------------------------
+
     def clear(self) -> None:
         """Clear items cache"""
         self.__items = None
@@ -598,6 +618,27 @@ class ConditionsRepository:
                 conditions.append(condition)
 
         return conditions
+
+    # -----------------------------------------------------------------------------
+
+    def validate_property_condition(
+        self,
+        condition_id: uuid.UUID,
+        previous_value: str or None,
+        actual_value: str
+    ) -> bool:
+        """Validate condition by id and property values"""
+        condition = self.get_by_id(condition_id)
+
+        if condition is None or not isinstance(condition, (DevicePropertyConditionItem, ChannelPropertyConditionItem)):
+            return False
+
+        result: bool = condition.validate(previous_value, actual_value)
+
+        # Replace condition to keep stored validation result
+        self.__items[condition.condition_id.__str__()] = condition
+
+        return result
 
     # -----------------------------------------------------------------------------
 
