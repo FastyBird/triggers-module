@@ -176,27 +176,21 @@ class PropertyConditionItem(ConditionItem):
 
     def validate(
         self,
-        previous_value: str or None,
-        actual_value: str
+        property_value: str
     ) -> bool:
         """Property value validation"""
-        if previous_value is not None and previous_value == actual_value:
-            self.__is_fulfilled = False
-
-            return self.is_fulfilled
-
         if self.__operator == TriggerConditionOperator.EQUAL:
-            self.__is_fulfilled = self.operand == actual_value
+            self.__is_fulfilled = self.operand == property_value
 
             return self.is_fulfilled
 
         if self.__operator == TriggerConditionOperator.ABOVE:
-            self.__is_fulfilled = self.operand < actual_value
+            self.__is_fulfilled = self.operand < property_value
 
             return self.is_fulfilled
 
         if self.__operator == TriggerConditionOperator.BELOW:
-            self.__is_fulfilled = self.operand > actual_value
+            self.__is_fulfilled = self.operand > property_value
 
             return self.is_fulfilled
 
@@ -467,7 +461,7 @@ class PropertyActionItem(ActionItem):
 
     def validate(
         self,
-        actual_value: str
+        property_value: str
     ) -> bool:
         """Property value validation"""
         if self.__value == SwitchPayload(SwitchPayload.TOGGLE).value:
@@ -475,7 +469,7 @@ class PropertyActionItem(ActionItem):
 
             return self.is_triggered
 
-        self.__is_triggered = self.__value == actual_value
+        self.__is_triggered = self.__value == property_value
 
         return self.is_triggered
 
