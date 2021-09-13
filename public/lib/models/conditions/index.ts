@@ -5,6 +5,7 @@ import {
   ModuleOrigin,
   ConditionEntity as ExchangeEntity,
   TriggersModule as RoutingKeys,
+  TriggerConditionType,
 } from '@fastybird/modules-metadata'
 
 import {
@@ -21,6 +22,7 @@ import Trigger from '@/lib/models/triggers/Trigger'
 import { TriggerInterface } from '@/lib/models/triggers/types'
 import Condition from '@/lib/models/conditions/Condition'
 import {
+  ConditionEntityTypes,
   ConditionInterface,
   ConditionResponseInterface,
   ConditionsResponseInterface,
@@ -487,6 +489,27 @@ const moduleActions: ActionTree<ConditionState, any> = {
 
               if (trigger !== null) {
                 entityData.triggerId = trigger.id
+              }
+            } else if (camelName === 'type') {
+              switch (body[attrName]) {
+                case TriggerConditionType.DEVICE_PROPERTY:
+                  entityData[camelName] = ConditionEntityTypes.DEVICE_PROPERTY
+                  break
+
+                case TriggerConditionType.CHANNEL_PROPERTY:
+                  entityData[camelName] = ConditionEntityTypes.CHANNEL_PROPERTY
+                  break
+
+                case TriggerConditionType.TIME:
+                  entityData[camelName] = ConditionEntityTypes.TIME
+                  break
+
+                case TriggerConditionType.DATE:
+                  entityData[camelName] = ConditionEntityTypes.DATE
+                  break
+
+                default:
+                  entityData[camelName] = body[attrName]
               }
             } else {
               entityData[camelName] = body[attrName]

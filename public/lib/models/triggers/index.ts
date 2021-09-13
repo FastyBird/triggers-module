@@ -7,6 +7,7 @@ import {
   TriggerControlAction,
   TriggerEntity as ExchangeEntity,
   TriggersModule as RoutingKeys,
+  TriggerType,
 } from '@fastybird/modules-metadata'
 
 import {
@@ -204,7 +205,7 @@ function buildCreateEmailNotification(data: any): CreateEmailNotificationInterfa
 
 const moduleGetters: GetterTree<TriggerState, any> = {
   firstLoadFinished: state => (): boolean => {
-    return !!state.firstLoad
+    return state.firstLoad
   },
 
   getting: state => (id: string): boolean => {
@@ -809,7 +810,22 @@ const moduleActions: ActionTree<TriggerState, any> = {
           .forEach((attrName) => {
             const camelName = attrName.replace(camelRegex, g => g[1].toUpperCase())
 
-            entityData[camelName] = body[attrName]
+            if (camelName === 'type') {
+              switch (body[attrName]) {
+                case TriggerType.MANUAL:
+                  entityData[camelName] = TriggerEntityTypes.MANUAL
+                  break
+
+                case TriggerType.AUTOMATIC:
+                  entityData[camelName] = TriggerEntityTypes.AUTOMATIC
+                  break
+
+                default:
+                  entityData[camelName] = body[attrName]
+              }
+            } else {
+              entityData[camelName] = body[attrName]
+            }
           })
 
         try {

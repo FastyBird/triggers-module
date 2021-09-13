@@ -4,6 +4,7 @@ import * as exchangeEntitySchema
 import {
   ModuleOrigin,
   NotificationEntity as ExchangeEntity,
+  TriggerNotificationType,
   TriggersModule as RoutingKeys,
 } from '@fastybird/modules-metadata'
 
@@ -23,6 +24,7 @@ import Notification from '@/lib/models/notifications/Notification'
 import {
   CreateEmailNotificationInterface,
   CreateSmsNotificationInterface,
+  NotificationEntityTypes,
   NotificationInterface,
   NotificationResponseInterface,
   NotificationsResponseInterface,
@@ -483,6 +485,19 @@ const moduleActions: ActionTree<NotificationState, any> = {
 
               if (trigger !== null) {
                 entityData.triggerId = trigger.id
+              }
+            } else if (camelName === 'type') {
+              switch (body[attrName]) {
+                case TriggerNotificationType.SMS:
+                  entityData[camelName] = NotificationEntityTypes.SMS
+                  break
+
+                case TriggerNotificationType.EMAIL:
+                  entityData[camelName] = NotificationEntityTypes.EMAIL
+                  break
+
+                default:
+                  entityData[camelName] = body[attrName]
               }
             } else {
               entityData[camelName] = body[attrName]

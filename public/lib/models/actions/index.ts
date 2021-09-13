@@ -4,6 +4,7 @@ import {
   ModuleOrigin,
   ActionEntity as ExchangeEntity,
   TriggersModule as RoutingKeys,
+  TriggerActionType,
 } from '@fastybird/modules-metadata'
 
 import {
@@ -20,6 +21,7 @@ import Trigger from '@/lib/models/triggers/Trigger'
 import { TriggerInterface } from '@/lib/models/triggers/types'
 import Action from '@/lib/models/actions/Action'
 import {
+  ActionEntityTypes,
   ActionInterface,
   ActionResponseInterface,
   ActionsResponseInterface,
@@ -482,6 +484,19 @@ const moduleActions: ActionTree<ActionState, any> = {
 
               if (trigger !== null) {
                 entityData.triggerId = trigger.id
+              }
+            } else if (camelName === 'type') {
+              switch (body[attrName]) {
+                case TriggerActionType.DEVICE_PROPERTY:
+                  entityData[camelName] = ActionEntityTypes.DEVICE_PROPERTY
+                  break
+
+                case TriggerActionType.CHANNEL_PROPERTY:
+                  entityData[camelName] = ActionEntityTypes.CHANNEL_PROPERTY
+                  break
+
+                default:
+                  entityData[camelName] = body[attrName]
               }
             } else {
               entityData[camelName] = body[attrName]
