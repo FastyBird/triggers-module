@@ -439,9 +439,9 @@ const moduleActions: ActionTree<ConditionState, any> = {
     if (validate(body)) {
       if (
         !Condition.query().where('id', body.id).exists() &&
-        (payload.routingKey === RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_UPDATED || payload.routingKey === RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_DELETED)
+        payload.routingKey === RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_DELETED
       ) {
-        throw new Error('triggers-module.conditions.update.failed')
+        return true
       }
 
       if (payload.routingKey === RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_DELETED) {

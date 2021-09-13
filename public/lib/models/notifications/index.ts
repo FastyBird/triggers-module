@@ -435,9 +435,9 @@ const moduleActions: ActionTree<NotificationState, any> = {
     if (validate(body)) {
       if (
         !Notification.query().where('id', body.id).exists() &&
-        (payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_UPDATED || payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_DELETED)
+        payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_DELETED
       ) {
-        throw new Error('triggers-module.notifications.update.failed')
+        return true
       }
 
       if (payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_DELETED) {

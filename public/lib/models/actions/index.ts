@@ -433,10 +433,10 @@ const moduleActions: ActionTree<ActionState, any> = {
 
     if (validate(body)) {
       if (
-        !Action.query().where('id', body.id).exists() &&
-        (payload.routingKey === RoutingKeys.TRIGGERS_ACTIONS_ENTITY_UPDATED || payload.routingKey === RoutingKeys.TRIGGERS_ACTIONS_ENTITY_DELETED)
+        !Action.query().where('id', body.id).exists()
+        && payload.routingKey === RoutingKeys.TRIGGERS_ACTIONS_ENTITY_DELETED
       ) {
-        throw new Error('triggers-module.actions.update.failed')
+        return true
       }
 
       if (payload.routingKey === RoutingKeys.TRIGGERS_ACTIONS_ENTITY_DELETED) {
