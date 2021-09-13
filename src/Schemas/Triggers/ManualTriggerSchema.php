@@ -16,6 +16,9 @@
 namespace FastyBird\TriggersModule\Schemas\Triggers;
 
 use FastyBird\TriggersModule\Entities;
+use FastyBird\TriggersModule\Models;
+use IPub\SlimRouter\Routing;
+use Neomerx\JsonApi;
 
 /**
  * Manual trigger entity schema
@@ -35,6 +38,18 @@ final class ManualTriggerSchema extends TriggerSchema
 	 */
 	public const SCHEMA_TYPE = 'triggers-module/trigger-manual';
 
+	/** @var Models\States\ITriggerItemRepository|null */
+	private ?Models\States\ITriggerItemRepository $triggerItemRepository;
+
+	public function __construct(
+		Routing\IRouter $router,
+		?Models\States\ITriggerItemRepository $triggerItemRepository
+	) {
+		parent::__construct($router);
+
+		$this->triggerItemRepository = $triggerItemRepository;
+	}
+
 	/**
 	 * @return string
 	 */
@@ -49,6 +64,35 @@ final class ManualTriggerSchema extends TriggerSchema
 	public function getEntityClass(): string
 	{
 		return Entities\Triggers\ManualTrigger::class;
+	}
+
+	/**
+	 * @param Entities\Triggers\IManualTrigger $trigger
+	 * @param JsonApi\Contracts\Schema\ContextInterface $context
+	 *
+	 * @return iterable<string, string|bool|null>
+	 *
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
+	 */
+	public function getAttributes($trigger, JsonApi\Contracts\Schema\ContextInterface $context): iterable
+	{
+		$isTriggered = null;
+
+		if ($this->triggerItemRepository !== null) {
+			$isTriggered = true;
+
+			foreach ($trigger->getActions() as $action) {
+				$state = $this->triggerItemRepository->findOne($action->getId());
+
+				if ($state === null || $state->getValidationResult() === false) {
+					$isTriggered = false;
+				}
+			}
+		}
+
+		return array_merge((array) parent::getAttributes($trigger, $context), [
+			'is_triggered' => $isTriggered,
+		]);
 	}
 
 }

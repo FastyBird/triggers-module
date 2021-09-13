@@ -52,4 +52,11 @@ interface IPropertyCondition extends ICondition
 	 */
 	public function getOperand(): string;
 
+	/**
+	 * @param string $value
+	 *
+	 * @return bool
+	 */
+	public function validate(string $value): bool;
+
 }

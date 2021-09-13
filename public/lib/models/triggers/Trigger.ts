@@ -45,6 +45,9 @@ export default class Trigger extends Model implements TriggerInterface {
 
       owner: this.string(null).nullable(),
 
+      isTriggered: this.attr(null),
+      isFulfilled: this.attr(null),
+
       // Relations
       relationshipNames: this.attr([]),
 
@@ -71,6 +74,9 @@ export default class Trigger extends Model implements TriggerInterface {
   enabled!: boolean
 
   owner!: string | null
+
+  isTriggered!: boolean | null
+  isFulfilled!: boolean | null
 
   relationshipNames!: string[]
 

@@ -251,10 +251,10 @@ class PropertyConditionItem(ConditionItem):
             return self.operand == property_value
 
         if self.__operator == TriggerConditionOperator.ABOVE:
-            return self.operand < property_value
+            return float(self.operand) < float(property_value)
 
         if self.__operator == TriggerConditionOperator.BELOW:
-            return self.operand > property_value
+            return float(self.operand) > float(property_value)
 
         return False
 
@@ -462,6 +462,7 @@ class DateConditionItem(ConditionItem):
         date: datetime.datetime,
     ) -> bool:
         """Condition validation"""
+        return date == self.date
 
     # -----------------------------------------------------------------------------
 

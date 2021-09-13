@@ -130,6 +130,18 @@ class TimeCondition extends Condition implements ITimeCondition
 	/**
 	 * {@inheritDoc}
 	 */
+	public function validate(DateTimeInterface $date): bool
+	{
+		if (in_array((int) $date->format('N'), (array) $this->getDays()) === false) {
+			return false;
+		}
+
+		return $date->format('h:i:s') === $this->getTime()->format('h:i:s');
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function toArray(): array
 	{
 		return array_merge(parent::toArray(), [

@@ -22,6 +22,7 @@ use FastyBird\ApplicationExchange\Publisher as ApplicationExchangePublisher;
 use FastyBird\ModulesMetadata;
 use FastyBird\TriggersModule;
 use FastyBird\TriggersModule\Entities;
+use FastyBird\TriggersModule\Models;
 use Nette;
 use ReflectionClass;
 use ReflectionException;
@@ -43,6 +44,9 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 
 	use Nette\SmartObject;
 
+	/** @var Models\States\ITriggerItemRepository|null */
+	private ?Models\States\ITriggerItemRepository $triggerItemRepository;
+
 	/** @var ApplicationExchangePublisher\IPublisher */
 	private ApplicationExchangePublisher\IPublisher $publisher;
 
@@ -51,8 +55,10 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 
 	public function __construct(
 		ApplicationExchangePublisher\IPublisher $publisher,
-		ORM\EntityManagerInterface $entityManager
+		ORM\EntityManagerInterface $entityManager,
+		?Models\States\ITriggerItemRepository $triggerItemRepository = null
 	) {
+		$this->triggerItemRepository = $triggerItemRepository;
 		$this->publisher = $publisher;
 		$this->entityManager = $entityManager;
 	}
@@ -72,6 +78,40 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 	}
 
 	/**
+	 * @return void
+	 */
+	public function onFlush(): void
+	{
+		$uow = $this->entityManager->getUnitOfWork();
+
+		$processedEntities = [];
+
+		$processEntities = [];
+
+		foreach ($uow->getScheduledEntityDeletions() as $entity) {
+			// Check for valid entity
+			if (!$entity instanceof Entities\IEntity || !$this->validateNamespace($entity)) {
+				continue;
+			}
+
+			// Doctrine is fine deleting elements multiple times. We are not.
+			$hash = $this->getHash($entity, $uow->getEntityIdentifier($entity));
+
+			if (in_array($hash, $processedEntities, true)) {
+				continue;
+			}
+
+			$processedEntities[] = $hash;
+
+			$processEntities[] = $entity;
+		}
+
+		foreach ($processEntities as $entity) {
+			$this->processEntityAction($entity, self::ACTION_DELETED);
+		}
+	}
+
+	/**
 	 * @param ORM\Event\LifecycleEventArgs $eventArgs
 	 *
 	 * @return void
@@ -87,6 +127,38 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 		}
 
 		$this->processEntityAction($entity, self::ACTION_CREATED);
+	}
+
+	/**
+	 * @param ORM\Event\LifecycleEventArgs $eventArgs
+	 *
+	 * @return void
+	 */
+	public function postUpdate(ORM\Event\LifecycleEventArgs $eventArgs): void
+	{
+		$uow = $this->entityManager->getUnitOfWork();
+
+		// onFlush was executed before, everything already initialized
+		$entity = $eventArgs->getObject();
+
+		// Get changes => should be already computed here (is a listener)
+		$changeset = $uow->getEntityChangeSet($entity);
+
+		// If we have no changes left => don't create revision log
+		if (count($changeset) === 0) {
+			return;
+		}
+
+		// Check for valid entity
+		if (
+			!$entity instanceof Entities\IEntity
+			|| !$this->validateNamespace($entity)
+			|| $uow->isScheduledForDelete($entity)
+		) {
+			return;
+		}
+
+		$this->processEntityAction($entity, self::ACTION_UPDATED);
 	}
 
 	/**
@@ -133,11 +205,75 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 		}
 
 		if ($publishRoutingKey !== null) {
-			$this->publisher->publish(
-				ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN,
-				$publishRoutingKey,
-				$entity->toArray()
-			);
+			if ($entity instanceof Entities\Actions\IAction && $this->triggerItemRepository !== null) {
+				$state = $this->triggerItemRepository->findOne($entity->getId());
+
+				$this->publisher->publish(
+					ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN,
+					$publishRoutingKey,
+					array_merge($state !== null ? [
+						'is_triggered' => $state->getValidationResult(),
+					] : [], $entity->toArray())
+				);
+
+			} elseif ($entity instanceof Entities\Conditions\ICondition && $this->triggerItemRepository !== null) {
+				$state = $this->triggerItemRepository->findOne($entity->getId());
+
+				$this->publisher->publish(
+					ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN,
+					$publishRoutingKey,
+					array_merge($state !== null ? [
+						'is_fulfilled' => $state->getValidationResult(),
+					] : [], $entity->toArray())
+				);
+
+			} elseif ($entity instanceof Entities\Triggers\ITrigger && $this->triggerItemRepository !== null) {
+				$isTriggered = true;
+
+				foreach ($entity->getActions() as $action) {
+					$state = $this->triggerItemRepository->findOne($action->getId());
+
+					if ($state === null || $state->getValidationResult() === false) {
+						$isTriggered = false;
+					}
+				}
+
+				if ($entity instanceof Entities\Triggers\IAutomaticTrigger) {
+					$isFulfilled = true;
+
+					foreach ($entity->getConditions() as $condition) {
+						$state = $this->triggerItemRepository->findOne($condition->getId());
+
+						if ($state === null || $state->getValidationResult() === false) {
+							$isFulfilled = false;
+						}
+					}
+
+					$this->publisher->publish(
+						ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN,
+						$publishRoutingKey,
+						array_merge([
+							'is_triggered' => $isTriggered,
+							'is_fulfilled' => $isFulfilled,
+						], $entity->toArray())
+					);
+
+				} else {
+					$this->publisher->publish(
+						ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN,
+						$publishRoutingKey,
+						array_merge([
+							'is_triggered' => $isTriggered,
+						], $entity->toArray())
+					);
+				}
+			} else {
+				$this->publisher->publish(
+					ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN,
+					$publishRoutingKey,
+					$entity->toArray()
+				);
+			}
 		}
 	}
 
@@ -160,72 +296,6 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 		}
 
 		return $result;
-	}
-
-	/**
-	 * @param ORM\Event\LifecycleEventArgs $eventArgs
-	 *
-	 * @return void
-	 */
-	public function postUpdate(ORM\Event\LifecycleEventArgs $eventArgs): void
-	{
-		$uow = $this->entityManager->getUnitOfWork();
-
-		// onFlush was executed before, everything already initialized
-		$entity = $eventArgs->getObject();
-
-		// Get changes => should be already computed here (is a listener)
-		$changeset = $uow->getEntityChangeSet($entity);
-
-		// If we have no changes left => don't create revision log
-		if (count($changeset) === 0) {
-			return;
-		}
-
-		// Check for valid entity
-		if (
-			!$entity instanceof Entities\IEntity
-			|| !$this->validateNamespace($entity)
-			|| $uow->isScheduledForDelete($entity)
-		) {
-			return;
-		}
-
-		$this->processEntityAction($entity, self::ACTION_UPDATED);
-	}
-
-	/**
-	 * @return void
-	 */
-	public function onFlush(): void
-	{
-		$uow = $this->entityManager->getUnitOfWork();
-
-		$processedEntities = [];
-
-		$processEntities = [];
-
-		foreach ($uow->getScheduledEntityDeletions() as $entity) {
-			// Check for valid entity
-			if (!$entity instanceof Entities\IEntity || !$this->validateNamespace($entity)) {
-				continue;
-			}
-
-			// Doctrine is fine deleting elements multiple times. We are not.
-			$hash = $this->getHash($entity, $uow->getEntityIdentifier($entity));
-
-			if (in_array($hash, $processedEntities, true)) {
-				continue;
-			}
-
-			$processedEntities[] = $hash;
-
-			$processEntities[] = $entity;
-		}
-
-		foreach ($processEntities as $entity) {
-			$this->processEntityAction($entity, self::ACTION_DELETED);
-		}
 	}
 
 	/**

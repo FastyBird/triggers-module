@@ -45,6 +45,9 @@ export interface TriggerInterface {
 
   owner: string | null
 
+  isTriggered: boolean | null
+  isFulfilled?: boolean | null
+
   // Relations
   relationshipNames: string[]
 

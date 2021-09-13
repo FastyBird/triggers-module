@@ -17,7 +17,9 @@ namespace FastyBird\TriggersModule\Schemas\Triggers;
 
 use FastyBird\TriggersModule;
 use FastyBird\TriggersModule\Entities;
+use FastyBird\TriggersModule\Models;
 use FastyBird\TriggersModule\Router;
+use IPub\SlimRouter\Routing;
 use Neomerx\JsonApi;
 
 /**
@@ -43,6 +45,18 @@ final class AutomaticTriggerSchema extends TriggerSchema
 	 */
 	public const RELATIONSHIPS_CONDITIONS = 'conditions';
 
+	/** @var Models\States\ITriggerItemRepository|null */
+	private ?Models\States\ITriggerItemRepository $triggerItemRepository;
+
+	public function __construct(
+		Routing\IRouter $router,
+		?Models\States\ITriggerItemRepository $triggerItemRepository
+	) {
+		parent::__construct($router);
+
+		$this->triggerItemRepository = $triggerItemRepository;
+	}
+
 	/**
 	 * @return string
 	 */
@@ -57,6 +71,46 @@ final class AutomaticTriggerSchema extends TriggerSchema
 	public function getEntityClass(): string
 	{
 		return Entities\Triggers\AutomaticTrigger::class;
+	}
+
+	/**
+	 * @param Entities\Triggers\IAutomaticTrigger $trigger
+	 * @param JsonApi\Contracts\Schema\ContextInterface $context
+	 *
+	 * @return iterable<string, string|bool|null>
+	 *
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
+	 */
+	public function getAttributes($trigger, JsonApi\Contracts\Schema\ContextInterface $context): iterable
+	{
+		$isTriggered = null;
+		$isFulfilled = null;
+
+		if ($this->triggerItemRepository !== null) {
+			$isTriggered = true;
+			$isFulfilled = true;
+
+			foreach ($trigger->getActions() as $action) {
+				$state = $this->triggerItemRepository->findOne($action->getId());
+
+				if ($state === null || $state->getValidationResult() === false) {
+					$isTriggered = false;
+				}
+			}
+
+			foreach ($trigger->getConditions() as $condition) {
+				$state = $this->triggerItemRepository->findOne($condition->getId());
+
+				if ($state === null || $state->getValidationResult() === false) {
+					$isFulfilled = false;
+				}
+			}
+		}
+
+		return array_merge((array) parent::getAttributes($trigger, $context), [
+			'is_fulfilled' => $isTriggered,
+			'is_triggered' => $isFulfilled,
+		]);
 	}
 
 	/**

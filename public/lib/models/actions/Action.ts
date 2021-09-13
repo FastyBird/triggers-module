@@ -37,6 +37,8 @@ export default class Action extends Model implements ActionInterface {
       channel: this.string(null).nullable(),
       property: this.string(''),
 
+      isTriggered: this.attr(null),
+
       relationshipNames: this.attr([]),
 
       trigger: this.belongsTo(Trigger, 'id'),
@@ -57,6 +59,8 @@ export default class Action extends Model implements ActionInterface {
   device!: string
   channel!: string
   property!: string
+
+  isTriggered!: boolean | null
 
   relationshipNames!: string[]
 

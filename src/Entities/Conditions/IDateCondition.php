@@ -40,4 +40,11 @@ interface IDateCondition extends ICondition
 	 */
 	public function getDate(): DateTimeInterface;
 
+	/**
+	 * @param DateTimeInterface $date
+	 *
+	 * @return bool
+	 */
+	public function validate(DateTimeInterface $date): bool;
+
 }

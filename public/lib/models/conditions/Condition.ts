@@ -50,6 +50,8 @@ export default class Condition extends Model implements ConditionInterface {
       // Date condition
       date: this.attr(null),
 
+      isFulfilled: this.attr(null),
+
       relationshipNames: this.attr([]),
 
       trigger: this.belongsTo(Trigger, 'id'),
@@ -76,6 +78,8 @@ export default class Condition extends Model implements ConditionInterface {
   days!: number[]
 
   date!: string
+
+  isFulfilled!: boolean | null
 
   relationshipNames!: string[]
 

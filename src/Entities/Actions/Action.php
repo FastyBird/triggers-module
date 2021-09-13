@@ -134,6 +134,14 @@ abstract class Action implements IAction
 	/**
 	 * {@inheritDoc}
 	 */
+	public function validate(string $value): bool
+	{
+		return $this->value === $value;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function toArray(): array
 	{
 		return [

@@ -18,6 +18,7 @@ namespace FastyBird\TriggersModule\Schemas\Actions;
 use FastyBird\JsonApi\Schemas as JsonApiSchemas;
 use FastyBird\TriggersModule;
 use FastyBird\TriggersModule\Entities;
+use FastyBird\TriggersModule\Models;
 use FastyBird\TriggersModule\Router;
 use FastyBird\TriggersModule\Schemas;
 use IPub\SlimRouter\Routing;
@@ -45,10 +46,15 @@ abstract class ActionSchema extends JsonApiSchemas\JsonApiSchema
 	/** @var Routing\IRouter */
 	protected Routing\IRouter $router;
 
+	/** @var Models\States\ITriggerItemRepository|null */
+	private ?Models\States\ITriggerItemRepository $triggerItemRepository;
+
 	public function __construct(
-		Routing\IRouter $router
+		Routing\IRouter $router,
+		?Models\States\ITriggerItemRepository $triggerItemRepository
 	) {
 		$this->router = $router;
+		$this->triggerItemRepository = $triggerItemRepository;
 	}
 
 	/**
@@ -63,8 +69,11 @@ abstract class ActionSchema extends JsonApiSchemas\JsonApiSchema
 	 */
 	public function getAttributes($action, JsonApi\Contracts\Schema\ContextInterface $context): iterable
 	{
+		$state = $this->triggerItemRepository === null ? null : $this->triggerItemRepository->findOne($action->getId());
+
 		return [
-			'enabled' => $action->isEnabled(),
+			'enabled'      => $action->isEnabled(),
+			'is_triggered' => $state !== null && $state->getValidationResult(),
 		];
 	}
 

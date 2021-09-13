@@ -35,6 +35,8 @@ export interface ActionInterface {
   channel?: string
   property: string
 
+  isTriggered: boolean | null
+
   // Relations
   relationshipNames: string[]
 

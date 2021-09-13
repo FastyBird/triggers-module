@@ -53,4 +53,11 @@ interface ITimeCondition extends ICondition
 	 */
 	public function getDays(): Utils\ArrayHash;
 
+	/**
+	 * @param DateTimeInterface $date
+	 *
+	 * @return bool
+	 */
+	public function validate(DateTimeInterface $date): bool;
+
 }

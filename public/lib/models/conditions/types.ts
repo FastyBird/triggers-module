@@ -48,6 +48,8 @@ export interface ConditionInterface {
   // Date conditions specific
   date?: string
 
+  isFulfilled: boolean | null
+
   // Relations
   relationshipNames: string[]
 

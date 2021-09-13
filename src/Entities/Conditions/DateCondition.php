@@ -80,6 +80,14 @@ class DateCondition extends Condition implements IDateCondition
 	/**
 	 * {@inheritDoc}
 	 */
+	public function validate(DateTimeInterface $date): bool
+	{
+		return $date->getTimestamp() === $this->date->getTimestamp();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function toArray(): array
 	{
 		return array_merge(parent::toArray(), [

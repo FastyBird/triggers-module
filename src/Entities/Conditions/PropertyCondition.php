@@ -101,6 +101,26 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	/**
 	 * {@inheritDoc}
 	 */
+	public function validate(string $value): bool
+	{
+		if ($this->operator->equalsValue(ModulesMetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_EQUAL)) {
+			return $this->operand === $value;
+		}
+
+		if ($this->operator->equalsValue(ModulesMetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_ABOVE)) {
+			return (float) $this->operand < (float) $value;
+		}
+
+		if ($this->operator->equalsValue(ModulesMetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_BELOW)) {
+			return (float) $this->operand > (float) $value;
+		}
+
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function toArray(): array
 	{
 		return array_merge(parent::toArray(), [
