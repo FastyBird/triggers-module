@@ -189,6 +189,8 @@ class TriggersRepository:
     def __create_item(entity: TriggerEntity) -> TriggerItem:
         return TriggerItem(
             trigger_id=entity.trigger_id,
+            name=entity.name,
+            comment=entity.comment,
             enabled=entity.enabled,
         )
 
@@ -198,6 +200,8 @@ class TriggersRepository:
     def __update_item(item: TriggerItem, data: Dict) -> TriggerItem:
         return TriggerItem(
             trigger_id=item.trigger_id,
+            name=data.get("name", item.name),
+            comment=data.get("comment", item.comment),
             enabled=bool(data.get("enabled", item.enabled)),
         )
 
@@ -318,26 +322,6 @@ class ActionsRepository:
                 actions.append(action)
 
         return actions
-
-    # -----------------------------------------------------------------------------
-
-    def validate_property_action(
-            self,
-            action_id: uuid.UUID,
-            property_value: str
-    ) -> bool:
-        """Validate action by id and property value"""
-        action = self.get_by_id(action_id)
-
-        if action is None or not isinstance(action, (DevicePropertyActionItem, ChannelPropertyActionItem)):
-            return False
-
-        result: bool = action.validate(property_value=property_value)
-
-        # Replace action to keep stored validation result
-        self.__items[action.action_id.__str__()] = action
-
-        return result
 
     # -----------------------------------------------------------------------------
 
@@ -618,26 +602,6 @@ class ConditionsRepository:
                 conditions.append(condition)
 
         return conditions
-
-    # -----------------------------------------------------------------------------
-
-    def validate_property_condition(
-        self,
-        condition_id: uuid.UUID,
-        property_value: str
-    ) -> bool:
-        """Validate condition by id and property values"""
-        condition = self.get_by_id(condition_id)
-
-        if condition is None or not isinstance(condition, (DevicePropertyConditionItem, ChannelPropertyConditionItem)):
-            return False
-
-        result: bool = condition.validate(property_value=property_value)
-
-        # Replace condition to keep stored validation result
-        self.__items[condition.condition_id.__str__()] = condition
-
-        return result
 
     # -----------------------------------------------------------------------------
 

@@ -22,12 +22,17 @@ Entities cache to prevent database overloading
 import datetime
 import uuid
 from abc import ABC
-from typing import List
-from modules_metadata.triggers_module import TriggerConditionOperator
+from typing import List, Dict
+from modules_metadata.triggers_module import (
+    TriggerType,
+    TriggerConditionOperator,
+    TriggerConditionType,
+    TriggerActionType,
+)
 from modules_metadata.types import SwitchPayload
 
 
-class TriggerItem:
+class TriggerItem(ABC):
     """
     Trigger entity item
 
@@ -37,12 +42,22 @@ class TriggerItem:
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
     __trigger_id: uuid.UUID
+    __name: str
+    __comment: str or None
     __enabled: bool
 
     # -----------------------------------------------------------------------------
 
-    def __init__(self, trigger_id: uuid.UUID, enabled: bool) -> None:
+    def __init__(
+        self,
+        trigger_id: uuid.UUID,
+        name: str,
+        comment: str or None,
+        enabled: bool,
+    ) -> None:
         self.__trigger_id = trigger_id
+        self.__name = name
+        self.__comment = comment
         self.__enabled = enabled
 
     # -----------------------------------------------------------------------------
@@ -55,9 +70,64 @@ class TriggerItem:
     # -----------------------------------------------------------------------------
 
     @property
+    def name(self) -> str:
+        """Trigger user name"""
+        return self.__name
+
+    # -----------------------------------------------------------------------------
+
+    @property
+    def comment(self) -> str or None:
+        """Trigger user description"""
+        return self.__comment
+
+    # -----------------------------------------------------------------------------
+
+    @property
     def enabled(self) -> bool:
         """Flag informing if trigger is enabled"""
         return self.__enabled
+
+    # -----------------------------------------------------------------------------
+
+    def to_dict(self) -> Dict[str, str or int or bool or None]:
+        """Convert condition item to dictionary"""
+        return {
+            "id": self.trigger_id.__str__(),
+            "name": self.name,
+            "comment": self.comment,
+            "enabled": self.enabled,
+        }
+
+
+class AutomaticTriggerItem(TriggerItem):
+    """
+    Automatic trigger entity item
+
+    @package        FastyBird:TriggersModule!
+    @module         items
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    def to_dict(self) -> Dict[str, str or int or bool or None]:
+        return {**{
+            "type": TriggerType(TriggerType.AUTOMATIC).value,
+        }, **super().to_dict()}
+
+
+class ManualTriggerItem(TriggerItem):
+    """
+    Manual trigger entity item
+
+    @package        FastyBird:TriggersModule!
+    @module         items
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    def to_dict(self) -> Dict[str, str or int or bool or None]:
+        return {**{
+            "type": TriggerType(TriggerType.MANUAL).value,
+        }, **super().to_dict()}
 
 
 class ConditionItem(ABC):
@@ -106,6 +176,16 @@ class ConditionItem(ABC):
         """Flag informing if condition is enabled"""
         return self.__enabled
 
+    # -----------------------------------------------------------------------------
+
+    def to_dict(self) -> Dict[str, str or int or bool or None]:
+        """Convert condition item to dictionary"""
+        return {
+            "id": self.condition_id.__str__(),
+            "trigger": self.trigger_id.__str__(),
+            "enabled": self.enabled,
+        }
+
 
 class PropertyConditionItem(ConditionItem):
     """
@@ -120,8 +200,6 @@ class PropertyConditionItem(ConditionItem):
     __operand: str
 
     __device: uuid.UUID
-
-    __is_fulfilled: bool = False
 
     # -----------------------------------------------------------------------------
 
@@ -167,36 +245,30 @@ class PropertyConditionItem(ConditionItem):
 
     # -----------------------------------------------------------------------------
 
-    @property
-    def is_fulfilled(self) -> bool:
-        """Property condition is fulfilled flag"""
-        return self.__is_fulfilled
-
-    # -----------------------------------------------------------------------------
-
     def validate(
         self,
         property_value: str
     ) -> bool:
         """Property value validation"""
         if self.__operator == TriggerConditionOperator.EQUAL:
-            self.__is_fulfilled = self.operand == property_value
-
-            return self.is_fulfilled
+            return self.operand == property_value
 
         if self.__operator == TriggerConditionOperator.ABOVE:
-            self.__is_fulfilled = self.operand < property_value
-
-            return self.is_fulfilled
+            return self.operand < property_value
 
         if self.__operator == TriggerConditionOperator.BELOW:
-            self.__is_fulfilled = self.operand > property_value
+            return self.operand > property_value
 
-            return self.is_fulfilled
+        return False
 
-        self.__is_fulfilled = False
+    # -----------------------------------------------------------------------------
 
-        return self.is_fulfilled
+    def to_dict(self) -> Dict[str, str or int or bool or None]:
+        return {**{
+            "device": self.device.__str__(),
+            "operator": self.operator.value,
+            "operand": self.operand,
+        }, **super().to_dict()}
 
 
 class DevicePropertyConditionItem(PropertyConditionItem):
@@ -233,6 +305,14 @@ class DevicePropertyConditionItem(PropertyConditionItem):
     def device_property(self) -> uuid.UUID:
         """Device property identifier"""
         return self.__device_property
+
+    # -----------------------------------------------------------------------------
+
+    def to_dict(self) -> Dict[str, str or int or bool or None]:
+        return {**{
+            "type": TriggerConditionType(TriggerConditionType.DEVICE_PROPERTY).value,
+            "property": self.device_property.__str__(),
+        }, **super().to_dict()}
 
 
 class ChannelPropertyConditionItem(PropertyConditionItem):
@@ -280,6 +360,15 @@ class ChannelPropertyConditionItem(PropertyConditionItem):
         """Channel property identifier"""
         return self.__channel_property
 
+    # -----------------------------------------------------------------------------
+
+    def to_dict(self) -> Dict[str, str or int or bool or None]:
+        return {**{
+            "type": TriggerConditionType(TriggerConditionType.CHANNEL_PROPERTY).value,
+            "channel": self.channel.__str__(),
+            "property": self.channel_property.__str__(),
+        }, **super().to_dict()}
+
 
 class TimeConditionItem(ConditionItem):
     """
@@ -322,6 +411,15 @@ class TimeConditionItem(ConditionItem):
         """Condition days array"""
         return self.__days
 
+    # -----------------------------------------------------------------------------
+
+    def to_dict(self) -> Dict[str, str or int or bool or None]:
+        return {**{
+            "type": TriggerConditionType(TriggerConditionType.TIME).value,
+            "time": r"1970-01-01\T{}+00:00".format(str(self.time)),
+            "days": self.days,
+        }, **super().to_dict()}
+
 
 class DateConditionItem(ConditionItem):
     """
@@ -353,6 +451,14 @@ class DateConditionItem(ConditionItem):
     def date(self) -> datetime.datetime:
         """Condition date"""
         return self.__date
+
+    # -----------------------------------------------------------------------------
+
+    def to_dict(self) -> Dict[str, str or int or bool or None]:
+        return {**{
+            "type": TriggerConditionType(TriggerConditionType.DATE).value,
+            "date": self.date.strftime(r"%Y-%m-%d\T%H:%M:%S+00:00"),
+        }, **super().to_dict()}
 
 
 class ActionItem(ABC):
@@ -401,6 +507,16 @@ class ActionItem(ABC):
         """Flag informing if action is enabled"""
         return self.__enabled
 
+    # -----------------------------------------------------------------------------
+
+    def to_dict(self) -> Dict[str, str or int or bool or None]:
+        """Convert condition item to dictionary"""
+        return {
+            "id": self.action_id.__str__(),
+            "trigger": self.trigger_id.__str__(),
+            "enabled": self.enabled,
+        }
+
 
 class PropertyActionItem(ActionItem):
     """
@@ -414,8 +530,6 @@ class PropertyActionItem(ActionItem):
     __value: str
 
     __device: uuid.UUID
-
-    __is_triggered: bool = False
 
     # -----------------------------------------------------------------------------
 
@@ -452,26 +566,26 @@ class PropertyActionItem(ActionItem):
 
     # -----------------------------------------------------------------------------
 
-    @property
-    def is_triggered(self) -> bool:
-        """Action property is triggered flag"""
-        return self.__is_triggered
-
-    # -----------------------------------------------------------------------------
-
     def validate(
         self,
         property_value: str
     ) -> bool:
         """Property value validation"""
         if self.__value == SwitchPayload(SwitchPayload.TOGGLE).value:
-            self.__is_triggered = False
+            return False
 
-            return self.is_triggered
+        if self.__value == property_value:
+            return True
 
-        self.__is_triggered = self.__value == property_value
+        return False
 
-        return self.is_triggered
+    # -----------------------------------------------------------------------------
+
+    def to_dict(self) -> Dict[str, str or int or bool or None]:
+        return {**{
+            "device": self.device.__str__(),
+            "value": self.value,
+        }, **super().to_dict()}
 
 
 class DevicePropertyActionItem(PropertyActionItem):
@@ -507,6 +621,14 @@ class DevicePropertyActionItem(PropertyActionItem):
     def device_property(self) -> uuid.UUID:
         """Device property identifier"""
         return self.__device_property
+
+    # -----------------------------------------------------------------------------
+
+    def to_dict(self) -> Dict[str, str or int or bool or None]:
+        return {**{
+            "type": TriggerActionType(TriggerActionType.DEVICE_PROPERTY).value,
+            "property": self.device_property.__str__(),
+        }, **super().to_dict()}
 
 
 class ChannelPropertyActionItem(PropertyActionItem):
@@ -552,3 +674,12 @@ class ChannelPropertyActionItem(PropertyActionItem):
     def channel_property(self) -> uuid.UUID:
         """Channel property identifier"""
         return self.__channel_property
+
+    # -----------------------------------------------------------------------------
+
+    def to_dict(self) -> Dict[str, str or int or bool or None]:
+        return {**{
+            "type": TriggerActionType(TriggerActionType.CHANNEL_PROPERTY).value,
+            "channel": self.channel.__str__(),
+            "property": self.channel_property.__str__(),
+        }, **super().to_dict()}
