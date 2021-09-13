@@ -436,7 +436,6 @@ class ActionsRepository:
                 value=entity.value,
                 device_property=entity.device_property,
                 device=entity.device,
-                is_triggered=False,
             )
 
         if isinstance(entity, ChannelPropertyActionEntity):
@@ -448,7 +447,6 @@ class ActionsRepository:
                 channel_property=entity.channel_property,
                 channel=entity.channel,
                 device=entity.device,
-                is_triggered=False,
             )
 
         return None
@@ -465,7 +463,6 @@ class ActionsRepository:
                 value=data.get("value", item.value),
                 device_property=item.device_property,
                 device=item.device,
-                is_triggered=item.is_triggered,
             )
 
         if isinstance(item, ChannelPropertyActionItem):
@@ -477,7 +474,6 @@ class ActionsRepository:
                 channel_property=item.channel_property,
                 channel=item.channel,
                 device=item.device,
-                is_triggered=item.is_triggered,
             )
 
         return None
@@ -719,7 +715,6 @@ class ConditionsRepository:
                 operand=entity.operand,
                 device_property=entity.device_property,
                 device=entity.device,
-                is_fulfilled=False,
             )
 
         if isinstance(entity, ChannelPropertyConditionEntity):
@@ -732,7 +727,6 @@ class ConditionsRepository:
                 channel_property=entity.channel_property,
                 channel=entity.channel,
                 device=entity.device,
-                is_fulfilled=False,
             )
 
         if isinstance(entity, TimeConditionEntity):
@@ -767,7 +761,6 @@ class ConditionsRepository:
                 operand=data.get("operand", item.operand),
                 device_property=item.device_property,
                 device=item.device,
-                is_fulfilled=item.is_fulfilled,
             )
 
         if isinstance(item, ChannelPropertyConditionItem):
@@ -780,7 +773,6 @@ class ConditionsRepository:
                 channel_property=item.channel_property,
                 channel=item.channel,
                 device=item.device,
-                is_fulfilled=item.is_fulfilled,
             )
 
         if isinstance(item, TimeConditionItem):
