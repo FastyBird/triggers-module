@@ -412,6 +412,7 @@ class TimeConditionItem(ConditionItem):
         self,
         date: datetime.datetime,
     ) -> bool:
+        """Condition validation"""
         pass
 
     # -----------------------------------------------------------------------------
@@ -461,6 +462,7 @@ class DateConditionItem(ConditionItem):
         self,
         date: datetime.datetime,
     ) -> bool:
+        """Condition validation"""
         pass
 
     # -----------------------------------------------------------------------------
