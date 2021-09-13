@@ -6,7 +6,6 @@ use DateTime;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Models;
 use FastyBird\TriggersModule\Queries;
-use IPub\DoctrineOrmQuery;
 use Ramsey\Uuid;
 use Tester\Assert;
 
