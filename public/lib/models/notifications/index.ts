@@ -110,7 +110,7 @@ const moduleActions: ActionTree<NotificationState, any> = {
       )
 
       return true
-    } catch (e) {
+    } catch (e: any) {
       throw new ApiError(
         'triggers-module.notifications.get.failed',
         e,
@@ -137,7 +137,7 @@ const moduleActions: ActionTree<NotificationState, any> = {
       await Notification.insert({
         data: Object.assign({}, payload.data, { id, draft, triggerId: payload.trigger.id }),
       })
-    } catch (e) {
+    } catch (e: any) {
       commit('CLEAR_SEMAPHORE', {
         type: SemaphoreTypes.CREATING,
         id,
@@ -181,7 +181,7 @@ const moduleActions: ActionTree<NotificationState, any> = {
         )
 
         return Notification.find(id)
-      } catch (e) {
+      } catch (e: any) {
         // Entity could not be created on api, we have to remove it from database
         await Notification.delete(id)
 
@@ -218,7 +218,7 @@ const moduleActions: ActionTree<NotificationState, any> = {
         where: payload.notification.id,
         data: payload.data,
       })
-    } catch (e) {
+    } catch (e: any) {
       commit('CLEAR_SEMAPHORE', {
         type: SemaphoreTypes.UPDATING,
         id: payload.notification.id,
@@ -270,7 +270,7 @@ const moduleActions: ActionTree<NotificationState, any> = {
         )
 
         return Notification.find(payload.notification.id)
-      } catch (e) {
+      } catch (e: any) {
         const trigger = Trigger.find(payload.notification.triggerId)
 
         if (trigger !== null) {
@@ -330,7 +330,7 @@ const moduleActions: ActionTree<NotificationState, any> = {
       )
 
       return Notification.find(payload.notification.id)
-    } catch (e) {
+    } catch (e: any) {
       throw new ApiError(
         'triggers-module.notifications.save.failed',
         e,
@@ -360,7 +360,7 @@ const moduleActions: ActionTree<NotificationState, any> = {
 
     try {
       await Notification.delete(payload.notification.id)
-    } catch (e) {
+    } catch (e: any) {
       commit('CLEAR_SEMAPHORE', {
         type: SemaphoreTypes.DELETING,
         id: payload.notification.id,
@@ -390,7 +390,7 @@ const moduleActions: ActionTree<NotificationState, any> = {
         )
 
         return true
-      } catch (e) {
+      } catch (e: any) {
         const trigger = await Trigger.find(payload.notification.triggerId)
 
         if (trigger !== null) {
@@ -450,7 +450,7 @@ const moduleActions: ActionTree<NotificationState, any> = {
 
         try {
           await Notification.delete(body.id)
-        } catch (e) {
+        } catch (e: any) {
           throw new OrmError(
             'triggers-module.notifications.delete.failed',
             e,
@@ -508,7 +508,7 @@ const moduleActions: ActionTree<NotificationState, any> = {
           await Notification.insertOrUpdate({
             data: entityData,
           })
-        } catch (e) {
+        } catch (e: any) {
           const trigger = Trigger.query().where('id', body.trigger).first()
 
           if (trigger !== null) {

@@ -235,7 +235,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
       )
 
       return true
-    } catch (e) {
+    } catch (e: any) {
       throw new ApiError(
         'triggers-module.triggers.fetch.failed',
         e,
@@ -267,7 +267,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
       commit('SET_FIRST_LOAD', true)
 
       return true
-    } catch (e) {
+    } catch (e: any) {
       throw new ApiError(
         'triggers-module.triggers.fetch.failed',
         e,
@@ -330,7 +330,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
       await Trigger.insert({
         data: Object.assign({}, payload.data, { id, draft }),
       })
-    } catch (e) {
+    } catch (e: any) {
       commit('CLEAR_SEMAPHORE', {
         type: SemaphoreTypes.CREATING,
         id,
@@ -414,7 +414,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
         await Promise.all(promises)
 
         return createdTrigger
-      } catch (e) {
+      } catch (e: any) {
         // Entity could not be created on api, we have to remove it from database
         await Trigger.delete(id)
 
@@ -451,7 +451,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
         where: payload.trigger.id,
         data: payload.data,
       })
-    } catch (e) {
+    } catch (e: any) {
       commit('CLEAR_SEMAPHORE', {
         type: SemaphoreTypes.UPDATING,
         id: payload.trigger.id,
@@ -498,7 +498,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
         )
 
         return Trigger.find(payload.trigger.id)
-      } catch (e) {
+      } catch (e: any) {
         // Updating entity on api failed, we need to refresh entity
         await Trigger.get(
           payload.trigger.id,
@@ -594,7 +594,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
       }
 
       return createdTrigger
-    } catch (e) {
+    } catch (e: any) {
       throw new ApiError(
         'triggers-module.triggers.save.failed',
         e,
@@ -632,7 +632,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
 
     try {
       await Trigger.delete(payload.trigger.id)
-    } catch (e) {
+    } catch (e: any) {
       commit('CLEAR_SEMAPHORE', {
         type: SemaphoreTypes.DELETING,
         id: payload.trigger.id,
@@ -698,7 +698,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
           })
 
         return true
-      } catch (e) {
+      } catch (e: any) {
         // Deleting entity on api failed, we need to refresh entity
         await Trigger.get(
           payload.trigger.id,
@@ -780,7 +780,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
 
         try {
           await Trigger.delete(body.id)
-        } catch (e) {
+        } catch (e: any) {
           throw new OrmError(
             'triggers-module.triggers.delete.failed',
             e,
@@ -832,7 +832,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
           await Trigger.insertOrUpdate({
             data: entityData,
           })
-        } catch (e) {
+        } catch (e: any) {
           // Updating entity on api failed, we need to refresh entity
           await Trigger.get(
             body.id,

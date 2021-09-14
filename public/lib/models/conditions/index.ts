@@ -114,7 +114,7 @@ const moduleActions: ActionTree<ConditionState, any> = {
       )
 
       return true
-    } catch (e) {
+    } catch (e: any) {
       throw new ApiError(
         'triggers-module.conditions.get.failed',
         e,
@@ -141,7 +141,7 @@ const moduleActions: ActionTree<ConditionState, any> = {
       await Condition.insert({
         data: Object.assign({}, payload.data, { id, draft, triggerId: payload.trigger.id }),
       })
-    } catch (e) {
+    } catch (e: any) {
       commit('CLEAR_SEMAPHORE', {
         type: SemaphoreTypes.CREATING,
         id,
@@ -185,7 +185,7 @@ const moduleActions: ActionTree<ConditionState, any> = {
         )
 
         return Condition.find(id)
-      } catch (e) {
+      } catch (e: any) {
         // Entity could not be created on api, we have to remove it from database
         await Condition.delete(id)
 
@@ -222,7 +222,7 @@ const moduleActions: ActionTree<ConditionState, any> = {
         where: payload.condition.id,
         data: payload.data,
       })
-    } catch (e) {
+    } catch (e: any) {
       commit('CLEAR_SEMAPHORE', {
         type: SemaphoreTypes.UPDATING,
         id: payload.condition.id,
@@ -274,7 +274,7 @@ const moduleActions: ActionTree<ConditionState, any> = {
         )
 
         return Condition.find(payload.condition.id)
-      } catch (e) {
+      } catch (e: any) {
         const trigger = Trigger.find(payload.condition.triggerId)
 
         if (trigger !== null) {
@@ -334,7 +334,7 @@ const moduleActions: ActionTree<ConditionState, any> = {
       )
 
       return Condition.find(payload.condition.id)
-    } catch (e) {
+    } catch (e: any) {
       throw new ApiError(
         'triggers-module.conditions.save.failed',
         e,
@@ -364,7 +364,7 @@ const moduleActions: ActionTree<ConditionState, any> = {
 
     try {
       await Condition.delete(payload.condition.id)
-    } catch (e) {
+    } catch (e: any) {
       commit('CLEAR_SEMAPHORE', {
         type: SemaphoreTypes.DELETING,
         id: payload.condition.id,
@@ -394,7 +394,7 @@ const moduleActions: ActionTree<ConditionState, any> = {
         )
 
         return true
-      } catch (e) {
+      } catch (e: any) {
         const trigger = await Trigger.find(payload.condition.triggerId)
 
         if (trigger !== null) {
@@ -454,7 +454,7 @@ const moduleActions: ActionTree<ConditionState, any> = {
 
         try {
           await Condition.delete(body.id)
-        } catch (e) {
+        } catch (e: any) {
           throw new OrmError(
             'triggers-module.conditions.delete.failed',
             e,
@@ -520,7 +520,7 @@ const moduleActions: ActionTree<ConditionState, any> = {
           await Condition.insertOrUpdate({
             data: entityData,
           })
-        } catch (e) {
+        } catch (e: any) {
           const trigger = Trigger.query().where('id', body.trigger).first()
 
           if (trigger !== null) {
