@@ -34,6 +34,8 @@ from pony.orm import core as orm
 from triggers_module.exceptions import HandleExchangeDataException
 from triggers_module.models import (
     TriggerEntity,
+    AutomaticTriggerEntity,
+    ManualTriggerEntity,
     ActionEntity,
     DevicePropertyActionEntity,
     ChannelPropertyActionEntity,
@@ -45,6 +47,8 @@ from triggers_module.models import (
 )
 from triggers_module.items import (
     TriggerItem,
+    AutomaticTriggerItem,
+    ManualTriggerItem,
     ConditionItem,
     DevicePropertyConditionItem,
     ChannelPropertyConditionItem,
@@ -186,24 +190,46 @@ class TriggersRepository:
     # -----------------------------------------------------------------------------
 
     @staticmethod
-    def __create_item(entity: TriggerEntity) -> TriggerItem:
-        return TriggerItem(
-            trigger_id=entity.trigger_id,
-            name=entity.name,
-            comment=entity.comment,
-            enabled=entity.enabled,
-        )
+    def __create_item(entity: TriggerEntity) -> TriggerItem or None:
+        if isinstance(entity, AutomaticTriggerEntity):
+            return AutomaticTriggerItem(
+                trigger_id=entity.trigger_id,
+                name=entity.name,
+                comment=entity.comment,
+                enabled=entity.enabled,
+            )
+
+        if isinstance(entity, ManualTriggerEntity):
+            return ManualTriggerItem(
+                trigger_id=entity.trigger_id,
+                name=entity.name,
+                comment=entity.comment,
+                enabled=entity.enabled,
+            )
+
+        return None
 
     # -----------------------------------------------------------------------------
 
     @staticmethod
-    def __update_item(item: TriggerItem, data: Dict) -> TriggerItem:
-        return TriggerItem(
-            trigger_id=item.trigger_id,
-            name=data.get("name", item.name),
-            comment=data.get("comment", item.comment),
-            enabled=bool(data.get("enabled", item.enabled)),
-        )
+    def __update_item(item: TriggerItem, data: Dict) -> TriggerItem or None:
+        if isinstance(item, AutomaticTriggerItem):
+            return AutomaticTriggerItem(
+                trigger_id=item.trigger_id,
+                name=data.get("name", item.name),
+                comment=data.get("comment", item.comment),
+                enabled=bool(data.get("enabled", item.enabled)),
+            )
+
+        if isinstance(item, ManualTriggerItem):
+            return ManualTriggerItem(
+                trigger_id=item.trigger_id,
+                name=data.get("name", item.name),
+                comment=data.get("comment", item.comment),
+                enabled=bool(data.get("enabled", item.enabled)),
+            )
+
+        return None
 
     # -----------------------------------------------------------------------------
 

@@ -267,7 +267,7 @@ class DevicePropertyActionEntity(PropertyActionEntity):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    _discriminator_: str = "device_property"
+    _discriminator_: str = "device-property"
 
     device_property: uuid.UUID = Required(uuid.UUID, column="action_device_property", nullable=True)
 
@@ -296,7 +296,7 @@ class ChannelPropertyActionEntity(PropertyActionEntity):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    _discriminator_: str = "channel_property"
+    _discriminator_: str = "channel-property"
 
     channel: uuid.UUID = Required(uuid.UUID, column="action_channel", nullable=True)
     channel_property: uuid.UUID = Required(uuid.UUID, column="action_channel_property", nullable=True)
@@ -525,7 +525,7 @@ class DevicePropertyConditionEntity(PropertyConditionEntity):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    _discriminator_: str = "device_property"
+    _discriminator_: str = "device-property"
 
     device_property: uuid.UUID = Required(uuid.UUID, column="condition_device_property", nullable=True)
 
@@ -554,7 +554,7 @@ class ChannelPropertyConditionEntity(PropertyConditionEntity):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    _discriminator_: str = "channel_property"
+    _discriminator_: str = "channel-property"
 
     channel: uuid.UUID = Required(uuid.UUID, column="condition_channel", nullable=True)
     channel_property: uuid.UUID = Required(uuid.UUID, column="condition_channel_property", nullable=True)

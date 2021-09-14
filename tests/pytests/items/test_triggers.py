@@ -35,6 +35,7 @@ class TestTriggersRepository(DbTestCase):
 
         self.assertEqual({
             "id": "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
+            "type": "manual",
             "name": "Good Night's Sleep",
             "comment": None,
             "enabled": True,

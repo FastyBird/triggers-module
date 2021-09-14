@@ -35,8 +35,8 @@ use Throwable;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="condition_type", type="string", length=20)
  * @ORM\DiscriminatorMap({
- *    "device_property"   = "FastyBird\TriggersModule\Entities\Conditions\DevicePropertyCondition",
- *    "channel_property"  = "FastyBird\TriggersModule\Entities\Conditions\ChannelPropertyCondition",
+ *    "device-property"   = "FastyBird\TriggersModule\Entities\Conditions\DevicePropertyCondition",
+ *    "channel-property"  = "FastyBird\TriggersModule\Entities\Conditions\ChannelPropertyCondition",
  *    "date"              = "FastyBird\TriggersModule\Entities\Conditions\DateCondition",
  *    "time"              = "FastyBird\TriggersModule\Entities\Conditions\TimeCondition"
  * })

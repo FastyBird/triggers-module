@@ -86,7 +86,17 @@ class TestConditionsRepository(DbTestCase):
         self.assertIsInstance(condition_item, PropertyConditionItem)
         self.assertIsInstance(condition_item, ChannelPropertyConditionItem)
         self.assertEqual("2726f19c-7759-440e-b6f5-8c3306692fa2", condition_item.condition_id.__str__())
-        self.assertIsInstance(condition_item.operator, TriggerConditionOperator)
+        self.assertEqual({
+            "id": "2726f19c-7759-440e-b6f5-8c3306692fa2",
+            "type": TriggerConditionType(TriggerConditionType.CHANNEL_PROPERTY).value,
+            "enabled": False,
+            "device": "28989c89-e7d7-4664-9d18-a73647a844fb",
+            "channel": "5421c268-8f5d-4972-a7b5-6b4295c3e4b1",
+            "property": "ff7b36d7-a0b0-4336-9efb-a608c93b0974",
+            "operand": "3",
+            "operator": TriggerConditionOperator(TriggerConditionOperator.EQUAL).value,
+            "trigger": "2cea2c1b-4790-4d82-8a9f-902c7155ab36",
+        }, condition_item.to_dict())
 
     # -----------------------------------------------------------------------------
 
@@ -126,9 +136,17 @@ class TestConditionsRepository(DbTestCase):
         self.assertIsInstance(condition_item, PropertyConditionItem)
         self.assertIsInstance(condition_item, ChannelPropertyConditionItem)
         self.assertEqual("2726f19c-7759-440e-b6f5-8c3306692fa2", condition_item.condition_id.__str__())
-        self.assertTrue(condition_item.enabled)
-        self.assertEqual("1", condition_item.operand)
-        self.assertIsInstance(condition_item.operator, TriggerConditionOperator)
+        self.assertEqual({
+            "id": "2726f19c-7759-440e-b6f5-8c3306692fa2",
+            "type": TriggerConditionType(TriggerConditionType.CHANNEL_PROPERTY).value,
+            "enabled": True,
+            "device": "28989c89-e7d7-4664-9d18-a73647a844fb",
+            "channel": "5421c268-8f5d-4972-a7b5-6b4295c3e4b1",
+            "property": "ff7b36d7-a0b0-4336-9efb-a608c93b0974",
+            "operand": "1",
+            "operator": TriggerConditionOperator(TriggerConditionOperator.EQUAL).value,
+            "trigger": "2cea2c1b-4790-4d82-8a9f-902c7155ab36",
+        }, condition_item.to_dict())
 
     # -----------------------------------------------------------------------------
 

@@ -67,7 +67,7 @@ class TestActionsRepository(DbTestCase):
             {
                 "id": "4aa84028-d8b7-4128-95b2-295763634aa4",
                 "type": TriggerActionType(TriggerActionType.CHANNEL_PROPERTY).value,
-                "enabled": True,
+                "enabled": False,
                 "device": "a830828c-6768-4274-b909-20ce0e222347",
                 "channel": "4f692f94-5be6-4384-94a7-60c424a5f723",
                 "property": "7bc1fc81-8ace-409d-b044-810140e2361a",
@@ -85,6 +85,16 @@ class TestActionsRepository(DbTestCase):
         self.assertIsInstance(action_item, PropertyActionItem)
         self.assertIsInstance(action_item, ChannelPropertyActionItem)
         self.assertEqual("4aa84028-d8b7-4128-95b2-295763634aa4", action_item.action_id.__str__())
+        self.assertEqual({
+            "id": "4aa84028-d8b7-4128-95b2-295763634aa4",
+            "type": TriggerActionType(TriggerActionType.CHANNEL_PROPERTY).value,
+            "enabled": False,
+            "device": "a830828c-6768-4274-b909-20ce0e222347",
+            "channel": "4f692f94-5be6-4384-94a7-60c424a5f723",
+            "property": "7bc1fc81-8ace-409d-b044-810140e2361a",
+            "value": "on",
+            "trigger": "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
+        }, action_item.to_dict())
 
     # -----------------------------------------------------------------------------
 
@@ -123,8 +133,16 @@ class TestActionsRepository(DbTestCase):
         self.assertIsInstance(action_item, PropertyActionItem)
         self.assertIsInstance(action_item, ChannelPropertyActionItem)
         self.assertEqual("4aa84028-d8b7-4128-95b2-295763634aa4", action_item.action_id.__str__())
-        self.assertTrue(action_item.enabled)
-        self.assertEqual("off", action_item.value)
+        self.assertEqual({
+            "id": "4aa84028-d8b7-4128-95b2-295763634aa4",
+            "type": TriggerActionType(TriggerActionType.CHANNEL_PROPERTY).value,
+            "enabled": True,
+            "device": "a830828c-6768-4274-b909-20ce0e222347",
+            "channel": "4f692f94-5be6-4384-94a7-60c424a5f723",
+            "property": "7bc1fc81-8ace-409d-b044-810140e2361a",
+            "value": "off",
+            "trigger": "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
+        }, action_item.to_dict())
 
     # -----------------------------------------------------------------------------
 

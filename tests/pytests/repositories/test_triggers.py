@@ -18,7 +18,7 @@ from modules_metadata.routing import RoutingKey
 from modules_metadata.triggers_module import TriggerType
 
 # Library libs
-from triggers_module.items import TriggerItem
+from triggers_module.items import TriggerItem, ManualTriggerItem
 from triggers_module.reposetories import triggers_repository
 
 # Tests libs
@@ -52,10 +52,10 @@ class TestTriggersRepository(DbTestCase):
             RoutingKey(RoutingKey.TRIGGERS_ENTITY_CREATED),
             {
                 "id": "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
-                "type": TriggerType(TriggerType.AUTOMATIC).value,
-                "enabled": True,
+                "type": TriggerType(TriggerType.MANUAL).value,
                 "name": "Good Night's Sleep",
                 "comment": None,
+                "enabled": True,
             },
         )
 
@@ -66,7 +66,15 @@ class TestTriggersRepository(DbTestCase):
         )
 
         self.assertIsInstance(trigger_item, TriggerItem)
+        self.assertIsInstance(trigger_item, ManualTriggerItem)
         self.assertEqual("c64ba1c4-0eda-4cab-87a0-4d634f7b67f4", trigger_item.trigger_id.__str__())
+        self.assertEqual({
+            "id": "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
+            "type": TriggerType(TriggerType.MANUAL).value,
+            "enabled": True,
+            "name": "Good Night's Sleep",
+            "comment": None,
+        }, trigger_item.to_dict())
 
     # -----------------------------------------------------------------------------
 
@@ -85,9 +93,9 @@ class TestTriggersRepository(DbTestCase):
             RoutingKey(RoutingKey.TRIGGERS_ENTITY_UPDATED),
             {
                 "id": "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
-                "type": TriggerType(TriggerType.AUTOMATIC).value,
+                "type": TriggerType(TriggerType.MANUAL).value,
                 "enabled": False,
-                "name": "Good Night's Sleep",
+                "name": "Good Night's Sleep with change",
                 "comment": None,
             },
         )
@@ -100,7 +108,13 @@ class TestTriggersRepository(DbTestCase):
 
         self.assertIsInstance(trigger_item, TriggerItem)
         self.assertEqual("c64ba1c4-0eda-4cab-87a0-4d634f7b67f4", trigger_item.trigger_id.__str__())
-        self.assertFalse(trigger_item.enabled)
+        self.assertEqual({
+            "id": "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
+            "type": TriggerType(TriggerType.MANUAL).value,
+            "enabled": False,
+            "name": "Good Night's Sleep with change",
+            "comment": None,
+        }, trigger_item.to_dict())
 
     # -----------------------------------------------------------------------------
 
@@ -118,7 +132,7 @@ class TestTriggersRepository(DbTestCase):
             RoutingKey(RoutingKey.TRIGGERS_ENTITY_DELETED),
             {
                 "id": "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
-                "type": TriggerType(TriggerType.AUTOMATIC).value,
+                "type": TriggerType(TriggerType.MANUAL).value,
                 "enabled": True,
                 "name": "Good Night's Sleep",
                 "comment": None,
