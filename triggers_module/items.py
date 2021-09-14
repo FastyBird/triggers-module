@@ -413,15 +413,27 @@ class TimeConditionItem(ConditionItem):
         date: datetime.datetime,
     ) -> bool:
         """Condition validation"""
+        if date.isoweekday() not in self.days:
+            return False
+
+        return date.strftime("%H:%M:%S") == self.__format_time()
 
     # -----------------------------------------------------------------------------
 
     def to_dict(self) -> Dict[str, str or int or bool or None]:
         return {**{
             "type": TriggerConditionType(TriggerConditionType.TIME).value,
-            "time": r"1970-01-01\T{}+00:00".format(str(self.time)),
+            "time": r"1970-01-01\T{}+00:00".format(self.__format_time()),
             "days": self.days,
         }, **super().to_dict()}
+
+    # -----------------------------------------------------------------------------
+
+    def __format_time(self) -> str:
+        mm, ss = divmod(self.time.seconds, 60)
+        hh, mm = divmod(mm, 60)
+
+        return "%02d:%02d:%02d" % (hh, mm, ss)
 
 
 class DateConditionItem(ConditionItem):

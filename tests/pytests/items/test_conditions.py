@@ -13,10 +13,11 @@
 #     limitations under the License.
 
 # Test dependencies
+import datetime
 import uuid
 
 # Library libs
-from triggers_module.items import PropertyConditionItem, ChannelPropertyConditionItem
+from triggers_module.items import PropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem
 from triggers_module.reposetories import conditions_repository
 
 # Tests libs
@@ -46,6 +47,21 @@ class TestConditionItem(DbTestCase):
             "operator": "eq",
         }, condition_item.to_dict())
 
+        condition_item = conditions_repository.get_by_id(
+            uuid.UUID("09c453b3-c55f-4050-8f1c-b50f8d5728c2", version=4)
+        )
+
+        self.assertIsInstance(condition_item, TimeConditionItem)
+
+        self.assertEqual({
+            "id": "09c453b3-c55f-4050-8f1c-b50f8d5728c2",
+            "type": "time",
+            "enabled": False,
+            "trigger": "1b17bcaa-a19e-45f0-98b4-56211cc648ae",
+            "time": r"1970-01-01\T07:30:00+00:00",
+            "days": [1, 2, 3, 4, 5, 6, 7],
+        }, condition_item.to_dict())
+
     # -----------------------------------------------------------------------------
 
     def test_validate(self) -> None:
@@ -61,3 +77,15 @@ class TestConditionItem(DbTestCase):
         self.assertTrue(condition_item.validate("3"))
 
         self.assertFalse(condition_item.validate("1"))
+
+        condition_item = conditions_repository.get_by_id(
+            uuid.UUID("09c453b3-c55f-4050-8f1c-b50f8d5728c2", version=4)
+        )
+
+        self.assertIsInstance(condition_item, TimeConditionItem)
+
+        self.assertTrue(condition_item.validate(datetime.datetime(1970, 1, 1, 7, 30)))
+        self.assertTrue(condition_item.validate(datetime.datetime(2021, 9, 14, 7, 30)))
+
+        self.assertFalse(condition_item.validate(datetime.datetime(1970, 1, 1, 7, 31)))
+        self.assertFalse(condition_item.validate(datetime.datetime(2021, 9, 14, 7, 31)))
