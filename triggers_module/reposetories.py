@@ -15,7 +15,7 @@
 #     limitations under the License.
 
 """
-Module models definitions
+Module repositories definitions
 """
 
 # Library dependencies
@@ -62,7 +62,7 @@ class TriggersRepository:
     Triggers repository
 
     @package        FastyBird:TriggersModule!
-    @module         models
+    @module         repositories
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
