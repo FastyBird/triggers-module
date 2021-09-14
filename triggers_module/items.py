@@ -430,10 +430,10 @@ class TimeConditionItem(ConditionItem):
     # -----------------------------------------------------------------------------
 
     def __format_time(self) -> str:
-        mm, ss = divmod(self.time.seconds, 60)
-        hh, mm = divmod(mm, 60)
+        minutes, seconds = divmod(self.time.seconds, 60)
+        hours, minutes = divmod(minutes, 60)
 
-        return "%02d:%02d:%02d" % (hh, mm, ss)
+        return "%02d:%02d:%02d" % (hours, minutes, seconds)
 
 
 class DateConditionItem(ConditionItem):
