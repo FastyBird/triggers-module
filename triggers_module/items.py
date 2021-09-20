@@ -423,7 +423,7 @@ class TimeConditionItem(ConditionItem):
     def to_dict(self) -> Dict[str, str or int or bool or None]:
         return {**{
             "type": TriggerConditionType(TriggerConditionType.TIME).value,
-            "time": r"1970-01-01\T{}+00:00".format(self.__format_time()),
+            "time": f"1970-01-01\T{self.__format_time()}+00:00",
             "days": self.days,
         }, **super().to_dict()}
 
@@ -433,7 +433,7 @@ class TimeConditionItem(ConditionItem):
         minutes, seconds = divmod(self.time.seconds, 60)
         hours, minutes = divmod(minutes, 60)
 
-        return "%02d:%02d:%02d" % (hours, minutes, seconds)
+        return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
 
 class DateConditionItem(ConditionItem):
