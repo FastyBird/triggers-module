@@ -5,6 +5,7 @@ namespace Tests\Cases;
 use FastyBird\WebServer\Http;
 use Fig\Http\Message\RequestMethodInterface;
 use IPub\SlimRouter;
+use Nette\Utils;
 use React\Http\Message\ServerRequest;
 use Tester\Assert;
 use Tests\Tools;
@@ -82,9 +83,24 @@ final class TriggersV1ControllerTest extends DbTestCase
 
 		$response = $router->handle($request);
 
+		$body = (string) $response->getBody();
+
+		$actual = Utils\Json::decode($body, Utils\Json::FORCE_ARRAY);
+
 		Tools\JsonAssert::assertFixtureMatch(
 			$fixture,
-			(string) $response->getBody()
+			$body,
+			function (string $expectation) use ($actual): string {
+				if (isset($actual['data']['relationships']['controls'])) {
+					$expectation = str_replace(
+						'__CONTROL_IDENTIFIER_PLACEHOLDER__',
+						$actual['data']['relationships']['controls']['data'][0]['id'],
+						$expectation
+					);
+				}
+
+				return $expectation;
+			}
 		);
 		Assert::same($statusCode, $response->getStatusCode());
 		Assert::type(Http\Response::class, $response);

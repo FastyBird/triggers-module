@@ -118,7 +118,7 @@ export default class Action extends Model implements ActionInterface {
     })
   }
 
-  static reset(): void {
-    Action.dispatch('reset')
+  static reset(): Promise<void> {
+    return Action.dispatch('reset')
   }
 }

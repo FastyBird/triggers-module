@@ -113,7 +113,7 @@ export default class Notification extends Model implements NotificationInterface
     })
   }
 
-  static reset(): void {
-    Notification.dispatch('reset')
+  static reset(): Promise<void> {
+    return Notification.dispatch('reset')
   }
 }

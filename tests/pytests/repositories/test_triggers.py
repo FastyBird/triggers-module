@@ -19,7 +19,7 @@ from modules_metadata.triggers_module import TriggerType
 
 # Library libs
 from triggers_module.items import TriggerItem, ManualTriggerItem
-from triggers_module.reposetories import triggers_repository
+from triggers_module.repositories import trigger_repository
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
@@ -27,16 +27,16 @@ from tests.pytests.tests import DbTestCase
 
 class TestTriggersRepository(DbTestCase):
     def test_repository_iterator(self) -> None:
-        triggers_repository.initialize()
+        trigger_repository.initialize()
 
-        self.assertEqual(6, len(triggers_repository))
+        self.assertEqual(6, len(trigger_repository))
 
     # -----------------------------------------------------------------------------
 
     def test_get_item(self) -> None:
-        triggers_repository.initialize()
+        trigger_repository.initialize()
 
-        trigger_item = triggers_repository.get_by_id(
+        trigger_item = trigger_repository.get_by_id(
             uuid.UUID("c64ba1c4-0eda-4cab-87a0-4d634f7b67f4", version=4)
         )
 
@@ -46,9 +46,9 @@ class TestTriggersRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     def test_create_from_exchange(self) -> None:
-        triggers_repository.initialize()
+        trigger_repository.initialize()
 
-        result: bool = triggers_repository.create_from_exchange(
+        result: bool = trigger_repository.create_from_exchange(
             RoutingKey(RoutingKey.TRIGGERS_ENTITY_CREATED),
             {
                 "id": "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
@@ -61,7 +61,7 @@ class TestTriggersRepository(DbTestCase):
 
         self.assertTrue(result)
 
-        trigger_item = triggers_repository.get_by_id(
+        trigger_item = trigger_repository.get_by_id(
             uuid.UUID("c64ba1c4-0eda-4cab-87a0-4d634f7b67f4", version=4)
         )
 
@@ -79,9 +79,9 @@ class TestTriggersRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     def test_update_from_exchange(self) -> None:
-        triggers_repository.initialize()
+        trigger_repository.initialize()
 
-        trigger_item = triggers_repository.get_by_id(
+        trigger_item = trigger_repository.get_by_id(
             uuid.UUID("c64ba1c4-0eda-4cab-87a0-4d634f7b67f4", version=4)
         )
 
@@ -89,7 +89,7 @@ class TestTriggersRepository(DbTestCase):
         self.assertEqual("c64ba1c4-0eda-4cab-87a0-4d634f7b67f4", trigger_item.trigger_id.__str__())
         self.assertTrue(trigger_item.enabled)
 
-        result: bool = triggers_repository.update_from_exchange(
+        result: bool = trigger_repository.update_from_exchange(
             RoutingKey(RoutingKey.TRIGGERS_ENTITY_UPDATED),
             {
                 "id": "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
@@ -102,7 +102,7 @@ class TestTriggersRepository(DbTestCase):
 
         self.assertTrue(result)
 
-        trigger_item = triggers_repository.get_by_id(
+        trigger_item = trigger_repository.get_by_id(
             uuid.UUID("c64ba1c4-0eda-4cab-87a0-4d634f7b67f4", version=4)
         )
 
@@ -119,16 +119,16 @@ class TestTriggersRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     def test_delete_from_exchange(self) -> None:
-        triggers_repository.initialize()
+        trigger_repository.initialize()
 
-        trigger_item = triggers_repository.get_by_id(
+        trigger_item = trigger_repository.get_by_id(
             uuid.UUID("c64ba1c4-0eda-4cab-87a0-4d634f7b67f4", version=4)
         )
 
         self.assertIsInstance(trigger_item, TriggerItem)
         self.assertEqual("c64ba1c4-0eda-4cab-87a0-4d634f7b67f4", trigger_item.trigger_id.__str__())
 
-        result: bool = triggers_repository.delete_from_exchange(
+        result: bool = trigger_repository.delete_from_exchange(
             RoutingKey(RoutingKey.TRIGGERS_ENTITY_DELETED),
             {
                 "id": "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
@@ -141,7 +141,7 @@ class TestTriggersRepository(DbTestCase):
 
         self.assertTrue(result)
 
-        trigger_item = triggers_repository.get_by_id(
+        trigger_item = trigger_repository.get_by_id(
             uuid.UUID("c64ba1c4-0eda-4cab-87a0-4d634f7b67f4", version=4)
         )
 

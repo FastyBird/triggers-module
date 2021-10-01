@@ -10,17 +10,21 @@ import {
   ActionInterface,
   ActionEntityTypes,
   ActionCreateInterface,
+  ActionDataResponseInterface,
 } from '@/lib/models/actions/types'
 import {
   NotificationInterface,
   NotificationEntityTypes,
   NotificationCreateInterface,
+  NotificationDataResponseInterface,
 } from '@/lib/models/notifications/types'
 import {
   ConditionInterface,
   ConditionEntityTypes,
   ConditionCreateInterface,
+  ConditionDataResponseInterface,
 } from '@/lib/models/conditions/types'
+import { TriggerControlDataResponseInterface, TriggerControlInterface } from '@/lib/models/trigger-controls/types'
 
 // ENTITY TYPES
 // ============
@@ -54,6 +58,7 @@ export interface TriggerInterface {
   actions: ActionInterface[]
   notifications: NotificationInterface[]
   conditions: ConditionInterface[]
+  controls: TriggerControlInterface[]
 
   // Entity transformers
   isEnabled: boolean
@@ -73,6 +78,9 @@ interface TriggerAttributesResponseInterface {
   name: string
   comment: string | null
   enabled: boolean
+
+  is_triggered: boolean
+  is_fulfilled?: boolean
 
   owner: string | null
 }
@@ -122,10 +130,12 @@ export interface TriggerDataResponseInterface extends TJsonApiData {
 
 export interface TriggerResponseInterface extends TJsonApiBody {
   data: TriggerDataResponseInterface
+  included?: (ActionDataResponseInterface | NotificationDataResponseInterface | ConditionDataResponseInterface | TriggerControlDataResponseInterface)[]
 }
 
 export interface TriggersResponseInterface extends TJsonApiBody {
   data: TriggerDataResponseInterface[]
+  included?: (ActionDataResponseInterface | NotificationDataResponseInterface | ConditionDataResponseInterface | TriggerControlDataResponseInterface)[]
 }
 
 // CREATE ENTITY INTERFACES

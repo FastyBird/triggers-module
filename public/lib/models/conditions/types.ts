@@ -11,6 +11,7 @@ import {
 import {
   TriggerInterface,
   TriggerEntityTypes,
+  TriggerDataResponseInterface,
 } from '@/lib/models/triggers/types'
 
 // ENTITY TYPES
@@ -107,10 +108,12 @@ export interface ConditionDataResponseInterface extends TJsonApiData {
 
 export interface ConditionResponseInterface extends TJsonApiBody {
   data: ConditionDataResponseInterface
+  included?: (TriggerDataResponseInterface)[]
 }
 
 export interface ConditionsResponseInterface extends TJsonApiBody {
   data: ConditionDataResponseInterface[]
+  included?: (TriggerDataResponseInterface)[]
 }
 
 // CREATE ENTITY INTERFACES

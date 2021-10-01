@@ -19,7 +19,7 @@ from modules_metadata.triggers_module import TriggerActionType
 
 # Library libs
 from triggers_module.items import PropertyActionItem, ChannelPropertyActionItem
-from triggers_module.reposetories import actions_repository
+from triggers_module.repositories import action_repository
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
@@ -27,16 +27,16 @@ from tests.pytests.tests import DbTestCase
 
 class TestActionsRepository(DbTestCase):
     def test_repository_iterator(self) -> None:
-        actions_repository.initialize()
+        action_repository.initialize()
 
-        self.assertEqual(13, len(actions_repository))
+        self.assertEqual(13, len(action_repository))
 
     # -----------------------------------------------------------------------------
 
     def test_get_item(self) -> None:
-        actions_repository.initialize()
+        action_repository.initialize()
 
-        action_item = actions_repository.get_by_id(
+        action_item = action_repository.get_by_id(
             uuid.UUID("4aa84028-d8b7-4128-95b2-295763634aa4", version=4)
         )
 
@@ -47,9 +47,9 @@ class TestActionsRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     def test_get_item_by_property(self) -> None:
-        actions_repository.initialize()
+        action_repository.initialize()
 
-        action_item = actions_repository.get_by_property_identifier(
+        action_item = action_repository.get_by_property_identifier(
             uuid.UUID("7bc1fc81-8ace-409d-b044-810140e2361a", version=4)
         )
 
@@ -60,9 +60,9 @@ class TestActionsRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     def test_create_from_exchange(self) -> None:
-        actions_repository.initialize()
+        action_repository.initialize()
 
-        result: bool = actions_repository.create_from_exchange(
+        result: bool = action_repository.create_from_exchange(
             RoutingKey(RoutingKey.TRIGGERS_ACTIONS_ENTITY_CREATED),
             {
                 "id": "4aa84028-d8b7-4128-95b2-295763634aa4",
@@ -78,7 +78,7 @@ class TestActionsRepository(DbTestCase):
 
         self.assertTrue(result)
 
-        action_item = actions_repository.get_by_id(
+        action_item = action_repository.get_by_id(
             uuid.UUID("4aa84028-d8b7-4128-95b2-295763634aa4", version=4)
         )
 
@@ -99,9 +99,9 @@ class TestActionsRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     def test_update_from_exchange(self) -> None:
-        actions_repository.initialize()
+        action_repository.initialize()
 
-        action_item = actions_repository.get_by_id(
+        action_item = action_repository.get_by_id(
             uuid.UUID("4aa84028-d8b7-4128-95b2-295763634aa4", version=4)
         )
 
@@ -110,7 +110,7 @@ class TestActionsRepository(DbTestCase):
         self.assertEqual("4aa84028-d8b7-4128-95b2-295763634aa4", action_item.action_id.__str__())
         self.assertFalse(action_item.enabled)
 
-        result: bool = actions_repository.update_from_exchange(
+        result: bool = action_repository.update_from_exchange(
             RoutingKey(RoutingKey.TRIGGERS_ACTIONS_ENTITY_UPDATED),
             {
                 "id": "4aa84028-d8b7-4128-95b2-295763634aa4",
@@ -126,7 +126,7 @@ class TestActionsRepository(DbTestCase):
 
         self.assertTrue(result)
 
-        action_item = actions_repository.get_by_id(
+        action_item = action_repository.get_by_id(
             uuid.UUID("4aa84028-d8b7-4128-95b2-295763634aa4", version=4)
         )
 
@@ -147,9 +147,9 @@ class TestActionsRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     def test_delete_from_exchange(self) -> None:
-        actions_repository.initialize()
+        action_repository.initialize()
 
-        action_item = actions_repository.get_by_id(
+        action_item = action_repository.get_by_id(
             uuid.UUID("4aa84028-d8b7-4128-95b2-295763634aa4", version=4)
         )
 
@@ -157,7 +157,7 @@ class TestActionsRepository(DbTestCase):
         self.assertIsInstance(action_item, ChannelPropertyActionItem)
         self.assertEqual("4aa84028-d8b7-4128-95b2-295763634aa4", action_item.action_id.__str__())
 
-        result: bool = actions_repository.delete_from_exchange(
+        result: bool = action_repository.delete_from_exchange(
             RoutingKey(RoutingKey.TRIGGERS_ACTIONS_ENTITY_DELETED),
             {
                 "id": "4aa84028-d8b7-4128-95b2-295763634aa4",
@@ -173,7 +173,7 @@ class TestActionsRepository(DbTestCase):
 
         self.assertTrue(result)
 
-        action_item = actions_repository.get_by_id(
+        action_item = action_repository.get_by_id(
             uuid.UUID("4aa84028-d8b7-4128-95b2-295763634aa4", version=4)
         )
 

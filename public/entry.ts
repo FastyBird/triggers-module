@@ -3,6 +3,8 @@ import { Plugin } from '@vuex-orm/core/dist/src/plugins/use'
 
 import Trigger from '@/lib/models/triggers/Trigger'
 import triggers from '@/lib/models/triggers'
+import TriggerControl from '@/lib/models/trigger-controls/TriggerControl'
+import triggerControls from '@/lib/models/trigger-controls'
 import Condition from '@/lib/models/conditions/Condition'
 import conditions from '@/lib/models/conditions'
 import Action from '@/lib/models/actions/Action'
@@ -24,6 +26,7 @@ const install: Plugin = function installVuexOrmWamp(components: ComponentsInterf
   }
 
   config.database.register(Trigger, triggers)
+  config.database.register(TriggerControl, triggerControls)
   config.database.register(Condition, conditions)
   config.database.register(Action, actions)
   config.database.register(Notification, notifications)
@@ -43,6 +46,7 @@ export {
   Condition,
   Notification,
   Trigger,
+  TriggerControl,
 }
 
 export * from '@/lib/errors'

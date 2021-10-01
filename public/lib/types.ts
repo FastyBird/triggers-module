@@ -3,6 +3,7 @@ import { ModulePrefix } from '@fastybird/modules-metadata'
 import { TJsonaModel } from 'jsona/lib/JsonaTypes'
 
 import { TriggerEntityTypes } from '@/lib/models/triggers/types'
+import { TriggerControlEntityTypes } from '@/lib/models/trigger-controls/types'
 import { ActionEntityTypes } from '@/lib/models/actions/types'
 import { ConditionEntityTypes } from '@/lib/models/conditions/types'
 import { NotificationEntityTypes } from '@/lib/models/notifications/types'
@@ -10,6 +11,11 @@ import { NotificationEntityTypes } from '@/lib/models/notifications/types'
 export interface TriggerJsonModelInterface extends TJsonaModel {
   id: string
   type: TriggerEntityTypes
+}
+
+export interface TriggerControlJsonModelInterface extends TJsonaModel {
+  id: string
+  type: TriggerControlEntityTypes
 }
 
 export interface ActionJsonModelInterface extends TJsonaModel {
@@ -29,7 +35,7 @@ export interface NotificationJsonModelInterface extends TJsonaModel {
 
 export interface RelationInterface extends TJsonaModel {
   id: string
-  type: TriggerEntityTypes | ActionEntityTypes | NotificationEntityTypes | ConditionEntityTypes
+  type: TriggerEntityTypes | TriggerControlEntityTypes | ActionEntityTypes | NotificationEntityTypes | ConditionEntityTypes
 }
 
 export const ModuleApiPrefix = `/${ModulePrefix.MODULE_TRIGGERS_PREFIX}`

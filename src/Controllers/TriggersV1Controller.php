@@ -414,6 +414,13 @@ final class TriggersV1Controller extends BaseV1Controller
 		) {
 			return $response
 				->withEntity(WebServerHttp\ScalarEntity::from($trigger->getConditions()));
+
+		} elseif (
+			$relationEntity === Schemas\Triggers\ManualTriggerSchema::RELATIONSHIPS_CONTROLS
+			&& $trigger instanceof Entities\Triggers\ManualTrigger
+		) {
+			return $response
+				->withEntity(WebServerHttp\ScalarEntity::from($trigger->getControls()));
 		}
 
 		return parent::readRelationship($request, $response);

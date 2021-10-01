@@ -30,7 +30,7 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 			$entityManager
 		);
 
-		Assert::same(['onFlush', 'postPersist', 'postUpdate'], $subscriber->getSubscribedEvents());
+		Assert::same(['onFlush', 'prePersist', 'postPersist', 'postUpdate'], $subscriber->getSubscribedEvents());
 	}
 
 	public function testPublishCreatedEntity(): void

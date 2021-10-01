@@ -101,6 +101,14 @@ abstract class Trigger implements ITrigger
 	protected Common\Collections\Collection $notifications;
 
 	/**
+	 * @var Common\Collections\Collection<int, Entities\Triggers\Controls\IControl>
+	 *
+	 * @IPubDoctrine\Crud(is="writable")
+	 * @ORM\OneToMany(targetEntity="FastyBird\TriggersModule\Entities\Triggers\Controls\Control", mappedBy="trigger", cascade={"persist", "remove"}, orphanRemoval=true)
+	 */
+	private Common\Collections\Collection $controls;
+
+	/**
 	 * @param string $name
 	 * @param Uuid\UuidInterface|null $id
 	 *
@@ -116,6 +124,7 @@ abstract class Trigger implements ITrigger
 
 		$this->actions = new Common\Collections\ArrayCollection();
 		$this->notifications = new Common\Collections\ArrayCollection();
+		$this->controls = new Common\Collections\ArrayCollection();
 	}
 
 	/**
@@ -287,6 +296,102 @@ abstract class Trigger implements ITrigger
 		if ($this->notifications->contains($notification)) {
 			// ...and remove it from collection
 			$this->notifications->removeElement($notification);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getControls(): array
+	{
+		return $this->controls->toArray();
+	}
+
+	/**
+	 * @return string[]
+	 */
+	private function getPlainControls(): array
+	{
+		$controls = [];
+
+		foreach ($this->getControls() as $control) {
+			$controls[] = $control->getName();
+		}
+
+		return $controls;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getControl(string $name): ?Entities\Triggers\Controls\IControl
+	{
+		$found = $this->controls
+			->filter(function (Entities\Triggers\Controls\IControl $row) use ($name): bool {
+				return $name === $row->getName();
+			});
+
+		return $found->isEmpty() ? null : $found->first();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function findControl(string $name): ?Entities\Triggers\Controls\IControl
+	{
+		$found = $this->controls
+			->filter(function (Entities\Triggers\Controls\IControl $row) use ($name): bool {
+				return $name === $row->getName();
+			});
+
+		return $found->isEmpty() ? null : $found->first();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function hasControl(string $name): bool
+	{
+		return $this->findControl($name) !== null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setControls(array $controls = []): void
+	{
+		$this->controls = new Common\Collections\ArrayCollection();
+
+		// Process all passed entities...
+		foreach ($controls as $entity) {
+			if (!$this->controls->contains($entity)) {
+				// ...and assign them to collection
+				$this->controls->add($entity);
+			}
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function addControl(Entities\Triggers\Controls\IControl $control): void
+	{
+		// Check if collection does not contain inserting entity
+		if (!$this->controls->contains($control)) {
+			// ...and assign it to collection
+			$this->controls->add($control);
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function removeControl(Entities\Triggers\Controls\IControl $control): void
+	{
+		// Check if collection contain removing entity...
+		if ($this->controls->contains($control)) {
+			// ...and remove it from collection
+			$this->controls->removeElement($control);
 		}
 	}
 

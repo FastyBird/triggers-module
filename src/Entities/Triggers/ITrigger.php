@@ -134,6 +134,53 @@ interface ITrigger extends Entities\IEntity,
 	public function removeNotification(Entities\Notifications\INotification $notification): void;
 
 	/**
+	 * @return Entities\Triggers\Controls\IControl[]
+	 */
+	public function getControls(): array;
+
+	/**
+	 * @param string $name
+	 *
+	 * @return Entities\Triggers\Controls\IControl|null
+	 */
+	public function getControl(string $name): ?Entities\Triggers\Controls\IControl;
+
+	/**
+	 * @param string $name
+	 *
+	 * @return Entities\Triggers\Controls\IControl|null
+	 */
+	public function findControl(string $name): ?Entities\Triggers\Controls\IControl;
+
+	/**
+	 * @param string $name
+	 *
+	 * @return bool
+	 */
+	public function hasControl(string $name): bool;
+
+	/**
+	 * @param Entities\Triggers\Controls\IControl[] $control
+	 *
+	 * @return void
+	 */
+	public function setControls(array $control): void;
+
+	/**
+	 * @param Entities\Triggers\Controls\IControl $control
+	 *
+	 * @return void
+	 */
+	public function addControl(Entities\Triggers\Controls\IControl $control): void;
+
+	/**
+	 * @param Entities\Triggers\Controls\IControl $control
+	 *
+	 * @return void
+	 */
+	public function removeControl(Entities\Triggers\Controls\IControl $control): void;
+
+	/**
 	 * @return mixed[]
 	 */
 	public function toArray(): array;

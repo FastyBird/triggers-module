@@ -1,10 +1,8 @@
 import { Item } from '@vuex-orm/core'
-import { RpCallResponse } from '@fastybird/vue-wamp-v1'
 import * as exchangeEntitySchema
   from '@fastybird/modules-metadata/resources/schemas/triggers-module/entity.trigger.json'
 import {
   ModuleOrigin,
-  TriggerControlAction,
   TriggerEntity as ExchangeEntity,
   TriggersModule as RoutingKeys,
   TriggerType,
@@ -55,6 +53,7 @@ import {
   NotificationEntityTypes,
   NotificationInterface,
 } from '@/lib/models/notifications/types'
+import TriggerControl from '@/lib/models/trigger-controls/TriggerControl'
 
 import {
   ApiError,
@@ -230,7 +229,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
 
     try {
       await Trigger.api().get(
-        `${ModuleApiPrefix}/v1/triggers/${payload.id}?include=conditions,actions,notifications`,
+        `${ModuleApiPrefix}/v1/triggers/${payload.id}?include=conditions,actions,notifications,controls`,
         apiOptions,
       )
 
@@ -260,7 +259,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
 
     try {
       await Trigger.api().get(
-        `${ModuleApiPrefix}/v1/triggers?include=conditions,actions,notifications`,
+        `${ModuleApiPrefix}/v1/triggers?include=conditions,actions,notifications,controls`,
         apiOptions,
       )
 
@@ -718,33 +717,6 @@ const moduleActions: ActionTree<TriggerState, any> = {
     }
   },
 
-  transmitCommand(_store, payload: { trigger: TriggerInterface, command: TriggerControlAction }): Promise<boolean> {
-    if (!Trigger.query().where('id', payload.trigger.id).exists()) {
-      throw new Error('triggers-module.channel.transmit.failed')
-    }
-
-    return new Promise((resolve, reject) => {
-      Trigger.wamp().call<{ data: string }>({
-        routing_key: RoutingKeys.TRIGGER_CONTROLS,
-        origin: Trigger.$triggersModuleOrigin,
-        data: {
-          control: payload.command,
-          trigger: payload.trigger.id,
-        },
-      })
-        .then((response: RpCallResponse<{ data: string }>): void => {
-          if (get(response.data, 'response') === 'accepted') {
-            resolve(true)
-          } else {
-            reject(new Error('triggers-module.trigger.transmit.failed'))
-          }
-        })
-        .catch((): void => {
-          reject(new Error('triggers-module.trigger.transmit.failed'))
-        })
-    })
-  },
-
   async socketData({ state, commit }, payload: { origin: string, routingKey: string, data: string }): Promise<boolean> {
     if (payload.origin !== ModuleOrigin.MODULE_TRIGGERS_ORIGIN) {
       return false
@@ -860,6 +832,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
   reset({ commit }): void {
     commit('RESET_STATE')
 
+    TriggerControl.reset()
     Action.reset()
     Condition.reset()
     Notification.reset()

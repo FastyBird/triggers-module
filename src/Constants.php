@@ -45,6 +45,9 @@ final class Constants
 	public const ROUTE_NAME_TRIGGER_NOTIFICATIONS = 'trigger.notifications';
 	public const ROUTE_NAME_TRIGGER_NOTIFICATION = 'trigger.notification';
 	public const ROUTE_NAME_TRIGGER_NOTIFICATION_RELATIONSHIP = 'trigger.v.relationship';
+	public const ROUTE_NAME_TRIGGER_CONTROLS = 'trigger.controls';
+	public const ROUTE_NAME_TRIGGER_CONTROL = 'trigger.control';
+	public const ROUTE_NAME_TRIGGER_CONTROL_RELATIONSHIP = 'trigger.control.relationship';
 
 	/**
 	 * Message bus routing keys mapping

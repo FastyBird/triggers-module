@@ -17,7 +17,7 @@ import uuid
 
 # Library libs
 from triggers_module.items import PropertyActionItem, ChannelPropertyActionItem
-from triggers_module.reposetories import actions_repository
+from triggers_module.repositories import action_repository
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
@@ -25,9 +25,9 @@ from tests.pytests.tests import DbTestCase
 
 class TestActionItem(DbTestCase):
     def test_transform_to_dict(self) -> None:
-        actions_repository.initialize()
+        action_repository.initialize()
 
-        action_item = actions_repository.get_by_id(
+        action_item = action_repository.get_by_id(
             uuid.UUID("4aa84028-d8b7-4128-95b2-295763634aa4", version=4)
         )
 
@@ -48,9 +48,9 @@ class TestActionItem(DbTestCase):
     # -----------------------------------------------------------------------------
 
     def test_validate(self) -> None:
-        actions_repository.initialize()
+        action_repository.initialize()
 
-        action_item = actions_repository.get_by_id(
+        action_item = action_repository.get_by_id(
             uuid.UUID("4aa84028-d8b7-4128-95b2-295763634aa4", version=4)
         )
 

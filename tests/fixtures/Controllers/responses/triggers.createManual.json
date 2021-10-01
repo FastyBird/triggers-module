@@ -19,6 +19,23 @@
       "is_triggered": null
     },
     "relationships": {
+      "controls": {
+        "links": {
+          "self": "/v1/triggers/bbbf5caa-b30e-4558-b83a-699617958cea/relationships/controls",
+          "related": {
+            "href": "/v1/triggers/bbbf5caa-b30e-4558-b83a-699617958cea/controls",
+            "meta": {
+              "count": 1
+            }
+          }
+        },
+        "data": [
+          {
+            "type": "triggers-module/trigger-control",
+            "id": "__CONTROL_IDENTIFIER_PLACEHOLDER__"
+          }
+        ]
+      },
       "actions": {
         "links": {
           "self": "/v1/triggers/bbbf5caa-b30e-4558-b83a-699617958cea/relationships/actions",

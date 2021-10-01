@@ -17,7 +17,7 @@ import uuid
 
 # Library libs
 from triggers_module.items import TriggerItem
-from triggers_module.reposetories import triggers_repository
+from triggers_module.repositories import trigger_repository
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
@@ -25,9 +25,9 @@ from tests.pytests.tests import DbTestCase
 
 class TestTriggersRepository(DbTestCase):
     def test_transform_to_dict(self) -> None:
-        triggers_repository.initialize()
+        trigger_repository.initialize()
 
-        trigger_item = triggers_repository.get_by_id(
+        trigger_item = trigger_repository.get_by_id(
             uuid.UUID("c64ba1c4-0eda-4cab-87a0-4d634f7b67f4", version=4)
         )
 

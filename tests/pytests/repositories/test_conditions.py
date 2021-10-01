@@ -19,7 +19,7 @@ from modules_metadata.triggers_module import TriggerConditionType, TriggerCondit
 
 # Library libs
 from triggers_module.items import PropertyConditionItem, ChannelPropertyConditionItem
-from triggers_module.reposetories import conditions_repository
+from triggers_module.repositories import condition_repository
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
@@ -27,16 +27,16 @@ from tests.pytests.tests import DbTestCase
 
 class TestConditionsRepository(DbTestCase):
     def test_repository_iterator(self) -> None:
-        conditions_repository.initialize()
+        condition_repository.initialize()
 
-        self.assertEqual(3, len(conditions_repository))
+        self.assertEqual(3, len(condition_repository))
 
     # -----------------------------------------------------------------------------
 
     def test_get_item(self) -> None:
-        conditions_repository.initialize()
+        condition_repository.initialize()
 
-        condition_item = conditions_repository.get_by_id(
+        condition_item = condition_repository.get_by_id(
             uuid.UUID("2726f19c-7759-440e-b6f5-8c3306692fa2", version=4)
         )
 
@@ -47,9 +47,9 @@ class TestConditionsRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     def test_get_item_by_property(self) -> None:
-        conditions_repository.initialize()
+        condition_repository.initialize()
 
-        condition_item = conditions_repository.get_by_property_identifier(
+        condition_item = condition_repository.get_by_property_identifier(
             uuid.UUID("ff7b36d7-a0b0-4336-9efb-a608c93b0974", version=4)
         )
 
@@ -60,9 +60,9 @@ class TestConditionsRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     def test_create_from_exchange(self) -> None:
-        conditions_repository.initialize()
+        condition_repository.initialize()
 
-        result: bool = conditions_repository.create_from_exchange(
+        result: bool = condition_repository.create_from_exchange(
             RoutingKey(RoutingKey.TRIGGERS_CONDITIONS_ENTITY_CREATED),
             {
                 "id": "2726f19c-7759-440e-b6f5-8c3306692fa2",
@@ -79,7 +79,7 @@ class TestConditionsRepository(DbTestCase):
 
         self.assertTrue(result)
 
-        condition_item = conditions_repository.get_by_id(
+        condition_item = condition_repository.get_by_id(
             uuid.UUID("2726f19c-7759-440e-b6f5-8c3306692fa2", version=4)
         )
 
@@ -101,9 +101,9 @@ class TestConditionsRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     def test_update_from_exchange(self) -> None:
-        conditions_repository.initialize()
+        condition_repository.initialize()
 
-        condition_item = conditions_repository.get_by_id(
+        condition_item = condition_repository.get_by_id(
             uuid.UUID("2726f19c-7759-440e-b6f5-8c3306692fa2", version=4)
         )
 
@@ -112,7 +112,7 @@ class TestConditionsRepository(DbTestCase):
         self.assertEqual("2726f19c-7759-440e-b6f5-8c3306692fa2", condition_item.condition_id.__str__())
         self.assertFalse(condition_item.enabled)
 
-        result: bool = conditions_repository.update_from_exchange(
+        result: bool = condition_repository.update_from_exchange(
             RoutingKey(RoutingKey.TRIGGERS_CONDITIONS_ENTITY_UPDATED),
             {
                 "id": "2726f19c-7759-440e-b6f5-8c3306692fa2",
@@ -129,7 +129,7 @@ class TestConditionsRepository(DbTestCase):
 
         self.assertTrue(result)
 
-        condition_item = conditions_repository.get_by_id(
+        condition_item = condition_repository.get_by_id(
             uuid.UUID("2726f19c-7759-440e-b6f5-8c3306692fa2", version=4)
         )
 
@@ -151,9 +151,9 @@ class TestConditionsRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     def test_delete_from_exchange(self) -> None:
-        conditions_repository.initialize()
+        condition_repository.initialize()
 
-        condition_item = conditions_repository.get_by_id(
+        condition_item = condition_repository.get_by_id(
             uuid.UUID("2726f19c-7759-440e-b6f5-8c3306692fa2", version=4)
         )
 
@@ -161,7 +161,7 @@ class TestConditionsRepository(DbTestCase):
         self.assertIsInstance(condition_item, ChannelPropertyConditionItem)
         self.assertEqual("2726f19c-7759-440e-b6f5-8c3306692fa2", condition_item.condition_id.__str__())
 
-        result: bool = conditions_repository.delete_from_exchange(
+        result: bool = condition_repository.delete_from_exchange(
             RoutingKey(RoutingKey.TRIGGERS_CONDITIONS_ENTITY_DELETED),
             {
                 "id": "2726f19c-7759-440e-b6f5-8c3306692fa2",
@@ -178,7 +178,7 @@ class TestConditionsRepository(DbTestCase):
 
         self.assertTrue(result)
 
-        condition_item = conditions_repository.get_by_id(
+        condition_item = condition_repository.get_by_id(
             uuid.UUID("2726f19c-7759-440e-b6f5-8c3306692fa2", version=4)
         )
 

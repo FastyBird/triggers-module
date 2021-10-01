@@ -36,6 +36,7 @@ from triggers_module.models import (
     TriggerEntity,
     AutomaticTriggerEntity,
     ManualTriggerEntity,
+    TriggerControlEntity,
     ActionEntity,
     DevicePropertyActionEntity,
     ChannelPropertyActionEntity,
@@ -49,6 +50,7 @@ from triggers_module.items import (
     TriggerItem,
     AutomaticTriggerItem,
     ManualTriggerItem,
+    TriggerControlItem,
     ConditionItem,
     DevicePropertyConditionItem,
     ChannelPropertyConditionItem,
@@ -858,6 +860,200 @@ class ConditionsRepository:
         raise StopIteration
 
 
+class TriggerControlsRepository:
+    """
+    Base controls repository
+
+    @package        FastyBird:DevicesModule!
+    @module         repositories
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    _items: Dict[str, TriggerControlItem] or None = None
+
+    __iterator_index = 0
+
+    # -----------------------------------------------------------------------------
+
+    def get_by_id(
+        self,
+        control_id: uuid.UUID,
+    ) -> TriggerControlItem or None:
+        """Find control in cache by provided identifier"""
+        if self._items is None:
+            self.initialize()
+
+        if control_id.__str__() in self._items:
+            return self._items[control_id.__str__()]
+
+        return None
+
+    # -----------------------------------------------------------------------------
+
+    def clear(self) -> None:
+        """Clear items cache"""
+        self._items = None
+
+    # -----------------------------------------------------------------------------
+
+    @orm.db_session
+    def create_from_exchange(self, routing_key: RoutingKey, data: Dict) -> bool:
+        """Process received device control message from exchange when entity was created"""
+        if routing_key != RoutingKey.TRIGGERS_CONTROL_ENTITY_CREATED:
+            return False
+
+        if self._items is None:
+            self.initialize()
+
+            return True
+
+        data: Dict = validate_exchange_data(ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE), routing_key, data)
+
+        entity: TriggerControlEntity or None = TriggerControlEntity.get(
+            control_id=uuid.UUID(data.get("id"), version=4),
+        )
+
+        if entity is not None:
+            self._items[entity.control_id.__str__()] = self._create_item(entity)
+
+            return True
+
+        return False
+
+    # -----------------------------------------------------------------------------
+
+    @orm.db_session
+    def update_from_exchange(self, routing_key: RoutingKey, data: Dict) -> bool:
+        """Process received device control message from exchange when entity was updated"""
+        if routing_key != RoutingKey.TRIGGERS_CONTROL_ENTITY_UPDATED:
+            return False
+
+        if self._items is None:
+            self.initialize()
+
+            return True
+
+        validated_data: Dict = validate_exchange_data(ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE), routing_key, data)
+
+        if validated_data.get("id") not in self._items:
+            entity: TriggerControlEntity or None = TriggerControlEntity.get(
+                control_id=uuid.UUID(validated_data.get("id"), version=4)
+            )
+
+            if entity is not None:
+                self._items[entity.control_id.__str__()] = self._create_item(entity)
+
+                return True
+
+            return False
+
+        item = self._update_item(self.get_by_id(uuid.UUID(validated_data.get("id"), version=4)))
+
+        if item is not None:
+            self._items[validated_data.get("id")] = item
+
+            return True
+
+        return False
+
+    # -----------------------------------------------------------------------------
+
+    @orm.db_session
+    def delete_from_exchange(self, routing_key: RoutingKey, data: Dict) -> bool:
+        """Process received device control message from exchange when entity was updated"""
+        if routing_key != RoutingKey.TRIGGERS_CONTROL_ENTITY_DELETED:
+            return False
+
+        if data.get("id") in self._items:
+            del self._items[data.get("id")]
+
+            return True
+
+        return False
+
+    # -----------------------------------------------------------------------------
+
+    @orm.db_session
+    def initialize(self) -> None:
+        """Initialize triggers controls repository by fetching entities from database"""
+        items: Dict[str, TriggerControlItem] = {}
+
+        for entity in TriggerControlEntity.select():
+            if self._items is None or entity.control_id.__str__() not in self._items:
+                item = self._create_item(entity)
+
+            else:
+                item = self._update_item(self.get_by_id(entity.control_id))
+
+            if item is not None:
+                items[entity.control_id.__str__()] = item
+
+        self._items = items
+
+    # -----------------------------------------------------------------------------
+
+    @staticmethod
+    def _create_item(entity: TriggerControlEntity) -> TriggerControlItem or None:
+        if isinstance(entity, TriggerControlEntity):
+            return TriggerControlItem(
+                control_id=entity.control_id,
+                control_name=entity.name,
+                trigger_id=entity.trigger.trigger_id,
+            )
+
+        return None
+
+    # -----------------------------------------------------------------------------
+
+    @staticmethod
+    def _update_item(item: TriggerControlItem) -> TriggerControlItem or None:
+        if isinstance(item, TriggerControlItem):
+            return TriggerControlItem(
+                control_id=item.control_id,
+                control_name=item.name,
+                trigger_id=item.trigger_id,
+            )
+
+        return None
+
+    # -----------------------------------------------------------------------------
+
+    def __iter__(self) -> "ControlsRepository":
+        # Reset index for nex iteration
+        self.__iterator_index = 0
+
+        return self
+
+    # -----------------------------------------------------------------------------
+
+    def __len__(self):
+        if self._items is None:
+            self.initialize()
+
+        return len(self._items.values())
+
+    # -----------------------------------------------------------------------------
+
+    def __next__(self) -> TriggerControlItem:
+        if self._items is None:
+            self.initialize()
+
+        if self.__iterator_index < len(self._items.values()):
+            items: List[TriggerControlItem] = list(self._items.values())
+
+            result: TriggerControlItem = items[self.__iterator_index]
+
+            self.__iterator_index += 1
+
+            return result
+
+        # Reset index for nex iteration
+        self.__iterator_index = 0
+
+        # End of iteration
+        raise StopIteration
+
+
 def validate_exchange_data(origin: ModuleOrigin, routing_key: RoutingKey, data: Dict) -> Dict:
     """
     Validate received RPC message against defined schema
@@ -884,6 +1080,7 @@ def validate_exchange_data(origin: ModuleOrigin, routing_key: RoutingKey, data: 
         raise HandleExchangeDataException("Provided data are not valid") from ex
 
 
-triggers_repository = TriggersRepository()
-actions_repository = ActionsRepository()
-conditions_repository = ConditionsRepository()
+trigger_repository = TriggersRepository()
+trigger_control_repository = TriggerControlsRepository()
+action_repository = ActionsRepository()
+condition_repository = ConditionsRepository()

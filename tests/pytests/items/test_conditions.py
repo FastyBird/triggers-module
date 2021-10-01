@@ -18,7 +18,7 @@ import uuid
 
 # Library libs
 from triggers_module.items import PropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem
-from triggers_module.reposetories import conditions_repository
+from triggers_module.repositories import condition_repository
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
@@ -26,9 +26,9 @@ from tests.pytests.tests import DbTestCase
 
 class TestConditionItem(DbTestCase):
     def test_transform_to_dict(self) -> None:
-        conditions_repository.initialize()
+        condition_repository.initialize()
 
-        condition_item = conditions_repository.get_by_id(
+        condition_item = condition_repository.get_by_id(
             uuid.UUID("2726f19c-7759-440e-b6f5-8c3306692fa2", version=4)
         )
 
@@ -47,7 +47,7 @@ class TestConditionItem(DbTestCase):
             "operator": "eq",
         }, condition_item.to_dict())
 
-        condition_item = conditions_repository.get_by_id(
+        condition_item = condition_repository.get_by_id(
             uuid.UUID("09c453b3-c55f-4050-8f1c-b50f8d5728c2", version=4)
         )
 
@@ -65,9 +65,9 @@ class TestConditionItem(DbTestCase):
     # -----------------------------------------------------------------------------
 
     def test_validate(self) -> None:
-        conditions_repository.initialize()
+        condition_repository.initialize()
 
-        condition_item = conditions_repository.get_by_id(
+        condition_item = condition_repository.get_by_id(
             uuid.UUID("2726f19c-7759-440e-b6f5-8c3306692fa2", version=4)
         )
 
@@ -78,7 +78,7 @@ class TestConditionItem(DbTestCase):
 
         self.assertFalse(condition_item.validate("1"))
 
-        condition_item = conditions_repository.get_by_id(
+        condition_item = condition_repository.get_by_id(
             uuid.UUID("09c453b3-c55f-4050-8f1c-b50f8d5728c2", version=4)
         )
 

@@ -214,6 +214,23 @@
         "is_triggered": null
       },
       "relationships": {
+        "controls": {
+          "links": {
+            "self": "/v1/triggers/421ca8e9-26c6-4630-89ba-c53aea9bcb1e/relationships/controls",
+            "related": {
+              "href": "/v1/triggers/421ca8e9-26c6-4630-89ba-c53aea9bcb1e/controls",
+              "meta": {
+                "count": 1
+              }
+            }
+          },
+          "data": [
+            {
+              "type": "triggers-module/trigger-control",
+              "id": "7c055b2b-60c3-4017-93db-e9478d8aa662"
+            }
+          ]
+        },
         "actions": {
           "links": {
             "self": "/v1/triggers/421ca8e9-26c6-4630-89ba-c53aea9bcb1e/relationships/actions",
@@ -262,6 +279,23 @@
         "is_triggered": null
       },
       "relationships": {
+        "controls": {
+          "links": {
+            "self": "/v1/triggers/b8bb82f3-31e2-406a-96ed-f99ebaf9947a/relationships/controls",
+            "related": {
+              "href": "/v1/triggers/b8bb82f3-31e2-406a-96ed-f99ebaf9947a/controls",
+              "meta": {
+                "count": 1
+              }
+            }
+          },
+          "data": [
+            {
+              "type": "triggers-module/trigger-control",
+              "id": "cfca08ff-d199-48ed-9f00-8c6b840a567a"
+            }
+          ]
+        },
         "actions": {
           "links": {
             "self": "/v1/triggers/b8bb82f3-31e2-406a-96ed-f99ebaf9947a/relationships/actions",
@@ -314,6 +348,23 @@
         "is_triggered": null
       },
       "relationships": {
+        "controls": {
+          "links": {
+            "self": "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/relationships/controls",
+            "related": {
+              "href": "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/controls",
+              "meta": {
+                "count": 1
+              }
+            }
+          },
+          "data": [
+            {
+              "type": "triggers-module/trigger-control",
+              "id": "177d6fc7-1905-4fd9-b847-e2da8189dd6a"
+            }
+          ]
+        },
         "actions": {
           "links": {
             "self": "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4/relationships/actions",

@@ -145,7 +145,7 @@ export default class Condition extends Model implements ConditionInterface {
     })
   }
 
-  static reset(): void {
-    Condition.dispatch('reset')
+  static reset(): Promise<void> {
+    return Condition.dispatch('reset')
   }
 }

@@ -28,22 +28,26 @@ final class ServicesTest extends BaseTestCase
 		Assert::notNull($container->getByType(Commands\InitializeCommand::class));
 
 		Assert::notNull($container->getByType(Models\Triggers\TriggerRepository::class));
+		Assert::notNull($container->getByType(Models\Triggers\Controls\ControlRepository::class));
 		Assert::notNull($container->getByType(Models\Actions\ActionRepository::class));
 		Assert::notNull($container->getByType(Models\Notifications\NotificationRepository::class));
 		Assert::notNull($container->getByType(Models\Conditions\ConditionRepository::class));
 
 		Assert::notNull($container->getByType(Models\Triggers\TriggersManager::class));
+		Assert::notNull($container->getByType(Models\Triggers\Controls\ControlsManager::class));
 		Assert::notNull($container->getByType(Models\Actions\ActionsManager::class));
 		Assert::notNull($container->getByType(Models\Notifications\NotificationsManager::class));
 		Assert::notNull($container->getByType(Models\Conditions\ConditionsManager::class));
 
 		Assert::notNull($container->getByType(Controllers\TriggersV1Controller::class));
+		Assert::notNull($container->getByType(Controllers\TriggerControlsV1Controller::class));
 		Assert::notNull($container->getByType(Controllers\ActionsV1Controller::class));
 		Assert::notNull($container->getByType(Controllers\NotificationsV1Controller::class));
 		Assert::notNull($container->getByType(Controllers\ConditionsV1Controller::class));
 
 		Assert::notNull($container->getByType(Schemas\Triggers\AutomaticTriggerSchema::class));
 		Assert::notNull($container->getByType(Schemas\Triggers\ManualTriggerSchema::class));
+		Assert::notNull($container->getByType(Schemas\Triggers\Controls\ControlSchema::class));
 		Assert::notNull($container->getByType(Schemas\Actions\ChannelPropertyActionSchema::class));
 		Assert::notNull($container->getByType(Schemas\Notifications\EmailNotificationSchema::class));
 		Assert::notNull($container->getByType(Schemas\Notifications\SmsNotificationSchema::class));

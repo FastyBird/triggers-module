@@ -55,45 +55,45 @@ class EntityEventMixin:
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    def after_insert(self) -> None:
+    @staticmethod
+    def after_insert(entity: orm.Entity) -> None:
         """After insert entity hook"""
-        if isinstance(self, orm.Entity):
-            app_dispatcher.dispatch(
-                DatabaseEntityCreatedEvent.EVENT_NAME,
-                DatabaseEntityCreatedEvent(
-                    ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE),
-                    self,
-                ),
-            )
+        app_dispatcher.dispatch(
+            DatabaseEntityCreatedEvent.EVENT_NAME,
+            DatabaseEntityCreatedEvent(
+                ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE),
+                entity,
+            ),
+        )
 
     # -----------------------------------------------------------------------------
 
-    def after_update(self) -> None:
+    @staticmethod
+    def after_update(entity: orm.Entity) -> None:
         """After update entity hook"""
-        if isinstance(self, orm.Entity):
-            app_dispatcher.dispatch(
-                DatabaseEntityUpdatedEvent.EVENT_NAME,
-                DatabaseEntityUpdatedEvent(
-                    ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE),
-                    self,
-                ),
-            )
+        app_dispatcher.dispatch(
+            DatabaseEntityUpdatedEvent.EVENT_NAME,
+            DatabaseEntityUpdatedEvent(
+                ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE),
+                entity,
+            ),
+        )
 
     # -----------------------------------------------------------------------------
 
-    def after_delete(self) -> None:
+    @staticmethod
+    def after_delete(entity: orm.Entity) -> None:
         """After delete entity hook"""
-        if isinstance(self, orm.Entity):
-            app_dispatcher.dispatch(
-                DatabaseEntityDeletedEvent.EVENT_NAME,
-                DatabaseEntityDeletedEvent(
-                    ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE),
-                    self,
-                ),
-            )
+        app_dispatcher.dispatch(
+            DatabaseEntityDeletedEvent.EVENT_NAME,
+            DatabaseEntityDeletedEvent(
+                ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE),
+                entity,
+            ),
+        )
 
 
-class TriggerEntity(EntityEventMixin, db.Entity):
+class TriggerEntity(db.Entity):
     """
     Base trigger entity
 
@@ -117,6 +117,7 @@ class TriggerEntity(EntityEventMixin, db.Entity):
 
     actions: List["ActionEntity"] = Set("ActionEntity", reverse="trigger")
     notifications: List["NotificationEntity"] = Set("NotificationEntity", reverse="trigger")
+    controls: List["TriggerControlEntity"] = Set("TriggerControlEntity", reverse="trigger")
 
     # -----------------------------------------------------------------------------
 
@@ -146,9 +147,27 @@ class TriggerEntity(EntityEventMixin, db.Entity):
 
     # -----------------------------------------------------------------------------
 
+    def after_insert(self) -> None:
+        """After insert entity hook"""
+        EntityEventMixin.after_insert(self)
+
+    # -----------------------------------------------------------------------------
+
     def before_update(self) -> None:
         """Before update entity hook"""
         self.updated_at = datetime.datetime.now()
+
+    # -----------------------------------------------------------------------------
+
+    def after_update(self) -> None:
+        """After update entity hook"""
+        EntityEventMixin.after_update(self)
+
+    # -----------------------------------------------------------------------------
+
+    def after_delete(self) -> None:
+        """After delete entity hook"""
+        EntityEventMixin.after_delete(self)
 
 
 class ManualTriggerEntity(TriggerEntity):
@@ -177,7 +196,56 @@ class AutomaticTriggerEntity(TriggerEntity):
     conditions: List["ConditionEntity"] = Set("ConditionEntity", reverse="trigger")
 
 
-class ActionEntity(EntityEventMixin, db.Entity):
+class TriggerControlEntity(db.Entity):
+    """
+    Trigger control entity
+
+    @package        FastyBird:DevicesModule!
+    @module         models
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    _table_: str = "fb_triggers_controls"
+
+    control_id: uuid.UUID = PrimaryKey(uuid.UUID, default=uuid.uuid4, column="control_id")
+    name: str = Optional(str, column="control_name", nullable=False)
+    created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
+    updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
+
+    trigger: TriggerEntity = Required("TriggerEntity", reverse="controls", column="trigger_id", nullable=False)
+
+    # -----------------------------------------------------------------------------
+
+    def before_insert(self) -> None:
+        """Before insert entity hook"""
+        self.created_at = datetime.datetime.now()
+
+    # -----------------------------------------------------------------------------
+
+    def after_insert(self) -> None:
+        """After insert entity hook"""
+        EntityEventMixin.after_insert(self)
+
+    # -----------------------------------------------------------------------------
+
+    def before_update(self) -> None:
+        """Before update entity hook"""
+        self.updated_at = datetime.datetime.now()
+
+    # -----------------------------------------------------------------------------
+
+    def after_update(self) -> None:
+        """After update entity hook"""
+        EntityEventMixin.after_update(self)
+
+    # -----------------------------------------------------------------------------
+
+    def after_delete(self) -> None:
+        """After delete entity hook"""
+        EntityEventMixin.after_delete(self)
+
+
+class ActionEntity(db.Entity):
     """
     Base action entity
 
@@ -226,6 +294,18 @@ class ActionEntity(EntityEventMixin, db.Entity):
     def before_update(self) -> None:
         """Before update entity hook"""
         self.updated_at = datetime.datetime.now()
+
+    # -----------------------------------------------------------------------------
+
+    def after_update(self) -> None:
+        """After update entity hook"""
+        EntityEventMixin.after_update(self)
+
+    # -----------------------------------------------------------------------------
+
+    def after_delete(self) -> None:
+        """After delete entity hook"""
+        EntityEventMixin.after_delete(self)
 
 
 class PropertyActionEntity(ActionEntity):
@@ -318,7 +398,7 @@ class ChannelPropertyActionEntity(PropertyActionEntity):
         }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
 
 
-class NotificationEntity(EntityEventMixin, db.Entity):
+class NotificationEntity(db.Entity):
     """
     Base notification entity
 
@@ -364,9 +444,27 @@ class NotificationEntity(EntityEventMixin, db.Entity):
 
     # -----------------------------------------------------------------------------
 
+    def after_insert(self) -> None:
+        """After insert entity hook"""
+        EntityEventMixin.after_insert(self)
+
+    # -----------------------------------------------------------------------------
+
     def before_update(self) -> None:
         """Before update entity hook"""
         self.updated_at = datetime.datetime.now()
+
+    # -----------------------------------------------------------------------------
+
+    def after_update(self) -> None:
+        """After update entity hook"""
+        EntityEventMixin.after_update(self)
+
+    # -----------------------------------------------------------------------------
+
+    def after_delete(self) -> None:
+        """After delete entity hook"""
+        EntityEventMixin.after_delete(self)
 
 
 class EmailNotificationEntity(NotificationEntity):
@@ -427,7 +525,7 @@ class SmsNotificationEntity(NotificationEntity):
         }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
 
 
-class ConditionEntity(EntityEventMixin, db.Entity):
+class ConditionEntity(db.Entity):
     """
     Base condition entity
 
@@ -478,9 +576,27 @@ class ConditionEntity(EntityEventMixin, db.Entity):
 
     # -----------------------------------------------------------------------------
 
+    def after_insert(self) -> None:
+        """After insert entity hook"""
+        EntityEventMixin.after_insert(self)
+
+    # -----------------------------------------------------------------------------
+
     def before_update(self) -> None:
         """Before update entity hook"""
         self.updated_at = datetime.datetime.now()
+
+    # -----------------------------------------------------------------------------
+
+    def after_update(self) -> None:
+        """After update entity hook"""
+        EntityEventMixin.after_update(self)
+
+    # -----------------------------------------------------------------------------
+
+    def after_delete(self) -> None:
+        """After delete entity hook"""
+        EntityEventMixin.after_delete(self)
 
 
 class PropertyConditionEntity(ConditionEntity):

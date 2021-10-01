@@ -20,6 +20,7 @@ use Doctrine\ORM;
 use Doctrine\Persistence;
 use FastyBird\ApplicationExchange\Publisher as ApplicationExchangePublisher;
 use FastyBird\ModulesMetadata;
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\TriggersModule;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Models;
@@ -72,6 +73,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 	{
 		return [
 			ORM\Events::onFlush,
+			ORM\Events::prePersist,
 			ORM\Events::postPersist,
 			ORM\Events::postUpdate,
 		];
@@ -108,6 +110,28 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 
 		foreach ($processEntities as $entity) {
 			$this->processEntityAction($entity, self::ACTION_DELETED);
+		}
+	}
+
+	/**
+	 * @param ORM\Event\LifecycleEventArgs $eventArgs
+	 *
+	 * @return void
+	 */
+	public function prePersist(ORM\Event\LifecycleEventArgs $eventArgs): void
+	{
+		$entity = $eventArgs->getObject();
+
+		// Check for valid entity
+		if (!$entity instanceof Entities\IEntity || !$this->validateNamespace($entity)) {
+			return;
+		}
+
+		if ($entity instanceof Entities\Triggers\IManualTrigger) {
+			new Entities\Triggers\Controls\Control(
+				ModulesMetadataTypes\ControlNameType::TYPE_TRIGGER,
+				$entity,
+			);
 		}
 	}
 

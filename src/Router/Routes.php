@@ -55,6 +55,9 @@ class Routes implements WebServerRouter\IRoutes
 	/** @var Controllers\ConditionsV1Controller */
 	private Controllers\ConditionsV1Controller $conditionsV1Controller;
 
+	/** @var Controllers\TriggerControlsV1Controller */
+	private Controllers\TriggerControlsV1Controller $controlsV1Controller;
+
 	/** @var Middleware\AccessMiddleware */
 	private Middleware\AccessMiddleware $devicesAccessControlMiddleware;
 
@@ -70,6 +73,7 @@ class Routes implements WebServerRouter\IRoutes
 		Controllers\ActionsV1Controller $actionsV1Controller,
 		Controllers\NotificationsV1Controller $notificationsV1Controller,
 		Controllers\ConditionsV1Controller $conditionsV1Controller,
+		Controllers\TriggerControlsV1Controller $controlsV1Controller,
 		Middleware\AccessMiddleware $devicesAccessControlMiddleware,
 		SimpleAuthMiddleware\AccessMiddleware $accessControlMiddleware,
 		SimpleAuthMiddleware\UserMiddleware $userMiddleware
@@ -80,6 +84,7 @@ class Routes implements WebServerRouter\IRoutes
 		$this->actionsV1Controller = $actionsV1Controller;
 		$this->notificationsV1Controller = $notificationsV1Controller;
 		$this->conditionsV1Controller = $conditionsV1Controller;
+		$this->controlsV1Controller = $controlsV1Controller;
 
 		$this->devicesAccessControlMiddleware = $devicesAccessControlMiddleware;
 		$this->accessControlMiddleware = $accessControlMiddleware;
@@ -206,6 +211,29 @@ class Routes implements WebServerRouter\IRoutes
 						'readRelationship',
 					]);
 					$route->setName(TriggersModule\Constants::ROUTE_NAME_TRIGGER_CONDITION_RELATIONSHIP);
+				});
+
+				$group->group('/controls', function (Routing\RouteCollector $group): void {
+					/**
+					 * CONTROLS
+					 */
+					$route = $group->get('', [$this->controlsV1Controller, 'index']);
+					$route->setName(TriggersModule\Constants::ROUTE_NAME_TRIGGER_CONTROLS);
+
+					$route = $group->get('/{' . self::URL_ITEM_ID . '}', [$this->controlsV1Controller, 'read']);
+					$route->setName(TriggersModule\Constants::ROUTE_NAME_TRIGGER_CONTROL);
+
+					$group->post('', [$this->controlsV1Controller, 'create']);
+
+					$group->patch('/{' . self::URL_ITEM_ID . '}', [$this->controlsV1Controller, 'update']);
+
+					$group->delete('/{' . self::URL_ITEM_ID . '}', [$this->controlsV1Controller, 'delete']);
+
+					$route = $group->get('/{' . self::URL_ITEM_ID . '}/relationships/{' . self::RELATION_ENTITY . '}', [
+						$this->controlsV1Controller,
+						'readRelationship',
+					]);
+					$route->setName(TriggersModule\Constants::ROUTE_NAME_TRIGGER_CONTROL_RELATIONSHIP);
 				});
 			});
 		});

@@ -3,7 +3,6 @@ import {
   Item,
   Model,
 } from '@vuex-orm/core'
-import { TriggerControlAction } from '@fastybird/modules-metadata'
 
 import get from 'lodash/get'
 
@@ -24,6 +23,8 @@ import {
 } from '@/lib/models/conditions/types'
 import Notification from '@/lib/models/notifications/Notification'
 import { NotificationInterface } from '@/lib/models/notifications/types'
+import TriggerControl from '@/lib/models/trigger-controls/TriggerControl'
+import { TriggerControlInterface } from '@/lib/models/trigger-controls/types'
 
 // ENTITY MODEL
 // ============
@@ -54,6 +55,7 @@ export default class Trigger extends Model implements TriggerInterface {
       actions: this.hasMany(Action, 'triggerId'),
       conditions: this.hasMany(Condition, 'triggerId'),
       notifications: this.hasMany(Notification, 'triggerId'),
+      controls: this.hasMany(TriggerControl, 'triggerId'),
 
       // Channel property trigger
       device: this.string(null).nullable(),
@@ -83,6 +85,7 @@ export default class Trigger extends Model implements TriggerInterface {
   actions!: ActionInterface[]
   conditions!: ConditionInterface[]
   notifications!: NotificationInterface[]
+  controls!: TriggerControlInterface[]
 
   get isEnabled(): boolean {
     return this.enabled
@@ -233,14 +236,7 @@ export default class Trigger extends Model implements TriggerInterface {
     })
   }
 
-  static transmitCommand(trigger: TriggerInterface, command: TriggerControlAction): Promise<boolean> {
-    return Trigger.dispatch('transmitCommand', {
-      trigger,
-      command,
-    })
-  }
-
-  static reset(): void {
-    Trigger.dispatch('reset')
+  static reset(): Promise<void> {
+    return Trigger.dispatch('reset')
   }
 }

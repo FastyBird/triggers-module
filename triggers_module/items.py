@@ -130,6 +130,65 @@ class ManualTriggerItem(TriggerItem):
         }, **super().to_dict()}
 
 
+class TriggerControlItem:
+    """
+    Trigger control entity base item
+
+    @package        FastyBird:TriggersModule!
+    @module         items
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+    __id: uuid.UUID
+    __name: str
+
+    __trigger_id: uuid.UUID
+
+    # -----------------------------------------------------------------------------
+
+    def __init__(
+        self,
+        trigger_id: uuid.UUID,
+        control_id: uuid.UUID,
+        control_name: str,
+    ) -> None:
+        self.__trigger_id = trigger_id
+
+        self.__id = control_id
+        self.__name = control_name
+
+    # -----------------------------------------------------------------------------
+
+    @property
+    def trigger_id(self) -> uuid.UUID:
+        """Control trigger identifier"""
+        return self.__trigger_id
+
+    # -----------------------------------------------------------------------------
+
+    @property
+    def control_id(self) -> uuid.UUID:
+        """Control identifier"""
+        return self.__id
+
+    # -----------------------------------------------------------------------------
+
+    @property
+    def name(self) -> str:
+        """Control name"""
+        return self.__name
+
+    # -----------------------------------------------------------------------------
+
+    def to_dict(self) -> Dict[str, str]:
+        """Convert control item to dictionary"""
+        return {
+            "id": self.control_id.__str__(),
+            "name": self.name,
+            "trigger": self.trigger_id.__str__(),
+        }
+
+
 class ConditionItem(ABC):
     """
     Base condition entity item
