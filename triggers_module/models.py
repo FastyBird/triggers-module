@@ -23,12 +23,12 @@ import uuid
 import datetime
 from enum import Enum
 from typing import List, Tuple, Dict
-from application_events.database import (
+from application_exchange.database import (
     DatabaseEntityCreatedEvent,
     DatabaseEntityUpdatedEvent,
     DatabaseEntityDeletedEvent,
 )
-from application_events.dispatcher import app_dispatcher
+from application_exchange.dispatcher import app_dispatcher
 from modules_metadata.triggers_module import TriggerConditionOperator
 from modules_metadata.types import ModuleOrigin
 from pony.orm import core as orm, Database, PrimaryKey, Required, Optional, Set, Discriminator, Json
