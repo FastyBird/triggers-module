@@ -38,7 +38,7 @@ export interface RelationInterface extends TJsonaModel {
   type: TriggerEntityTypes | TriggerControlEntityTypes | ActionEntityTypes | NotificationEntityTypes | ConditionEntityTypes
 }
 
-export const ModuleApiPrefix = `/${ModulePrefix.MODULE_TRIGGERS_PREFIX}`
+export const ModuleApiPrefix = `/${ModulePrefix.MODULE_TRIGGERS}`
 
 // STORE
 // =====

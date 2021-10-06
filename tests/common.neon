@@ -30,12 +30,13 @@ extensions:
     ipubDoctrineDynamicDiscriminatorMap : IPub\DoctrineDynamicDiscriminatorMap\DI\DoctrineDynamicDiscriminatorMapExtension
     ipubDoctrinePhone                   : IPub\DoctrinePhone\DI\DoctrinePhoneExtension
     ipubPhone                           : IPub\Phone\DI\PhoneExtension
-    fbApplicationExchange               : FastyBird\ApplicationExchange\DI\ApplicationExchangeExtension
-    fbDatabase                          : FastyBird\Database\DI\DatabaseExtension
     fbDateTimeFactory                   : FastyBird\DateTimeFactory\DI\DateTimeFactoryExtension
     fbJsonApi                           : FastyBird\JsonApi\DI\JsonApiExtension
     fbSimpleAuth                        : FastyBird\SimpleAuth\DI\SimpleAuthExtension
+    fbSocketServerFactory               : FastyBird\SocketServerFactory\DI\SocketServerFactoryExtension
     fbWebServer                         : FastyBird\WebServer\DI\WebServerExtension(%consoleMode%)
+    fbDatabasePlugin                    : FastyBird\DatabasePlugin\DI\DatabasePluginExtension
+    fbExchangePlugin                    : FastyBird\ExchangePlugin\DI\ExchangePluginExtension
 
 contributteConsole:
     name: FastyBird:TriggersModule!

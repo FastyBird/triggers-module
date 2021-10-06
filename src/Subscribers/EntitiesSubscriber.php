@@ -18,8 +18,7 @@ namespace FastyBird\TriggersModule\Subscribers;
 use Doctrine\Common;
 use Doctrine\ORM;
 use Doctrine\Persistence;
-use FastyBird\ApplicationExchange\Publisher as ApplicationExchangePublisher;
-use FastyBird\ModulesMetadata;
+use FastyBird\ExchangePlugin\Publisher as ExchangePluginPublisher;
 use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\TriggersModule;
 use FastyBird\TriggersModule\Entities;
@@ -48,14 +47,14 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 	/** @var Models\States\ITriggerItemRepository|null */
 	private ?Models\States\ITriggerItemRepository $triggerItemRepository;
 
-	/** @var ApplicationExchangePublisher\IPublisher */
-	private ApplicationExchangePublisher\IPublisher $publisher;
+	/** @var ExchangePluginPublisher\IPublisher */
+	private ExchangePluginPublisher\IPublisher $publisher;
 
 	/** @var ORM\EntityManagerInterface */
 	private ORM\EntityManagerInterface $entityManager;
 
 	public function __construct(
-		ApplicationExchangePublisher\IPublisher $publisher,
+		ExchangePluginPublisher\IPublisher $publisher,
 		ORM\EntityManagerInterface $entityManager,
 		?Models\States\ITriggerItemRepository $triggerItemRepository = null
 	) {
@@ -129,7 +128,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 
 		if ($entity instanceof Entities\Triggers\IManualTrigger) {
 			new Entities\Triggers\Controls\Control(
-				ModulesMetadataTypes\ControlNameType::TYPE_TRIGGER,
+				ModulesMetadataTypes\ControlNameType::NAME_TRIGGER,
 				$entity,
 			);
 		}
@@ -203,7 +202,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 			case self::ACTION_CREATED:
 				foreach (TriggersModule\Constants::MESSAGE_BUS_CREATED_ENTITIES_ROUTING_KEYS_MAPPING as $class => $routingKey) {
 					if ($this->validateEntity($entity, $class)) {
-						$publishRoutingKey = $routingKey;
+						$publishRoutingKey = ModulesMetadataTypes\RoutingKeyType::get($routingKey);
 					}
 				}
 
@@ -212,7 +211,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 			case self::ACTION_UPDATED:
 				foreach (TriggersModule\Constants::MESSAGE_BUS_UPDATED_ENTITIES_ROUTING_KEYS_MAPPING as $class => $routingKey) {
 					if ($this->validateEntity($entity, $class)) {
-						$publishRoutingKey = $routingKey;
+						$publishRoutingKey = ModulesMetadataTypes\RoutingKeyType::get($routingKey);
 					}
 				}
 
@@ -221,7 +220,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 			case self::ACTION_DELETED:
 				foreach (TriggersModule\Constants::MESSAGE_BUS_DELETED_ENTITIES_ROUTING_KEYS_MAPPING as $class => $routingKey) {
 					if ($this->validateEntity($entity, $class)) {
-						$publishRoutingKey = $routingKey;
+						$publishRoutingKey = ModulesMetadataTypes\RoutingKeyType::get($routingKey);
 					}
 				}
 
@@ -233,7 +232,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 				$state = $this->triggerItemRepository->findOne($entity->getId());
 
 				$this->publisher->publish(
-					ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN,
+					ModulesMetadataTypes\ModuleOriginType::get(ModulesMetadataTypes\ModuleOriginType::ORIGIN_MODULE_TRIGGERS),
 					$publishRoutingKey,
 					array_merge($state !== null ? [
 						'is_triggered' => $state->getValidationResult(),
@@ -244,7 +243,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 				$state = $this->triggerItemRepository->findOne($entity->getId());
 
 				$this->publisher->publish(
-					ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN,
+					ModulesMetadataTypes\ModuleOriginType::get(ModulesMetadataTypes\ModuleOriginType::ORIGIN_MODULE_TRIGGERS),
 					$publishRoutingKey,
 					array_merge($state !== null ? [
 						'is_fulfilled' => $state->getValidationResult(),
@@ -274,7 +273,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 					}
 
 					$this->publisher->publish(
-						ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN,
+						ModulesMetadataTypes\ModuleOriginType::get(ModulesMetadataTypes\ModuleOriginType::ORIGIN_MODULE_TRIGGERS),
 						$publishRoutingKey,
 						array_merge([
 							'is_triggered' => $isTriggered,
@@ -284,7 +283,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 
 				} else {
 					$this->publisher->publish(
-						ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN,
+						ModulesMetadataTypes\ModuleOriginType::get(ModulesMetadataTypes\ModuleOriginType::ORIGIN_MODULE_TRIGGERS),
 						$publishRoutingKey,
 						array_merge([
 							'is_triggered' => $isTriggered,
@@ -293,7 +292,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 				}
 			} else {
 				$this->publisher->publish(
-					ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN,
+					ModulesMetadataTypes\ModuleOriginType::get(ModulesMetadataTypes\ModuleOriginType::ORIGIN_MODULE_TRIGGERS),
 					$publishRoutingKey,
 					$entity->toArray()
 				);

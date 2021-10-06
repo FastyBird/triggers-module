@@ -415,7 +415,7 @@ const moduleActions: ActionTree<ActionState, any> = {
   },
 
   async socketData({ state, commit }, payload: { origin: string, routingKey: string, data: string }): Promise<boolean> {
-    if (payload.origin !== ModuleOrigin.MODULE_TRIGGERS_ORIGIN) {
+    if (payload.origin !== ModuleOrigin.MODULE_TRIGGERS) {
       return false
     }
 

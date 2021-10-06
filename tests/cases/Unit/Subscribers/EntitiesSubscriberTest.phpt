@@ -3,7 +3,7 @@
 namespace Tests\Cases;
 
 use Doctrine\ORM;
-use FastyBird\ApplicationExchange\Publisher as ApplicationExchangePublisher;
+use FastyBird\ExchangePlugin\Publisher as ExchangePluginPublisher;
 use FastyBird\ModulesMetadata;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Subscribers;
@@ -22,7 +22,7 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 
 	public function testSubscriberEvents(): void
 	{
-		$publisher = Mockery::mock(ApplicationExchangePublisher\IPublisher::class);
+		$publisher = Mockery::mock(ExchangePluginPublisher\IPublisher::class);
 		$entityManager = Mockery::mock(ORM\EntityManagerInterface::class);
 
 		$subscriber = new Subscribers\EntitiesSubscriber(
@@ -35,7 +35,7 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 
 	public function testPublishCreatedEntity(): void
 	{
-		$publisher = Mockery::mock(ApplicationExchangePublisher\IPublisher::class);
+		$publisher = Mockery::mock(ExchangePluginPublisher\IPublisher::class);
 		$publisher
 			->shouldReceive('publish')
 			->withArgs(function (string $origin, string $key, array $data): bool {
@@ -126,7 +126,7 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 
 	public function testPublishUpdatedEntity(): void
 	{
-		$publisher = Mockery::mock(ApplicationExchangePublisher\IPublisher::class);
+		$publisher = Mockery::mock(ExchangePluginPublisher\IPublisher::class);
 		$publisher
 			->shouldReceive('publish')
 			->withArgs(function (string $origin, string $key, array $data): bool {
@@ -169,7 +169,7 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 
 	public function testPublishDeletedEntity(): void
 	{
-		$publisher = Mockery::mock(ApplicationExchangePublisher\IPublisher::class);
+		$publisher = Mockery::mock(ExchangePluginPublisher\IPublisher::class);
 		$publisher
 			->shouldReceive('publish')
 			->withArgs(function (string $origin, string $key, array $data): bool {

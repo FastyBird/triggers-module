@@ -35,6 +35,7 @@ use Throwable;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="action_type", type="string", length=20)
  * @ORM\DiscriminatorMap({
+ *    "device-property"  = "FastyBird\TriggersModule\Entities\Actions\DevicePropertyAction",
  *    "channel-property" = "FastyBird\TriggersModule\Entities\Actions\ChannelPropertyAction"
  * })
  * @ORM\MappedSuperclass
