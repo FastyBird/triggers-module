@@ -14,10 +14,11 @@
 
 # Test dependencies
 import uuid
+from kink import inject
 
 # Library libs
 from triggers_module.items import TriggerControlItem
-from triggers_module.repositories import trigger_control_repository
+from triggers_module.repositories import TriggerControlsRepository
 from modules_metadata.routing import RoutingKey
 
 # Tests libs
@@ -25,17 +26,19 @@ from tests.pytests.tests import DbTestCase
 
 
 class TestTriggersControlsRepository(DbTestCase):
-    def test_repository_iterator(self) -> None:
-        trigger_control_repository.initialize()
+    @inject
+    def test_repository_iterator(self, control_repository: TriggerControlsRepository) -> None:
+        control_repository.initialize()
 
-        self.assertEqual(3, len(trigger_control_repository))
+        self.assertEqual(3, len(control_repository))
 
     # -----------------------------------------------------------------------------
 
-    def test_get_item(self) -> None:
-        trigger_control_repository.initialize()
+    @inject
+    def test_get_item(self, control_repository: TriggerControlsRepository) -> None:
+        control_repository.initialize()
 
-        control_item = trigger_control_repository.get_by_id(
+        control_item = control_repository.get_by_id(
             uuid.UUID("177d6fc7-1905-4fd9-b847-e2da8189dd6a", version=4)
         )
 
@@ -44,10 +47,11 @@ class TestTriggersControlsRepository(DbTestCase):
 
     # -----------------------------------------------------------------------------
 
-    def test_create_from_exchange(self) -> None:
-        trigger_control_repository.initialize()
+    @inject
+    def test_create_from_exchange(self, control_repository: TriggerControlsRepository) -> None:
+        control_repository.initialize()
 
-        result: bool = trigger_control_repository.create_from_exchange(
+        result: bool = control_repository.create_from_exchange(
             RoutingKey(RoutingKey.TRIGGERS_CONTROL_ENTITY_CREATED),
             {
                 "id": "177d6fc7-1905-4fd9-b847-e2da8189dd6a",
@@ -58,7 +62,7 @@ class TestTriggersControlsRepository(DbTestCase):
 
         self.assertTrue(result)
 
-        control_item = trigger_control_repository.get_by_id(
+        control_item = control_repository.get_by_id(
             uuid.UUID("177d6fc7-1905-4fd9-b847-e2da8189dd6a", version=4)
         )
 
@@ -72,10 +76,11 @@ class TestTriggersControlsRepository(DbTestCase):
 
     # -----------------------------------------------------------------------------
 
-    def test_update_from_exchange(self) -> None:
-        trigger_control_repository.initialize()
+    @inject
+    def test_update_from_exchange(self, control_repository: TriggerControlsRepository) -> None:
+        control_repository.initialize()
 
-        result: bool = trigger_control_repository.update_from_exchange(
+        result: bool = control_repository.update_from_exchange(
             RoutingKey(RoutingKey.TRIGGERS_CONTROL_ENTITY_UPDATED),
             {
                 "id": "177d6fc7-1905-4fd9-b847-e2da8189dd6a",
@@ -86,7 +91,7 @@ class TestTriggersControlsRepository(DbTestCase):
 
         self.assertTrue(result)
 
-        control_item = trigger_control_repository.get_by_id(
+        control_item = control_repository.get_by_id(
             uuid.UUID("177d6fc7-1905-4fd9-b847-e2da8189dd6a", version=4)
         )
 
@@ -100,17 +105,18 @@ class TestTriggersControlsRepository(DbTestCase):
 
     # -----------------------------------------------------------------------------
 
-    def test_delete_from_exchange(self) -> None:
-        trigger_control_repository.initialize()
+    @inject
+    def test_delete_from_exchange(self, control_repository: TriggerControlsRepository) -> None:
+        control_repository.initialize()
 
-        control_item = trigger_control_repository.get_by_id(
+        control_item = control_repository.get_by_id(
             uuid.UUID("177d6fc7-1905-4fd9-b847-e2da8189dd6a", version=4)
         )
 
         self.assertIsInstance(control_item, TriggerControlItem)
         self.assertEqual("177d6fc7-1905-4fd9-b847-e2da8189dd6a", control_item.control_id.__str__())
 
-        result: bool = trigger_control_repository.delete_from_exchange(
+        result: bool = control_repository.delete_from_exchange(
             RoutingKey(RoutingKey.TRIGGERS_CONTROL_ENTITY_DELETED),
             {
                 "id": "177d6fc7-1905-4fd9-b847-e2da8189dd6a",
@@ -121,7 +127,7 @@ class TestTriggersControlsRepository(DbTestCase):
 
         self.assertTrue(result)
 
-        control_item = trigger_control_repository.get_by_id(
+        control_item = control_repository.get_by_id(
             uuid.UUID("177d6fc7-1905-4fd9-b847-e2da8189dd6a", version=4)
         )
 

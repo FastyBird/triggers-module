@@ -14,17 +14,19 @@
 
 # Test dependencies
 import uuid
+from kink import inject
 
 # Library libs
 from triggers_module.items import PropertyActionItem, ChannelPropertyActionItem
-from triggers_module.repositories import action_repository
+from triggers_module.repositories import ActionsRepository
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
 
 
 class TestActionItem(DbTestCase):
-    def test_transform_to_dict(self) -> None:
+    @inject
+    def test_transform_to_dict(self, action_repository: ActionsRepository) -> None:
         action_repository.initialize()
 
         action_item = action_repository.get_by_id(
@@ -47,7 +49,8 @@ class TestActionItem(DbTestCase):
 
     # -----------------------------------------------------------------------------
 
-    def test_validate(self) -> None:
+    @inject
+    def test_validate(self, action_repository: ActionsRepository) -> None:
         action_repository.initialize()
 
         action_item = action_repository.get_by_id(

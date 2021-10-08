@@ -14,26 +14,29 @@
 
 # Test dependencies
 import uuid
+from kink import inject
 from modules_metadata.routing import RoutingKey
 from modules_metadata.triggers_module import TriggerActionType
 
 # Library libs
 from triggers_module.items import PropertyActionItem, ChannelPropertyActionItem
-from triggers_module.repositories import action_repository
+from triggers_module.repositories import ActionsRepository
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
 
 
 class TestActionsRepository(DbTestCase):
-    def test_repository_iterator(self) -> None:
+    @inject
+    def test_repository_iterator(self, action_repository: ActionsRepository) -> None:
         action_repository.initialize()
 
         self.assertEqual(13, len(action_repository))
 
     # -----------------------------------------------------------------------------
 
-    def test_get_item(self) -> None:
+    @inject
+    def test_get_item(self, action_repository: ActionsRepository) -> None:
         action_repository.initialize()
 
         action_item = action_repository.get_by_id(
@@ -46,7 +49,8 @@ class TestActionsRepository(DbTestCase):
 
     # -----------------------------------------------------------------------------
 
-    def test_get_item_by_property(self) -> None:
+    @inject
+    def test_get_item_by_property(self, action_repository: ActionsRepository) -> None:
         action_repository.initialize()
 
         action_item = action_repository.get_by_property_identifier(
@@ -59,7 +63,8 @@ class TestActionsRepository(DbTestCase):
 
     # -----------------------------------------------------------------------------
 
-    def test_create_from_exchange(self) -> None:
+    @inject
+    def test_create_from_exchange(self, action_repository: ActionsRepository) -> None:
         action_repository.initialize()
 
         result: bool = action_repository.create_from_exchange(
@@ -98,7 +103,8 @@ class TestActionsRepository(DbTestCase):
 
     # -----------------------------------------------------------------------------
 
-    def test_update_from_exchange(self) -> None:
+    @inject
+    def test_update_from_exchange(self, action_repository: ActionsRepository) -> None:
         action_repository.initialize()
 
         action_item = action_repository.get_by_id(
@@ -146,7 +152,8 @@ class TestActionsRepository(DbTestCase):
 
     # -----------------------------------------------------------------------------
 
-    def test_delete_from_exchange(self) -> None:
+    @inject
+    def test_delete_from_exchange(self, action_repository: ActionsRepository) -> None:
         action_repository.initialize()
 
         action_item = action_repository.get_by_id(

@@ -15,17 +15,19 @@
 # Test dependencies
 import datetime
 import uuid
+from kink import inject
 
 # Library libs
 from triggers_module.items import PropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem
-from triggers_module.repositories import condition_repository
+from triggers_module.repositories import ConditionsRepository
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
 
 
 class TestConditionItem(DbTestCase):
-    def test_transform_to_dict(self) -> None:
+    @inject
+    def test_transform_to_dict(self, condition_repository: ConditionsRepository) -> None:
         condition_repository.initialize()
 
         condition_item = condition_repository.get_by_id(
@@ -64,7 +66,8 @@ class TestConditionItem(DbTestCase):
 
     # -----------------------------------------------------------------------------
 
-    def test_validate(self) -> None:
+    @inject
+    def test_validate(self, condition_repository: ConditionsRepository) -> None:
         condition_repository.initialize()
 
         condition_item = condition_repository.get_by_id(

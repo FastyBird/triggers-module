@@ -22,6 +22,9 @@ Module repositories definitions
 import json
 import uuid
 from typing import List, Dict
+from exchange_plugin.dispatcher import EventDispatcher
+from exchange_plugin.events.event import IEvent
+from kink import inject
 import modules_metadata.exceptions as metadata_exceptions
 from modules_metadata.loader import load_schema
 from modules_metadata.routing import RoutingKey
@@ -31,6 +34,7 @@ from modules_metadata.types import ModuleOrigin
 from pony.orm import core as orm
 
 # Library libs
+from triggers_module.events import ModelEntityCreatedEvent, ModelEntityUpdatedEvent, ModelEntityDeletedEvent
 from triggers_module.exceptions import HandleExchangeDataException
 from triggers_module.models import (
     TriggerEntity,
@@ -63,6 +67,7 @@ from triggers_module.items import (
 )
 
 
+@inject
 class TriggersRepository:
     """
     Triggers repository
@@ -75,6 +80,31 @@ class TriggersRepository:
     __items: Dict[str, TriggerItem] or None = None
 
     __iterator_index = 0
+
+    __event_dispatcher: EventDispatcher
+
+    # -----------------------------------------------------------------------------
+
+    def __init__(
+        self,
+        event_dispatcher: EventDispatcher,
+    ) -> None:
+        self.__event_dispatcher = event_dispatcher
+
+        self.__event_dispatcher.add_listener(
+            event_id=ModelEntityCreatedEvent.EVENT_NAME,
+            listener=self.__entity_created,
+        )
+
+        self.__event_dispatcher.add_listener(
+            event_id=ModelEntityUpdatedEvent.EVENT_NAME,
+            listener=self.__entity_updated,
+        )
+
+        self.__event_dispatcher.add_listener(
+            event_id=ModelEntityDeletedEvent.EVENT_NAME,
+            listener=self.__entity_deleted,
+        )
 
     # -----------------------------------------------------------------------------
 
@@ -191,6 +221,39 @@ class TriggersRepository:
 
     # -----------------------------------------------------------------------------
 
+    def __entity_created(self, event: IEvent) -> None:
+        if (
+            not isinstance(event, ModelEntityCreatedEvent)
+            or not isinstance(event.entity, (ManualTriggerEntity, AutomaticTriggerEntity))
+        ):
+            return
+
+        self.initialize()
+
+    # -----------------------------------------------------------------------------
+
+    def __entity_updated(self, event: IEvent) -> None:
+        if (
+            not isinstance(event, ModelEntityUpdatedEvent)
+            or not isinstance(event.entity, (ManualTriggerEntity, AutomaticTriggerEntity))
+        ):
+            return
+
+        self.initialize()
+
+    # -----------------------------------------------------------------------------
+
+    def __entity_deleted(self, event: IEvent) -> None:
+        if (
+            not isinstance(event, ModelEntityDeletedEvent)
+            or not isinstance(event.entity, (ManualTriggerEntity, AutomaticTriggerEntity))
+        ):
+            return
+
+        self.initialize()
+
+    # -----------------------------------------------------------------------------
+
     @staticmethod
     def __create_item(entity: TriggerEntity) -> TriggerItem or None:
         if isinstance(entity, AutomaticTriggerEntity):
@@ -271,18 +334,44 @@ class TriggersRepository:
         raise StopIteration
 
 
+@inject
 class ActionsRepository:
     """
     Triggers actions repository
 
     @package        FastyBird:TriggersModule!
-    @module         models
+    @module         repositories
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
     __items: Dict[str, ActionItem] or None = None
 
     __iterator_index = 0
+
+    __event_dispatcher: EventDispatcher
+
+    # -----------------------------------------------------------------------------
+
+    def __init__(
+        self,
+        event_dispatcher: EventDispatcher,
+    ) -> None:
+        self.__event_dispatcher = event_dispatcher
+
+        self.__event_dispatcher.add_listener(
+            event_id=ModelEntityCreatedEvent.EVENT_NAME,
+            listener=self.__entity_created,
+        )
+
+        self.__event_dispatcher.add_listener(
+            event_id=ModelEntityUpdatedEvent.EVENT_NAME,
+            listener=self.__entity_updated,
+        )
+
+        self.__event_dispatcher.add_listener(
+            event_id=ModelEntityDeletedEvent.EVENT_NAME,
+            listener=self.__entity_deleted,
+        )
 
     # -----------------------------------------------------------------------------
 
@@ -454,6 +543,39 @@ class ActionsRepository:
 
     # -----------------------------------------------------------------------------
 
+    def __entity_created(self, event: IEvent) -> None:
+        if (
+            not isinstance(event, ModelEntityCreatedEvent)
+            or not isinstance(event.entity, (DevicePropertyActionEntity, ChannelPropertyActionEntity))
+        ):
+            return
+
+        self.initialize()
+
+    # -----------------------------------------------------------------------------
+
+    def __entity_updated(self, event: IEvent) -> None:
+        if (
+            not isinstance(event, ModelEntityUpdatedEvent)
+            or not isinstance(event.entity, (DevicePropertyActionEntity, ChannelPropertyActionEntity))
+        ):
+            return
+
+        self.initialize()
+
+    # -----------------------------------------------------------------------------
+
+    def __entity_deleted(self, event: IEvent) -> None:
+        if (
+            not isinstance(event, ModelEntityDeletedEvent)
+            or not isinstance(event.entity, (DevicePropertyActionEntity, ChannelPropertyActionEntity))
+        ):
+            return
+
+        self.initialize()
+
+    # -----------------------------------------------------------------------------
+
     @staticmethod
     def __create_item(entity: ActionEntity) -> ActionItem or None:
         if isinstance(entity, DevicePropertyActionEntity):
@@ -544,18 +666,44 @@ class ActionsRepository:
         raise StopIteration
 
 
+@inject
 class ConditionsRepository:
     """
     Triggers conditions repository
 
     @package        FastyBird:TriggersModule!
-    @module         models
+    @module         repositories
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
     __items: Dict[str, ConditionItem] or None = None
 
     __iterator_index = 0
+
+    __event_dispatcher: EventDispatcher
+
+    # -----------------------------------------------------------------------------
+
+    def __init__(
+        self,
+        event_dispatcher: EventDispatcher,
+    ) -> None:
+        self.__event_dispatcher = event_dispatcher
+
+        self.__event_dispatcher.add_listener(
+            event_id=ModelEntityCreatedEvent.EVENT_NAME,
+            listener=self.__entity_created,
+        )
+
+        self.__event_dispatcher.add_listener(
+            event_id=ModelEntityUpdatedEvent.EVENT_NAME,
+            listener=self.__entity_updated,
+        )
+
+        self.__event_dispatcher.add_listener(
+            event_id=ModelEntityDeletedEvent.EVENT_NAME,
+            listener=self.__entity_deleted,
+        )
 
     # -----------------------------------------------------------------------------
 
@@ -732,6 +880,54 @@ class ConditionsRepository:
 
     # -----------------------------------------------------------------------------
 
+    def __entity_created(self, event: IEvent) -> None:
+        if (
+            not isinstance(event, ModelEntityCreatedEvent)
+            or not isinstance(event.entity, (
+                DevicePropertyConditionEntity,
+                ChannelPropertyConditionEntity,
+                DateConditionEntity,
+                TimeConditionEntity,
+            ))
+        ):
+            return
+
+        self.initialize()
+
+    # -----------------------------------------------------------------------------
+
+    def __entity_updated(self, event: IEvent) -> None:
+        if (
+            not isinstance(event, ModelEntityUpdatedEvent)
+            or not isinstance(event.entity, (
+                DevicePropertyConditionEntity,
+                ChannelPropertyConditionEntity,
+                DateConditionEntity,
+                TimeConditionEntity,
+            ))
+        ):
+            return
+
+        self.initialize()
+
+    # -----------------------------------------------------------------------------
+
+    def __entity_deleted(self, event: IEvent) -> None:
+        if (
+            not isinstance(event, ModelEntityDeletedEvent)
+            or not isinstance(event.entity, (
+                DevicePropertyConditionEntity,
+                ChannelPropertyConditionEntity,
+                DateConditionEntity,
+                TimeConditionEntity,
+            ))
+        ):
+            return
+
+        self.initialize()
+
+    # -----------------------------------------------------------------------------
+
     @staticmethod
     def __create_item(entity: ConditionEntity) -> ConditionItem or None:
         if isinstance(entity, DevicePropertyConditionEntity):
@@ -860,6 +1056,7 @@ class ConditionsRepository:
         raise StopIteration
 
 
+@inject
 class TriggerControlsRepository:
     """
     Base controls repository
@@ -872,6 +1069,31 @@ class TriggerControlsRepository:
     _items: Dict[str, TriggerControlItem] or None = None
 
     __iterator_index = 0
+
+    __event_dispatcher: EventDispatcher
+
+    # -----------------------------------------------------------------------------
+
+    def __init__(
+        self,
+        event_dispatcher: EventDispatcher,
+    ) -> None:
+        self.__event_dispatcher = event_dispatcher
+
+        self.__event_dispatcher.add_listener(
+            event_id=ModelEntityCreatedEvent.EVENT_NAME,
+            listener=self.__entity_created,
+        )
+
+        self.__event_dispatcher.add_listener(
+            event_id=ModelEntityUpdatedEvent.EVENT_NAME,
+            listener=self.__entity_updated,
+        )
+
+        self.__event_dispatcher.add_listener(
+            event_id=ModelEntityDeletedEvent.EVENT_NAME,
+            listener=self.__entity_deleted,
+        )
 
     # -----------------------------------------------------------------------------
 
@@ -992,6 +1214,30 @@ class TriggerControlsRepository:
 
     # -----------------------------------------------------------------------------
 
+    def __entity_created(self, event: IEvent) -> None:
+        if not isinstance(event, ModelEntityCreatedEvent) or not isinstance(event.entity, TriggerControlEntity):
+            return
+
+        self.initialize()
+
+    # -----------------------------------------------------------------------------
+
+    def __entity_updated(self, event: IEvent) -> None:
+        if not isinstance(event, ModelEntityUpdatedEvent) or not isinstance(event.entity, TriggerControlEntity):
+            return
+
+        self.initialize()
+
+    # -----------------------------------------------------------------------------
+
+    def __entity_deleted(self, event: IEvent) -> None:
+        if not isinstance(event, ModelEntityDeletedEvent) or not isinstance(event.entity, TriggerControlEntity):
+            return
+
+        self.initialize()
+
+    # -----------------------------------------------------------------------------
+
     @staticmethod
     def _create_item(entity: TriggerControlEntity) -> TriggerControlItem or None:
         if isinstance(entity, TriggerControlEntity):
@@ -1078,9 +1324,3 @@ def validate_exchange_data(origin: ModuleOrigin, routing_key: RoutingKey, data: 
 
     except metadata_exceptions.InvalidDataException as ex:
         raise HandleExchangeDataException("Provided data are not valid") from ex
-
-
-trigger_repository = TriggersRepository()
-trigger_control_repository = TriggerControlsRepository()
-action_repository = ActionsRepository()
-condition_repository = ConditionsRepository()

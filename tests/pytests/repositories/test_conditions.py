@@ -14,26 +14,29 @@
 
 # Test dependencies
 import uuid
+from kink import inject
 from modules_metadata.routing import RoutingKey
 from modules_metadata.triggers_module import TriggerConditionType, TriggerConditionOperator
 
 # Library libs
 from triggers_module.items import PropertyConditionItem, ChannelPropertyConditionItem
-from triggers_module.repositories import condition_repository
+from triggers_module.repositories import ConditionsRepository
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
 
 
 class TestConditionsRepository(DbTestCase):
-    def test_repository_iterator(self) -> None:
+    @inject
+    def test_repository_iterator(self, condition_repository: ConditionsRepository) -> None:
         condition_repository.initialize()
 
         self.assertEqual(3, len(condition_repository))
 
     # -----------------------------------------------------------------------------
 
-    def test_get_item(self) -> None:
+    @inject
+    def test_get_item(self, condition_repository: ConditionsRepository) -> None:
         condition_repository.initialize()
 
         condition_item = condition_repository.get_by_id(
@@ -46,7 +49,8 @@ class TestConditionsRepository(DbTestCase):
 
     # -----------------------------------------------------------------------------
 
-    def test_get_item_by_property(self) -> None:
+    @inject
+    def test_get_item_by_property(self, condition_repository: ConditionsRepository) -> None:
         condition_repository.initialize()
 
         condition_item = condition_repository.get_by_property_identifier(
@@ -59,7 +63,8 @@ class TestConditionsRepository(DbTestCase):
 
     # -----------------------------------------------------------------------------
 
-    def test_create_from_exchange(self) -> None:
+    @inject
+    def test_create_from_exchange(self, condition_repository: ConditionsRepository) -> None:
         condition_repository.initialize()
 
         result: bool = condition_repository.create_from_exchange(
@@ -100,7 +105,8 @@ class TestConditionsRepository(DbTestCase):
 
     # -----------------------------------------------------------------------------
 
-    def test_update_from_exchange(self) -> None:
+    @inject
+    def test_update_from_exchange(self, condition_repository: ConditionsRepository) -> None:
         condition_repository.initialize()
 
         condition_item = condition_repository.get_by_id(
@@ -150,7 +156,8 @@ class TestConditionsRepository(DbTestCase):
 
     # -----------------------------------------------------------------------------
 
-    def test_delete_from_exchange(self) -> None:
+    @inject
+    def test_delete_from_exchange(self, condition_repository: ConditionsRepository) -> None:
         condition_repository.initialize()
 
         condition_item = condition_repository.get_by_id(

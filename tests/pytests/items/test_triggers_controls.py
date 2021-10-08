@@ -14,20 +14,22 @@
 
 # Test dependencies
 import uuid
+from kink import inject
 
 # Library libs
 from triggers_module.items import TriggerControlItem
-from triggers_module.repositories import trigger_control_repository
+from triggers_module.repositories import TriggerControlsRepository
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
 
 
 class TestTriggerControlItem(DbTestCase):
-    def test_transform_to_dict(self) -> None:
-        trigger_control_repository.initialize()
+    @inject
+    def test_transform_to_dict(self, control_repository: TriggerControlsRepository) -> None:
+        control_repository.initialize()
 
-        control_item = trigger_control_repository.get_by_id(
+        control_item = control_repository.get_by_id(
             uuid.UUID("177d6fc7-1905-4fd9-b847-e2da8189dd6a", version=4)
         )
 

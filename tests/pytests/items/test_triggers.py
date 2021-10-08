@@ -14,17 +14,19 @@
 
 # Test dependencies
 import uuid
+from kink import inject
 
 # Library libs
 from triggers_module.items import TriggerItem
-from triggers_module.repositories import trigger_repository
+from triggers_module.repositories import TriggersRepository
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
 
 
 class TestTriggersRepository(DbTestCase):
-    def test_transform_to_dict(self) -> None:
+    @inject
+    def test_transform_to_dict(self, trigger_repository: TriggersRepository) -> None:
         trigger_repository.initialize()
 
         trigger_item = trigger_repository.get_by_id(
