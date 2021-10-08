@@ -18,7 +18,7 @@ from kink import inject
 
 # Library libs
 from triggers_module.items import PropertyActionItem, ChannelPropertyActionItem
-from triggers_module.repositories import ActionsRepository
+from triggers_module.repositories import ActionRepository
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
@@ -26,7 +26,7 @@ from tests.pytests.tests import DbTestCase
 
 class TestActionItem(DbTestCase):
     @inject
-    def test_transform_to_dict(self, action_repository: ActionsRepository) -> None:
+    def test_transform_to_dict(self, action_repository: ActionRepository) -> None:
         action_repository.initialize()
 
         action_item = action_repository.get_by_id(
@@ -50,7 +50,7 @@ class TestActionItem(DbTestCase):
     # -----------------------------------------------------------------------------
 
     @inject
-    def test_validate(self, action_repository: ActionsRepository) -> None:
+    def test_validate(self, action_repository: ActionRepository) -> None:
         action_repository.initialize()
 
         action_item = action_repository.get_by_id(

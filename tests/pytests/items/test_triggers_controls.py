@@ -18,7 +18,7 @@ from kink import inject
 
 # Library libs
 from triggers_module.items import TriggerControlItem
-from triggers_module.repositories import TriggerControlsRepository
+from triggers_module.repositories import TriggerControlRepository
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
@@ -26,7 +26,7 @@ from tests.pytests.tests import DbTestCase
 
 class TestTriggerControlItem(DbTestCase):
     @inject
-    def test_transform_to_dict(self, control_repository: TriggerControlsRepository) -> None:
+    def test_transform_to_dict(self, control_repository: TriggerControlRepository) -> None:
         control_repository.initialize()
 
         control_item = control_repository.get_by_id(

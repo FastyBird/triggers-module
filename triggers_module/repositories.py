@@ -70,9 +70,9 @@ from triggers_module.items import (
 
 
 @inject
-class TriggersRepository:
+class TriggerRepository:
     """
-    Triggers repository
+    Trigger repository
 
     @package        FastyBird:TriggersModule!
     @module         repositories
@@ -300,7 +300,7 @@ class TriggersRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __iter__(self) -> "TriggersRepository":
+    def __iter__(self) -> "TriggerRepository":
         # Reset index for nex iteration
         self.__iterator_index = 0
 
@@ -337,9 +337,9 @@ class TriggersRepository:
 
 
 @inject
-class ActionsRepository:
+class ActionRepository:
     """
-    Triggers actions repository
+    Trigger action repository
 
     @package        FastyBird:TriggersModule!
     @module         repositories
@@ -632,7 +632,7 @@ class ActionsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __iter__(self) -> "ActionsRepository":
+    def __iter__(self) -> "ActionRepository":
         # Reset index for nex iteration
         self.__iterator_index = 0
 
@@ -669,9 +669,9 @@ class ActionsRepository:
 
 
 @inject
-class ConditionsRepository:
+class ConditionRepository:
     """
-    Triggers conditions repository
+    Trigger condition repository
 
     @package        FastyBird:TriggersModule!
     @module         repositories
@@ -1022,7 +1022,7 @@ class ConditionsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __iter__(self) -> "ConditionsRepository":
+    def __iter__(self) -> "ConditionRepository":
         # Reset index for nex iteration
         self.__iterator_index = 0
 
@@ -1059,9 +1059,9 @@ class ConditionsRepository:
 
 
 @inject
-class TriggerControlsRepository:
+class TriggerControlRepository:
     """
-    Base controls repository
+    Trigger control repository
 
     @package        FastyBird:DevicesModule!
     @module         repositories
@@ -1266,7 +1266,7 @@ class TriggerControlsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __iter__(self) -> "ControlsRepository":
+    def __iter__(self) -> "TriggerControlRepository":
         # Reset index for nex iteration
         self.__iterator_index = 0
 

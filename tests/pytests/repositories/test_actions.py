@@ -20,7 +20,7 @@ from modules_metadata.triggers_module import TriggerActionType
 
 # Library libs
 from triggers_module.items import PropertyActionItem, ChannelPropertyActionItem
-from triggers_module.repositories import ActionsRepository
+from triggers_module.repositories import ActionRepository
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
@@ -28,7 +28,7 @@ from tests.pytests.tests import DbTestCase
 
 class TestActionsRepository(DbTestCase):
     @inject
-    def test_repository_iterator(self, action_repository: ActionsRepository) -> None:
+    def test_repository_iterator(self, action_repository: ActionRepository) -> None:
         action_repository.initialize()
 
         self.assertEqual(13, len(action_repository))
@@ -36,7 +36,7 @@ class TestActionsRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     @inject
-    def test_get_item(self, action_repository: ActionsRepository) -> None:
+    def test_get_item(self, action_repository: ActionRepository) -> None:
         action_repository.initialize()
 
         action_item = action_repository.get_by_id(
@@ -50,7 +50,7 @@ class TestActionsRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     @inject
-    def test_get_item_by_property(self, action_repository: ActionsRepository) -> None:
+    def test_get_item_by_property(self, action_repository: ActionRepository) -> None:
         action_repository.initialize()
 
         action_item = action_repository.get_by_property_identifier(
@@ -64,7 +64,7 @@ class TestActionsRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     @inject
-    def test_create_from_exchange(self, action_repository: ActionsRepository) -> None:
+    def test_create_from_exchange(self, action_repository: ActionRepository) -> None:
         action_repository.initialize()
 
         result: bool = action_repository.create_from_exchange(
@@ -104,7 +104,7 @@ class TestActionsRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     @inject
-    def test_update_from_exchange(self, action_repository: ActionsRepository) -> None:
+    def test_update_from_exchange(self, action_repository: ActionRepository) -> None:
         action_repository.initialize()
 
         action_item = action_repository.get_by_id(
@@ -153,7 +153,7 @@ class TestActionsRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     @inject
-    def test_delete_from_exchange(self, action_repository: ActionsRepository) -> None:
+    def test_delete_from_exchange(self, action_repository: ActionRepository) -> None:
         action_repository.initialize()
 
         action_item = action_repository.get_by_id(

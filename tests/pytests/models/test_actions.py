@@ -22,7 +22,7 @@ from exchange_plugin.publisher import Publisher
 # Library libs
 from triggers_module.items import ChannelPropertyActionItem
 from triggers_module.models import ManualTriggerEntity, ChannelPropertyActionEntity
-from triggers_module.repositories import ActionsRepository
+from triggers_module.repositories import ActionRepository
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
@@ -31,7 +31,7 @@ from tests.pytests.tests import DbTestCase
 class TestChannelPropertyActionEntity(DbTestCase):
 
     @inject
-    def test_create_entity(self, action_repository: ActionsRepository) -> None:
+    def test_create_entity(self, action_repository: ActionRepository) -> None:
         action_item = action_repository.get_by_id(
             action_id=uuid.UUID("26d7a945-ba29-471e-9e3c-304ef0acb199", version=4),
         )
