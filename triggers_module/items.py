@@ -15,7 +15,7 @@
 #     limitations under the License.
 
 """
-Entities cache to prevent database overloading
+Triggers module entities cache
 """
 
 # Library dependencies

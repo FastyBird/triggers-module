@@ -15,7 +15,7 @@
 #     limitations under the License.
 
 """
-Module models definitions
+Triggers module models
 """
 
 # Library dependencies

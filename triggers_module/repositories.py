@@ -17,7 +17,7 @@
 # pylint: disable=too-many-lines
 
 """
-Module repositories definitions
+Triggers module repositories
 """
 
 # Library dependencies
@@ -70,9 +70,9 @@ from triggers_module.items import (
 
 
 @inject
-class TriggerRepository:
+class TriggersRepository:
     """
-    Trigger repository
+    Triggers repository
 
     @package        FastyBird:TriggersModule!
     @module         repositories
@@ -300,7 +300,7 @@ class TriggerRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __iter__(self) -> "TriggerRepository":
+    def __iter__(self) -> "TriggersRepository":
         # Reset index for nex iteration
         self.__iterator_index = 0
 
@@ -337,9 +337,9 @@ class TriggerRepository:
 
 
 @inject
-class ActionRepository:
+class ActionsRepository:
     """
-    Trigger action repository
+    Triggers actions repository
 
     @package        FastyBird:TriggersModule!
     @module         repositories
@@ -632,7 +632,7 @@ class ActionRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __iter__(self) -> "ActionRepository":
+    def __iter__(self) -> "ActionsRepository":
         # Reset index for nex iteration
         self.__iterator_index = 0
 
@@ -669,9 +669,9 @@ class ActionRepository:
 
 
 @inject
-class ConditionRepository:
+class ConditionsRepository:
     """
-    Trigger condition repository
+    Triggers conditions repository
 
     @package        FastyBird:TriggersModule!
     @module         repositories
@@ -1022,7 +1022,7 @@ class ConditionRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __iter__(self) -> "ConditionRepository":
+    def __iter__(self) -> "ConditionsRepository":
         # Reset index for nex iteration
         self.__iterator_index = 0
 
@@ -1059,9 +1059,9 @@ class ConditionRepository:
 
 
 @inject
-class TriggerControlRepository:
+class TriggersControlsRepository:
     """
-    Trigger control repository
+    Triggers controls repository
 
     @package        FastyBird:DevicesModule!
     @module         repositories
@@ -1266,7 +1266,7 @@ class TriggerControlRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __iter__(self) -> "TriggerControlRepository":
+    def __iter__(self) -> "TriggersControlsRepository":
         # Reset index for nex iteration
         self.__iterator_index = 0
 

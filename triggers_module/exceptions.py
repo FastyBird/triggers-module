@@ -15,7 +15,7 @@
 #     limitations under the License.
 
 """
-Module exceptions classes
+Triggers module exceptions
 """
 
 

@@ -32,10 +32,10 @@ from triggers_module.converters import EnumConverter
 from triggers_module.exchange import ModuleExchange
 from triggers_module.models import db
 from triggers_module.repositories import (
-    TriggerRepository,
-    TriggerControlRepository,
-    ActionRepository,
-    ConditionRepository,
+    TriggersRepository,
+    TriggersControlsRepository,
+    ActionsRepository,
+    ConditionsRepository,
 )
 
 
@@ -47,14 +47,14 @@ def create_container(settings: Dict) -> None:
 
     di["fb-triggers-module_database"] = db
 
-    di[TriggerRepository] = TriggerRepository()
-    di["fb-triggers-module_trigger-repository"] = di[TriggerRepository]
-    di[TriggerControlRepository] = TriggerControlRepository()
-    di["fb-triggers-module_trigger-control-repository"] = di[TriggerControlRepository]
-    di[ActionRepository] = ActionRepository()
-    di["fb-triggers-module_action-repository"] = di[ActionRepository]
-    di[ConditionRepository] = ConditionRepository()
-    di["fb-triggers-module_condition-repository"] = di[ConditionRepository]
+    di[TriggersRepository] = TriggersRepository()
+    di["fb-triggers-module_trigger-repository"] = di[TriggersRepository]
+    di[TriggersControlsRepository] = TriggersControlsRepository()
+    di["fb-triggers-module_trigger-control-repository"] = di[TriggersControlsRepository]
+    di[ActionsRepository] = ActionsRepository()
+    di["fb-triggers-module_action-repository"] = di[ActionsRepository]
+    di[ConditionsRepository] = ConditionsRepository()
+    di["fb-triggers-module_condition-repository"] = di[ConditionsRepository]
 
     di[ModuleExchange] = ModuleExchange()
     di["fb-triggers-module_exchange"] = di[ModuleExchange]

@@ -22,7 +22,7 @@ from exchange_plugin.publisher import Publisher
 # Library libs
 from triggers_module.items import ManualTriggerItem
 from triggers_module.models import ManualTriggerEntity
-from triggers_module.repositories import TriggerRepository
+from triggers_module.repositories import TriggersRepository
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
@@ -31,7 +31,7 @@ from tests.pytests.tests import DbTestCase
 class TestManualTriggerEntity(DbTestCase):
 
     @inject
-    def test_create_entity(self, trigger_repository: TriggerRepository) -> None:
+    def test_create_entity(self, trigger_repository: TriggersRepository) -> None:
         trigger_item = trigger_repository.get_by_id(
             trigger_id=uuid.UUID("26d7a945-ba29-471e-9e3c-304ef0acb199", version=4),
         )

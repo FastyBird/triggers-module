@@ -15,7 +15,7 @@
 #     limitations under the License.
 
 """
-Module data exchange utilities
+Triggers module data exchange
 """
 
 # Library dependencies

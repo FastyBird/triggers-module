@@ -15,7 +15,7 @@
 #     limitations under the License.
 
 """
-Database converters
+Triggers module database converters
 """
 
 # App dependencies

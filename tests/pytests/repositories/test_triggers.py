@@ -20,7 +20,7 @@ from modules_metadata.triggers_module import TriggerType
 
 # Library libs
 from triggers_module.items import TriggerItem, ManualTriggerItem
-from triggers_module.repositories import TriggerRepository
+from triggers_module.repositories import TriggersRepository
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
@@ -28,7 +28,7 @@ from tests.pytests.tests import DbTestCase
 
 class TestTriggersRepository(DbTestCase):
     @inject
-    def test_repository_iterator(self, trigger_repository: TriggerRepository) -> None:
+    def test_repository_iterator(self, trigger_repository: TriggersRepository) -> None:
         trigger_repository.initialize()
 
         self.assertEqual(6, len(trigger_repository))
@@ -36,7 +36,7 @@ class TestTriggersRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     @inject
-    def test_get_item(self, trigger_repository: TriggerRepository) -> None:
+    def test_get_item(self, trigger_repository: TriggersRepository) -> None:
         trigger_repository.initialize()
 
         trigger_item = trigger_repository.get_by_id(
@@ -49,7 +49,7 @@ class TestTriggersRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     @inject
-    def test_create_from_exchange(self, trigger_repository: TriggerRepository) -> None:
+    def test_create_from_exchange(self, trigger_repository: TriggersRepository) -> None:
         trigger_repository.initialize()
 
         result: bool = trigger_repository.create_from_exchange(
@@ -83,7 +83,7 @@ class TestTriggersRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     @inject
-    def test_update_from_exchange(self, trigger_repository: TriggerRepository) -> None:
+    def test_update_from_exchange(self, trigger_repository: TriggersRepository) -> None:
         trigger_repository.initialize()
 
         trigger_item = trigger_repository.get_by_id(
@@ -124,7 +124,7 @@ class TestTriggersRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     @inject
-    def test_delete_from_exchange(self, trigger_repository: TriggerRepository) -> None:
+    def test_delete_from_exchange(self, trigger_repository: TriggersRepository) -> None:
         trigger_repository.initialize()
 
         trigger_item = trigger_repository.get_by_id(
