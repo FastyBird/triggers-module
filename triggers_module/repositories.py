@@ -53,17 +53,13 @@ from triggers_module.models import (
     DateConditionEntity,
 )
 from triggers_module.items import (
-    TriggerItem,
     AutomaticTriggerItem,
     ManualTriggerItem,
     TriggerControlItem,
-    ConditionItem,
     DevicePropertyConditionItem,
     ChannelPropertyConditionItem,
     TimeConditionItem,
     DateConditionItem,
-    ActionItem,
-    PropertyActionItem,
     DevicePropertyActionItem,
     ChannelPropertyActionItem,
 )
@@ -79,7 +75,7 @@ class TriggersRepository:
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    __items: Optional[Dict[str, TriggerItem]] = None
+    __items: Optional[Dict[str, Union[AutomaticTriggerItem, ManualTriggerItem]]] = None
 
     __iterator_index = 0
 
@@ -110,7 +106,7 @@ class TriggersRepository:
 
     # -----------------------------------------------------------------------------
 
-    def get_by_id(self, trigger_id: uuid.UUID) -> Optional[TriggerItem]:
+    def get_by_id(self, trigger_id: uuid.UUID) -> Union[AutomaticTriggerItem, ManualTriggerItem, None]:
         """Find trigger in cache by provided identifier"""
         if self.__items is None:
             self.initialize()
@@ -166,7 +162,9 @@ class TriggersRepository:
         validated_data: Dict = validate_exchange_data(ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE), routing_key, data)
 
         if validated_data.get("id") not in self.__items:
-            entity: Optional[TriggerEntity] = TriggerEntity.get(trigger_id=uuid.UUID(validated_data.get("id"), version=4))
+            entity: Optional[TriggerEntity] = TriggerEntity.get(
+                trigger_id=uuid.UUID(validated_data.get("id"), version=4),
+            )
 
             if entity is not None:
                 self.__items[entity.trigger_id.__str__()] = self.__create_item(entity)
@@ -207,7 +205,7 @@ class TriggersRepository:
     @orm.db_session
     def initialize(self) -> None:
         """Initialize repository by fetching entities from database"""
-        items: Dict[str, TriggerItem] = {}
+        items: Dict[str, Union[AutomaticTriggerItem, ManualTriggerItem]] = {}
 
         for trigger in TriggerEntity.select():
             if self.__items is None or trigger.trigger_id.__str__() not in self.__items:
@@ -257,7 +255,7 @@ class TriggersRepository:
     # -----------------------------------------------------------------------------
 
     @staticmethod
-    def __create_item(entity: TriggerEntity) -> Optional[TriggerItem]:
+    def __create_item(entity: TriggerEntity) -> Union[AutomaticTriggerItem, ManualTriggerItem, None]:
         if isinstance(entity, AutomaticTriggerEntity):
             return AutomaticTriggerItem(
                 trigger_id=entity.trigger_id,
@@ -279,7 +277,10 @@ class TriggersRepository:
     # -----------------------------------------------------------------------------
 
     @staticmethod
-    def __update_item(item: TriggerItem, data: Dict) -> Optional[TriggerItem]:
+    def __update_item(
+        item: Union[AutomaticTriggerItem, ManualTriggerItem],
+        data: Dict,
+    ) -> Union[AutomaticTriggerItem, ManualTriggerItem, None]:
         if isinstance(item, AutomaticTriggerItem):
             return AutomaticTriggerItem(
                 trigger_id=item.trigger_id,
@@ -316,14 +317,14 @@ class TriggersRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __next__(self) -> TriggerItem:
+    def __next__(self) -> Union[AutomaticTriggerItem, ManualTriggerItem]:
         if self.__items is None:
             self.initialize()
 
         if self.__iterator_index < len(self.__items.values()):
-            items: List[TriggerItem] = list(self.__items.values())
+            items: List[Union[AutomaticTriggerItem, ManualTriggerItem]] = list(self.__items.values())
 
-            result: TriggerItem = items[self.__iterator_index]
+            result: Union[AutomaticTriggerItem, ManualTriggerItem] = items[self.__iterator_index]
 
             self.__iterator_index += 1
 
@@ -346,7 +347,7 @@ class ActionsRepository:
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    __items: Optional[Dict[str, ActionItem]] = None
+    __items: Optional[Dict[str, Union[DevicePropertyActionItem, ChannelPropertyActionItem]]] = None
 
     __iterator_index = 0
 
@@ -377,7 +378,7 @@ class ActionsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def get_by_id(self, action_id: uuid.UUID) -> Optional[ActionItem]:
+    def get_by_id(self, action_id: uuid.UUID) -> Union[DevicePropertyActionItem, ChannelPropertyActionItem, None]:
         """Find action in cache by provided identifier"""
         if self.__items is None:
             self.initialize()
@@ -392,7 +393,7 @@ class ActionsRepository:
     def get_by_property_identifier(
             self,
             property_id: uuid.UUID,
-    ) -> Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, None]:
+    ) -> Union[DevicePropertyActionItem, ChannelPropertyActionItem, None]:
         """Find action in cache by provided property identifier"""
         if self.__items is None:
             self.initialize()
@@ -411,7 +412,7 @@ class ActionsRepository:
     def get_all_by_property_identifier(
             self,
             property_id: uuid.UUID,
-    ) -> List[Union[DevicePropertyConditionItem, ChannelPropertyConditionItem]]:
+    ) -> List[Union[DevicePropertyActionItem, ChannelPropertyActionItem]]:
         """Find actions in cache by provided property identifier"""
         if self.__items is None:
             self.initialize()
@@ -429,12 +430,15 @@ class ActionsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def get_all_for_trigger(self, trigger_id: uuid.UUID) -> List[ActionItem]:
+    def get_all_for_trigger(
+        self,
+        trigger_id: uuid.UUID,
+    ) -> List[Union[DevicePropertyActionItem, ChannelPropertyActionItem]]:
         """Find all actions in cache for provided trigger identifier"""
         if self.__items is None:
             self.initialize()
 
-        actions: List[ActionItem] = []
+        actions: List[Union[DevicePropertyActionItem, ChannelPropertyActionItem]] = []
 
         for action in self.__items.values():
             if action.trigger_id.__eq__(trigger_id):
@@ -529,7 +533,7 @@ class ActionsRepository:
     @orm.db_session
     def initialize(self) -> None:
         """Initialize repository by fetching entities from database"""
-        items: Dict[str, ActionItem] = {}
+        items: Dict[str, Union[DevicePropertyActionItem, ChannelPropertyActionItem]] = {}
 
         for action in ActionEntity.select():
             if self.__items is None or action.action_id.__str__() not in self.__items:
@@ -579,7 +583,7 @@ class ActionsRepository:
     # -----------------------------------------------------------------------------
 
     @staticmethod
-    def __create_item(entity: ActionEntity) -> Optional[ActionItem]:
+    def __create_item(entity: ActionEntity) -> Union[DevicePropertyActionItem, ChannelPropertyActionItem, None]:
         if isinstance(entity, DevicePropertyActionEntity):
             return DevicePropertyActionItem(
                 action_id=entity.action_id,
@@ -606,7 +610,10 @@ class ActionsRepository:
     # -----------------------------------------------------------------------------
 
     @staticmethod
-    def __update_item(item: ActionItem, data: Dict) -> Optional[ActionItem]:
+    def __update_item(
+        item: Union[DevicePropertyActionItem, ChannelPropertyActionItem],
+        data: Dict,
+    ) -> Union[DevicePropertyActionItem, ChannelPropertyActionItem, None]:
         if isinstance(item, DevicePropertyActionItem):
             return DevicePropertyActionItem(
                 action_id=item.action_id,
@@ -648,14 +655,14 @@ class ActionsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __next__(self) -> PropertyActionItem:
+    def __next__(self) -> Union[DevicePropertyActionItem, ChannelPropertyActionItem]:
         if self.__items is None:
             self.initialize()
 
         if self.__iterator_index < len(self.__items.values()):
-            items: List[PropertyActionItem] = list(self.__items.values())
+            items: List[Union[DevicePropertyActionItem, ChannelPropertyActionItem]] = list(self.__items.values())
 
-            result: PropertyActionItem = items[self.__iterator_index]
+            result: Union[DevicePropertyActionItem, ChannelPropertyActionItem] = items[self.__iterator_index]
 
             self.__iterator_index += 1
 
@@ -678,7 +685,12 @@ class ConditionsRepository:
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    __items: Optional[Dict[str, ConditionItem]] = None
+    __items: Optional[
+        Dict[
+            str,
+            Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem]
+        ]
+    ] = None
 
     __iterator_index = 0
 
@@ -709,7 +721,10 @@ class ConditionsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def get_by_id(self, condition_id: uuid.UUID) -> Optional[ConditionItem]:
+    def get_by_id(
+        self,
+        condition_id: uuid.UUID,
+    ) -> Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem, None]:
         """Find condition in cache by provided identifier"""
         if self.__items is None:
             self.initialize()
@@ -722,9 +737,9 @@ class ConditionsRepository:
     # -----------------------------------------------------------------------------
 
     def get_by_property_identifier(
-            self,
-            property_id: uuid.UUID,
-    ) -> Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, None]:
+        self,
+        property_id: uuid.UUID,
+    ) -> Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem, None]:
         """Find condition in cache by provided property identifier"""
         if self.__items is None:
             self.initialize()
@@ -741,9 +756,9 @@ class ConditionsRepository:
     # -----------------------------------------------------------------------------
 
     def get_all_by_property_identifier(
-            self,
-            property_id: uuid.UUID,
-    ) -> List[Union[DevicePropertyConditionItem, ChannelPropertyConditionItem]]:
+        self,
+        property_id: uuid.UUID,
+    ) -> List[Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem]]:
         """Find conditions in cache by provided property identifier"""
         if self.__items is None:
             self.initialize()
@@ -764,12 +779,14 @@ class ConditionsRepository:
     def get_all_for_trigger(
             self,
             trigger_id: uuid.UUID,
-    ) -> List[ConditionItem]:
+    ) -> List[Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem]]:
         """Find all conditions in cache for provided trigger identifier"""
         if self.__items is None:
             self.initialize()
 
-        conditions: List[ConditionItem] = []
+        conditions: List[
+            Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem]
+        ] = []
 
         for condition in self.__items.values():
             if condition.trigger_id.__eq__(trigger_id):
@@ -866,7 +883,10 @@ class ConditionsRepository:
     @orm.db_session
     def initialize(self) -> None:
         """Initialize conditions repository by fetching entities from database"""
-        items: Dict[str, ConditionItem] = {}
+        items: Dict[
+            str,
+            Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem],
+        ] = {}
 
         for condition in ConditionEntity.select():
             if self.__items is None or condition.condition_id.__str__() not in self.__items:
@@ -931,7 +951,9 @@ class ConditionsRepository:
     # -----------------------------------------------------------------------------
 
     @staticmethod
-    def __create_item(entity: ConditionEntity) -> Optional[ConditionItem]:
+    def __create_item(
+        entity: ConditionEntity,
+    ) -> Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem, None]:
         if isinstance(entity, DevicePropertyConditionEntity):
             return DevicePropertyConditionItem(
                 condition_id=entity.condition_id,
@@ -977,7 +999,10 @@ class ConditionsRepository:
     # -----------------------------------------------------------------------------
 
     @staticmethod
-    def __update_item(item: ConditionItem, data: Dict) -> Optional[ConditionItem]:
+    def __update_item(
+        item: Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem],
+        data: Dict,
+    ) -> Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem, None]:
         if isinstance(item, DevicePropertyConditionItem):
             return DevicePropertyConditionItem(
                 condition_id=item.condition_id,
@@ -1038,14 +1063,28 @@ class ConditionsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __next__(self) -> ConditionItem:
+    def __next__(
+        self,
+    ) -> Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem]:
         if self.__items is None:
             self.initialize()
 
         if self.__iterator_index < len(self.__items.values()):
-            items: List[ConditionItem] = list(self.__items.values())
+            items: List[
+                Union[
+                    DevicePropertyConditionItem,
+                    ChannelPropertyConditionItem,
+                    TimeConditionItem,
+                    DateConditionItem,
+                ]
+            ] = list(self.__items.values())
 
-            result: ConditionItem = items[self.__iterator_index]
+            result: Union[
+                DevicePropertyConditionItem,
+                ChannelPropertyConditionItem,
+                TimeConditionItem,
+                DateConditionItem,
+            ] = items[self.__iterator_index]
 
             self.__iterator_index += 1
 
