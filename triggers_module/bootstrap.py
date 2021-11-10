@@ -22,7 +22,7 @@ Triggers module DI container
 
 # Library dependencies
 from enum import Enum
-from typing import Dict
+from typing import Dict, Union
 from kink import di
 from pony.orm.dbproviders.mysql import MySQLProvider
 from pony.orm.dbproviders.sqlite import SQLiteProvider
@@ -38,7 +38,7 @@ from triggers_module.repositories import (
     ConditionsRepository,
 )
 
-default_settings: Dict[str, Dict[str, str or int or bool or None]] = {
+default_settings: Dict[str, Dict[str, Union[str, int, bool, None]]] = {
     "database": {
         "provider": "mysql",
         "host": "127.0.0.1",
@@ -51,9 +51,9 @@ default_settings: Dict[str, Dict[str, str or int or bool or None]] = {
 }
 
 
-def create_container(settings: Dict[str, Dict[str, str or int or bool or None]]) -> None:
+def create_container(settings: Dict[str, Dict[str, Union[str, int, bool, None]]]) -> None:
     """Register triggers module services"""
-    module_settings: Dict[str, Dict[str, str or int or bool or None]] = {**default_settings, **settings}
+    module_settings: Dict[str, Dict[str, Union[str, int, bool, None]]] = {**default_settings, **settings}
 
     # Add ENUM converter
     MySQLProvider.converter_classes.append((Enum, EnumConverter))

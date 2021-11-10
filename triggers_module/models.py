@@ -21,11 +21,19 @@ Triggers module models
 # Library dependencies
 import uuid
 import datetime
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Optional, Union
 from exchange_plugin.dispatcher import EventDispatcher
-from kink import inject
+from kink import di
 from modules_metadata.triggers_module import TriggerConditionOperator
-from pony.orm import Database, PrimaryKey, Required, Optional, Set, Discriminator, Json
+from pony.orm import (
+    Database,
+    PrimaryKey,
+    Required as RequiredField,
+    Optional as OptionalField,
+    Set,
+    Discriminator,
+    Json,
+)
 
 # Create triggers module database accessor
 from triggers_module.events import ModelEntityCreatedEvent, ModelEntityUpdatedEvent, ModelEntityDeletedEvent
@@ -33,7 +41,6 @@ from triggers_module.events import ModelEntityCreatedEvent, ModelEntityUpdatedEv
 db: Database = Database()
 
 
-@inject
 class TriggerEntity(db.Entity):
     """
     Base trigger entity
@@ -49,25 +56,19 @@ class TriggerEntity(db.Entity):
     _discriminator_: str = "trigger"
 
     trigger_id: uuid.UUID = PrimaryKey(uuid.UUID, default=uuid.uuid4, column="trigger_id")
-    name: str = Required(str, column="trigger_name", max_len=100, nullable=False)
-    comment: str or None = Optional(str, column="trigger_comment", nullable=True, default=None)
-    enabled: bool = Optional(bool, column="trigger_enabled", nullable=True, default=True)
-    params: Json or None = Optional(Json, column="params", nullable=True)
-    created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
-    updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
+    name: str = RequiredField(str, column="trigger_name", max_len=100, nullable=False)
+    comment: Optional[str] = OptionalField(str, column="trigger_comment", nullable=True, default=None)
+    enabled: bool = OptionalField(bool, column="trigger_enabled", nullable=True, default=True)
+    params: Optional[Dict[str, Union[str, int, float, bool, None]]] = OptionalField(
+        Json, column="params", nullable=True,
+    )
+
+    created_at: Optional[datetime.datetime] = OptionalField(datetime.datetime, column="created_at", nullable=True)
+    updated_at: Optional[datetime.datetime] = OptionalField(datetime.datetime, column="updated_at", nullable=True)
 
     actions: List["ActionEntity"] = Set("ActionEntity", reverse="trigger")
     notifications: List["NotificationEntity"] = Set("NotificationEntity", reverse="trigger")
     controls: List["TriggerControlEntity"] = Set("TriggerControlEntity", reverse="trigger")
-
-    _event_dispatcher: EventDispatcher
-
-    # -----------------------------------------------------------------------------
-
-    def __init__(self, event_dispatcher: EventDispatcher, *args, **kwargs) -> None:
-        db.Entity.__init__(self, *args, **kwargs)
-
-        self._event_dispatcher = event_dispatcher
 
     # -----------------------------------------------------------------------------
 
@@ -78,7 +79,7 @@ class TriggerEntity(db.Entity):
         with_collections: bool = False,  # pylint: disable=unused-argument
         with_lazy: bool = False,  # pylint: disable=unused-argument
         related_objects: bool = False,  # pylint: disable=unused-argument
-    ) -> Dict[str, str or int or bool or None]:
+    ) -> Dict[str, Union[str, int, bool, None]]:
         """Transform entity to dictionary"""
         return {
             "id": self.trigger_id.__str__(),
@@ -99,7 +100,7 @@ class TriggerEntity(db.Entity):
 
     def after_insert(self) -> None:
         """After insert entity hook"""
-        self._event_dispatcher.dispatch(
+        di[EventDispatcher].dispatch(
             ModelEntityCreatedEvent.EVENT_NAME,
             ModelEntityCreatedEvent(self),
         )
@@ -114,7 +115,7 @@ class TriggerEntity(db.Entity):
 
     def after_update(self) -> None:
         """After update entity hook"""
-        self._event_dispatcher.dispatch(
+        di[EventDispatcher].dispatch(
             ModelEntityUpdatedEvent.EVENT_NAME,
             ModelEntityUpdatedEvent(self),
         )
@@ -123,7 +124,7 @@ class TriggerEntity(db.Entity):
 
     def after_delete(self) -> None:
         """After delete entity hook"""
-        self._event_dispatcher.dispatch(
+        di[EventDispatcher].dispatch(
             ModelEntityDeletedEvent.EVENT_NAME,
             ModelEntityDeletedEvent(self),
         )
@@ -155,7 +156,6 @@ class AutomaticTriggerEntity(TriggerEntity):
     conditions: List["ConditionEntity"] = Set("ConditionEntity", reverse="trigger")
 
 
-@inject
 class TriggerControlEntity(db.Entity):
     """
     Trigger control entity
@@ -168,20 +168,12 @@ class TriggerControlEntity(db.Entity):
     _table_: str = "fb_triggers_controls"
 
     control_id: uuid.UUID = PrimaryKey(uuid.UUID, default=uuid.uuid4, column="control_id")
-    name: str = Optional(str, column="control_name", nullable=False)
-    created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
-    updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
+    name: str = OptionalField(str, column="control_name", nullable=False)
 
-    trigger: TriggerEntity = Required("TriggerEntity", reverse="controls", column="trigger_id", nullable=False)
+    created_at: Optional[datetime.datetime] = OptionalField(datetime.datetime, column="created_at", nullable=True)
+    updated_at: Optional[datetime.datetime] = OptionalField(datetime.datetime, column="updated_at", nullable=True)
 
-    __event_dispatcher: EventDispatcher
-
-    # -----------------------------------------------------------------------------
-
-    def __init__(self, event_dispatcher: EventDispatcher, *args, **kwargs) -> None:
-        db.Entity.__init__(self, *args, **kwargs)
-
-        self.__event_dispatcher = event_dispatcher
+    trigger: TriggerEntity = RequiredField("TriggerEntity", reverse="controls", column="trigger_id", nullable=False)
 
     # -----------------------------------------------------------------------------
 
@@ -193,7 +185,7 @@ class TriggerControlEntity(db.Entity):
 
     def after_insert(self) -> None:
         """After insert entity hook"""
-        self.__event_dispatcher.dispatch(
+        di[EventDispatcher].dispatch(
             ModelEntityCreatedEvent.EVENT_NAME,
             ModelEntityCreatedEvent(self),
         )
@@ -208,7 +200,7 @@ class TriggerControlEntity(db.Entity):
 
     def after_update(self) -> None:
         """After update entity hook"""
-        self.__event_dispatcher.dispatch(
+        di[EventDispatcher].dispatch(
             ModelEntityUpdatedEvent.EVENT_NAME,
             ModelEntityUpdatedEvent(self),
         )
@@ -217,13 +209,12 @@ class TriggerControlEntity(db.Entity):
 
     def after_delete(self) -> None:
         """After delete entity hook"""
-        self.__event_dispatcher.dispatch(
+        di[EventDispatcher].dispatch(
             ModelEntityDeletedEvent.EVENT_NAME,
             ModelEntityDeletedEvent(self),
         )
 
 
-@inject
 class ActionEntity(db.Entity):
     """
     Base action entity
@@ -238,20 +229,12 @@ class ActionEntity(db.Entity):
     type = Discriminator(str, column="action_type")
 
     action_id: uuid.UUID = PrimaryKey(uuid.UUID, default=uuid.uuid4, column="action_id")
-    enabled: bool = Required(bool, column="action_enabled", nullable=False, default=True)
-    created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
-    updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
+    enabled: bool = RequiredField(bool, column="action_enabled", nullable=False, default=True)
 
-    trigger: TriggerEntity = Required("TriggerEntity", reverse="actions", column="trigger_id", nullable=False)
+    created_at: Optional[datetime.datetime] = OptionalField(datetime.datetime, column="created_at", nullable=True)
+    updated_at: Optional[datetime.datetime] = OptionalField(datetime.datetime, column="updated_at", nullable=True)
 
-    _event_dispatcher: EventDispatcher
-
-    # -----------------------------------------------------------------------------
-
-    def __init__(self, event_dispatcher: EventDispatcher, *args, **kwargs) -> None:
-        db.Entity.__init__(self, *args, **kwargs)
-
-        self._event_dispatcher = event_dispatcher
+    trigger: TriggerEntity = RequiredField("TriggerEntity", reverse="actions", column="trigger_id", nullable=False)
 
     # -----------------------------------------------------------------------------
 
@@ -262,7 +245,7 @@ class ActionEntity(db.Entity):
         with_collections: bool = False,  # pylint: disable=unused-argument
         with_lazy: bool = False,  # pylint: disable=unused-argument
         related_objects: bool = False,  # pylint: disable=unused-argument
-    ) -> Dict[str, str or int or bool or None]:
+    ) -> Dict[str, Union[str, int, bool, None]]:
         """Transform entity to dictionary"""
         return {
             "id": self.action_id.__str__(),
@@ -281,7 +264,7 @@ class ActionEntity(db.Entity):
 
     def after_insert(self) -> None:
         """After insert entity hook"""
-        self._event_dispatcher.dispatch(
+        di[EventDispatcher].dispatch(
             ModelEntityCreatedEvent.EVENT_NAME,
             ModelEntityCreatedEvent(self),
         )
@@ -296,7 +279,7 @@ class ActionEntity(db.Entity):
 
     def after_update(self) -> None:
         """After update entity hook"""
-        self._event_dispatcher.dispatch(
+        di[EventDispatcher].dispatch(
             ModelEntityUpdatedEvent.EVENT_NAME,
             ModelEntityUpdatedEvent(self),
         )
@@ -305,7 +288,7 @@ class ActionEntity(db.Entity):
 
     def after_delete(self) -> None:
         """After delete entity hook"""
-        self._event_dispatcher.dispatch(
+        di[EventDispatcher].dispatch(
             ModelEntityDeletedEvent.EVENT_NAME,
             ModelEntityDeletedEvent(self),
         )
@@ -320,9 +303,9 @@ class PropertyActionEntity(ActionEntity):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    device: uuid.UUID = Required(uuid.UUID, column="action_device", nullable=True)
+    device: uuid.UUID = RequiredField(uuid.UUID, column="action_device", nullable=True)
 
-    value: str = Required(str, column="action_value", max_len=100, nullable=True)
+    value: str = RequiredField(str, column="action_value", max_len=100, nullable=True)
 
     # -----------------------------------------------------------------------------
 
@@ -333,7 +316,7 @@ class PropertyActionEntity(ActionEntity):
         with_collections: bool = False,
         with_lazy: bool = False,
         related_objects: bool = False,
-    ) -> Dict[str, str or int or bool or None]:
+    ) -> Dict[str, Union[str, int, bool, None]]:
         """Transform entity to dictionary"""
         return {**{
             "device": self.device.__str__(),
@@ -352,7 +335,7 @@ class DevicePropertyActionEntity(PropertyActionEntity):
     """
     _discriminator_: str = "device-property"
 
-    device_property: uuid.UUID = Required(uuid.UUID, column="action_device_property", nullable=True)
+    device_property: uuid.UUID = RequiredField(uuid.UUID, column="action_device_property", nullable=True)
 
     # -----------------------------------------------------------------------------
 
@@ -363,7 +346,7 @@ class DevicePropertyActionEntity(PropertyActionEntity):
         with_collections: bool = False,
         with_lazy: bool = False,
         related_objects: bool = False,
-    ) -> Dict[str, str or int or bool or None]:
+    ) -> Dict[str, Union[str, int, bool, None]]:
         """Transform entity to dictionary"""
         return {**{
             "property": self.device_property.__str__(),
@@ -381,8 +364,8 @@ class ChannelPropertyActionEntity(PropertyActionEntity):
     """
     _discriminator_: str = "channel-property"
 
-    channel: uuid.UUID = Required(uuid.UUID, column="action_channel", nullable=True)
-    channel_property: uuid.UUID = Required(uuid.UUID, column="action_channel_property", nullable=True)
+    channel: uuid.UUID = RequiredField(uuid.UUID, column="action_channel", nullable=True)
+    channel_property: uuid.UUID = RequiredField(uuid.UUID, column="action_channel_property", nullable=True)
 
     # -----------------------------------------------------------------------------
 
@@ -393,7 +376,7 @@ class ChannelPropertyActionEntity(PropertyActionEntity):
         with_collections: bool = False,
         with_lazy: bool = False,
         related_objects: bool = False,
-    ) -> Dict[str, str or int or bool or None]:
+    ) -> Dict[str, Union[str, int, bool, None]]:
         """Transform entity to dictionary"""
         return {**{
             "channel": self.channel.__str__(),
@@ -401,7 +384,6 @@ class ChannelPropertyActionEntity(PropertyActionEntity):
         }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
 
 
-@inject
 class NotificationEntity(db.Entity):
     """
     Base notification entity
@@ -416,20 +398,14 @@ class NotificationEntity(db.Entity):
     type = Discriminator(str, column="notification_type")
 
     notification_id: uuid.UUID = PrimaryKey(uuid.UUID, default=uuid.uuid4, column="notification_id")
-    enabled: bool = Required(bool, column="notification_enabled", nullable=False, default=True)
-    created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
-    updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
+    enabled: bool = RequiredField(bool, column="notification_enabled", nullable=False, default=True)
 
-    trigger: TriggerEntity = Required("TriggerEntity", reverse="notifications", column="trigger_id", nullable=False)
+    created_at: Optional[datetime.datetime] = OptionalField(datetime.datetime, column="created_at", nullable=True)
+    updated_at: Optional[datetime.datetime] = OptionalField(datetime.datetime, column="updated_at", nullable=True)
 
-    _event_dispatcher: EventDispatcher
-
-    # -----------------------------------------------------------------------------
-
-    def __init__(self, event_dispatcher: EventDispatcher, *args, **kwargs) -> None:
-        db.Entity.__init__(self, *args, **kwargs)
-
-        self._event_dispatcher = event_dispatcher
+    trigger: TriggerEntity = RequiredField(
+        "TriggerEntity", reverse="notifications", column="trigger_id", nullable=False,
+    )
 
     # -----------------------------------------------------------------------------
 
@@ -440,7 +416,7 @@ class NotificationEntity(db.Entity):
         with_collections: bool = False,  # pylint: disable=unused-argument
         with_lazy: bool = False,  # pylint: disable=unused-argument
         related_objects: bool = False,  # pylint: disable=unused-argument
-    ) -> Dict[str, str or int or bool or None]:
+    ) -> Dict[str, Union[str, int, bool, None]]:
         """Transform entity to dictionary"""
         return {
             "id": self.notification_id.__str__(),
@@ -459,7 +435,7 @@ class NotificationEntity(db.Entity):
 
     def after_insert(self) -> None:
         """After insert entity hook"""
-        self._event_dispatcher.dispatch(
+        di[EventDispatcher].dispatch(
             ModelEntityCreatedEvent.EVENT_NAME,
             ModelEntityCreatedEvent(self),
         )
@@ -474,7 +450,7 @@ class NotificationEntity(db.Entity):
 
     def after_update(self) -> None:
         """After update entity hook"""
-        self._event_dispatcher.dispatch(
+        di[EventDispatcher].dispatch(
             ModelEntityUpdatedEvent.EVENT_NAME,
             ModelEntityUpdatedEvent(self),
         )
@@ -483,7 +459,7 @@ class NotificationEntity(db.Entity):
 
     def after_delete(self) -> None:
         """After delete entity hook"""
-        self._event_dispatcher.dispatch(
+        di[EventDispatcher].dispatch(
             ModelEntityDeletedEvent.EVENT_NAME,
             ModelEntityDeletedEvent(self),
         )
@@ -500,7 +476,7 @@ class EmailNotificationEntity(NotificationEntity):
     """
     _discriminator_: str = "email"
 
-    email: str = Required(str, column="notification_email", max_len=150, nullable=True)
+    email: str = RequiredField(str, column="notification_email", max_len=150, nullable=True)
 
     # -----------------------------------------------------------------------------
 
@@ -511,7 +487,7 @@ class EmailNotificationEntity(NotificationEntity):
         with_collections: bool = False,
         with_lazy: bool = False,
         related_objects: bool = False,
-    ) -> Dict[str, str or int or bool or None]:
+    ) -> Dict[str, Union[str, int, bool, None]]:
         """Transform entity to dictionary"""
         return {**{
             "email": self.email,
@@ -529,7 +505,7 @@ class SmsNotificationEntity(NotificationEntity):
     """
     _discriminator_: str = "sms"
 
-    phone: str = Required(str, column="notification_phone", max_len=150, nullable=True)
+    phone: str = RequiredField(str, column="notification_phone", max_len=150, nullable=True)
 
     # -----------------------------------------------------------------------------
 
@@ -540,14 +516,13 @@ class SmsNotificationEntity(NotificationEntity):
         with_collections: bool = False,
         with_lazy: bool = False,
         related_objects: bool = False,
-    ) -> Dict[str, str or int or bool or None]:
+    ) -> Dict[str, Union[str, int, bool, None]]:
         """Transform entity to dictionary"""
         return {**{
             "phone": self.phone,
         }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
 
 
-@inject
 class ConditionEntity(db.Entity):
     """
     Base condition entity
@@ -562,25 +537,17 @@ class ConditionEntity(db.Entity):
     type = Discriminator(str, column="condition_type")
 
     condition_id: uuid.UUID = PrimaryKey(uuid.UUID, default=uuid.uuid4, column="condition_id")
-    enabled: bool = Required(bool, column="condition_enabled", nullable=False, default=True)
-    created_at: datetime.datetime or None = Optional(datetime.datetime, column="created_at", nullable=True)
-    updated_at: datetime.datetime or None = Optional(datetime.datetime, column="updated_at", nullable=True)
+    enabled: bool = RequiredField(bool, column="condition_enabled", nullable=False, default=True)
 
-    trigger: AutomaticTriggerEntity = Required(
+    created_at: Optional[datetime.datetime] = OptionalField(datetime.datetime, column="created_at", nullable=True)
+    updated_at: Optional[datetime.datetime] = OptionalField(datetime.datetime, column="updated_at", nullable=True)
+
+    trigger: AutomaticTriggerEntity = RequiredField(
         "AutomaticTriggerEntity",
         reverse="conditions",
         column="trigger_id",
         nullable=False,
     )
-
-    _event_dispatcher: EventDispatcher
-
-    # -----------------------------------------------------------------------------
-
-    def __init__(self, event_dispatcher: EventDispatcher, *args, **kwargs) -> None:
-        db.Entity.__init__(self, *args, **kwargs)
-
-        self._event_dispatcher = event_dispatcher
 
     # -----------------------------------------------------------------------------
 
@@ -591,7 +558,7 @@ class ConditionEntity(db.Entity):
         with_collections: bool = False,  # pylint: disable=unused-argument
         with_lazy: bool = False,  # pylint: disable=unused-argument
         related_objects: bool = False,  # pylint: disable=unused-argument
-    ) -> Dict[str, str or int or bool or None]:
+    ) -> Dict[str, Union[str, int, bool, None]]:
         """Transform entity to dictionary"""
         return {
             "id": self.condition_id.__str__(),
@@ -610,7 +577,7 @@ class ConditionEntity(db.Entity):
 
     def after_insert(self) -> None:
         """After insert entity hook"""
-        self._event_dispatcher.dispatch(
+        di[EventDispatcher].dispatch(
             ModelEntityCreatedEvent.EVENT_NAME,
             ModelEntityCreatedEvent(self),
         )
@@ -625,7 +592,7 @@ class ConditionEntity(db.Entity):
 
     def after_update(self) -> None:
         """After update entity hook"""
-        self._event_dispatcher.dispatch(
+        di[EventDispatcher].dispatch(
             ModelEntityUpdatedEvent.EVENT_NAME,
             ModelEntityUpdatedEvent(self),
         )
@@ -634,7 +601,7 @@ class ConditionEntity(db.Entity):
 
     def after_delete(self) -> None:
         """After delete entity hook"""
-        self._event_dispatcher.dispatch(
+        di[EventDispatcher].dispatch(
             ModelEntityDeletedEvent.EVENT_NAME,
             ModelEntityDeletedEvent(self),
         )
@@ -649,11 +616,12 @@ class PropertyConditionEntity(ConditionEntity):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    operator: TriggerConditionOperator = Required(TriggerConditionOperator, column="condition_operator",
-                                                  nullable=True)
-    operand: str = Required(str, column="condition_operand", max_len=100, nullable=True)
+    operator: TriggerConditionOperator = RequiredField(
+        TriggerConditionOperator, column="condition_operator", nullable=True,
+    )
+    operand: str = RequiredField(str, column="condition_operand", max_len=100, nullable=True)
 
-    device: uuid.UUID = Required(uuid.UUID, column="condition_device", nullable=True)
+    device: uuid.UUID = RequiredField(uuid.UUID, column="condition_device", nullable=True)
 
     # -----------------------------------------------------------------------------
 
@@ -664,7 +632,7 @@ class PropertyConditionEntity(ConditionEntity):
         with_collections: bool = False,
         with_lazy: bool = False,
         related_objects: bool = False,
-    ) -> Dict[str, str or int or bool or None]:
+    ) -> Dict[str, Union[str, int, bool, None]]:
         """Transform entity to dictionary"""
         return {**{
             "operator": self.operator,
@@ -684,7 +652,7 @@ class DevicePropertyConditionEntity(PropertyConditionEntity):
     """
     _discriminator_: str = "device-property"
 
-    device_property: uuid.UUID = Required(uuid.UUID, column="condition_device_property", nullable=True)
+    device_property: uuid.UUID = RequiredField(uuid.UUID, column="condition_device_property", nullable=True)
 
     # -----------------------------------------------------------------------------
 
@@ -695,7 +663,7 @@ class DevicePropertyConditionEntity(PropertyConditionEntity):
         with_collections: bool = False,
         with_lazy: bool = False,
         related_objects: bool = False,
-    ) -> Dict[str, str or int or bool or None]:
+    ) -> Dict[str, Union[str, int, bool, None]]:
         """Transform entity to dictionary"""
         return {**{
             "property": self.device_property.__str__(),
@@ -713,8 +681,8 @@ class ChannelPropertyConditionEntity(PropertyConditionEntity):
     """
     _discriminator_: str = "channel-property"
 
-    channel: uuid.UUID = Required(uuid.UUID, column="condition_channel", nullable=True)
-    channel_property: uuid.UUID = Required(uuid.UUID, column="condition_channel_property", nullable=True)
+    channel: uuid.UUID = RequiredField(uuid.UUID, column="condition_channel", nullable=True)
+    channel_property: uuid.UUID = RequiredField(uuid.UUID, column="condition_channel_property", nullable=True)
 
     # -----------------------------------------------------------------------------
 
@@ -725,7 +693,7 @@ class ChannelPropertyConditionEntity(PropertyConditionEntity):
         with_collections: bool = False,
         with_lazy: bool = False,
         related_objects: bool = False,
-    ) -> Dict[str, str or int or bool or None]:
+    ) -> Dict[str, Union[str, int, bool, None]]:
         """Transform entity to dictionary"""
         return {**{
             "channel": self.channel.__str__(),
@@ -744,8 +712,8 @@ class TimeConditionEntity(ConditionEntity):
     """
     _discriminator_: str = "time"
 
-    time: datetime.timedelta = Required(datetime.timedelta, column="condition_time", nullable=True)
-    days: str = Required(str, column="condition_days", max_len=100, nullable=True)
+    time: datetime.timedelta = RequiredField(datetime.timedelta, column="condition_time", nullable=True)
+    days: str = RequiredField(str, column="condition_days", max_len=100, nullable=True)
 
     # -----------------------------------------------------------------------------
 
@@ -756,7 +724,7 @@ class TimeConditionEntity(ConditionEntity):
         with_collections: bool = False,
         with_lazy: bool = False,
         related_objects: bool = False,
-    ) -> Dict[str, str or int or bool or None]:
+    ) -> Dict[str, Union[str, int, bool, None]]:
         """Transform entity to dictionary"""
         return {**{
             "time": self.time,
@@ -775,7 +743,7 @@ class DateConditionEntity(ConditionEntity):
     """
     _discriminator_: str = "date"
 
-    date: datetime.datetime = Required(datetime.datetime, column="condition_date", nullable=True)
+    date: datetime.datetime = RequiredField(datetime.datetime, column="condition_date", nullable=True)
 
     # -----------------------------------------------------------------------------
 
@@ -786,7 +754,7 @@ class DateConditionEntity(ConditionEntity):
         with_collections: bool = False,
         with_lazy: bool = False,
         related_objects: bool = False,
-    ) -> Dict[str, str or int or bool or None]:
+    ) -> Dict[str, Union[str, int, bool, None]]:
         """Transform entity to dictionary"""
         return {**{
             "date": self.date,

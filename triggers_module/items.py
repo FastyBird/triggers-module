@@ -22,7 +22,7 @@ Triggers module entities cache
 import datetime
 import uuid
 from abc import ABC
-from typing import List, Dict
+from typing import List, Dict, Optional, Union
 from modules_metadata.triggers_module import (
     TriggerType,
     TriggerConditionOperator,
@@ -43,7 +43,7 @@ class TriggerItem(ABC):
     """
     __trigger_id: uuid.UUID
     __name: str
-    __comment: str or None
+    __comment: Optional[str]
     __enabled: bool
 
     # -----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ class TriggerItem(ABC):
         self,
         trigger_id: uuid.UUID,
         name: str,
-        comment: str or None,
+        comment: Optional[str],
         enabled: bool,
     ) -> None:
         self.__trigger_id = trigger_id
@@ -77,7 +77,7 @@ class TriggerItem(ABC):
     # -----------------------------------------------------------------------------
 
     @property
-    def comment(self) -> str or None:
+    def comment(self) -> Optional[str]:
         """Trigger user description"""
         return self.__comment
 
@@ -90,7 +90,7 @@ class TriggerItem(ABC):
 
     # -----------------------------------------------------------------------------
 
-    def to_dict(self) -> Dict[str, str or int or bool or None]:
+    def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         """Convert condition item to dictionary"""
         return {
             "id": self.trigger_id.__str__(),
@@ -109,7 +109,7 @@ class AutomaticTriggerItem(TriggerItem):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    def to_dict(self) -> Dict[str, str or int or bool or None]:
+    def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         return {**{
             "type": TriggerType(TriggerType.AUTOMATIC).value,
         }, **super().to_dict()}
@@ -124,7 +124,7 @@ class ManualTriggerItem(TriggerItem):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    def to_dict(self) -> Dict[str, str or int or bool or None]:
+    def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         return {**{
             "type": TriggerType(TriggerType.MANUAL).value,
         }, **super().to_dict()}
@@ -237,7 +237,7 @@ class ConditionItem(ABC):
 
     # -----------------------------------------------------------------------------
 
-    def to_dict(self) -> Dict[str, str or int or bool or None]:
+    def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         """Convert condition item to dictionary"""
         return {
             "id": self.condition_id.__str__(),
@@ -319,7 +319,7 @@ class PropertyConditionItem(ConditionItem):
 
     # -----------------------------------------------------------------------------
 
-    def to_dict(self) -> Dict[str, str or int or bool or None]:
+    def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         return {**{
             "device": self.device.__str__(),
             "operator": self.operator.value,
@@ -363,7 +363,7 @@ class DevicePropertyConditionItem(PropertyConditionItem):
 
     # -----------------------------------------------------------------------------
 
-    def to_dict(self) -> Dict[str, str or int or bool or None]:
+    def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         return {**{
             "type": TriggerConditionType(TriggerConditionType.DEVICE_PROPERTY).value,
             "property": self.device_property.__str__(),
@@ -416,7 +416,7 @@ class ChannelPropertyConditionItem(PropertyConditionItem):
 
     # -----------------------------------------------------------------------------
 
-    def to_dict(self) -> Dict[str, str or int or bool or None]:
+    def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         return {**{
             "type": TriggerConditionType(TriggerConditionType.CHANNEL_PROPERTY).value,
             "channel": self.channel.__str__(),
@@ -479,7 +479,7 @@ class TimeConditionItem(ConditionItem):
 
     # -----------------------------------------------------------------------------
 
-    def to_dict(self) -> Dict[str, str or int or bool or None]:
+    def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         return {**{
             "type": TriggerConditionType(TriggerConditionType.TIME).value,
             "time": f"1970-01-01\\T{self.__format_time()}+00:00",
@@ -537,7 +537,7 @@ class DateConditionItem(ConditionItem):
 
     # -----------------------------------------------------------------------------
 
-    def to_dict(self) -> Dict[str, str or int or bool or None]:
+    def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         return {**{
             "type": TriggerConditionType(TriggerConditionType.DATE).value,
             "date": self.date.strftime(r"%Y-%m-%d\T%H:%M:%S+00:00"),
@@ -592,7 +592,7 @@ class ActionItem(ABC):
 
     # -----------------------------------------------------------------------------
 
-    def to_dict(self) -> Dict[str, str or int or bool or None]:
+    def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         """Convert condition item to dictionary"""
         return {
             "id": self.action_id.__str__(),
@@ -661,7 +661,7 @@ class PropertyActionItem(ActionItem):
 
     # -----------------------------------------------------------------------------
 
-    def to_dict(self) -> Dict[str, str or int or bool or None]:
+    def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         return {**{
             "device": self.device.__str__(),
             "value": self.value,
@@ -703,7 +703,7 @@ class DevicePropertyActionItem(PropertyActionItem):
 
     # -----------------------------------------------------------------------------
 
-    def to_dict(self) -> Dict[str, str or int or bool or None]:
+    def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         return {**{
             "type": TriggerActionType(TriggerActionType.DEVICE_PROPERTY).value,
             "property": self.device_property.__str__(),
@@ -755,7 +755,7 @@ class ChannelPropertyActionItem(PropertyActionItem):
 
     # -----------------------------------------------------------------------------
 
-    def to_dict(self) -> Dict[str, str or int or bool or None]:
+    def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         return {**{
             "type": TriggerActionType(TriggerActionType.CHANNEL_PROPERTY).value,
             "channel": self.channel.__str__(),

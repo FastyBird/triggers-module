@@ -23,7 +23,7 @@ Triggers module repositories
 # Library dependencies
 import json
 import uuid
-from typing import List, Dict
+from typing import List, Dict, Optional, Union
 from exchange_plugin.dispatcher import EventDispatcher
 from exchange_plugin.events.event import IEvent
 from kink import inject
@@ -79,7 +79,7 @@ class TriggersRepository:
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    __items: Dict[str, TriggerItem] or None = None
+    __items: Optional[Dict[str, TriggerItem]] = None
 
     __iterator_index = 0
 
@@ -110,7 +110,7 @@ class TriggersRepository:
 
     # -----------------------------------------------------------------------------
 
-    def get_by_id(self, trigger_id: uuid.UUID) -> TriggerItem or None:
+    def get_by_id(self, trigger_id: uuid.UUID) -> Optional[TriggerItem]:
         """Find trigger in cache by provided identifier"""
         if self.__items is None:
             self.initialize()
@@ -141,7 +141,7 @@ class TriggersRepository:
 
         data: Dict = validate_exchange_data(ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE), routing_key, data)
 
-        entity: TriggerEntity or None = TriggerEntity.get(trigger_id=uuid.UUID(data.get("id"), version=4))
+        entity: Optional[TriggerEntity] = TriggerEntity.get(trigger_id=uuid.UUID(data.get("id"), version=4))
 
         if entity is not None:
             self.__items[entity.trigger_id.__str__()] = self.__create_item(entity)
@@ -166,7 +166,7 @@ class TriggersRepository:
         validated_data: Dict = validate_exchange_data(ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE), routing_key, data)
 
         if validated_data.get("id") not in self.__items:
-            entity: TriggerEntity or None = TriggerEntity.get(trigger_id=uuid.UUID(validated_data.get("id"), version=4))
+            entity: Optional[TriggerEntity] = TriggerEntity.get(trigger_id=uuid.UUID(validated_data.get("id"), version=4))
 
             if entity is not None:
                 self.__items[entity.trigger_id.__str__()] = self.__create_item(entity)
@@ -257,7 +257,7 @@ class TriggersRepository:
     # -----------------------------------------------------------------------------
 
     @staticmethod
-    def __create_item(entity: TriggerEntity) -> TriggerItem or None:
+    def __create_item(entity: TriggerEntity) -> Optional[TriggerItem]:
         if isinstance(entity, AutomaticTriggerEntity):
             return AutomaticTriggerItem(
                 trigger_id=entity.trigger_id,
@@ -279,7 +279,7 @@ class TriggersRepository:
     # -----------------------------------------------------------------------------
 
     @staticmethod
-    def __update_item(item: TriggerItem, data: Dict) -> TriggerItem or None:
+    def __update_item(item: TriggerItem, data: Dict) -> Optional[TriggerItem]:
         if isinstance(item, AutomaticTriggerItem):
             return AutomaticTriggerItem(
                 trigger_id=item.trigger_id,
@@ -346,7 +346,7 @@ class ActionsRepository:
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    __items: Dict[str, ActionItem] or None = None
+    __items: Optional[Dict[str, ActionItem]] = None
 
     __iterator_index = 0
 
@@ -377,7 +377,7 @@ class ActionsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def get_by_id(self, action_id: uuid.UUID) -> ActionItem or None:
+    def get_by_id(self, action_id: uuid.UUID) -> Optional[ActionItem]:
         """Find action in cache by provided identifier"""
         if self.__items is None:
             self.initialize()
@@ -392,7 +392,7 @@ class ActionsRepository:
     def get_by_property_identifier(
             self,
             property_id: uuid.UUID,
-    ) -> DevicePropertyConditionItem or ChannelPropertyConditionItem or None:
+    ) -> Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, None]:
         """Find action in cache by provided property identifier"""
         if self.__items is None:
             self.initialize()
@@ -411,12 +411,12 @@ class ActionsRepository:
     def get_all_by_property_identifier(
             self,
             property_id: uuid.UUID,
-    ) -> List[DevicePropertyConditionItem or ChannelPropertyConditionItem]:
+    ) -> List[Union[DevicePropertyConditionItem, ChannelPropertyConditionItem]]:
         """Find actions in cache by provided property identifier"""
         if self.__items is None:
             self.initialize()
 
-        actions: List[DevicePropertyActionItem or ChannelPropertyActionItem] = []
+        actions: List[Union[DevicePropertyActionItem, ChannelPropertyActionItem]] = []
 
         for action in self.__items.values():
             if isinstance(action, DevicePropertyActionItem) and action.device_property.__eq__(property_id):
@@ -463,7 +463,7 @@ class ActionsRepository:
 
         data: Dict = validate_exchange_data(ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE), routing_key, data)
 
-        entity: ActionEntity or None = ActionEntity.get(action_id=uuid.UUID(data.get("id"), version=4))
+        entity: Optional[ActionEntity] = ActionEntity.get(action_id=uuid.UUID(data.get("id"), version=4))
 
         if entity is not None:
             self.__items[entity.action_id.__str__()] = self.__create_item(entity)
@@ -488,7 +488,7 @@ class ActionsRepository:
         validated_data: Dict = validate_exchange_data(ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE), routing_key, data)
 
         if validated_data.get("id") not in self.__items:
-            entity: ActionEntity or None = ActionEntity.get(action_id=uuid.UUID(validated_data.get("id"), version=4))
+            entity: Optional[ActionEntity] = ActionEntity.get(action_id=uuid.UUID(validated_data.get("id"), version=4))
 
             if entity is not None:
                 self.__items[entity.action_id.__str__()] = self.__create_item(entity)
@@ -579,7 +579,7 @@ class ActionsRepository:
     # -----------------------------------------------------------------------------
 
     @staticmethod
-    def __create_item(entity: ActionEntity) -> ActionItem or None:
+    def __create_item(entity: ActionEntity) -> Optional[ActionItem]:
         if isinstance(entity, DevicePropertyActionEntity):
             return DevicePropertyActionItem(
                 action_id=entity.action_id,
@@ -606,7 +606,7 @@ class ActionsRepository:
     # -----------------------------------------------------------------------------
 
     @staticmethod
-    def __update_item(item: ActionItem, data: Dict) -> ActionItem or None:
+    def __update_item(item: ActionItem, data: Dict) -> Optional[ActionItem]:
         if isinstance(item, DevicePropertyActionItem):
             return DevicePropertyActionItem(
                 action_id=item.action_id,
@@ -678,7 +678,7 @@ class ConditionsRepository:
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    __items: Dict[str, ConditionItem] or None = None
+    __items: Optional[Dict[str, ConditionItem]] = None
 
     __iterator_index = 0
 
@@ -709,7 +709,7 @@ class ConditionsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def get_by_id(self, condition_id: uuid.UUID) -> ConditionItem or None:
+    def get_by_id(self, condition_id: uuid.UUID) -> Optional[ConditionItem]:
         """Find condition in cache by provided identifier"""
         if self.__items is None:
             self.initialize()
@@ -724,7 +724,7 @@ class ConditionsRepository:
     def get_by_property_identifier(
             self,
             property_id: uuid.UUID,
-    ) -> DevicePropertyConditionItem or ChannelPropertyConditionItem or None:
+    ) -> Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, None]:
         """Find condition in cache by provided property identifier"""
         if self.__items is None:
             self.initialize()
@@ -743,12 +743,12 @@ class ConditionsRepository:
     def get_all_by_property_identifier(
             self,
             property_id: uuid.UUID,
-    ) -> List[DevicePropertyConditionItem or ChannelPropertyConditionItem]:
+    ) -> List[Union[DevicePropertyConditionItem, ChannelPropertyConditionItem]]:
         """Find conditions in cache by provided property identifier"""
         if self.__items is None:
             self.initialize()
 
-        conditions: List[DevicePropertyConditionItem or ChannelPropertyConditionItem] = []
+        conditions: List[Union[DevicePropertyConditionItem, ChannelPropertyConditionItem]] = []
 
         for condition in self.__items.values():
             if isinstance(condition, DevicePropertyConditionItem) and condition.device_property.__eq__(property_id):
@@ -798,7 +798,7 @@ class ConditionsRepository:
 
         data: Dict = validate_exchange_data(ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE), routing_key, data)
 
-        entity: ConditionEntity or None = ConditionEntity.get(condition_id=uuid.UUID(data.get("id"), version=4))
+        entity: Optional[ConditionEntity] = ConditionEntity.get(condition_id=uuid.UUID(data.get("id"), version=4))
 
         if entity is not None:
             self.__items[entity.condition_id.__str__()] = self.__create_item(entity)
@@ -823,7 +823,7 @@ class ConditionsRepository:
         validated_data: Dict = validate_exchange_data(ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE), routing_key, data)
 
         if validated_data.get("id") not in self.__items:
-            entity: ConditionEntity or None = ConditionEntity.get(
+            entity: Optional[ConditionEntity] = ConditionEntity.get(
                 condition_id=uuid.UUID(validated_data.get("id"), version=4)
             )
 
@@ -931,7 +931,7 @@ class ConditionsRepository:
     # -----------------------------------------------------------------------------
 
     @staticmethod
-    def __create_item(entity: ConditionEntity) -> ConditionItem or None:
+    def __create_item(entity: ConditionEntity) -> Optional[ConditionItem]:
         if isinstance(entity, DevicePropertyConditionEntity):
             return DevicePropertyConditionItem(
                 condition_id=entity.condition_id,
@@ -977,7 +977,7 @@ class ConditionsRepository:
     # -----------------------------------------------------------------------------
 
     @staticmethod
-    def __update_item(item: ConditionItem, data: Dict) -> ConditionItem or None:
+    def __update_item(item: ConditionItem, data: Dict) -> Optional[ConditionItem]:
         if isinstance(item, DevicePropertyConditionItem):
             return DevicePropertyConditionItem(
                 condition_id=item.condition_id,
@@ -1068,7 +1068,7 @@ class TriggersControlsRepository:
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    _items: Dict[str, TriggerControlItem] or None = None
+    _items: Optional[Dict[str, TriggerControlItem]] = None
 
     __iterator_index = 0
 
@@ -1102,7 +1102,7 @@ class TriggersControlsRepository:
     def get_by_id(
         self,
         control_id: uuid.UUID,
-    ) -> TriggerControlItem or None:
+    ) -> Optional[TriggerControlItem]:
         """Find control in cache by provided identifier"""
         if self._items is None:
             self.initialize()
@@ -1133,7 +1133,7 @@ class TriggersControlsRepository:
 
         data: Dict = validate_exchange_data(ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE), routing_key, data)
 
-        entity: TriggerControlEntity or None = TriggerControlEntity.get(
+        entity: Optional[TriggerControlEntity] = TriggerControlEntity.get(
             control_id=uuid.UUID(data.get("id"), version=4),
         )
 
@@ -1160,7 +1160,7 @@ class TriggersControlsRepository:
         validated_data: Dict = validate_exchange_data(ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE), routing_key, data)
 
         if validated_data.get("id") not in self._items:
-            entity: TriggerControlEntity or None = TriggerControlEntity.get(
+            entity: Optional[TriggerControlEntity] = TriggerControlEntity.get(
                 control_id=uuid.UUID(validated_data.get("id"), version=4)
             )
 
@@ -1241,7 +1241,7 @@ class TriggersControlsRepository:
     # -----------------------------------------------------------------------------
 
     @staticmethod
-    def _create_item(entity: TriggerControlEntity) -> TriggerControlItem or None:
+    def _create_item(entity: TriggerControlEntity) -> Optional[TriggerControlItem]:
         if isinstance(entity, TriggerControlEntity):
             return TriggerControlItem(
                 control_id=entity.control_id,
@@ -1254,7 +1254,7 @@ class TriggersControlsRepository:
     # -----------------------------------------------------------------------------
 
     @staticmethod
-    def _update_item(item: TriggerControlItem) -> TriggerControlItem or None:
+    def _update_item(item: TriggerControlItem) -> Optional[TriggerControlItem]:
         if isinstance(item, TriggerControlItem):
             return TriggerControlItem(
                 control_id=item.control_id,
