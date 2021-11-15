@@ -21,14 +21,10 @@ Triggers module DI container
 # pylint: disable=no-value-for-parameter
 
 # Library dependencies
-from enum import Enum
 from typing import Dict, Union
 from kink import di
-from pony.orm.dbproviders.mysql import MySQLProvider
-from pony.orm.dbproviders.sqlite import SQLiteProvider
 
 # Library libs
-from triggers_module.converters import EnumConverter
 from triggers_module.exchange import ModuleExchange
 from triggers_module.models import db
 from triggers_module.repositories import (
@@ -54,10 +50,6 @@ default_settings: Dict[str, Dict[str, Union[str, int, bool, None]]] = {
 def create_container(settings: Dict[str, Dict[str, Union[str, int, bool, None]]]) -> None:
     """Register triggers module services"""
     module_settings: Dict[str, Dict[str, Union[str, int, bool, None]]] = {**default_settings, **settings}
-
-    # Add ENUM converter
-    MySQLProvider.converter_classes.append((Enum, EnumConverter))
-    SQLiteProvider.converter_classes.append((Enum, EnumConverter))
 
     di["fb-triggers-module_database"] = db
 

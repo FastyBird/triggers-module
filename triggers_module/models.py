@@ -616,12 +616,17 @@ class PropertyConditionEntity(ConditionEntity):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    operator: TriggerConditionOperator = RequiredField(
-        TriggerConditionOperator, column="condition_operator", nullable=True,
-    )
+    operator: str = RequiredField(str, column="condition_operator", nullable=True)
     operand: str = RequiredField(str, column="condition_operand", max_len=100, nullable=True)
 
     device: uuid.UUID = RequiredField(uuid.UUID, column="condition_device", nullable=True)
+
+    # -----------------------------------------------------------------------------
+
+    @property
+    def operator_formatted(self) -> TriggerConditionOperator:
+        """Transform operator to enum value"""
+        return TriggerConditionOperator(self.operator)
 
     # -----------------------------------------------------------------------------
 
@@ -635,7 +640,7 @@ class PropertyConditionEntity(ConditionEntity):
     ) -> Dict[str, Union[str, int, bool, None]]:
         """Transform entity to dictionary"""
         return {**{
-            "operator": self.operator,
+            "operator": self.operator_formatted.value,
             "operand": self.operand,
             "device": self.device.__str__(),
         }, **super().to_dict(only, exclude, with_collections, with_lazy, related_objects)}
