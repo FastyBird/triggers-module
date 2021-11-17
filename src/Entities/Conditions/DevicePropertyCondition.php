@@ -44,14 +44,6 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 	 * @var Uuid\UuidInterface
 	 *
 	 * @IPubDoctrine\Crud(is="required")
-	 * @ORM\Column(type="uuid_binary", name="condition_device", nullable=true)
-	 */
-	private Uuid\UuidInterface $device;
-
-	/**
-	 * @var Uuid\UuidInterface
-	 *
-	 * @IPubDoctrine\Crud(is="required")
 	 * @ORM\Column(type="uuid_binary", name="condition_device_property", nullable=true)
 	 */
 	private Uuid\UuidInterface $property;
@@ -74,18 +66,9 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 		Entities\Triggers\IAutomaticTrigger $trigger,
 		?Uuid\UuidInterface $id = null
 	) {
-		parent::__construct($operator, $operand, $trigger, $id);
+		parent::__construct($device, $operator, $operand, $trigger, $id);
 
-		$this->device = $device;
 		$this->property = $property;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getDevice(): Uuid\UuidInterface
-	{
-		return $this->device;
 	}
 
 	/**
@@ -103,7 +86,6 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 	{
 		return array_merge(parent::toArray(), [
 			'type'     => 'device-property',
-			'device'   => $this->getDevice()->toString(),
 			'property' => $this->getProperty()->toString(),
 		]);
 	}

@@ -15,6 +15,7 @@
 
 namespace FastyBird\TriggersModule\Schemas\Conditions;
 
+use Consistence;
 use FastyBird\TriggersModule\Entities;
 use Neomerx\JsonApi;
 
@@ -66,7 +67,7 @@ final class DevicePropertyConditionSchema extends ConditionSchema
 			'device'   => $condition->getDevice()->toString(),
 			'property' => $condition->getProperty()->toString(),
 			'operator' => $condition->getOperator()->getValue(),
-			'operand'  => $condition->getOperand(),
+			'operand'  => $condition->getOperand() instanceof Consistence\Enum\Enum ? $condition->getOperand()->getValue() : $condition->getOperand(),
 		]);
 	}
 

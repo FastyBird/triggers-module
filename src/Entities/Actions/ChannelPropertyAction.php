@@ -19,7 +19,6 @@ use Doctrine\ORM\Mapping as ORM;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use Ramsey\Uuid;
-use Throwable;
 
 /**
  * @ORM\Entity
@@ -37,16 +36,8 @@ use Throwable;
  *     }
  * )
  */
-class ChannelPropertyAction extends Action implements IChannelPropertyAction
+class ChannelPropertyAction extends PropertyAction implements IChannelPropertyAction
 {
-
-	/**
-	 * @var Uuid\UuidInterface
-	 *
-	 * @IPubDoctrine\Crud(is="required")
-	 * @ORM\Column(type="uuid_binary", name="action_device", nullable=true)
-	 */
-	private Uuid\UuidInterface $device;
 
 	/**
 	 * @var Uuid\UuidInterface
@@ -71,8 +62,6 @@ class ChannelPropertyAction extends Action implements IChannelPropertyAction
 	 * @param string $value
 	 * @param Entities\Triggers\ITrigger $trigger
 	 * @param Uuid\UuidInterface|null $id
-	 *
-	 * @throws Throwable
 	 */
 	public function __construct(
 		Uuid\UuidInterface $device,
@@ -82,32 +71,10 @@ class ChannelPropertyAction extends Action implements IChannelPropertyAction
 		Entities\Triggers\ITrigger $trigger,
 		?Uuid\UuidInterface $id = null
 	) {
-		parent::__construct($value, $trigger, $id);
+		parent::__construct($device, $value, $trigger, $id);
 
-		$this->device = $device;
 		$this->channel = $channel;
 		$this->property = $property;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function toArray(): array
-	{
-		return array_merge(parent::toArray(), [
-			'type'     => 'channel-property',
-			'device'   => $this->getDevice()->toString(),
-			'channel'  => $this->getChannel()->toString(),
-			'property' => $this->getProperty()->toString(),
-		]);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getDevice(): Uuid\UuidInterface
-	{
-		return $this->device;
 	}
 
 	/**
@@ -124,6 +91,18 @@ class ChannelPropertyAction extends Action implements IChannelPropertyAction
 	public function getProperty(): Uuid\UuidInterface
 	{
 		return $this->property;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function toArray(): array
+	{
+		return array_merge(parent::toArray(), [
+			'type'     => 'channel-property',
+			'channel'  => $this->getChannel()->toString(),
+			'property' => $this->getProperty()->toString(),
+		]);
 	}
 
 }

@@ -31,11 +31,6 @@ interface IChannelPropertyCondition extends IPropertyCondition
 	/**
 	 * @return Uuid\UuidInterface
 	 */
-	public function getDevice(): Uuid\UuidInterface;
-
-	/**
-	 * @return Uuid\UuidInterface
-	 */
 	public function getChannel(): Uuid\UuidInterface;
 
 	/**

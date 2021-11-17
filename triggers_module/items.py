@@ -22,6 +22,7 @@ Triggers module entities cache
 import datetime
 import uuid
 from abc import ABC
+from enum import Enum
 from typing import List, Dict, Optional, Union
 from modules_metadata.triggers_module import (
     TriggerType,
@@ -29,7 +30,7 @@ from modules_metadata.triggers_module import (
     TriggerConditionType,
     TriggerActionType,
 )
-from modules_metadata.types import SwitchPayload
+from modules_metadata.types import SwitchPayload, ButtonPayload
 
 
 class TriggerItem(ABC):
@@ -256,7 +257,7 @@ class PropertyConditionItem(ConditionItem):
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
     __operator: TriggerConditionOperator
-    __operand: str
+    __operand: Union[str, ButtonPayload, SwitchPayload]
 
     __device: uuid.UUID
 
@@ -268,7 +269,7 @@ class PropertyConditionItem(ConditionItem):
         trigger_id: uuid.UUID,
         enabled: bool,
         operator: TriggerConditionOperator,
-        operand: str,
+        operand: Union[str, ButtonPayload, SwitchPayload],
         device: uuid.UUID,
     ) -> None:
         super().__init__(condition_id, trigger_id, enabled)
@@ -295,7 +296,7 @@ class PropertyConditionItem(ConditionItem):
     # -----------------------------------------------------------------------------
 
     @property
-    def operand(self) -> str:
+    def operand(self) -> Union[str, ButtonPayload, SwitchPayload]:
         """Property condition operand"""
         return self.__operand
 
@@ -307,13 +308,25 @@ class PropertyConditionItem(ConditionItem):
     ) -> bool:
         """Property value validation"""
         if self.__operator == TriggerConditionOperator.EQUAL:
-            return self.operand == property_value
+            if isinstance(self.operand, Enum):
+                return self.operand.value == property_value
+
+            else:
+                return self.operand == property_value
 
         if self.__operator == TriggerConditionOperator.ABOVE:
-            return float(self.operand) < float(property_value)
+            if isinstance(self.operand, Enum):
+                return float(self.operand.value) < float(property_value)
+
+            else:
+                return float(self.operand) < float(property_value)
 
         if self.__operator == TriggerConditionOperator.BELOW:
-            return float(self.operand) > float(property_value)
+            if isinstance(self.operand, Enum):
+                return float(self.operand.value) > float(property_value)
+
+            else:
+                return float(self.operand) > float(property_value)
 
         return False
 
@@ -323,7 +336,7 @@ class PropertyConditionItem(ConditionItem):
         return {**{
             "device": self.device.__str__(),
             "operator": self.operator.value,
-            "operand": self.operand,
+            "operand": self.operand.value if isinstance(self.operand, Enum) else self.operand,
         }, **super().to_dict()}
 
 
@@ -346,7 +359,7 @@ class DevicePropertyConditionItem(PropertyConditionItem):
         trigger_id: uuid.UUID,
         enabled: bool,
         operator: TriggerConditionOperator,
-        operand: str,
+        operand: Union[str, ButtonPayload, SwitchPayload],
         device_property: uuid.UUID,
         device: uuid.UUID,
     ) -> None:
@@ -390,7 +403,7 @@ class ChannelPropertyConditionItem(PropertyConditionItem):
         trigger_id: uuid.UUID,
         enabled: bool,
         operator: TriggerConditionOperator,
-        operand: str,
+        operand: Union[str, ButtonPayload, SwitchPayload],
         channel_property: uuid.UUID,
         channel: uuid.UUID,
         device: uuid.UUID,
@@ -610,7 +623,7 @@ class PropertyActionItem(ActionItem):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    __value: str
+    __value: Union[str, ButtonPayload, SwitchPayload]
 
     __device: uuid.UUID
 
@@ -621,7 +634,7 @@ class PropertyActionItem(ActionItem):
         action_id: uuid.UUID,
         trigger_id: uuid.UUID,
         enabled: bool,
-        value: str,
+        value: Union[str, ButtonPayload, SwitchPayload],
         device: uuid.UUID,
     ) -> None:
         super().__init__(action_id, trigger_id, enabled)
@@ -640,7 +653,7 @@ class PropertyActionItem(ActionItem):
     # -----------------------------------------------------------------------------
 
     @property
-    def value(self) -> str:
+    def value(self) -> Union[str, ButtonPayload, SwitchPayload]:
         """Action property value to be set"""
         return self.__value
 
@@ -651,20 +664,20 @@ class PropertyActionItem(ActionItem):
         property_value: str
     ) -> bool:
         """Property value validation"""
-        if self.__value == SwitchPayload(SwitchPayload.TOGGLE).value:
+        if isinstance(self.value, SwitchPayload) and self.value == SwitchPayload.TOGGLE:
             return False
 
-        if self.__value == property_value:
-            return True
+        if isinstance(self.value, Enum):
+            return self.value.value == property_value
 
-        return False
+        return self.value == property_value
 
     # -----------------------------------------------------------------------------
 
     def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         return {**{
             "device": self.device.__str__(),
-            "value": self.value,
+            "value": self.value.value if isinstance(self.value, Enum) else self.value,
         }, **super().to_dict()}
 
 
@@ -686,7 +699,7 @@ class DevicePropertyActionItem(PropertyActionItem):
         action_id: uuid.UUID,
         trigger_id: uuid.UUID,
         enabled: bool,
-        value: str,
+        value: Union[str, ButtonPayload, SwitchPayload],
         device_property: uuid.UUID,
         device: uuid.UUID,
     ) -> None:
@@ -729,7 +742,7 @@ class ChannelPropertyActionItem(PropertyActionItem):
         action_id: uuid.UUID,
         trigger_id: uuid.UUID,
         enabled: bool,
-        value: str,
+        value: Union[str, ButtonPayload, SwitchPayload],
         channel_property: uuid.UUID,
         channel: uuid.UUID,
         device: uuid.UUID,

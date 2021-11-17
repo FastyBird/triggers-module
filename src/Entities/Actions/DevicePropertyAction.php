@@ -19,7 +19,6 @@ use Doctrine\ORM\Mapping as ORM;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use Ramsey\Uuid;
-use Throwable;
 
 /**
  * @ORM\Entity
@@ -36,16 +35,8 @@ use Throwable;
  *     }
  * )
  */
-class DevicePropertyAction extends Action implements IDevicePropertyAction
+class DevicePropertyAction extends PropertyAction implements IDevicePropertyAction
 {
-
-	/**
-	 * @var Uuid\UuidInterface
-	 *
-	 * @IPubDoctrine\Crud(is="required")
-	 * @ORM\Column(type="uuid_binary", name="action_device", nullable=true)
-	 */
-	private Uuid\UuidInterface $device;
 
 	/**
 	 * @var Uuid\UuidInterface
@@ -61,8 +52,6 @@ class DevicePropertyAction extends Action implements IDevicePropertyAction
 	 * @param string $value
 	 * @param Entities\Triggers\ITrigger $trigger
 	 * @param Uuid\UuidInterface|null $id
-	 *
-	 * @throws Throwable
 	 */
 	public function __construct(
 		Uuid\UuidInterface $device,
@@ -71,10 +60,17 @@ class DevicePropertyAction extends Action implements IDevicePropertyAction
 		Entities\Triggers\ITrigger $trigger,
 		?Uuid\UuidInterface $id = null
 	) {
-		parent::__construct($value, $trigger, $id);
+		parent::__construct($device, $value, $trigger, $id);
 
-		$this->device = $device;
 		$this->property = $property;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getProperty(): Uuid\UuidInterface
+	{
+		return $this->property;
 	}
 
 	/**
@@ -84,25 +80,8 @@ class DevicePropertyAction extends Action implements IDevicePropertyAction
 	{
 		return array_merge(parent::toArray(), [
 			'type'     => 'device-property',
-			'device'   => $this->getDevice()->toString(),
 			'property' => $this->getProperty()->toString(),
 		]);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getDevice(): Uuid\UuidInterface
-	{
-		return $this->device;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getProperty(): Uuid\UuidInterface
-	{
-		return $this->property;
 	}
 
 }

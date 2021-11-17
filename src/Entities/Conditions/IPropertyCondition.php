@@ -16,6 +16,7 @@
 namespace FastyBird\TriggersModule\Entities\Conditions;
 
 use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
+use Ramsey\Uuid;
 
 /**
  * Device or channel property condition entity interface
@@ -27,6 +28,11 @@ use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
  */
 interface IPropertyCondition extends ICondition
 {
+
+	/**
+	 * @return Uuid\UuidInterface
+	 */
+	public function getDevice(): Uuid\UuidInterface;
 
 	/**
 	 * @param ModulesMetadataTypes\TriggerConditionOperatorType $operator
@@ -48,9 +54,9 @@ interface IPropertyCondition extends ICondition
 	public function setOperand(string $operand): void;
 
 	/**
-	 * @return string
+	 * @return string|ModulesMetadataTypes\ButtonPayloadType|ModulesMetadataTypes\SwitchPayloadType
 	 */
-	public function getOperand(): string;
+	public function getOperand();
 
 	/**
 	 * @param string $value

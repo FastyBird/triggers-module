@@ -25,7 +25,7 @@ use Ramsey\Uuid;
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-interface IDevicePropertyAction extends IAction
+interface IDevicePropertyAction extends IPropertyAction
 {
 
 	/**

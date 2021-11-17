@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * IDevicePropertyCondition.php
+ * IPropertyAction.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -13,24 +13,31 @@
  * @date           04.04.20
  */
 
-namespace FastyBird\TriggersModule\Entities\Conditions;
+namespace FastyBird\TriggersModule\Entities\Actions;
 
-use Ramsey\Uuid;
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 
 /**
- * Device state condition entity interface
+ * Property action entity interface
  *
  * @package        FastyBird:TriggersModule!
  * @subpackage     Entities
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-interface IDevicePropertyCondition extends IPropertyCondition
+interface IPropertyAction extends IAction
 {
 
 	/**
-	 * @return Uuid\UuidInterface
+	 * @return string|ModulesMetadataTypes\ButtonPayloadType|ModulesMetadataTypes\SwitchPayloadType
 	 */
-	public function getProperty(): Uuid\UuidInterface;
+	public function getValue();
+
+	/**
+	 * @param string $value
+	 *
+	 * @return bool
+	 */
+	public function validate(string $value): bool;
 
 }

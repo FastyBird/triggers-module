@@ -15,6 +15,7 @@
 
 namespace FastyBird\TriggersModule\Entities\Conditions;
 
+use Consistence;
 use Consistence\Doctrine\Enum\EnumAnnotation as Enum;
 use Doctrine\ORM\Mapping as ORM;
 use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
@@ -28,6 +29,14 @@ use Throwable;
  */
 abstract class PropertyCondition extends Condition implements IPropertyCondition
 {
+
+	/**
+	 * @var Uuid\UuidInterface
+	 *
+	 * @IPubDoctrine\Crud(is="required")
+	 * @ORM\Column(type="uuid_binary", name="condition_device", nullable=true)
+	 */
+	protected Uuid\UuidInterface $device;
 
 	/**
 	 * @var ModulesMetadataTypes\TriggerConditionOperatorType
@@ -55,6 +64,7 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	 * @throws Throwable
 	 */
 	public function __construct(
+		Uuid\UuidInterface $device,
 		ModulesMetadataTypes\TriggerConditionOperatorType $operator,
 		string $operand,
 		Entities\Triggers\IAutomaticTrigger $trigger,
@@ -62,8 +72,17 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	) {
 		parent::__construct($trigger, $id);
 
+		$this->device = $device;
 		$this->operator = $operator;
 		$this->operand = $operand;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getDevice(): Uuid\UuidInterface
+	{
+		return $this->device;
 	}
 
 	/**
@@ -85,8 +104,16 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getOperand(): string
+	public function getOperand()
 	{
+		if (ModulesMetadataTypes\ButtonPayloadType::isValidValue($this->operand)) {
+			return ModulesMetadataTypes\ButtonPayloadType::get($this->operand);
+		}
+
+		if (ModulesMetadataTypes\SwitchPayloadType::isValidValue($this->operand)) {
+			return ModulesMetadataTypes\SwitchPayloadType::get($this->operand);
+		}
+
 		return $this->operand;
 	}
 
@@ -124,8 +151,9 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	public function toArray(): array
 	{
 		return array_merge(parent::toArray(), [
+			'device'   => $this->getDevice()->toString(),
 			'operator' => $this->getOperator()->getValue(),
-			'operand'  => $this->getOperand(),
+			'operand'  => $this->getOperand() instanceof Consistence\Enum\Enum ? $this->getOperand()->getValue() : $this->getOperand(),
 		]);
 	}
 

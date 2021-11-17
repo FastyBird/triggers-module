@@ -48,18 +48,6 @@ interface IAction extends Entities\IEntity,
 	public function isEnabled(): bool;
 
 	/**
-	 * @return string
-	 */
-	public function getValue(): string;
-
-	/**
-	 * @param string $value
-	 *
-	 * @return bool
-	 */
-	public function validate(string $value): bool;
-
-	/**
 	 * @return mixed[]
 	 */
 	public function toArray(): array;

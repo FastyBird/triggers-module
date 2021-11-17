@@ -45,14 +45,6 @@ class ChannelPropertyCondition extends PropertyCondition implements IChannelProp
 	 * @var Uuid\UuidInterface
 	 *
 	 * @IPubDoctrine\Crud(is="required")
-	 * @ORM\Column(type="uuid_binary", name="condition_device", nullable=true)
-	 */
-	private Uuid\UuidInterface $device;
-
-	/**
-	 * @var Uuid\UuidInterface
-	 *
-	 * @IPubDoctrine\Crud(is="required")
 	 * @ORM\Column(type="uuid_binary", name="condition_channel", nullable=true)
 	 */
 	private Uuid\UuidInterface $channel;
@@ -85,19 +77,10 @@ class ChannelPropertyCondition extends PropertyCondition implements IChannelProp
 		Entities\Triggers\IAutomaticTrigger $trigger,
 		?Uuid\UuidInterface $id = null
 	) {
-		parent::__construct($operator, $operand, $trigger, $id);
+		parent::__construct($device, $operator, $operand, $trigger, $id);
 
-		$this->device = $device;
 		$this->channel = $channel;
 		$this->property = $property;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getDevice(): Uuid\UuidInterface
-	{
-		return $this->device;
 	}
 
 	/**
@@ -123,7 +106,6 @@ class ChannelPropertyCondition extends PropertyCondition implements IChannelProp
 	{
 		return array_merge(parent::toArray(), [
 			'type'     => 'channel-property',
-			'device'   => $this->getDevice()->toString(),
 			'channel'  => $this->getChannel()->toString(),
 			'property' => $this->getProperty()->toString(),
 		]);

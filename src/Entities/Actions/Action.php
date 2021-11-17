@@ -20,7 +20,6 @@ use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use IPub\DoctrineTimestampable;
 use Ramsey\Uuid;
-use Throwable;
 
 /**
  * @ORM\Entity
@@ -65,14 +64,6 @@ abstract class Action implements IAction
 	protected bool $enabled = true;
 
 	/**
-	 * @var string
-	 *
-	 * @IPubDoctrine\Crud(is={"required", "writable"})
-	 * @ORM\Column(type="string", name="action_value", length=100, nullable=true)
-	 */
-	protected string $value;
-
-	/**
 	 * @var Entities\Triggers\ITrigger
 	 *
 	 * @IPubDoctrine\Crud(is="required")
@@ -82,22 +73,16 @@ abstract class Action implements IAction
 	protected Entities\Triggers\ITrigger $trigger;
 
 	/**
-	 * @param string $value
 	 * @param Entities\Triggers\ITrigger $trigger
 	 * @param Uuid\UuidInterface|null $id
-	 *
-	 * @throws Throwable
 	 */
 	public function __construct(
-		string $value,
 		Entities\Triggers\ITrigger $trigger,
 		?Uuid\UuidInterface $id = null
 	) {
 		$this->id = $id ?? Uuid\Uuid::uuid4();
 
 		$this->trigger = $trigger;
-
-		$this->value = $value;
 	}
 
 	/**
@@ -127,28 +112,11 @@ abstract class Action implements IAction
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getValue(): string
-	{
-		return $this->value;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function validate(string $value): bool
-	{
-		return $this->value === $value;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function toArray(): array
 	{
 		return [
 			'id'      => $this->getPlainId(),
 			'enabled' => $this->isEnabled(),
-			'value'   => $this->getValue(),
 			'trigger' => $this->getTrigger()->getPlainId(),
 			'owner'   => $this->getTrigger()->getOwnerId(),
 		];

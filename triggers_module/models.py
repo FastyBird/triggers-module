@@ -25,6 +25,7 @@ from typing import List, Tuple, Dict, Optional, Union
 from exchange_plugin.dispatcher import EventDispatcher
 from kink import di
 from modules_metadata.triggers_module import TriggerConditionOperator
+from modules_metadata.types import ButtonPayload, SwitchPayload
 from pony.orm import (
     Database,
     PrimaryKey,
@@ -306,6 +307,19 @@ class PropertyActionEntity(ActionEntity):
     device: uuid.UUID = RequiredField(uuid.UUID, column="action_device", nullable=True)
 
     value: str = RequiredField(str, column="action_value", max_len=100, nullable=True)
+
+    # -----------------------------------------------------------------------------
+
+    @property
+    def value_formatted(self) -> Union[str, ButtonPayload, SwitchPayload]:
+        """Transform value to enum value"""
+        if ButtonPayload.has_value(self.value):
+            return ButtonPayload(self.value)
+
+        if SwitchPayload.has_value(self.value):
+            return SwitchPayload(self.value)
+
+        return self.value
 
     # -----------------------------------------------------------------------------
 
@@ -627,6 +641,19 @@ class PropertyConditionEntity(ConditionEntity):
     def operator_formatted(self) -> TriggerConditionOperator:
         """Transform operator to enum value"""
         return TriggerConditionOperator(self.operator)
+
+    # -----------------------------------------------------------------------------
+
+    @property
+    def operand_formatted(self) -> Union[str, ButtonPayload, SwitchPayload]:
+        """Transform operand to enum value"""
+        if ButtonPayload.has_value(self.operand):
+            return ButtonPayload(self.operand)
+
+        if SwitchPayload.has_value(self.operand):
+            return SwitchPayload(self.operand)
+
+        return self.operand
 
     # -----------------------------------------------------------------------------
 
