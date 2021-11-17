@@ -24,6 +24,7 @@ use FastyBird\TriggersModule;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Models;
 use Nette;
+use Nette\Utils;
 use ReflectionClass;
 use ReflectionException;
 
@@ -234,9 +235,9 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 				$this->publisher->publish(
 					ModulesMetadataTypes\ModuleOriginType::get(ModulesMetadataTypes\ModuleOriginType::ORIGIN_MODULE_TRIGGERS),
 					$publishRoutingKey,
-					array_merge($state !== null ? [
+					Utils\ArrayHash::from(array_merge($state !== null ? [
 						'is_triggered' => $state->getValidationResult(),
-					] : [], $entity->toArray())
+					] : [], $entity->toArray()))
 				);
 
 			} elseif ($entity instanceof Entities\Conditions\ICondition && $this->triggerItemRepository !== null) {
@@ -245,9 +246,9 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 				$this->publisher->publish(
 					ModulesMetadataTypes\ModuleOriginType::get(ModulesMetadataTypes\ModuleOriginType::ORIGIN_MODULE_TRIGGERS),
 					$publishRoutingKey,
-					array_merge($state !== null ? [
+					Utils\ArrayHash::from(array_merge($state !== null ? [
 						'is_fulfilled' => $state->getValidationResult(),
-					] : [], $entity->toArray())
+					] : [], $entity->toArray()))
 				);
 
 			} elseif ($entity instanceof Entities\Triggers\ITrigger && $this->triggerItemRepository !== null) {
@@ -275,26 +276,26 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 					$this->publisher->publish(
 						ModulesMetadataTypes\ModuleOriginType::get(ModulesMetadataTypes\ModuleOriginType::ORIGIN_MODULE_TRIGGERS),
 						$publishRoutingKey,
-						array_merge([
+						Utils\ArrayHash::from(array_merge([
 							'is_triggered' => $isTriggered,
 							'is_fulfilled' => $isFulfilled,
-						], $entity->toArray())
+						], $entity->toArray()))
 					);
 
 				} else {
 					$this->publisher->publish(
 						ModulesMetadataTypes\ModuleOriginType::get(ModulesMetadataTypes\ModuleOriginType::ORIGIN_MODULE_TRIGGERS),
 						$publishRoutingKey,
-						array_merge([
+						Utils\ArrayHash::from(array_merge([
 							'is_triggered' => $isTriggered,
-						], $entity->toArray())
+						], $entity->toArray()))
 					);
 				}
 			} else {
 				$this->publisher->publish(
 					ModulesMetadataTypes\ModuleOriginType::get(ModulesMetadataTypes\ModuleOriginType::ORIGIN_MODULE_TRIGGERS),
 					$publishRoutingKey,
-					$entity->toArray()
+					Utils\ArrayHash::from($entity->toArray())
 				);
 			}
 		}

@@ -8,6 +8,7 @@ use FastyBird\ModulesMetadata;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Subscribers;
 use Mockery;
+use Nette\Utils;
 use Ninjify\Nunjuck\TestCase\BaseMockeryTestCase;
 use stdClass;
 use Tester\Assert;
@@ -38,19 +39,19 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 		$publisher = Mockery::mock(ExchangePluginPublisher\IPublisher::class);
 		$publisher
 			->shouldReceive('publish')
-			->withArgs(function (string $origin, string $key, array $data): bool {
+			->withArgs(function (string $origin, string $key, Utils\ArrayHash $data): bool {
 				Assert::same(ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN, $origin);
 
 				unset($data['id']);
 
 				Assert::same('fb.bus.entity.created.trigger', $key);
-				Assert::equal([
+				Assert::equal(Utils\ArrayHash::from([
 					'name'     => 'Trigger name',
 					'comment'  => null,
 					'enabled'  => true,
 					'owner'    => null,
 					'type'     => 'manual',
-				], $data);
+				]), $data);
 
 				return true;
 			})
@@ -129,19 +130,19 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 		$publisher = Mockery::mock(ExchangePluginPublisher\IPublisher::class);
 		$publisher
 			->shouldReceive('publish')
-			->withArgs(function (string $origin, string $key, array $data): bool {
+			->withArgs(function (string $origin, string $key, Utils\ArrayHash $data): bool {
 				Assert::same(ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN, $origin);
 
 				unset($data['id']);
 
 				Assert::same('fb.bus.entity.updated.trigger', $key);
-				Assert::equal([
+				Assert::equal(Utils\ArrayHash::from([
 					'name'     => 'Trigger name',
 					'comment'  => null,
 					'enabled'  => true,
 					'owner'    => null,
 					'type'     => 'manual',
-				], $data);
+				]), $data);
 
 				return true;
 			})
@@ -172,19 +173,19 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 		$publisher = Mockery::mock(ExchangePluginPublisher\IPublisher::class);
 		$publisher
 			->shouldReceive('publish')
-			->withArgs(function (string $origin, string $key, array $data): bool {
+			->withArgs(function (string $origin, string $key, Utils\ArrayHash $data): bool {
 				Assert::same(ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN, $origin);
 
 				unset($data['id']);
 
 				Assert::same('fb.bus.entity.deleted.trigger', $key);
-				Assert::equal([
+				Assert::equal(Utils\ArrayHash::from([
 					'name'     => 'Trigger name',
 					'comment'  => null,
 					'enabled'  => true,
 					'owner'    => null,
 					'type'     => 'manual',
-				], $data);
+				]), $data);
 
 				return true;
 			})

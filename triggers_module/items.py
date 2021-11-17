@@ -311,22 +311,19 @@ class PropertyConditionItem(ConditionItem):
             if isinstance(self.operand, Enum):
                 return self.operand.value == property_value
 
-            else:
-                return self.operand == property_value
+            return self.operand == property_value
 
         if self.__operator == TriggerConditionOperator.ABOVE:
             if isinstance(self.operand, Enum):
                 return float(self.operand.value) < float(property_value)
 
-            else:
-                return float(self.operand) < float(property_value)
+            return float(self.operand) < float(property_value)
 
         if self.__operator == TriggerConditionOperator.BELOW:
             if isinstance(self.operand, Enum):
                 return float(self.operand.value) > float(property_value)
 
-            else:
-                return float(self.operand) > float(property_value)
+            return float(self.operand) > float(property_value)
 
         return False
 
