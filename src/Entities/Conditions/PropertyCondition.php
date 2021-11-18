@@ -131,15 +131,15 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	public function validate(string $value): bool
 	{
 		if ($this->operator->equalsValue(ModulesMetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_EQUAL)) {
-			return $this->operand === $value;
+			return (string) $this->operand === $value;
 		}
 
 		if ($this->operator->equalsValue(ModulesMetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_ABOVE)) {
-			return (float) $this->operand < (float) $value;
+			return (float) ((string) $this->operand) < (float) $value;
 		}
 
 		if ($this->operator->equalsValue(ModulesMetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_BELOW)) {
-			return (float) $this->operand > (float) $value;
+			return (float) ((string) $this->operand) > (float) $value;
 		}
 
 		return false;
@@ -153,7 +153,7 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 		return array_merge(parent::toArray(), [
 			'device'   => $this->getDevice()->toString(),
 			'operator' => $this->getOperator()->getValue(),
-			'operand'  => $this->getOperand() instanceof Consistence\Enum\Enum ? $this->getOperand()->getValue() : $this->getOperand(),
+			'operand'  => (string) $this->getOperand(),
 		]);
 	}
 

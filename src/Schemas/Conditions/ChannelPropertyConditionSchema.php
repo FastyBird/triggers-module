@@ -68,7 +68,7 @@ final class ChannelPropertyConditionSchema extends ConditionSchema
 			'channel'  => $condition->getChannel()->toString(),
 			'property' => $condition->getProperty()->toString(),
 			'operator' => $condition->getOperator()->getValue(),
-			'operand'  => $condition->getOperand() instanceof Consistence\Enum\Enum ? $condition->getOperand()->getValue() : $condition->getOperand(),
+			'operand'  => (string) $condition->getOperand(),
 		]);
 	}
 

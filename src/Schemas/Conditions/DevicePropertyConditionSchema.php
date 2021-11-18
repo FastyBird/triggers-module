@@ -67,7 +67,7 @@ final class DevicePropertyConditionSchema extends ConditionSchema
 			'device'   => $condition->getDevice()->toString(),
 			'property' => $condition->getProperty()->toString(),
 			'operator' => $condition->getOperator()->getValue(),
-			'operand'  => $condition->getOperand() instanceof Consistence\Enum\Enum ? $condition->getOperand()->getValue() : $condition->getOperand(),
+			'operand'  => (string) $condition->getOperand(),
 		]);
 	}
 

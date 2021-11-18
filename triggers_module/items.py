@@ -24,6 +24,7 @@ import uuid
 from abc import ABC
 from enum import Enum
 from typing import List, Dict, Optional, Union
+from fastnumbers import fast_float
 from modules_metadata.triggers_module import (
     TriggerType,
     TriggerConditionOperator,
@@ -304,26 +305,17 @@ class PropertyConditionItem(ConditionItem):
 
     def validate(
         self,
-        property_value: str
+        property_value: Union[str, int, float, bool, SwitchPayload, ButtonPayload]
     ) -> bool:
         """Property value validation"""
         if self.__operator == TriggerConditionOperator.EQUAL:
-            if isinstance(self.operand, Enum):
-                return self.operand.value == property_value
-
-            return self.operand == property_value
+            return str(self.operand.value) == str(property_value)
 
         if self.__operator == TriggerConditionOperator.ABOVE:
-            if isinstance(self.operand, Enum):
-                return float(self.operand.value) < float(property_value)
-
-            return float(self.operand) < float(property_value)
+            return fast_float(str(self.operand), 0) < fast_float(str(property_value), 0)
 
         if self.__operator == TriggerConditionOperator.BELOW:
-            if isinstance(self.operand, Enum):
-                return float(self.operand.value) > float(property_value)
-
-            return float(self.operand) > float(property_value)
+            return fast_float(str(self.operand), 0) > fast_float(str(property_value), 0)
 
         return False
 
@@ -658,16 +650,13 @@ class PropertyActionItem(ActionItem):
 
     def validate(
         self,
-        property_value: str
+        property_value: Union[str, int, float, bool, SwitchPayload, ButtonPayload]
     ) -> bool:
         """Property value validation"""
         if isinstance(self.value, SwitchPayload) and self.value == SwitchPayload.TOGGLE:
             return False
 
-        if isinstance(self.value, Enum):
-            return self.value.value == property_value
-
-        return self.value == property_value
+        return str(self.value) == str(property_value)
 
     # -----------------------------------------------------------------------------
 

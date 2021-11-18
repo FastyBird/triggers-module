@@ -67,7 +67,7 @@ final class ChannelPropertyActionSchema extends ActionSchema
 			'device'   => $action->getDevice()->toString(),
 			'channel'  => $action->getChannel()->toString(),
 			'property' => $action->getProperty()->toString(),
-			'value'    => $action->getValue() instanceof Consistence\Enum\Enum ? $action->getValue()->getValue() : $action->getValue(),
+			'value'    => (string) $action->getValue(),
 		]);
 	}
 

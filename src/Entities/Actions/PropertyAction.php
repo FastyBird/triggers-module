@@ -91,7 +91,7 @@ abstract class PropertyAction extends Action implements IPropertyAction
 	 */
 	public function validate(string $value): bool
 	{
-		return $this->value === $value;
+		return (string) $this->value === $value;
 	}
 
 	/**
@@ -101,7 +101,7 @@ abstract class PropertyAction extends Action implements IPropertyAction
 	{
 		return array_merge(parent::toArray(), [
 			'device' => $this->getDevice()->toString(),
-			'value'  => $this->getValue() instanceof Consistence\Enum\Enum ? $this->getValue()->getValue() : $this->getValue(),
+			'value'  => (string) $this->getValue(),
 		]);
 	}
 
