@@ -22,7 +22,6 @@ Triggers module entities cache
 import datetime
 import uuid
 from abc import ABC
-from enum import Enum
 from typing import List, Dict, Optional, Union
 from fastnumbers import fast_float
 from modules_metadata.triggers_module import (
