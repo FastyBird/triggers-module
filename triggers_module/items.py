@@ -113,7 +113,7 @@ class AutomaticTriggerItem(TriggerItem):
     """
     def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         return {**{
-            "type": TriggerType(TriggerType.AUTOMATIC).value,
+            "type": TriggerType.AUTOMATIC.value,
         }, **super().to_dict()}
 
 
@@ -128,7 +128,7 @@ class ManualTriggerItem(TriggerItem):
     """
     def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         return {**{
-            "type": TriggerType(TriggerType.MANUAL).value,
+            "type": TriggerType.MANUAL.value,
         }, **super().to_dict()}
 
 
@@ -309,7 +309,7 @@ class PropertyConditionItem(ConditionItem):
     ) -> bool:
         """Property value validation"""
         if self.__operator == TriggerConditionOperator.EQUAL:
-            return str(self.operand.value) == str(property_value)
+            return str(self.operand) == str(property_value)
 
         if self.__operator == TriggerConditionOperator.ABOVE:
             return fast_float(str(self.operand), 0) < fast_float(str(property_value), 0)
@@ -325,7 +325,7 @@ class PropertyConditionItem(ConditionItem):
         return {**{
             "device": self.device.__str__(),
             "operator": self.operator.value,
-            "operand": self.operand.value if isinstance(self.operand, Enum) else self.operand,
+            "operand": str(self.operand),
         }, **super().to_dict()}
 
 
@@ -367,7 +367,7 @@ class DevicePropertyConditionItem(PropertyConditionItem):
 
     def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         return {**{
-            "type": TriggerConditionType(TriggerConditionType.DEVICE_PROPERTY).value,
+            "type": TriggerConditionType.DEVICE_PROPERTY.value,
             "property": self.device_property.__str__(),
         }, **super().to_dict()}
 
@@ -420,7 +420,7 @@ class ChannelPropertyConditionItem(PropertyConditionItem):
 
     def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         return {**{
-            "type": TriggerConditionType(TriggerConditionType.CHANNEL_PROPERTY).value,
+            "type": TriggerConditionType.CHANNEL_PROPERTY.value,
             "channel": self.channel.__str__(),
             "property": self.channel_property.__str__(),
         }, **super().to_dict()}
@@ -483,7 +483,7 @@ class TimeConditionItem(ConditionItem):
 
     def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         return {**{
-            "type": TriggerConditionType(TriggerConditionType.TIME).value,
+            "type": TriggerConditionType.TIME.value,
             "time": f"1970-01-01\\T{self.__format_time()}+00:00",
             "days": self.days,
         }, **super().to_dict()}
@@ -541,7 +541,7 @@ class DateConditionItem(ConditionItem):
 
     def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         return {**{
-            "type": TriggerConditionType(TriggerConditionType.DATE).value,
+            "type": TriggerConditionType.DATE.value,
             "date": self.date.strftime(r"%Y-%m-%d\T%H:%M:%S+00:00"),
         }, **super().to_dict()}
 
@@ -663,7 +663,7 @@ class PropertyActionItem(ActionItem):
     def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         return {**{
             "device": self.device.__str__(),
-            "value": self.value.value if isinstance(self.value, Enum) else self.value,
+            "value": str(self.value),
         }, **super().to_dict()}
 
 
@@ -704,7 +704,7 @@ class DevicePropertyActionItem(PropertyActionItem):
 
     def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         return {**{
-            "type": TriggerActionType(TriggerActionType.DEVICE_PROPERTY).value,
+            "type": TriggerActionType.DEVICE_PROPERTY.value,
             "property": self.device_property.__str__(),
         }, **super().to_dict()}
 
@@ -756,7 +756,7 @@ class ChannelPropertyActionItem(PropertyActionItem):
 
     def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
         return {**{
-            "type": TriggerActionType(TriggerActionType.CHANNEL_PROPERTY).value,
+            "type": TriggerActionType.CHANNEL_PROPERTY.value,
             "channel": self.channel.__str__(),
             "property": self.channel_property.__str__(),
         }, **super().to_dict()}

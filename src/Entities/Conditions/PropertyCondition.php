@@ -15,7 +15,6 @@
 
 namespace FastyBird\TriggersModule\Entities\Conditions;
 
-use Consistence;
 use Consistence\Doctrine\Enum\EnumAnnotation as Enum;
 use Doctrine\ORM\Mapping as ORM;
 use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;

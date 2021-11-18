@@ -15,7 +15,6 @@
 
 namespace FastyBird\TriggersModule\Entities\Actions;
 
-use Consistence;
 use Doctrine\ORM\Mapping as ORM;
 use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\TriggersModule\Entities;

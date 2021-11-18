@@ -15,7 +15,6 @@
 
 namespace FastyBird\TriggersModule\Schemas\Actions;
 
-use Consistence;
 use FastyBird\TriggersModule\Entities;
 use Neomerx\JsonApi;
 
