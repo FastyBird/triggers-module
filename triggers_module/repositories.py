@@ -135,7 +135,7 @@ class TriggersRepository:
 
             return True
 
-        data: Dict = validate_exchange_data(ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE), routing_key, data)
+        data: Dict = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
 
         entity: Optional[TriggerEntity] = TriggerEntity.get(trigger_id=uuid.UUID(data.get("id"), version=4))
 
@@ -159,7 +159,7 @@ class TriggersRepository:
 
             return True
 
-        validated_data: Dict = validate_exchange_data(ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE), routing_key, data)
+        validated_data: Dict = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
 
         if validated_data.get("id") not in self.__items:
             entity: Optional[TriggerEntity] = TriggerEntity.get(
@@ -465,7 +465,7 @@ class ActionsRepository:
 
             return True
 
-        data: Dict = validate_exchange_data(ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE), routing_key, data)
+        data: Dict = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
 
         entity: Optional[ActionEntity] = ActionEntity.get(action_id=uuid.UUID(data.get("id"), version=4))
 
@@ -489,7 +489,7 @@ class ActionsRepository:
 
             return True
 
-        validated_data: Dict = validate_exchange_data(ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE), routing_key, data)
+        validated_data: Dict = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
 
         if validated_data.get("id") not in self.__items:
             entity: Optional[ActionEntity] = ActionEntity.get(action_id=uuid.UUID(validated_data.get("id"), version=4))
@@ -813,7 +813,7 @@ class ConditionsRepository:
 
             return True
 
-        data: Dict = validate_exchange_data(ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE), routing_key, data)
+        data: Dict = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
 
         entity: Optional[ConditionEntity] = ConditionEntity.get(condition_id=uuid.UUID(data.get("id"), version=4))
 
@@ -837,7 +837,7 @@ class ConditionsRepository:
 
             return True
 
-        validated_data: Dict = validate_exchange_data(ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE), routing_key, data)
+        validated_data: Dict = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
 
         if validated_data.get("id") not in self.__items:
             entity: Optional[ConditionEntity] = ConditionEntity.get(
@@ -1170,7 +1170,7 @@ class TriggersControlsRepository:
 
             return True
 
-        data: Dict = validate_exchange_data(ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE), routing_key, data)
+        data: Dict = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
 
         entity: Optional[TriggerControlEntity] = TriggerControlEntity.get(
             control_id=uuid.UUID(data.get("id"), version=4),
@@ -1196,7 +1196,7 @@ class TriggersControlsRepository:
 
             return True
 
-        validated_data: Dict = validate_exchange_data(ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE), routing_key, data)
+        validated_data: Dict = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
 
         if validated_data.get("id") not in self._items:
             entity: Optional[TriggerControlEntity] = TriggerControlEntity.get(

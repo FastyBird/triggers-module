@@ -136,7 +136,7 @@ class ModuleExchange:
 
         if routing_key is not None:
             self.__publisher.publish(
-                origin=ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE),
+                origin=ModuleOrigin.TRIGGERS_MODULE,
                 routing_key=routing_key,
                 data=event.entity.to_dict(),
             )
@@ -151,7 +151,7 @@ class ModuleExchange:
 
         if routing_key is not None:
             self.__publisher.publish(
-                origin=ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE),
+                origin=ModuleOrigin.TRIGGERS_MODULE,
                 routing_key=routing_key,
                 data=event.entity.to_dict(),
             )
@@ -166,7 +166,7 @@ class ModuleExchange:
 
         if routing_key is not None:
             self.__publisher.publish(
-                origin=ModuleOrigin(ModuleOrigin.TRIGGERS_MODULE),
+                origin=ModuleOrigin.TRIGGERS_MODULE,
                 routing_key=routing_key,
                 data=event.entity.to_dict(),
             )
