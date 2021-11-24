@@ -4,7 +4,8 @@ import * as exchangeEntitySchema
 import {
   ModuleOrigin,
   TriggerControlEntity as ExchangeEntity,
-  TriggersModule as RoutingKeys, DataType,
+  TriggersModule as RoutingKeys,
+  DataType,
 } from '@fastybird/modules-metadata'
 
 import {

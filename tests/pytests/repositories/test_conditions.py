@@ -50,20 +50,6 @@ class TestConditionsRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     @inject
-    def test_get_item_by_property(self, condition_repository: ConditionsRepository) -> None:
-        condition_repository.initialize()
-
-        condition_item = condition_repository.get_by_property_identifier(
-            uuid.UUID("ff7b36d7-a0b0-4336-9efb-a608c93b0974", version=4)
-        )
-
-        self.assertIsInstance(condition_item, PropertyConditionItem)
-        self.assertIsInstance(condition_item, ChannelPropertyConditionItem)
-        self.assertEqual("2726f19c-7759-440e-b6f5-8c3306692fa2", condition_item.condition_id.__str__())
-
-    # -----------------------------------------------------------------------------
-
-    @inject
     def test_create_from_exchange(self, condition_repository: ConditionsRepository) -> None:
         condition_repository.initialize()
 

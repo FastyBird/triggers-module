@@ -20,48 +20,57 @@
 Triggers module repositories
 """
 
-# Library dependencies
+# Python base dependencies
 import json
 import uuid
-from typing import List, Dict, Optional, Union
-from exchange_plugin.dispatcher import EventDispatcher
-from exchange_plugin.events.event import IEvent
-from kink import inject
+from typing import Dict, List, Optional, Union
+
+# Library dependencies
 import modules_metadata.exceptions as metadata_exceptions
+from exchange_plugin.dispatcher import EventDispatcher
+from kink import inject
 from modules_metadata.loader import load_schema
 from modules_metadata.routing import RoutingKey
-from modules_metadata.validator import validate
 from modules_metadata.triggers_module import TriggerConditionOperator
 from modules_metadata.types import ModuleOrigin
+from modules_metadata.validator import validate
 from pony.orm import core as orm
+from whistle import Event
 
 # Library libs
-from triggers_module.events import ModelEntityCreatedEvent, ModelEntityUpdatedEvent, ModelEntityDeletedEvent
-from triggers_module.exceptions import HandleExchangeDataException
-from triggers_module.models import (
-    TriggerEntity,
-    AutomaticTriggerEntity,
-    ManualTriggerEntity,
-    TriggerControlEntity,
-    ActionEntity,
-    DevicePropertyActionEntity,
-    ChannelPropertyActionEntity,
-    ConditionEntity,
-    DevicePropertyConditionEntity,
-    ChannelPropertyConditionEntity,
-    TimeConditionEntity,
-    DateConditionEntity,
+from triggers_module.events import (
+    ModelEntityCreatedEvent,
+    ModelEntityDeletedEvent,
+    ModelEntityUpdatedEvent,
+)
+from triggers_module.exceptions import (
+    HandleExchangeDataException,
+    InvalidStateException,
 )
 from triggers_module.items import (
     AutomaticTriggerItem,
-    ManualTriggerItem,
-    TriggerControlItem,
-    DevicePropertyConditionItem,
+    ChannelPropertyActionItem,
     ChannelPropertyConditionItem,
-    TimeConditionItem,
     DateConditionItem,
     DevicePropertyActionItem,
-    ChannelPropertyActionItem,
+    DevicePropertyConditionItem,
+    ManualTriggerItem,
+    TimeConditionItem,
+    TriggerControlItem,
+)
+from triggers_module.models import (
+    ActionEntity,
+    AutomaticTriggerEntity,
+    ChannelPropertyActionEntity,
+    ChannelPropertyConditionEntity,
+    ConditionEntity,
+    DateConditionEntity,
+    DevicePropertyActionEntity,
+    DevicePropertyConditionEntity,
+    ManualTriggerEntity,
+    TimeConditionEntity,
+    TriggerControlEntity,
+    TriggerEntity,
 )
 
 
@@ -75,6 +84,7 @@ class TriggersRepository:
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
+
     __items: Optional[Dict[str, Union[AutomaticTriggerItem, ManualTriggerItem]]] = None
 
     __iterator_index = 0
@@ -108,11 +118,9 @@ class TriggersRepository:
 
     def get_by_id(self, trigger_id: uuid.UUID) -> Union[AutomaticTriggerItem, ManualTriggerItem, None]:
         """Find trigger in cache by provided identifier"""
-        if self.__items is None:
-            self.initialize()
-
-        if trigger_id.__str__() in self.__items:
-            return self.__items[trigger_id.__str__()]
+        for record in self:
+            if trigger_id.__eq__(record.trigger_id):
+                return record
 
         return None
 
@@ -124,66 +132,25 @@ class TriggersRepository:
 
     # -----------------------------------------------------------------------------
 
-    @orm.db_session
     def create_from_exchange(self, routing_key: RoutingKey, data: Dict) -> bool:
         """Process received trigger message from exchange when entity was created"""
         if routing_key != RoutingKey.TRIGGERS_ENTITY_CREATED:
             return False
 
-        if self.__items is None:
-            self.initialize()
+        result: bool = self.__handle_data_from_exchange(routing_key=routing_key, data=data)
 
-            return True
-
-        data: Dict = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
-
-        entity: Optional[TriggerEntity] = TriggerEntity.get(trigger_id=uuid.UUID(data.get("id"), version=4))
-
-        if entity is not None:
-            self.__items[entity.trigger_id.__str__()] = self.__create_item(entity)
-
-            return True
-
-        return False
+        return result
 
     # -----------------------------------------------------------------------------
 
-    @orm.db_session
     def update_from_exchange(self, routing_key: RoutingKey, data: Dict) -> bool:
         """Process received trigger message from exchange when entity was updated"""
         if routing_key != RoutingKey.TRIGGERS_ENTITY_UPDATED:
             return False
 
-        if self.__items is None:
-            self.initialize()
+        result: bool = self.__handle_data_from_exchange(routing_key=routing_key, data=data)
 
-            return True
-
-        validated_data: Dict = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
-
-        if validated_data.get("id") not in self.__items:
-            entity: Optional[TriggerEntity] = TriggerEntity.get(
-                trigger_id=uuid.UUID(validated_data.get("id"), version=4),
-            )
-
-            if entity is not None:
-                self.__items[entity.trigger_id.__str__()] = self.__create_item(entity)
-
-                return True
-
-            return False
-
-        item = self.__update_item(
-            self.get_by_id(uuid.UUID(validated_data.get("id"), version=4)),
-            validated_data,
-        )
-
-        if item is not None:
-            self.__items[validated_data.get("id")] = item
-
-            return True
-
-        return False
+        return result
 
     # -----------------------------------------------------------------------------
 
@@ -193,8 +160,39 @@ class TriggersRepository:
         if routing_key != RoutingKey.TRIGGERS_ENTITY_DELETED:
             return False
 
-        if data.get("id") in self.__items:
-            del self.__items[data.get("id")]
+        validated_data = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
+
+        if self.get_by_id(trigger_id=uuid.UUID(validated_data.get("id"), version=4)) is not None:
+            del self[str(data.get("id"))]
+
+            return True
+
+        return False
+
+    # -----------------------------------------------------------------------------
+
+    @orm.db_session
+    def __handle_data_from_exchange(self, routing_key: RoutingKey, data: Dict) -> bool:
+        validated_data = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
+
+        trigger_item = self.get_by_id(trigger_id=uuid.UUID(validated_data.get("id"), version=4))
+
+        if trigger_item is None:
+            entity: Optional[TriggerEntity] = TriggerEntity.get(
+                trigger_id=uuid.UUID(validated_data.get("id"), version=4)
+            )
+
+            if entity is not None:
+                self[entity.trigger_id.__str__()] = self.__create_item(entity=entity)
+
+                return True
+
+            return False
+
+        item = self.__update_item(item=trigger_item, data=validated_data)
+
+        if item is not None:
+            self[str(validated_data.get("id"))] = item
 
             return True
 
@@ -208,23 +206,15 @@ class TriggersRepository:
         items: Dict[str, Union[AutomaticTriggerItem, ManualTriggerItem]] = {}
 
         for trigger in TriggerEntity.select():
-            if self.__items is None or trigger.trigger_id.__str__() not in self.__items:
-                item = self.__create_item(trigger)
-
-            else:
-                item = self.__update_item(self.get_by_id(trigger.trigger_id), trigger.to_dict())
-
-            if item is not None:
-                items[trigger.trigger_id.__str__()] = item
+            items[trigger.trigger_id.__str__()] = self.__create_item(entity=trigger)
 
         self.__items = items
 
     # -----------------------------------------------------------------------------
 
-    def __entity_created(self, event: IEvent) -> None:
-        if (
-            not isinstance(event, ModelEntityCreatedEvent)
-            or not isinstance(event.entity, (ManualTriggerEntity, AutomaticTriggerEntity))
+    def __entity_created(self, event: Event) -> None:
+        if not isinstance(event, ModelEntityCreatedEvent) or not isinstance(
+            event.entity, (ManualTriggerEntity, AutomaticTriggerEntity)
         ):
             return
 
@@ -232,10 +222,9 @@ class TriggersRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __entity_updated(self, event: IEvent) -> None:
-        if (
-            not isinstance(event, ModelEntityUpdatedEvent)
-            or not isinstance(event.entity, (ManualTriggerEntity, AutomaticTriggerEntity))
+    def __entity_updated(self, event: Event) -> None:
+        if not isinstance(event, ModelEntityUpdatedEvent) or not isinstance(
+            event.entity, (ManualTriggerEntity, AutomaticTriggerEntity)
         ):
             return
 
@@ -243,10 +232,9 @@ class TriggersRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __entity_deleted(self, event: IEvent) -> None:
-        if (
-            not isinstance(event, ModelEntityDeletedEvent)
-            or not isinstance(event.entity, (ManualTriggerEntity, AutomaticTriggerEntity))
+    def __entity_deleted(self, event: Event) -> None:
+        if not isinstance(event, ModelEntityDeletedEvent) or not isinstance(
+            event.entity, (ManualTriggerEntity, AutomaticTriggerEntity)
         ):
             return
 
@@ -255,7 +243,7 @@ class TriggersRepository:
     # -----------------------------------------------------------------------------
 
     @staticmethod
-    def __create_item(entity: TriggerEntity) -> Union[AutomaticTriggerItem, ManualTriggerItem, None]:
+    def __create_item(entity: TriggerEntity) -> Union[AutomaticTriggerItem, ManualTriggerItem]:
         if isinstance(entity, AutomaticTriggerEntity):
             return AutomaticTriggerItem(
                 trigger_id=entity.trigger_id,
@@ -272,7 +260,7 @@ class TriggersRepository:
                 enabled=entity.enabled,
             )
 
-        return None
+        raise InvalidStateException("Unsupported entity type provided")
 
     # -----------------------------------------------------------------------------
 
@@ -280,7 +268,7 @@ class TriggersRepository:
     def __update_item(
         item: Union[AutomaticTriggerItem, ManualTriggerItem],
         data: Dict,
-    ) -> Union[AutomaticTriggerItem, ManualTriggerItem, None]:
+    ) -> Union[AutomaticTriggerItem, ManualTriggerItem]:
         if isinstance(item, AutomaticTriggerItem):
             return AutomaticTriggerItem(
                 trigger_id=item.trigger_id,
@@ -297,7 +285,33 @@ class TriggersRepository:
                 enabled=bool(data.get("enabled", item.enabled)),
             )
 
-        return None
+        raise InvalidStateException("Unsupported entity type provided")
+
+    # -----------------------------------------------------------------------------
+
+    def __setitem__(self, key: str, value: Union[AutomaticTriggerItem, ManualTriggerItem]) -> None:
+        if self.__items is None:
+            self.initialize()
+
+        if self.__items:
+            self.__items[key] = value
+
+    # -----------------------------------------------------------------------------
+
+    def __getitem__(self, key: str) -> Union[AutomaticTriggerItem, ManualTriggerItem]:
+        if self.__items is None:
+            self.initialize()
+
+        if self.__items and key in self.__items:
+            return self.__items[key]
+
+        raise IndexError
+
+    # -----------------------------------------------------------------------------
+
+    def __delitem__(self, key: str) -> None:
+        if self.__items and key in self.__items:
+            del self.__items[key]
 
     # -----------------------------------------------------------------------------
 
@@ -309,11 +323,11 @@ class TriggersRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __len__(self):
+    def __len__(self) -> int:
         if self.__items is None:
             self.initialize()
 
-        return len(self.__items.values())
+        return len(self.__items.values()) if isinstance(self.__items, dict) else 0
 
     # -----------------------------------------------------------------------------
 
@@ -321,10 +335,10 @@ class TriggersRepository:
         if self.__items is None:
             self.initialize()
 
-        if self.__iterator_index < len(self.__items.values()):
-            items: List[Union[AutomaticTriggerItem, ManualTriggerItem]] = list(self.__items.values())
+        if self.__items and self.__iterator_index < len(self.__items.values()):
+            items = list(self.__items.values()) if self.__items else []
 
-            result: Union[AutomaticTriggerItem, ManualTriggerItem] = items[self.__iterator_index]
+            result = items[self.__iterator_index]
 
             self.__iterator_index += 1
 
@@ -347,6 +361,7 @@ class ActionsRepository:
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
+
     __items: Optional[Dict[str, Union[DevicePropertyActionItem, ChannelPropertyActionItem]]] = None
 
     __iterator_index = 0
@@ -380,53 +395,29 @@ class ActionsRepository:
 
     def get_by_id(self, action_id: uuid.UUID) -> Union[DevicePropertyActionItem, ChannelPropertyActionItem, None]:
         """Find action in cache by provided identifier"""
-        if self.__items is None:
-            self.initialize()
-
-        if action_id.__str__() in self.__items:
-            return self.__items[action_id.__str__()]
-
-        return None
-
-    # -----------------------------------------------------------------------------
-
-    def get_by_property_identifier(
-            self,
-            property_id: uuid.UUID,
-    ) -> Union[DevicePropertyActionItem, ChannelPropertyActionItem, None]:
-        """Find action in cache by provided property identifier"""
-        if self.__items is None:
-            self.initialize()
-
-        for action in self.__items.values():
-            if isinstance(action, DevicePropertyActionItem) and action.device_property.__eq__(property_id):
-                return action
-
-            if isinstance(action, ChannelPropertyActionItem) and action.channel_property.__eq__(property_id):
-                return action
+        for record in self:
+            if action_id.__eq__(record.action_id):
+                return record
 
         return None
 
     # -----------------------------------------------------------------------------
 
     def get_all_by_property_identifier(
-            self,
-            property_id: uuid.UUID,
+        self,
+        property_id: uuid.UUID,
     ) -> List[Union[DevicePropertyActionItem, ChannelPropertyActionItem]]:
         """Find actions in cache by provided property identifier"""
-        if self.__items is None:
-            self.initialize()
+        items: List[Union[DevicePropertyActionItem, ChannelPropertyActionItem]] = []
 
-        actions: List[Union[DevicePropertyActionItem, ChannelPropertyActionItem]] = []
+        for record in self:
+            if isinstance(record, DevicePropertyActionItem) and record.device_property.__eq__(property_id):
+                items.append(record)
 
-        for action in self.__items.values():
-            if isinstance(action, DevicePropertyActionItem) and action.device_property.__eq__(property_id):
-                actions.append(action)
+            if isinstance(record, ChannelPropertyActionItem) and record.channel_property.__eq__(property_id):
+                items.append(record)
 
-            if isinstance(action, ChannelPropertyActionItem) and action.channel_property.__eq__(property_id):
-                actions.append(action)
-
-        return actions
+        return items
 
     # -----------------------------------------------------------------------------
 
@@ -435,16 +426,13 @@ class ActionsRepository:
         trigger_id: uuid.UUID,
     ) -> List[Union[DevicePropertyActionItem, ChannelPropertyActionItem]]:
         """Find all actions in cache for provided trigger identifier"""
-        if self.__items is None:
-            self.initialize()
+        items: List[Union[DevicePropertyActionItem, ChannelPropertyActionItem]] = []
 
-        actions: List[Union[DevicePropertyActionItem, ChannelPropertyActionItem]] = []
+        for record in self:
+            if trigger_id.__eq__(record.trigger_id):
+                items.append(record)
 
-        for action in self.__items.values():
-            if action.trigger_id.__eq__(trigger_id):
-                actions.append(action)
-
-        return actions
+        return items
 
     # -----------------------------------------------------------------------------
 
@@ -454,64 +442,25 @@ class ActionsRepository:
 
     # -----------------------------------------------------------------------------
 
-    @orm.db_session
     def create_from_exchange(self, routing_key: RoutingKey, data: Dict) -> bool:
         """Process received action message from exchange when entity was created"""
         if routing_key != RoutingKey.TRIGGERS_ACTIONS_ENTITY_CREATED:
             return False
 
-        if self.__items is None:
-            self.initialize()
+        result: bool = self.__handle_data_from_exchange(routing_key=routing_key, data=data)
 
-            return True
-
-        data: Dict = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
-
-        entity: Optional[ActionEntity] = ActionEntity.get(action_id=uuid.UUID(data.get("id"), version=4))
-
-        if entity is not None:
-            self.__items[entity.action_id.__str__()] = self.__create_item(entity)
-
-            return True
-
-        return False
+        return result
 
     # -----------------------------------------------------------------------------
 
-    @orm.db_session
     def update_from_exchange(self, routing_key: RoutingKey, data: Dict) -> bool:
         """Process received action message from exchange when entity was updated"""
         if routing_key != RoutingKey.TRIGGERS_ACTIONS_ENTITY_UPDATED:
             return False
 
-        if self.__items is None:
-            self.initialize()
+        result: bool = self.__handle_data_from_exchange(routing_key=routing_key, data=data)
 
-            return True
-
-        validated_data: Dict = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
-
-        if validated_data.get("id") not in self.__items:
-            entity: Optional[ActionEntity] = ActionEntity.get(action_id=uuid.UUID(validated_data.get("id"), version=4))
-
-            if entity is not None:
-                self.__items[entity.action_id.__str__()] = self.__create_item(entity)
-
-                return True
-
-            return False
-
-        item = self.__update_item(
-            self.get_by_id(uuid.UUID(validated_data.get("id"), version=4)),
-            validated_data,
-        )
-
-        if item is not None:
-            self.__items[validated_data.get("id")] = item
-
-            return True
-
-        return False
+        return result
 
     # -----------------------------------------------------------------------------
 
@@ -521,8 +470,10 @@ class ActionsRepository:
         if routing_key != RoutingKey.TRIGGERS_ACTIONS_ENTITY_DELETED:
             return False
 
-        if data.get("id") in self.__items:
-            del self.__items[data.get("id")]
+        validated_data = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
+
+        if self.get_by_id(action_id=uuid.UUID(validated_data.get("id"), version=4)) is not None:
+            del self[str(data.get("id"))]
 
             return True
 
@@ -536,23 +487,42 @@ class ActionsRepository:
         items: Dict[str, Union[DevicePropertyActionItem, ChannelPropertyActionItem]] = {}
 
         for action in ActionEntity.select():
-            if self.__items is None or action.action_id.__str__() not in self.__items:
-                item = self.__create_item(action)
-
-            else:
-                item = self.__update_item(self.get_by_id(action.action_id), action.to_dict())
-
-            if item is not None:
-                items[action.action_id.__str__()] = item
+            items[action.action_id.__str__()] = self.__create_item(entity=action)
 
         self.__items = items
 
     # -----------------------------------------------------------------------------
 
-    def __entity_created(self, event: IEvent) -> None:
-        if (
-            not isinstance(event, ModelEntityCreatedEvent)
-            or not isinstance(event.entity, (DevicePropertyActionEntity, ChannelPropertyActionEntity))
+    @orm.db_session
+    def __handle_data_from_exchange(self, routing_key: RoutingKey, data: Dict) -> bool:
+        validated_data = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
+
+        action_item = self.get_by_id(action_id=uuid.UUID(validated_data.get("id"), version=4))
+
+        if action_item is None:
+            entity: Optional[ActionEntity] = ActionEntity.get(action_id=uuid.UUID(validated_data.get("id"), version=4))
+
+            if entity is not None:
+                self[entity.action_id.__str__()] = self.__create_item(entity=entity)
+
+                return True
+
+            return False
+
+        item = self.__update_item(item=action_item, data=validated_data)
+
+        if item is not None:
+            self[str(validated_data.get("id"))] = item
+
+            return True
+
+        return False
+
+    # -----------------------------------------------------------------------------
+
+    def __entity_created(self, event: Event) -> None:
+        if not isinstance(event, ModelEntityCreatedEvent) or not isinstance(
+            event.entity, (DevicePropertyActionEntity, ChannelPropertyActionEntity)
         ):
             return
 
@@ -560,10 +530,9 @@ class ActionsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __entity_updated(self, event: IEvent) -> None:
-        if (
-            not isinstance(event, ModelEntityUpdatedEvent)
-            or not isinstance(event.entity, (DevicePropertyActionEntity, ChannelPropertyActionEntity))
+    def __entity_updated(self, event: Event) -> None:
+        if not isinstance(event, ModelEntityUpdatedEvent) or not isinstance(
+            event.entity, (DevicePropertyActionEntity, ChannelPropertyActionEntity)
         ):
             return
 
@@ -571,10 +540,9 @@ class ActionsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __entity_deleted(self, event: IEvent) -> None:
-        if (
-            not isinstance(event, ModelEntityDeletedEvent)
-            or not isinstance(event.entity, (DevicePropertyActionEntity, ChannelPropertyActionEntity))
+    def __entity_deleted(self, event: Event) -> None:
+        if not isinstance(event, ModelEntityDeletedEvent) or not isinstance(
+            event.entity, (DevicePropertyActionEntity, ChannelPropertyActionEntity)
         ):
             return
 
@@ -583,7 +551,7 @@ class ActionsRepository:
     # -----------------------------------------------------------------------------
 
     @staticmethod
-    def __create_item(entity: ActionEntity) -> Union[DevicePropertyActionItem, ChannelPropertyActionItem, None]:
+    def __create_item(entity: ActionEntity) -> Union[DevicePropertyActionItem, ChannelPropertyActionItem]:
         if isinstance(entity, DevicePropertyActionEntity):
             return DevicePropertyActionItem(
                 action_id=entity.action_id,
@@ -605,7 +573,7 @@ class ActionsRepository:
                 device=entity.device,
             )
 
-        return None
+        raise InvalidStateException("Unsupported entity type provided")
 
     # -----------------------------------------------------------------------------
 
@@ -613,7 +581,7 @@ class ActionsRepository:
     def __update_item(
         item: Union[DevicePropertyActionItem, ChannelPropertyActionItem],
         data: Dict,
-    ) -> Union[DevicePropertyActionItem, ChannelPropertyActionItem, None]:
+    ) -> Union[DevicePropertyActionItem, ChannelPropertyActionItem]:
         if isinstance(item, DevicePropertyActionItem):
             return DevicePropertyActionItem(
                 action_id=item.action_id,
@@ -635,7 +603,33 @@ class ActionsRepository:
                 device=item.device,
             )
 
-        return None
+        raise InvalidStateException("Unsupported entity type provided")
+
+    # -----------------------------------------------------------------------------
+
+    def __setitem__(self, key: str, value: Union[DevicePropertyActionItem, ChannelPropertyActionItem]) -> None:
+        if self.__items is None:
+            self.initialize()
+
+        if self.__items:
+            self.__items[key] = value
+
+    # -----------------------------------------------------------------------------
+
+    def __getitem__(self, key: str) -> Union[DevicePropertyActionItem, ChannelPropertyActionItem]:
+        if self.__items is None:
+            self.initialize()
+
+        if self.__items and key in self.__items:
+            return self.__items[key]
+
+        raise IndexError
+
+    # -----------------------------------------------------------------------------
+
+    def __delitem__(self, key: str) -> None:
+        if self.__items and key in self.__items:
+            del self.__items[key]
 
     # -----------------------------------------------------------------------------
 
@@ -647,11 +641,11 @@ class ActionsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __len__(self):
+    def __len__(self) -> int:
         if self.__items is None:
             self.initialize()
 
-        return len(self.__items.values())
+        return len(self.__items.values()) if isinstance(self.__items, dict) else 0
 
     # -----------------------------------------------------------------------------
 
@@ -659,10 +653,10 @@ class ActionsRepository:
         if self.__items is None:
             self.initialize()
 
-        if self.__iterator_index < len(self.__items.values()):
-            items: List[Union[DevicePropertyActionItem, ChannelPropertyActionItem]] = list(self.__items.values())
+        if self.__items and self.__iterator_index < len(self.__items.values()):
+            items = list(self.__items.values()) if self.__items else []
 
-            result: Union[DevicePropertyActionItem, ChannelPropertyActionItem] = items[self.__iterator_index]
+            result = items[self.__iterator_index]
 
             self.__iterator_index += 1
 
@@ -685,10 +679,10 @@ class ConditionsRepository:
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
+
     __items: Optional[
         Dict[
-            str,
-            Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem]
+            str, Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem]
         ]
     ] = None
 
@@ -726,30 +720,9 @@ class ConditionsRepository:
         condition_id: uuid.UUID,
     ) -> Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem, None]:
         """Find condition in cache by provided identifier"""
-        if self.__items is None:
-            self.initialize()
-
-        if condition_id.__str__() in self.__items:
-            return self.__items[condition_id.__str__()]
-
-        return None
-
-    # -----------------------------------------------------------------------------
-
-    def get_by_property_identifier(
-        self,
-        property_id: uuid.UUID,
-    ) -> Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem, None]:
-        """Find condition in cache by provided property identifier"""
-        if self.__items is None:
-            self.initialize()
-
-        for condition in self.__items.values():
-            if isinstance(condition, DevicePropertyConditionItem) and condition.device_property.__eq__(property_id):
-                return condition
-
-            if isinstance(condition, ChannelPropertyConditionItem) and condition.channel_property.__eq__(property_id):
-                return condition
+        for record in self:
+            if condition_id.__eq__(record.condition_id):
+                return record
 
         return None
 
@@ -758,41 +731,35 @@ class ConditionsRepository:
     def get_all_by_property_identifier(
         self,
         property_id: uuid.UUID,
-    ) -> List[Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem]]:
+    ) -> List[Union[DevicePropertyConditionItem, ChannelPropertyConditionItem]]:
         """Find conditions in cache by provided property identifier"""
-        if self.__items is None:
-            self.initialize()
+        items: List[Union[DevicePropertyConditionItem, ChannelPropertyConditionItem]] = []
 
-        conditions: List[Union[DevicePropertyConditionItem, ChannelPropertyConditionItem]] = []
+        for record in self:
+            if isinstance(record, DevicePropertyConditionItem) and property_id.__eq__(record.device_property):
+                items.append(record)
 
-        for condition in self.__items.values():
-            if isinstance(condition, DevicePropertyConditionItem) and condition.device_property.__eq__(property_id):
-                conditions.append(condition)
+            if isinstance(record, ChannelPropertyConditionItem) and property_id.__eq__(record.channel_property):
+                items.append(record)
 
-            if isinstance(condition, ChannelPropertyConditionItem) and condition.channel_property.__eq__(property_id):
-                conditions.append(condition)
-
-        return conditions
+        return items
 
     # -----------------------------------------------------------------------------
 
     def get_all_for_trigger(
-            self,
-            trigger_id: uuid.UUID,
+        self,
+        trigger_id: uuid.UUID,
     ) -> List[Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem]]:
         """Find all conditions in cache for provided trigger identifier"""
-        if self.__items is None:
-            self.initialize()
-
-        conditions: List[
+        items: List[
             Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem]
         ] = []
 
-        for condition in self.__items.values():
-            if condition.trigger_id.__eq__(trigger_id):
-                conditions.append(condition)
+        for record in self:
+            if trigger_id.__eq__(record.trigger_id):
+                items.append(record)
 
-        return conditions
+        return items
 
     # -----------------------------------------------------------------------------
 
@@ -802,66 +769,25 @@ class ConditionsRepository:
 
     # -----------------------------------------------------------------------------
 
-    @orm.db_session
     def create_from_exchange(self, routing_key: RoutingKey, data: Dict) -> bool:
         """Process received condition message from exchange when entity was created"""
         if routing_key != RoutingKey.TRIGGERS_CONDITIONS_ENTITY_CREATED:
             return False
 
-        if self.__items is None:
-            self.initialize()
+        result: bool = self.__handle_data_from_exchange(routing_key=routing_key, data=data)
 
-            return True
-
-        data: Dict = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
-
-        entity: Optional[ConditionEntity] = ConditionEntity.get(condition_id=uuid.UUID(data.get("id"), version=4))
-
-        if entity is not None:
-            self.__items[entity.condition_id.__str__()] = self.__create_item(entity)
-
-            return True
-
-        return False
+        return result
 
     # -----------------------------------------------------------------------------
 
-    @orm.db_session
     def update_from_exchange(self, routing_key: RoutingKey, data: Dict) -> bool:
         """Process received condition message from exchange when entity was updated"""
         if routing_key != RoutingKey.TRIGGERS_CONDITIONS_ENTITY_UPDATED:
             return False
 
-        if self.__items is None:
-            self.initialize()
+        result: bool = self.__handle_data_from_exchange(routing_key=routing_key, data=data)
 
-            return True
-
-        validated_data: Dict = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
-
-        if validated_data.get("id") not in self.__items:
-            entity: Optional[ConditionEntity] = ConditionEntity.get(
-                condition_id=uuid.UUID(validated_data.get("id"), version=4)
-            )
-
-            if entity is not None:
-                self.__items[entity.condition_id.__str__()] = self.__create_item(entity)
-
-                return True
-
-            return False
-
-        item = self.__update_item(
-            self.get_by_id(uuid.UUID(validated_data.get("id"), version=4)),
-            validated_data,
-        )
-
-        if item is not None:
-            self.__items[validated_data.get("id")] = item
-
-            return True
-
-        return False
+        return result
 
     # -----------------------------------------------------------------------------
 
@@ -871,8 +797,10 @@ class ConditionsRepository:
         if routing_key != RoutingKey.TRIGGERS_CONDITIONS_ENTITY_DELETED:
             return False
 
-        if data.get("id") in self.__items:
-            del self.__items[data.get("id")]
+        validated_data = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
+
+        if self.get_by_id(condition_id=uuid.UUID(validated_data.get("id"), version=4)) is not None:
+            del self[str(data.get("id"))]
 
             return True
 
@@ -889,28 +817,50 @@ class ConditionsRepository:
         ] = {}
 
         for condition in ConditionEntity.select():
-            if self.__items is None or condition.condition_id.__str__() not in self.__items:
-                item = self.__create_item(condition)
-
-            else:
-                item = self.__update_item(self.get_by_id(condition.condition_id), condition.to_dict())
-
-            if item is not None:
-                items[condition.condition_id.__str__()] = item
+            items[condition.condition_id.__str__()] = self.__create_item(entity=condition)
 
         self.__items = items
 
     # -----------------------------------------------------------------------------
 
-    def __entity_created(self, event: IEvent) -> None:
-        if (
-            not isinstance(event, ModelEntityCreatedEvent)
-            or not isinstance(event.entity, (
+    @orm.db_session
+    def __handle_data_from_exchange(self, routing_key: RoutingKey, data: Dict) -> bool:
+        validated_data = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
+
+        condition_item = self.get_by_id(condition_id=uuid.UUID(validated_data.get("id"), version=4))
+
+        if condition_item is None:
+            entity: Optional[ConditionEntity] = ConditionEntity.get(
+                condition_id=uuid.UUID(validated_data.get("id"), version=4)
+            )
+
+            if entity is not None:
+                self[entity.condition_id.__str__()] = self.__create_item(entity=entity)
+
+                return True
+
+            return False
+
+        item = self.__update_item(item=condition_item, data=validated_data)
+
+        if item is not None:
+            self[str(validated_data.get("id"))] = item
+
+            return True
+
+        return False
+
+    # -----------------------------------------------------------------------------
+
+    def __entity_created(self, event: Event) -> None:
+        if not isinstance(event, ModelEntityCreatedEvent) or not isinstance(
+            event.entity,
+            (
                 DevicePropertyConditionEntity,
                 ChannelPropertyConditionEntity,
                 DateConditionEntity,
                 TimeConditionEntity,
-            ))
+            ),
         ):
             return
 
@@ -918,15 +868,15 @@ class ConditionsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __entity_updated(self, event: IEvent) -> None:
-        if (
-            not isinstance(event, ModelEntityUpdatedEvent)
-            or not isinstance(event.entity, (
+    def __entity_updated(self, event: Event) -> None:
+        if not isinstance(event, ModelEntityUpdatedEvent) or not isinstance(
+            event.entity,
+            (
                 DevicePropertyConditionEntity,
                 ChannelPropertyConditionEntity,
                 DateConditionEntity,
                 TimeConditionEntity,
-            ))
+            ),
         ):
             return
 
@@ -934,15 +884,15 @@ class ConditionsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __entity_deleted(self, event: IEvent) -> None:
-        if (
-            not isinstance(event, ModelEntityDeletedEvent)
-            or not isinstance(event.entity, (
+    def __entity_deleted(self, event: Event) -> None:
+        if not isinstance(event, ModelEntityDeletedEvent) or not isinstance(
+            event.entity,
+            (
                 DevicePropertyConditionEntity,
                 ChannelPropertyConditionEntity,
                 DateConditionEntity,
                 TimeConditionEntity,
-            ))
+            ),
         ):
             return
 
@@ -953,7 +903,7 @@ class ConditionsRepository:
     @staticmethod
     def __create_item(
         entity: ConditionEntity,
-    ) -> Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem, None]:
+    ) -> Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem]:
         if isinstance(entity, DevicePropertyConditionEntity):
             return DevicePropertyConditionItem(
                 condition_id=entity.condition_id,
@@ -994,7 +944,7 @@ class ConditionsRepository:
                 date=entity.date,
             )
 
-        return None
+        raise InvalidStateException("Unsupported entity type provided")
 
     # -----------------------------------------------------------------------------
 
@@ -1002,7 +952,7 @@ class ConditionsRepository:
     def __update_item(
         item: Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem],
         data: Dict,
-    ) -> Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem, None]:
+    ) -> Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem]:
         if isinstance(item, DevicePropertyConditionItem):
             return DevicePropertyConditionItem(
                 condition_id=item.condition_id,
@@ -1043,7 +993,39 @@ class ConditionsRepository:
                 date=data.get("time", item.date),
             )
 
-        return None
+        raise InvalidStateException("Unsupported entity type provided")
+
+    # -----------------------------------------------------------------------------
+
+    def __setitem__(
+        self,
+        key: str,
+        value: Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem],
+    ) -> None:
+        if self.__items is None:
+            self.initialize()
+
+        if self.__items:
+            self.__items[key] = value
+
+    # -----------------------------------------------------------------------------
+
+    def __getitem__(
+        self, key: str
+    ) -> Union[DevicePropertyConditionItem, ChannelPropertyConditionItem, TimeConditionItem, DateConditionItem]:
+        if self.__items is None:
+            self.initialize()
+
+        if self.__items and key in self.__items:
+            return self.__items[key]
+
+        raise IndexError
+
+    # -----------------------------------------------------------------------------
+
+    def __delitem__(self, key: str) -> None:
+        if self.__items and key in self.__items:
+            del self.__items[key]
 
     # -----------------------------------------------------------------------------
 
@@ -1055,11 +1037,11 @@ class ConditionsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __len__(self):
+    def __len__(self) -> int:
         if self.__items is None:
             self.initialize()
 
-        return len(self.__items.values())
+        return len(self.__items.values()) if isinstance(self.__items, dict) else 0
 
     # -----------------------------------------------------------------------------
 
@@ -1069,22 +1051,10 @@ class ConditionsRepository:
         if self.__items is None:
             self.initialize()
 
-        if self.__iterator_index < len(self.__items.values()):
-            items: List[
-                Union[
-                    DevicePropertyConditionItem,
-                    ChannelPropertyConditionItem,
-                    TimeConditionItem,
-                    DateConditionItem,
-                ]
-            ] = list(self.__items.values())
+        if self.__items and self.__iterator_index < len(self.__items.values()):
+            items = list(self.__items.values()) if self.__items else []
 
-            result: Union[
-                DevicePropertyConditionItem,
-                ChannelPropertyConditionItem,
-                TimeConditionItem,
-                DateConditionItem,
-            ] = items[self.__iterator_index]
+            result = items[self.__iterator_index]
 
             self.__iterator_index += 1
 
@@ -1102,12 +1072,13 @@ class TriggersControlsRepository:
     """
     Triggers controls repository
 
-    @package        FastyBird:DevicesModule!
+    @package        FastyBird:TriggersModule!
     @module         repositories
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
-    _items: Optional[Dict[str, TriggerControlItem]] = None
+
+    __items: Optional[Dict[str, Union[TriggerControlItem]]] = None
 
     __iterator_index = 0
 
@@ -1141,13 +1112,11 @@ class TriggersControlsRepository:
     def get_by_id(
         self,
         control_id: uuid.UUID,
-    ) -> Optional[TriggerControlItem]:
+    ) -> Union[TriggerControlItem, None]:
         """Find control in cache by provided identifier"""
-        if self._items is None:
-            self.initialize()
-
-        if control_id.__str__() in self._items:
-            return self._items[control_id.__str__()]
+        for record in self:
+            if control_id.__eq__(record.control_id):
+                return record
 
         return None
 
@@ -1155,80 +1124,42 @@ class TriggersControlsRepository:
 
     def clear(self) -> None:
         """Clear items cache"""
-        self._items = None
+        self.__items = None
 
     # -----------------------------------------------------------------------------
 
-    @orm.db_session
     def create_from_exchange(self, routing_key: RoutingKey, data: Dict) -> bool:
-        """Process received device control message from exchange when entity was created"""
+        """Process received control control message from exchange when entity was created"""
         if routing_key != RoutingKey.TRIGGERS_CONTROL_ENTITY_CREATED:
             return False
 
-        if self._items is None:
-            self.initialize()
+        result: bool = self.__handle_data_from_exchange(routing_key=routing_key, data=data)
 
-            return True
-
-        data: Dict = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
-
-        entity: Optional[TriggerControlEntity] = TriggerControlEntity.get(
-            control_id=uuid.UUID(data.get("id"), version=4),
-        )
-
-        if entity is not None:
-            self._items[entity.control_id.__str__()] = self._create_item(entity)
-
-            return True
-
-        return False
+        return result
 
     # -----------------------------------------------------------------------------
 
-    @orm.db_session
     def update_from_exchange(self, routing_key: RoutingKey, data: Dict) -> bool:
-        """Process received device control message from exchange when entity was updated"""
+        """Process received control control message from exchange when entity was updated"""
         if routing_key != RoutingKey.TRIGGERS_CONTROL_ENTITY_UPDATED:
             return False
 
-        if self._items is None:
-            self.initialize()
+        result: bool = self.__handle_data_from_exchange(routing_key=routing_key, data=data)
 
-            return True
-
-        validated_data: Dict = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
-
-        if validated_data.get("id") not in self._items:
-            entity: Optional[TriggerControlEntity] = TriggerControlEntity.get(
-                control_id=uuid.UUID(validated_data.get("id"), version=4)
-            )
-
-            if entity is not None:
-                self._items[entity.control_id.__str__()] = self._create_item(entity)
-
-                return True
-
-            return False
-
-        item = self._update_item(self.get_by_id(uuid.UUID(validated_data.get("id"), version=4)))
-
-        if item is not None:
-            self._items[validated_data.get("id")] = item
-
-            return True
-
-        return False
+        return result
 
     # -----------------------------------------------------------------------------
 
     @orm.db_session
     def delete_from_exchange(self, routing_key: RoutingKey, data: Dict) -> bool:
-        """Process received device control message from exchange when entity was updated"""
+        """Process received control control message from exchange when entity was updated"""
         if routing_key != RoutingKey.TRIGGERS_CONTROL_ENTITY_DELETED:
             return False
 
-        if data.get("id") in self._items:
-            del self._items[data.get("id")]
+        validated_data = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
+
+        if self.get_by_id(control_id=uuid.UUID(validated_data.get("id"), version=4)) is not None:
+            del self[str(data.get("id"))]
 
             return True
 
@@ -1239,23 +1170,45 @@ class TriggersControlsRepository:
     @orm.db_session
     def initialize(self) -> None:
         """Initialize triggers controls repository by fetching entities from database"""
-        items: Dict[str, TriggerControlItem] = {}
+        items: Dict[str, Union[TriggerControlItem]] = {}
 
         for entity in TriggerControlEntity.select():
-            if self._items is None or entity.control_id.__str__() not in self._items:
-                item = self._create_item(entity)
+            items[entity.control_id.__str__()] = self.__create_item(entity=entity)
 
-            else:
-                item = self._update_item(self.get_by_id(entity.control_id))
-
-            if item is not None:
-                items[entity.control_id.__str__()] = item
-
-        self._items = items
+        self.__items = items
 
     # -----------------------------------------------------------------------------
 
-    def __entity_created(self, event: IEvent) -> None:
+    @orm.db_session
+    def __handle_data_from_exchange(self, routing_key: RoutingKey, data: Dict) -> bool:
+        validated_data = validate_exchange_data(ModuleOrigin.TRIGGERS_MODULE, routing_key, data)
+
+        control_item = self.get_by_id(control_id=uuid.UUID(validated_data.get("id"), version=4))
+
+        if control_item is None:
+            entity: Optional[TriggerControlEntity] = TriggerControlEntity.get(
+                control_id=uuid.UUID(validated_data.get("id"), version=4)
+            )
+
+            if entity is not None:
+                self[entity.control_id.__str__()] = self.__create_item(entity=entity)
+
+                return True
+
+            return False
+
+        item = self.__update_item(item=control_item)
+
+        if item is not None:
+            self[str(validated_data.get("id"))] = item
+
+            return True
+
+        return False
+
+    # -----------------------------------------------------------------------------
+
+    def __entity_created(self, event: Event) -> None:
         if not isinstance(event, ModelEntityCreatedEvent) or not isinstance(event.entity, TriggerControlEntity):
             return
 
@@ -1263,7 +1216,7 @@ class TriggersControlsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __entity_updated(self, event: IEvent) -> None:
+    def __entity_updated(self, event: Event) -> None:
         if not isinstance(event, ModelEntityUpdatedEvent) or not isinstance(event.entity, TriggerControlEntity):
             return
 
@@ -1271,7 +1224,7 @@ class TriggersControlsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __entity_deleted(self, event: IEvent) -> None:
+    def __entity_deleted(self, event: Event) -> None:
         if not isinstance(event, ModelEntityDeletedEvent) or not isinstance(event.entity, TriggerControlEntity):
             return
 
@@ -1280,7 +1233,7 @@ class TriggersControlsRepository:
     # -----------------------------------------------------------------------------
 
     @staticmethod
-    def _create_item(entity: TriggerControlEntity) -> Optional[TriggerControlItem]:
+    def __create_item(entity: TriggerControlEntity) -> Union[TriggerControlItem]:
         if isinstance(entity, TriggerControlEntity):
             return TriggerControlItem(
                 control_id=entity.control_id,
@@ -1288,12 +1241,12 @@ class TriggersControlsRepository:
                 trigger_id=entity.trigger.trigger_id,
             )
 
-        return None
+        raise InvalidStateException("Unsupported entity type provided")
 
     # -----------------------------------------------------------------------------
 
     @staticmethod
-    def _update_item(item: TriggerControlItem) -> Optional[TriggerControlItem]:
+    def __update_item(item: TriggerControlItem) -> Union[TriggerControlItem]:
         if isinstance(item, TriggerControlItem):
             return TriggerControlItem(
                 control_id=item.control_id,
@@ -1301,7 +1254,33 @@ class TriggersControlsRepository:
                 trigger_id=item.trigger_id,
             )
 
-        return None
+        raise InvalidStateException("Unsupported entity type provided")
+
+    # -----------------------------------------------------------------------------
+
+    def __setitem__(self, key: str, value: Union[TriggerControlItem]) -> None:
+        if self.__items is None:
+            self.initialize()
+
+        if self.__items:
+            self.__items[key] = value
+
+    # -----------------------------------------------------------------------------
+
+    def __getitem__(self, key: str) -> Union[TriggerControlItem]:
+        if self.__items is None:
+            self.initialize()
+
+        if self.__items and key in self.__items:
+            return self.__items[key]
+
+        raise IndexError
+
+    # -----------------------------------------------------------------------------
+
+    def __delitem__(self, key: str) -> None:
+        if self.__items and key in self.__items:
+            del self.__items[key]
 
     # -----------------------------------------------------------------------------
 
@@ -1313,22 +1292,22 @@ class TriggersControlsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def __len__(self):
-        if self._items is None:
+    def __len__(self) -> int:
+        if self.__items is None:
             self.initialize()
 
-        return len(self._items.values())
+        return len(self.__items.values()) if isinstance(self.__items, dict) else 0
 
     # -----------------------------------------------------------------------------
 
-    def __next__(self) -> TriggerControlItem:
-        if self._items is None:
+    def __next__(self) -> Union[TriggerControlItem]:
+        if self.__items is None:
             self.initialize()
 
-        if self.__iterator_index < len(self._items.values()):
-            items: List[TriggerControlItem] = list(self._items.values())
+        if self.__items and self.__iterator_index < len(self.__items.values()):
+            items = list(self.__items.values()) if self.__items else []
 
-            result: TriggerControlItem = items[self.__iterator_index]
+            result = items[self.__iterator_index]
 
             self.__iterator_index += 1
 

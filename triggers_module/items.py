@@ -18,19 +18,21 @@
 Triggers module entities cache
 """
 
-# Library dependencies
+# Python base dependencies
 import datetime
 import uuid
 from abc import ABC
-from typing import List, Dict, Optional, Union
+from typing import Dict, List, Optional, Union
+
+# Library dependencies
 from fastnumbers import fast_float
 from modules_metadata.triggers_module import (
-    TriggerType,
+    TriggerActionType,
     TriggerConditionOperator,
     TriggerConditionType,
-    TriggerActionType,
+    TriggerType,
 )
-from modules_metadata.types import SwitchPayload, ButtonPayload
+from modules_metadata.types import ButtonPayload, SwitchPayload
 
 
 class TriggerItem(ABC):
@@ -42,6 +44,7 @@ class TriggerItem(ABC):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
+
     __trigger_id: uuid.UUID
     __name: str
     __comment: Optional[str]
@@ -110,10 +113,14 @@ class AutomaticTriggerItem(TriggerItem):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
+
     def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
-        return {**{
-            "type": TriggerType.AUTOMATIC.value,
-        }, **super().to_dict()}
+        return {
+            **{
+                "type": TriggerType.AUTOMATIC.value,
+            },
+            **super().to_dict(),
+        }
 
 
 class ManualTriggerItem(TriggerItem):
@@ -125,10 +132,14 @@ class ManualTriggerItem(TriggerItem):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
+
     def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
-        return {**{
-            "type": TriggerType.MANUAL.value,
-        }, **super().to_dict()}
+        return {
+            **{
+                "type": TriggerType.MANUAL.value,
+            },
+            **super().to_dict(),
+        }
 
 
 class TriggerControlItem:
@@ -140,6 +151,7 @@ class TriggerControlItem:
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
+
     __id: uuid.UUID
     __name: str
 
@@ -199,6 +211,7 @@ class ConditionItem(ABC):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
+
     __condition_id: uuid.UUID
     __trigger_id: uuid.UUID
     __enabled: bool
@@ -238,7 +251,7 @@ class ConditionItem(ABC):
 
     # -----------------------------------------------------------------------------
 
-    def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
+    def to_dict(self) -> Dict[str, Union[str, int, bool, List[int], None]]:
         """Convert condition item to dictionary"""
         return {
             "id": self.condition_id.__str__(),
@@ -256,6 +269,7 @@ class PropertyConditionItem(ConditionItem):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
+
     __operator: TriggerConditionOperator
     __operand: Union[str, ButtonPayload, SwitchPayload]
 
@@ -302,10 +316,7 @@ class PropertyConditionItem(ConditionItem):
 
     # -----------------------------------------------------------------------------
 
-    def validate(
-        self,
-        property_value: Union[str, int, float, bool, SwitchPayload, ButtonPayload]
-    ) -> bool:
+    def validate(self, property_value: Union[str, int, float, bool, SwitchPayload, ButtonPayload]) -> bool:
         """Property value validation"""
         if self.__operator == TriggerConditionOperator.EQUAL:
             return str(self.operand) == str(property_value)
@@ -320,12 +331,15 @@ class PropertyConditionItem(ConditionItem):
 
     # -----------------------------------------------------------------------------
 
-    def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
-        return {**{
-            "device": self.device.__str__(),
-            "operator": self.operator.value,
-            "operand": str(self.operand),
-        }, **super().to_dict()}
+    def to_dict(self) -> Dict[str, Union[str, int, bool, List[int], None]]:
+        return {
+            **{
+                "device": self.device.__str__(),
+                "operator": self.operator.value,
+                "operand": str(self.operand),
+            },
+            **super().to_dict(),
+        }
 
 
 class DevicePropertyConditionItem(PropertyConditionItem):
@@ -337,6 +351,7 @@ class DevicePropertyConditionItem(PropertyConditionItem):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
+
     __device_property: uuid.UUID
 
     # -----------------------------------------------------------------------------
@@ -364,11 +379,14 @@ class DevicePropertyConditionItem(PropertyConditionItem):
 
     # -----------------------------------------------------------------------------
 
-    def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
-        return {**{
-            "type": TriggerConditionType.DEVICE_PROPERTY.value,
-            "property": self.device_property.__str__(),
-        }, **super().to_dict()}
+    def to_dict(self) -> Dict[str, Union[str, int, bool, List[int], None]]:
+        return {
+            **{
+                "type": TriggerConditionType.DEVICE_PROPERTY.value,
+                "property": self.device_property.__str__(),
+            },
+            **super().to_dict(),
+        }
 
 
 class ChannelPropertyConditionItem(PropertyConditionItem):
@@ -380,6 +398,7 @@ class ChannelPropertyConditionItem(PropertyConditionItem):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
+
     __channel_property: uuid.UUID
     __channel: uuid.UUID
 
@@ -417,12 +436,15 @@ class ChannelPropertyConditionItem(PropertyConditionItem):
 
     # -----------------------------------------------------------------------------
 
-    def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
-        return {**{
-            "type": TriggerConditionType.CHANNEL_PROPERTY.value,
-            "channel": self.channel.__str__(),
-            "property": self.channel_property.__str__(),
-        }, **super().to_dict()}
+    def to_dict(self) -> Dict[str, Union[str, int, bool, List[int], None]]:
+        return {
+            **{
+                "type": TriggerConditionType.CHANNEL_PROPERTY.value,
+                "channel": self.channel.__str__(),
+                "property": self.channel_property.__str__(),
+            },
+            **super().to_dict(),
+        }
 
 
 class TimeConditionItem(ConditionItem):
@@ -434,6 +456,7 @@ class TimeConditionItem(ConditionItem):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
+
     __time: datetime.timedelta
     __days: List[int]
 
@@ -480,12 +503,15 @@ class TimeConditionItem(ConditionItem):
 
     # -----------------------------------------------------------------------------
 
-    def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
-        return {**{
-            "type": TriggerConditionType.TIME.value,
-            "time": f"1970-01-01\\T{self.__format_time()}+00:00",
-            "days": self.days,
-        }, **super().to_dict()}
+    def to_dict(self) -> Dict[str, Union[str, int, bool, List[int], None]]:
+        return {
+            **{
+                "type": TriggerConditionType.TIME.value,
+                "time": f"1970-01-01\\T{self.__format_time()}+00:00",
+                "days": self.days,
+            },
+            **super().to_dict(),
+        }
 
     # -----------------------------------------------------------------------------
 
@@ -505,6 +531,7 @@ class DateConditionItem(ConditionItem):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
+
     __date: datetime.datetime
 
     # -----------------------------------------------------------------------------
@@ -538,11 +565,14 @@ class DateConditionItem(ConditionItem):
 
     # -----------------------------------------------------------------------------
 
-    def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
-        return {**{
-            "type": TriggerConditionType.DATE.value,
-            "date": self.date.strftime(r"%Y-%m-%d\T%H:%M:%S+00:00"),
-        }, **super().to_dict()}
+    def to_dict(self) -> Dict[str, Union[str, int, bool, List[int], None]]:
+        return {
+            **{
+                "type": TriggerConditionType.DATE.value,
+                "date": self.date.strftime(r"%Y-%m-%d\T%H:%M:%S+00:00"),
+            },
+            **super().to_dict(),
+        }
 
 
 class ActionItem(ABC):
@@ -554,6 +584,7 @@ class ActionItem(ABC):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
+
     __action_id: uuid.UUID
     __trigger_id: uuid.UUID
     __enabled: bool
@@ -611,6 +642,7 @@ class PropertyActionItem(ActionItem):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
+
     __value: Union[str, ButtonPayload, SwitchPayload]
 
     __device: uuid.UUID
@@ -647,10 +679,7 @@ class PropertyActionItem(ActionItem):
 
     # -----------------------------------------------------------------------------
 
-    def validate(
-        self,
-        property_value: Union[str, int, float, bool, SwitchPayload, ButtonPayload]
-    ) -> bool:
+    def validate(self, property_value: Union[str, int, float, bool, SwitchPayload, ButtonPayload]) -> bool:
         """Property value validation"""
         if isinstance(self.value, SwitchPayload) and self.value == SwitchPayload.TOGGLE:
             return False
@@ -660,10 +689,13 @@ class PropertyActionItem(ActionItem):
     # -----------------------------------------------------------------------------
 
     def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
-        return {**{
-            "device": self.device.__str__(),
-            "value": str(self.value),
-        }, **super().to_dict()}
+        return {
+            **{
+                "device": self.device.__str__(),
+                "value": str(self.value),
+            },
+            **super().to_dict(),
+        }
 
 
 class DevicePropertyActionItem(PropertyActionItem):
@@ -675,6 +707,7 @@ class DevicePropertyActionItem(PropertyActionItem):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
+
     __device_property: uuid.UUID
 
     # -----------------------------------------------------------------------------
@@ -702,10 +735,13 @@ class DevicePropertyActionItem(PropertyActionItem):
     # -----------------------------------------------------------------------------
 
     def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
-        return {**{
-            "type": TriggerActionType.DEVICE_PROPERTY.value,
-            "property": self.device_property.__str__(),
-        }, **super().to_dict()}
+        return {
+            **{
+                "type": TriggerActionType.DEVICE_PROPERTY.value,
+                "property": self.device_property.__str__(),
+            },
+            **super().to_dict(),
+        }
 
 
 class ChannelPropertyActionItem(PropertyActionItem):
@@ -717,6 +753,7 @@ class ChannelPropertyActionItem(PropertyActionItem):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
+
     __channel_property: uuid.UUID
     __channel: uuid.UUID
 
@@ -754,8 +791,11 @@ class ChannelPropertyActionItem(PropertyActionItem):
     # -----------------------------------------------------------------------------
 
     def to_dict(self) -> Dict[str, Union[str, int, bool, None]]:
-        return {**{
-            "type": TriggerActionType.CHANNEL_PROPERTY.value,
-            "channel": self.channel.__str__(),
-            "property": self.channel_property.__str__(),
-        }, **super().to_dict()}
+        return {
+            **{
+                "type": TriggerActionType.CHANNEL_PROPERTY.value,
+                "channel": self.channel.__str__(),
+                "property": self.channel_property.__str__(),
+            },
+            **super().to_dict(),
+        }

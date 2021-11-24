@@ -20,18 +20,20 @@ Triggers module DI container
 
 # pylint: disable=no-value-for-parameter
 
-# Library dependencies
+# Python base dependencies
 from typing import Dict, Union
+
+# Library dependencies
 from kink import di
 
 # Library libs
 from triggers_module.exchange import ModuleExchange
 from triggers_module.models import db
 from triggers_module.repositories import (
-    TriggersRepository,
-    TriggersControlsRepository,
     ActionsRepository,
     ConditionsRepository,
+    TriggersControlsRepository,
+    TriggersRepository,
 )
 
 default_settings: Dict[str, Dict[str, Union[str, int, bool, None]]] = {
@@ -53,16 +55,16 @@ def create_container(settings: Dict[str, Dict[str, Union[str, int, bool, None]]]
 
     di["fb-triggers-module_database"] = db
 
-    di[TriggersRepository] = TriggersRepository()
+    di[TriggersRepository] = TriggersRepository()  # type: ignore[call-arg]
     di["fb-triggers-module_trigger-repository"] = di[TriggersRepository]
-    di[TriggersControlsRepository] = TriggersControlsRepository()
+    di[TriggersControlsRepository] = TriggersControlsRepository()  # type: ignore[call-arg]
     di["fb-triggers-module_trigger-control-repository"] = di[TriggersControlsRepository]
-    di[ActionsRepository] = ActionsRepository()
+    di[ActionsRepository] = ActionsRepository()  # type: ignore[call-arg]
     di["fb-triggers-module_action-repository"] = di[ActionsRepository]
-    di[ConditionsRepository] = ConditionsRepository()
+    di[ConditionsRepository] = ConditionsRepository()  # type: ignore[call-arg]
     di["fb-triggers-module_condition-repository"] = di[ConditionsRepository]
 
-    di[ModuleExchange] = ModuleExchange()
+    di[ModuleExchange] = ModuleExchange()  # type: ignore[call-arg]
     di["fb-triggers-module_exchange"] = di[ModuleExchange]
 
     db.bind(
@@ -71,6 +73,6 @@ def create_container(settings: Dict[str, Dict[str, Union[str, int, bool, None]]]
         user=module_settings.get("database", {}).get("username", None),
         passwd=module_settings.get("database", {}).get("password", None),
         db=module_settings.get("database", {}).get("database", None),
-        port=int(module_settings.get("database", {}).get("port", 3306)),
+        port=int(str(module_settings.get("database", {}).get("port", 3306))),
     )
     db.generate_mapping(create_tables=settings.get("database", {}).get("create_tables", False))
