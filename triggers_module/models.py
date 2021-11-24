@@ -28,11 +28,11 @@ from exchange_plugin.dispatcher import EventDispatcher
 from kink import di
 from modules_metadata.triggers_module import TriggerConditionOperator
 from modules_metadata.types import ButtonPayload, SwitchPayload
+from pony.orm import PrimaryKey  # type: ignore[attr-defined]
+from pony.orm import Set  # type: ignore[attr-defined]
 from pony.orm import Database, Discriminator, Json  # type: ignore[attr-defined]
 from pony.orm import Optional as OptionalField  # type: ignore[attr-defined]
-from pony.orm import PrimaryKey  # type: ignore[attr-defined]
 from pony.orm import Required as RequiredField  # type: ignore[attr-defined]
-from pony.orm import Set  # type: ignore[attr-defined]
 
 # Library libs
 from triggers_module.events import (
