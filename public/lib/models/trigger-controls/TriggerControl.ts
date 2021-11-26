@@ -58,7 +58,7 @@ export default class TriggerControl extends Model implements TriggerControlInter
     })
   }
 
-  static transmitCommand(control: TriggerControl, value?: string | number | boolean | null): Promise<boolean> {
+  static transmitCommand(control: TriggerControlInterface, value?: string | number | boolean | null): Promise<boolean> {
     return TriggerControl.dispatch('transmitCommand', {
       control,
       value,
