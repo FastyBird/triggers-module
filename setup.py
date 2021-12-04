@@ -60,11 +60,12 @@ setup(
     package_data={"triggers_module": ["py.typed"]},
     install_requires=[
         "fastnumbers",
-        "fastybird-application-exchange",
+        "fastybird-exchange-plugin",
         "fastybird-modules-metadata",
         "kink",
         "pony",
         "setuptools",
+        "mysqlclient",
     ],
     download_url="https://github.com/FastyBird/triggers-module/archive/%s.tar.gz" % VERSION,
     classifiers=[

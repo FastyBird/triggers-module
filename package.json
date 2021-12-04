@@ -1,6 +1,6 @@
 {
   "name": "@fastybird/triggers-module",
-  "version": "0.5.7",
+  "version": "0.5.8",
   "description": "Triggers module data model plugin",
   "keywords": [
     "triggers",
@@ -38,7 +38,7 @@
     "lint:ts": "tslint -c tslint.json 'public/**/*.ts'"
   },
   "dependencies": {
-    "@fastybird/modules-metadata": "^0.9",
+    "@fastybird/modules-metadata": "^0.10",
     "@fastybird/vue-wamp-v1": "^0.1",
     "@fastybird/vuex-orm-wamp": "^0.1",
     "@vuex-orm/core": "^0.36",
