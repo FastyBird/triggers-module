@@ -66,11 +66,6 @@ jobs:
       - name: "Setup problem matchers for PHP"
         run: 'echo "::add-matcher::${{ runner.tool_cache }}/php.json"'
 
-      - name: "Install PHP_CodeSniffer"
-        run: |
-          curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
-          php phpcs.phar --version
-
       - name: "Get Composer cache directory"
         id: "composercache"
         run: 'echo "::set-output name=dir::$(composer config cache-files-dir)"'
