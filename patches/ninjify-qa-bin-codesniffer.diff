@@ -5,5 +5,5 @@
  else
      # Run codesniffer
 -    ${DIR}/phpcs --standard="${RULESET}" --ignore="${EXCLUDE_FOLDERS}" --extensions="${EXTENSIONS}" --encoding=utf-8 --colors -nsp $@
-+    [[ -z "${CI}" ]] && ${DIR}/phpcs --standard="${RULESET}" --ignore="${EXCLUDE_FOLDERS}" --extensions="${EXTENSIONS}" --encoding=utf-8 --colors -nsp $@
++    ${DIR}/../../../bin/phpcs --standard="${RULESET}" --ignore="${EXCLUDE_FOLDERS}" --extensions="${EXTENSIONS}" --encoding=utf-8 --colors -nsp $@
  fi
