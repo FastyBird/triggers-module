@@ -48,9 +48,10 @@
   },
 
   "require-dev": {
+    "contributte/qa": "@dev",
     "mockery/mockery": "^1.4",
+    "ninjify/coding-standard": "^0.11.2",
     "ninjify/nunjuck": "^0.3",
-    "ninjify/qa": "^0.12",
     "pds/skeleton": "~1.0",
     "phpstan/extension-installer": "^1.1",
     "phpstan/phpstan": "^0.12",
