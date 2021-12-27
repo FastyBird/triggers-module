@@ -1,0 +1,9 @@
+--- a/bin/codesniffer
++++ b/bin/codesniffer
+@@ -39,5 +39,5 @@
+     ${DIR}/phpcs --standard="${RULESET}" --ignore="${EXCLUDE_FOLDERS}" --extensions="${EXTENSIONS}" --encoding=utf-8 --colors -nsp ${FOLDERS[*]}
+ else
+     # Run codesniffer
+-    ${DIR}/phpcs --standard="${RULESET}" --ignore="${EXCLUDE_FOLDERS}" --extensions="${EXTENSIONS}" --encoding=utf-8 --colors -nsp $@
++    [[ -z "${CI}" ]] && ${DIR}/phpcs --standard="${RULESET}" --ignore="${EXCLUDE_FOLDERS}" --extensions="${EXTENSIONS}" --encoding=utf-8 --colors -nsp $@
+ fi
