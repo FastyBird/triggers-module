@@ -12,7 +12,7 @@ php_lint: vendor
 	vendor/bin/linter src tests
 
 php_cs: vendor
-	vendor/bin/codesniffer src tests
+	vendor/ninjify/qa/bin/codesniffer src tests
 
 php_csf: vendor
 	vendor/bin/codefixer src tests
