@@ -4,7 +4,7 @@
  #!/bin/bash
 
 -DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../.."
++DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../../bin"
  RULESET=${RULESET:='ruleset.xml'}
  EXTENSIONS=${EXTENSIONS:='php,phtml,phpt'}
  EXCLUDE_FOLDERS=${EXCLUDE_FOLDERS:='*/temp,*/tmp'}
