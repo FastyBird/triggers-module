@@ -1,9 +1,10 @@
 --- a/bin/codesniffer
 +++ b/bin/codesniffer
-@@ -39,5 +39,5 @@
-     ${DIR}/phpcs --standard="${RULESET}" --ignore="${EXCLUDE_FOLDERS}" --extensions="${EXTENSIONS}" --encoding=utf-8 --colors -nsp ${FOLDERS[*]}
- else
-     # Run codesniffer
--    ${DIR}/phpcs --standard="${RULESET}" --ignore="${EXCLUDE_FOLDERS}" --extensions="${EXTENSIONS}" --encoding=utf-8 --colors -nsp $@
-+    ${DIR}/../../../bin/phpcs --standard="${RULESET}" --ignore="${EXCLUDE_FOLDERS}" --extensions="${EXTENSIONS}" --encoding=utf-8 --colors -nsp $@
- fi
+@@ -1,6 +1,6 @@
+ #!/bin/bash
+
+-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
++DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../"
+ RULESET=${RULESET:='ruleset.xml'}
+ EXTENSIONS=${EXTENSIONS:='php,phtml,phpt'}
+ EXCLUDE_FOLDERS=${EXCLUDE_FOLDERS:='*/temp,*/tmp'}
