@@ -50,7 +50,7 @@ from triggers_module.entities.notification import (
 from triggers_module.entities.trigger import (
     AutomaticTriggerEntity,
     ManualTriggerEntity,
-    TriggerControlEntity,
+    TriggerControlEntity, TriggerEntity,
 )
 from triggers_module.repositories.state import (
     IActionStateRepository,
@@ -256,11 +256,52 @@ class EntitiesSubscriber:
         if isinstance(entity, ActionEntity) and self.__action_state_repository is not None:
             action_state = self.__action_state_repository.get_by_id(property_id=entity.id)
 
-            return action_state.to_dict() if action_state is not None else {}
+            if action_state is None:
+                return {}
+
+            return {
+                "is_triggered": action_state.is_triggered,
+            }
 
         if isinstance(entity, ConditionEntity) and self.__condition_state_repository is not None:
             condition_state = self.__condition_state_repository.get_by_id(property_id=entity.id)
 
-            return condition_state.to_dict() if condition_state is not None else {}
+            if condition_state is None:
+                return {}
+
+            return {
+                "is_fulfilled": condition_state.is_fulfilled,
+            }
+
+        if (
+            isinstance(entity, TriggerEntity)
+            and self.__action_state_repository is not None
+            and self.__condition_state_repository is not None
+        ):
+            is_triggered: bool = True
+
+            for action in entity.actions:
+                action_state = self.__action_state_repository.get_by_id(property_id=action.id)
+
+                if action_state is None or action_state.is_triggered is False:
+                    is_triggered = False
+
+            if isinstance(entity, AutomaticTriggerEntity):
+                is_fulfilled = True
+
+                for condition in entity.conditions:
+                    condition_state = self.__condition_state_repository.get_by_id(property_id=condition.id)
+
+                    if condition_state is None or condition_state.is_fulfilled is False:
+                        is_fulfilled = False
+
+                return {
+                    "is_triggered": is_triggered,
+                    "is_fulfilled": is_fulfilled,
+                }
+
+            return {
+                "is_triggered": is_triggered,
+            }
 
         return {}

@@ -21,10 +21,6 @@ Triggers module condition state module
 # Python base dependencies
 import uuid
 from abc import ABC, abstractmethod
-from datetime import datetime
-from typing import Dict, Union
-
-from modules_metadata.types import ButtonPayload, SwitchPayload
 
 
 class ConditionState(ABC):
@@ -40,58 +36,21 @@ class ConditionState(ABC):
     @property
     @abstractmethod
     def id(self) -> uuid.UUID:  # pylint: disable=invalid-name
-        """Property unique identifier"""
+        """Condition unique identifier"""
 
     # -----------------------------------------------------------------------------
 
     @property  # type: ignore[misc]
     @abstractmethod
-    def actual_value(self) -> Union[int, float, str, bool, datetime, ButtonPayload, SwitchPayload, None]:
-        """Property actual value"""
+    def is_fulfilled(self) -> bool:
+        """Condition fulfilling status"""
 
     # -----------------------------------------------------------------------------
 
-    @actual_value.setter  # type: ignore[misc]
+    @is_fulfilled.setter  # type: ignore[misc]
     @abstractmethod
-    def actual_value(
+    def is_fulfilled(
         self,
-        actual_value: Union[int, float, str, bool, datetime, ButtonPayload, SwitchPayload, None],
+        result: bool,
     ) -> None:
-        """Property actual value setter"""
-
-    # -----------------------------------------------------------------------------
-
-    @property  # type: ignore[misc]
-    @abstractmethod
-    def expected_value(self) -> Union[int, float, str, bool, datetime, ButtonPayload, SwitchPayload, None]:
-        """Property expected value"""
-
-    # -----------------------------------------------------------------------------
-
-    @expected_value.setter  # type: ignore[misc]
-    @abstractmethod
-    def expected_value(
-        self,
-        expected_value: Union[int, float, str, bool, datetime, ButtonPayload, SwitchPayload, None],
-    ) -> None:
-        """Property expected value setter"""
-
-    # -----------------------------------------------------------------------------
-
-    @property  # type: ignore[misc]
-    @abstractmethod
-    def pending(self) -> bool:
-        """Property expected value is pending"""
-
-    # -----------------------------------------------------------------------------
-
-    @pending.setter  # type: ignore[misc]
-    @abstractmethod
-    def pending(self, pending: bool) -> None:
-        """Property expected value is pending setter"""
-
-    # -----------------------------------------------------------------------------
-
-    @abstractmethod
-    def to_dict(self) -> Dict:
-        """Transform state to dictionary"""
+        """Condition fulfilling status setter"""
