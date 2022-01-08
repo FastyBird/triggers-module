@@ -17,6 +17,7 @@ namespace FastyBird\TriggersModule\Entities\Triggers;
 
 use Doctrine\Common;
 use Doctrine\ORM\Mapping as ORM;
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\SimpleAuth\Entities as SimpleAuthEntities;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
@@ -35,7 +36,7 @@ use Throwable;
  *     }
  * )
  * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="trigger_type", type="string", length=20)
+ * @ORM\DiscriminatorColumn(name="trigger_type", type="string", length=40)
  * @ORM\DiscriminatorMap({
  *    "automatic"  = "FastyBird\TriggersModule\Entities\Triggers\AutomaticTrigger",
  *    "manual"     = "FastyBird\TriggersModule\Entities\Triggers\ManualTrigger"
@@ -130,6 +131,11 @@ abstract class Trigger implements ITrigger
 	/**
 	 * {@inheritDoc}
 	 */
+	abstract public function getType(): ModulesMetadataTypes\TriggerTypeType;
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getName(): string
 	{
 		return $this->name;
@@ -178,18 +184,6 @@ abstract class Trigger implements ITrigger
 	/**
 	 * {@inheritDoc}
 	 */
-	public function addAction(Entities\Actions\IAction $action): void
-	{
-		// Check if collection does not contain inserting entity
-		if (!$this->actions->contains($action)) {
-			// ...and assign it to collection
-			$this->actions->add($action);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getActions(): array
 	{
 		return $this->actions->toArray();
@@ -209,6 +203,18 @@ abstract class Trigger implements ITrigger
 				// ...and assign them to collection
 				$this->actions->add($entity);
 			}
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function addAction(Entities\Actions\IAction $action): void
+	{
+		// Check if collection does not contain inserting entity
+		if (!$this->actions->contains($action)) {
+			// ...and assign it to collection
+			$this->actions->add($action);
 		}
 	}
 
@@ -240,18 +246,6 @@ abstract class Trigger implements ITrigger
 	/**
 	 * {@inheritDoc}
 	 */
-	public function addNotification(Entities\Notifications\INotification $notification): void
-	{
-		// Check if collection does not contain inserting entity
-		if (!$this->notifications->contains($notification)) {
-			// ...and assign it to collection
-			$this->notifications->add($notification);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getNotifications(): array
 	{
 		return $this->notifications->toArray();
@@ -271,6 +265,18 @@ abstract class Trigger implements ITrigger
 				// ...and assign them to collection
 				$this->notifications->add($entity);
 			}
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function addNotification(Entities\Notifications\INotification $notification): void
+	{
+		// Check if collection does not contain inserting entity
+		if (!$this->notifications->contains($notification)) {
+			// ...and assign it to collection
+			$this->notifications->add($notification);
 		}
 	}
 
@@ -308,54 +314,6 @@ abstract class Trigger implements ITrigger
 	}
 
 	/**
-	 * @return string[]
-	 */
-	private function getPlainControls(): array
-	{
-		$controls = [];
-
-		foreach ($this->getControls() as $control) {
-			$controls[] = $control->getName();
-		}
-
-		return $controls;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getControl(string $name): ?Entities\Triggers\Controls\IControl
-	{
-		$found = $this->controls
-			->filter(function (Entities\Triggers\Controls\IControl $row) use ($name): bool {
-				return $name === $row->getName();
-			});
-
-		return $found->isEmpty() ? null : $found->first();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function findControl(string $name): ?Entities\Triggers\Controls\IControl
-	{
-		$found = $this->controls
-			->filter(function (Entities\Triggers\Controls\IControl $row) use ($name): bool {
-				return $name === $row->getName();
-			});
-
-		return $found->isEmpty() ? null : $found->first();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function hasControl(string $name): bool
-	{
-		return $this->findControl($name) !== null;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public function setControls(array $controls = []): void
@@ -386,6 +344,19 @@ abstract class Trigger implements ITrigger
 	/**
 	 * {@inheritDoc}
 	 */
+	public function getControl(string $name): ?Entities\Triggers\Controls\IControl
+	{
+		$found = $this->controls
+			->filter(function (Entities\Triggers\Controls\IControl $row) use ($name): bool {
+				return $name === $row->getName();
+			});
+
+		return $found->isEmpty() ? null : $found->first();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function removeControl(Entities\Triggers\Controls\IControl $control): void
 	{
 		// Check if collection contain removing entity...
@@ -398,13 +369,36 @@ abstract class Trigger implements ITrigger
 	/**
 	 * {@inheritDoc}
 	 */
+	public function findControl(string $name): ?Entities\Triggers\Controls\IControl
+	{
+		$found = $this->controls
+			->filter(function (Entities\Triggers\Controls\IControl $row) use ($name): bool {
+				return $name === $row->getName();
+			});
+
+		return $found->isEmpty() ? null : $found->first();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function hasControl(string $name): bool
+	{
+		return $this->findControl($name) !== null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function toArray(): array
 	{
 		return [
 			'id'      => $this->getPlainId(),
+			'type'    => $this->getType()->getValue(),
 			'name'    => $this->getName(),
 			'comment' => $this->getComment(),
 			'enabled' => $this->isEnabled(),
+
 			'owner'   => $this->getOwnerId(),
 		];
 	}

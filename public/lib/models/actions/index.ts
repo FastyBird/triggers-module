@@ -3,8 +3,8 @@ import * as exchangeEntitySchema from '@fastybird/modules-metadata/resources/sch
 import {
   ModuleOrigin,
   ActionEntity as ExchangeEntity,
-  TriggersModule as RoutingKeys,
-  TriggerActionType,
+  TriggersModuleRoutes as RoutingKeys,
+  ActionType,
 } from '@fastybird/modules-metadata'
 
 import {
@@ -421,6 +421,7 @@ const moduleActions: ActionTree<ActionState, any> = {
 
     if (
       ![
+        RoutingKeys.TRIGGERS_ACTIONS_ENTITY_REPORTED,
         RoutingKeys.TRIGGERS_ACTIONS_ENTITY_CREATED,
         RoutingKeys.TRIGGERS_ACTIONS_ENTITY_UPDATED,
         RoutingKeys.TRIGGERS_ACTIONS_ENTITY_DELETED,
@@ -467,7 +468,7 @@ const moduleActions: ActionTree<ActionState, any> = {
         }
 
         commit('SET_SEMAPHORE', {
-          type: payload.routingKey === RoutingKeys.TRIGGERS_ACTIONS_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING,
+          type: payload.routingKey === RoutingKeys.TRIGGERS_ACTIONS_ENTITY_REPORTED ? SemaphoreTypes.GETTING : (payload.routingKey === RoutingKeys.TRIGGERS_ACTIONS_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING),
           id: body.id,
         })
 
@@ -487,11 +488,11 @@ const moduleActions: ActionTree<ActionState, any> = {
               }
             } else if (camelName === 'type') {
               switch (body[attrName]) {
-                case TriggerActionType.DEVICE_PROPERTY:
+                case ActionType.DEVICE_PROPERTY:
                   entityData[camelName] = ActionEntityTypes.DEVICE_PROPERTY
                   break
 
-                case TriggerActionType.CHANNEL_PROPERTY:
+                case ActionType.CHANNEL_PROPERTY:
                   entityData[camelName] = ActionEntityTypes.CHANNEL_PROPERTY
                   break
 

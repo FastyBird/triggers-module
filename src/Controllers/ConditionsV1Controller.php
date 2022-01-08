@@ -67,6 +67,9 @@ final class ConditionsV1Controller extends BaseV1Controller
 	/** @var Hydrators\Conditions\ChannelPropertyConditionHydrator */
 	private Hydrators\Conditions\ChannelPropertyConditionHydrator $channelPropertyConditionHydrator;
 
+	/** @var Hydrators\Conditions\DataConditionHydrator */
+	private Hydrators\Conditions\DataConditionHydrator $dateConditionHydrator;
+
 	/** @var Hydrators\Conditions\TimeConditionHydrator */
 	private Hydrators\Conditions\TimeConditionHydrator $timeConditionHydrator;
 
@@ -76,6 +79,7 @@ final class ConditionsV1Controller extends BaseV1Controller
 		Models\Conditions\IConditionsManager $conditionsManager,
 		Hydrators\Conditions\DevicePropertyConditionHydrator $devicePropertyConditionHydrator,
 		Hydrators\Conditions\ChannelPropertyConditionHydrator $channelPropertyConditionHydrator,
+		Hydrators\Conditions\DataConditionHydrator $dateConditionHydrator,
 		Hydrators\Conditions\TimeConditionHydrator $timeConditionHydrator
 	) {
 		$this->triggerRepository = $triggerRepository;
@@ -84,6 +88,7 @@ final class ConditionsV1Controller extends BaseV1Controller
 
 		$this->devicePropertyConditionHydrator = $devicePropertyConditionHydrator;
 		$this->channelPropertyConditionHydrator = $channelPropertyConditionHydrator;
+		$this->dateConditionHydrator = $dateConditionHydrator;
 		$this->timeConditionHydrator = $timeConditionHydrator;
 	}
 
@@ -180,6 +185,9 @@ final class ConditionsV1Controller extends BaseV1Controller
 
 				} elseif ($document->getResource()->getType() === Schemas\Conditions\ChannelPropertyConditionSchema::SCHEMA_TYPE) {
 					$condition = $this->conditionsManager->create($this->channelPropertyConditionHydrator->hydrate($document));
+
+				} elseif ($document->getResource()->getType() === Schemas\Conditions\DateConditionSchema::SCHEMA_TYPE) {
+					$condition = $this->conditionsManager->create($this->dateConditionHydrator->hydrate($document));
 
 				} elseif ($document->getResource()->getType() === Schemas\Conditions\TimeConditionSchema::SCHEMA_TYPE) {
 					$condition = $this->conditionsManager->create($this->timeConditionHydrator->hydrate($document));
@@ -355,6 +363,15 @@ final class ConditionsV1Controller extends BaseV1Controller
 				$condition = $this->conditionsManager->update(
 					$condition,
 					$this->channelPropertyConditionHydrator->hydrate($document, $condition)
+				);
+
+			} elseif (
+				$document->getResource()->getType() === Schemas\Conditions\DateConditionSchema::SCHEMA_TYPE
+				&& $condition instanceof Entities\Conditions\DateCondition
+			) {
+				$condition = $this->conditionsManager->update(
+					$condition,
+					$this->dateConditionHydrator->hydrate($document, $condition)
 				);
 
 			} elseif (

@@ -86,6 +86,14 @@ class ChannelPropertyCondition extends PropertyCondition implements IChannelProp
 	/**
 	 * {@inheritDoc}
 	 */
+	public function getType(): ModulesMetadataTypes\TriggerConditionTypeType
+	{
+		return ModulesMetadataTypes\TriggerConditionTypeType::get(ModulesMetadataTypes\TriggerConditionTypeType::TYPE_CHANNEL_PROPERTY);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getChannel(): Uuid\UuidInterface
 	{
 		return $this->channel;
@@ -105,7 +113,6 @@ class ChannelPropertyCondition extends PropertyCondition implements IChannelProp
 	public function toArray(): array
 	{
 		return array_merge(parent::toArray(), [
-			'type'     => 'channel-property',
 			'channel'  => $this->getChannel()->toString(),
 			'property' => $this->getProperty()->toString(),
 		]);

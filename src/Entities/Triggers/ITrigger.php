@@ -15,6 +15,7 @@
 
 namespace FastyBird\TriggersModule\Entities\Triggers;
 
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\SimpleAuth\Entities as SimpleAuthEntities;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineTimestampable;
@@ -32,6 +33,11 @@ interface ITrigger extends Entities\IEntity,
 	SimpleAuthEntities\IEntityOwner,
 	DoctrineTimestampable\Entities\IEntityCreated, DoctrineTimestampable\Entities\IEntityUpdated
 {
+
+	/**
+	 * @return ModulesMetadataTypes\TriggerTypeType
+	 */
+	public function getType(): ModulesMetadataTypes\TriggerTypeType;
 
 	/**
 	 * @param string $name

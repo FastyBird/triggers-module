@@ -15,6 +15,7 @@
 
 namespace FastyBird\TriggersModule\Entities\Notifications;
 
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineTimestampable;
 
@@ -29,6 +30,11 @@ use IPub\DoctrineTimestampable;
 interface INotification extends Entities\IEntity,
 	DoctrineTimestampable\Entities\IEntityCreated, DoctrineTimestampable\Entities\IEntityUpdated
 {
+
+	/**
+	 * @return ModulesMetadataTypes\TriggerNotificationTypeType
+	 */
+	public function getType(): ModulesMetadataTypes\TriggerNotificationTypeType;
 
 	/**
 	 * @return Entities\Triggers\ITrigger

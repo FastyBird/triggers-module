@@ -4,8 +4,8 @@ import * as exchangeEntitySchema
 import {
   ModuleOrigin,
   ConditionEntity as ExchangeEntity,
-  TriggersModule as RoutingKeys,
-  TriggerConditionType,
+  TriggersModuleRoutes as RoutingKeys,
+  ConditionType,
 } from '@fastybird/modules-metadata'
 
 import {
@@ -426,6 +426,7 @@ const moduleActions: ActionTree<ConditionState, any> = {
 
     if (
       ![
+        RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_REPORTED,
         RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_CREATED,
         RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_UPDATED,
         RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_DELETED,
@@ -472,7 +473,7 @@ const moduleActions: ActionTree<ConditionState, any> = {
         }
 
         commit('SET_SEMAPHORE', {
-          type: payload.routingKey === RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING,
+          type: payload.routingKey === RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_REPORTED ? SemaphoreTypes.GETTING : (payload.routingKey === RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING),
           id: body.id,
         })
 
@@ -492,19 +493,19 @@ const moduleActions: ActionTree<ConditionState, any> = {
               }
             } else if (camelName === 'type') {
               switch (body[attrName]) {
-                case TriggerConditionType.DEVICE_PROPERTY:
+                case ConditionType.DEVICE_PROPERTY:
                   entityData[camelName] = ConditionEntityTypes.DEVICE_PROPERTY
                   break
 
-                case TriggerConditionType.CHANNEL_PROPERTY:
+                case ConditionType.CHANNEL_PROPERTY:
                   entityData[camelName] = ConditionEntityTypes.CHANNEL_PROPERTY
                   break
 
-                case TriggerConditionType.TIME:
+                case ConditionType.TIME:
                   entityData[camelName] = ConditionEntityTypes.TIME
                   break
 
-                case TriggerConditionType.DATE:
+                case ConditionType.DATE:
                   entityData[camelName] = ConditionEntityTypes.DATE
                   break
 

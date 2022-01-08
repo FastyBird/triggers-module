@@ -15,6 +15,7 @@
 
 namespace FastyBird\TriggersModule\Entities\Actions;
 
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineTimestampable;
 
@@ -29,6 +30,11 @@ use IPub\DoctrineTimestampable;
 interface IAction extends Entities\IEntity,
 	DoctrineTimestampable\Entities\IEntityCreated, DoctrineTimestampable\Entities\IEntityUpdated
 {
+
+	/**
+	 * @return ModulesMetadataTypes\TriggerActionTypeType
+	 */
+	public function getType(): ModulesMetadataTypes\TriggerActionTypeType;
 
 	/**
 	 * @return Entities\Triggers\ITrigger

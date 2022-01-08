@@ -15,54 +15,109 @@
 #     limitations under the License.
 
 """
-Triggers module data exchange
+Triggers module subscriber module
 """
 
 # Python base dependencies
+import datetime
 from typing import Dict, Optional, Type
 
 # Library dependencies
-from exchange_plugin.dispatcher import EventDispatcher
 from exchange_plugin.publisher import Publisher
 from kink import inject
 from modules_metadata.routing import RoutingKey
 from modules_metadata.types import ModuleOrigin
-from pony.orm import core as orm
-from whistle import Event
+from sqlalchemy import event
 
 # Library libs
-from triggers_module.events import (
-    ModelEntityCreatedEvent,
-    ModelEntityDeletedEvent,
-    ModelEntityUpdatedEvent,
-)
-from triggers_module.models import (
-    AutomaticTriggerEntity,
+from triggers_module.entities.action import (
+    ActionEntity,
     ChannelPropertyActionEntity,
-    ChannelPropertyConditionEntity,
-    DateConditionEntity,
     DevicePropertyActionEntity,
+)
+from triggers_module.entities.base import Base, EntityCreatedMixin, EntityUpdatedMixin
+from triggers_module.entities.condition import (
+    ChannelPropertyConditionEntity,
+    ConditionEntity,
+    DateConditionEntity,
     DevicePropertyConditionEntity,
-    EmailNotificationEntity,
-    ManualTriggerEntity,
-    SmsNotificationEntity,
     TimeConditionEntity,
+)
+from triggers_module.entities.notification import (
+    EmailNotificationEntity,
+    SmsNotificationEntity,
+)
+from triggers_module.entities.trigger import (
+    AutomaticTriggerEntity,
+    ManualTriggerEntity,
     TriggerControlEntity,
 )
+from triggers_module.repositories.state import (
+    IActionStateRepository,
+    IConditionStateRepository,
+)
 
 
-@inject
-class ModuleExchange:
+class EntityCreatedSubscriber:
     """
-    Data exchanges utils
+    New entity creation subscriber
 
     @package        FastyBird:TriggersModule!
-    @module         exchange
+    @module         subscriber
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
 
-    CREATED_ENTITIES_ROUTING_KEYS_MAPPING: Dict[Type[orm.Entity], RoutingKey] = {
+    def __init__(self) -> None:
+        event.listen(
+            Base, "before_insert", lambda mapper, connection, target: self.before_insert(target), propagate=True
+        )
+
+    # -----------------------------------------------------------------------------
+
+    @staticmethod
+    def before_insert(target: Base) -> None:
+        """Before entity inserted update timestamp"""
+        if isinstance(target, EntityCreatedMixin):
+            target.created_at = datetime.datetime.now()
+
+
+class EntityUpdatedSubscriber:
+    """
+    Existing entity update subscriber
+
+    @package        FastyBird:TriggersModule!
+    @module         subscriber
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+
+    def __init__(self) -> None:
+        event.listen(
+            Base, "before_update", lambda mapper, connection, target: self.before_update(target), propagate=True
+        )
+
+    # -----------------------------------------------------------------------------
+
+    @staticmethod
+    def before_update(target: Base) -> None:
+        """Before entity updated update timestamp"""
+        if isinstance(target, EntityUpdatedMixin):
+            target.updated_at = datetime.datetime.now()
+
+
+@inject
+class EntitiesSubscriber:
+    """
+    Data exchanges utils
+
+    @package        FastyBird:TriggersModule!
+    @module         subscriber
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+
+    CREATED_ENTITIES_ROUTING_KEYS_MAPPING: Dict[Type[Base], RoutingKey] = {
         ManualTriggerEntity: RoutingKey.TRIGGERS_ENTITY_CREATED,
         AutomaticTriggerEntity: RoutingKey.TRIGGERS_ENTITY_CREATED,
         TriggerControlEntity: RoutingKey.TRIGGERS_CONTROL_ENTITY_CREATED,
@@ -76,7 +131,7 @@ class ModuleExchange:
         EmailNotificationEntity: RoutingKey.TRIGGERS_NOTIFICATIONS_ENTITY_CREATED,
     }
 
-    UPDATED_ENTITIES_ROUTING_KEYS_MAPPING: Dict[Type[orm.Entity], RoutingKey] = {
+    UPDATED_ENTITIES_ROUTING_KEYS_MAPPING: Dict[Type[Base], RoutingKey] = {
         ManualTriggerEntity: RoutingKey.TRIGGERS_ENTITY_UPDATED,
         AutomaticTriggerEntity: RoutingKey.TRIGGERS_ENTITY_UPDATED,
         TriggerControlEntity: RoutingKey.TRIGGERS_CONTROL_ENTITY_UPDATED,
@@ -90,7 +145,7 @@ class ModuleExchange:
         EmailNotificationEntity: RoutingKey.TRIGGERS_NOTIFICATIONS_ENTITY_UPDATED,
     }
 
-    DELETED_ENTITIES_ROUTING_KEYS_MAPPING: Dict[Type[orm.Entity], RoutingKey] = {
+    DELETED_ENTITIES_ROUTING_KEYS_MAPPING: Dict[Type[Base], RoutingKey] = {
         ManualTriggerEntity: RoutingKey.TRIGGERS_ENTITY_DELETED,
         AutomaticTriggerEntity: RoutingKey.TRIGGERS_ENTITY_DELETED,
         TriggerControlEntity: RoutingKey.TRIGGERS_CONTROL_ENTITY_DELETED,
@@ -105,81 +160,69 @@ class ModuleExchange:
     }
 
     __publisher: Publisher
-    __event_dispatcher: EventDispatcher
+
+    __action_state_repository: Optional[IActionStateRepository]
+    __condition_state_repository: Optional[IConditionStateRepository]
 
     # -----------------------------------------------------------------------------
 
     def __init__(
         self,
         publisher: Publisher,
-        event_dispatcher: EventDispatcher,
+        action_state_repository: Optional[IActionStateRepository] = None,
+        condition_state_repository: Optional[IConditionStateRepository] = None,
     ) -> None:
         self.__publisher = publisher
-        self.__event_dispatcher = event_dispatcher
 
-        self.__event_dispatcher.add_listener(
-            event_id=ModelEntityCreatedEvent.EVENT_NAME,
-            listener=self.__entity_created,
-        )
+        self.__action_state_repository = action_state_repository
+        self.__condition_state_repository = condition_state_repository
 
-        self.__event_dispatcher.add_listener(
-            event_id=ModelEntityUpdatedEvent.EVENT_NAME,
-            listener=self.__entity_updated,
-        )
-
-        self.__event_dispatcher.add_listener(
-            event_id=ModelEntityDeletedEvent.EVENT_NAME,
-            listener=self.__entity_deleted,
-        )
+        event.listen(Base, "after_insert", lambda mapper, connection, target: self.after_insert(target), propagate=True)
+        event.listen(Base, "after_update", lambda mapper, connection, target: self.after_update(target), propagate=True)
+        event.listen(Base, "after_delete", lambda mapper, connection, target: self.after_delete(target), propagate=True)
 
     # -----------------------------------------------------------------------------
 
-    def __entity_created(self, event: Event) -> None:
-        if not isinstance(event, ModelEntityCreatedEvent):
-            return
-
-        routing_key = self.__get_entity_created_routing_key(entity=type(event.entity))
+    def after_insert(self, target: Base) -> None:
+        """Event fired after new entity is created"""
+        routing_key = self.__get_entity_created_routing_key(entity=type(target))
 
         if routing_key is not None:
             self.__publisher.publish(
-                origin=ModuleOrigin.TRIGGERS_MODULE,
+                origin=ModuleOrigin.DEVICES_MODULE,
                 routing_key=routing_key,
-                data=event.entity.to_dict(),
+                data={**target.to_dict(), **self.__get_entity_extended_data(entity=target)},
             )
 
     # -----------------------------------------------------------------------------
 
-    def __entity_updated(self, event: Event) -> None:
-        if not isinstance(event, ModelEntityUpdatedEvent):
-            return
-
-        routing_key = self.__get_entity_updated_routing_key(entity=type(event.entity))
+    def after_update(self, target: Base) -> None:
+        """Event fired after existing entity is updated"""
+        routing_key = self.__get_entity_updated_routing_key(entity=type(target))
 
         if routing_key is not None:
             self.__publisher.publish(
-                origin=ModuleOrigin.TRIGGERS_MODULE,
+                origin=ModuleOrigin.DEVICES_MODULE,
                 routing_key=routing_key,
-                data=event.entity.to_dict(),
+                data={**target.to_dict(), **self.__get_entity_extended_data(entity=target)},
             )
 
     # -----------------------------------------------------------------------------
 
-    def __entity_deleted(self, event: Event) -> None:
-        if not isinstance(event, ModelEntityDeletedEvent):
-            return
-
-        routing_key = self.__get_entity_deleted_routing_key(entity=type(event.entity))
+    def after_delete(self, target: Base) -> None:
+        """Event fired after existing entity is deleted"""
+        routing_key = self.__get_entity_deleted_routing_key(entity=type(target))
 
         if routing_key is not None:
             self.__publisher.publish(
-                origin=ModuleOrigin.TRIGGERS_MODULE,
+                origin=ModuleOrigin.DEVICES_MODULE,
                 routing_key=routing_key,
-                data=event.entity.to_dict(),
+                data={**target.to_dict(), **self.__get_entity_extended_data(entity=target)},
             )
 
     # -----------------------------------------------------------------------------
 
-    def __get_entity_created_routing_key(self, entity: Type[orm.Entity]) -> Optional[RoutingKey]:
+    def __get_entity_created_routing_key(self, entity: Type[Base]) -> Optional[RoutingKey]:
         """Get routing key for created entity"""
         for classname, routing_key in self.CREATED_ENTITIES_ROUTING_KEYS_MAPPING.items():
             if issubclass(entity, classname):
@@ -189,7 +232,7 @@ class ModuleExchange:
 
     # -----------------------------------------------------------------------------
 
-    def __get_entity_updated_routing_key(self, entity: Type[orm.Entity]) -> Optional[RoutingKey]:
+    def __get_entity_updated_routing_key(self, entity: Type[Base]) -> Optional[RoutingKey]:
         """Get routing key for updated entity"""
         for classname, routing_key in self.UPDATED_ENTITIES_ROUTING_KEYS_MAPPING.items():
             if issubclass(entity, classname):
@@ -199,10 +242,25 @@ class ModuleExchange:
 
     # -----------------------------------------------------------------------------
 
-    def __get_entity_deleted_routing_key(self, entity: Type[orm.Entity]) -> Optional[RoutingKey]:
+    def __get_entity_deleted_routing_key(self, entity: Type[Base]) -> Optional[RoutingKey]:
         """Get routing key for deleted entity"""
         for classname, routing_key in self.DELETED_ENTITIES_ROUTING_KEYS_MAPPING.items():
             if issubclass(entity, classname):
                 return routing_key
 
         return None
+
+    # -----------------------------------------------------------------------------
+
+    def __get_entity_extended_data(self, entity: Base) -> Dict:
+        if isinstance(entity, ActionEntity) and self.__action_state_repository is not None:
+            action_state = self.__action_state_repository.get_by_id(property_id=entity.id)
+
+            return action_state.to_dict() if action_state is not None else {}
+
+        if isinstance(entity, ConditionEntity) and self.__condition_state_repository is not None:
+            condition_state = self.__condition_state_repository.get_by_id(property_id=entity.id)
+
+            return condition_state.to_dict() if condition_state is not None else {}
+
+        return {}

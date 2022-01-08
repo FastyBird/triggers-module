@@ -18,6 +18,7 @@ namespace FastyBird\TriggersModule\Entities\Conditions;
 use DateTimeInterface;
 use DateTimeZone;
 use Doctrine\ORM\Mapping as ORM;
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Exceptions;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
@@ -73,6 +74,14 @@ class TimeCondition extends Condition implements ITimeCondition
 
 		$this->setTime($time);
 		$this->setDays($days);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getType(): ModulesMetadataTypes\TriggerConditionTypeType
+	{
+		return ModulesMetadataTypes\TriggerConditionTypeType::get(ModulesMetadataTypes\TriggerConditionTypeType::TYPE_TIME);
 	}
 
 	/**
@@ -145,7 +154,6 @@ class TimeCondition extends Condition implements ITimeCondition
 	public function toArray(): array
 	{
 		return array_merge(parent::toArray(), [
-			'type' => 'time',
 			'time' => $this->getTime()->format(DATE_ATOM),
 			'days' => $this->getDays(),
 		]);

@@ -74,6 +74,14 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 	/**
 	 * {@inheritDoc}
 	 */
+	public function getType(): ModulesMetadataTypes\TriggerConditionTypeType
+	{
+		return ModulesMetadataTypes\TriggerConditionTypeType::get(ModulesMetadataTypes\TriggerConditionTypeType::TYPE_DEVICE_PROPERTY);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getProperty(): Uuid\UuidInterface
 	{
 		return $this->property;
@@ -85,7 +93,6 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 	public function toArray(): array
 	{
 		return array_merge(parent::toArray(), [
-			'type'     => 'device-property',
 			'property' => $this->getProperty()->toString(),
 		]);
 	}

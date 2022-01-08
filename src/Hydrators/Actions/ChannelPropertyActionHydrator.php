@@ -29,9 +29,9 @@ use Ramsey\Uuid;
  *
  * @author          Adam Kadlec <adam.kadlec@fastybird.com>
  *
- * @phpstan-extends ActionHydrator<Entities\Actions\IChannelPropertyAction>
+ * @phpstan-extends PropertyActionHydrator<Entities\Actions\IChannelPropertyAction>
  */
-final class ChannelPropertyActionHydrator extends ActionHydrator
+final class ChannelPropertyActionHydrator extends PropertyActionHydrator
 {
 
 	/** @var string[] */
@@ -49,35 +49,6 @@ final class ChannelPropertyActionHydrator extends ActionHydrator
 	protected function getEntityName(): string
 	{
 		return Entities\Actions\ChannelPropertyAction::class;
-	}
-
-	/**
-	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
-	 *
-	 * @return Uuid\UuidInterface
-	 *
-	 * @throws JsonApiExceptions\IJsonApiException
-	 */
-	protected function hydrateDeviceAttribute(
-		JsonAPIDocument\Objects\IStandardObject $attributes
-	): Uuid\UuidInterface {
-		if (
-			!is_scalar($attributes->get('device'))
-			|| !$attributes->has('device')
-			|| $attributes->get('device') === ''
-			|| !Uuid\Uuid::isValid((string) $attributes->get('device'))
-		) {
-			throw new JsonApiExceptions\JsonApiErrorException(
-				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
-				$this->translator->translate('//triggers-module.base.messages.missingAttribute.message'),
-				[
-					'pointer' => '/data/attributes/device',
-				]
-			);
-		}
-
-		return Uuid\Uuid::fromString((string) $attributes->get('device'));
 	}
 
 	/**
@@ -107,65 +78,6 @@ final class ChannelPropertyActionHydrator extends ActionHydrator
 		}
 
 		return Uuid\Uuid::fromString((string) $attributes->get('channel'));
-	}
-
-	/**
-	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
-	 *
-	 * @return Uuid\UuidInterface
-	 *
-	 * @throws JsonApiExceptions\IJsonApiException
-	 */
-	protected function hydratePropertyAttribute(
-		JsonAPIDocument\Objects\IStandardObject $attributes
-	): Uuid\UuidInterface {
-		if (
-			!is_scalar($attributes->get('property'))
-			|| !$attributes->has('property')
-			|| $attributes->get('property') === ''
-			|| !Uuid\Uuid::isValid((string) $attributes->get('property'))
-		) {
-			throw new JsonApiExceptions\JsonApiErrorException(
-				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
-				$this->translator->translate('//triggers-module.base.messages.missingAttribute.message'),
-				[
-					'pointer' => '/data/attributes/property',
-				]
-			);
-		}
-
-		return Uuid\Uuid::fromString((string) $attributes->get('property'));
-	}
-
-	/**
-	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
-	 *
-	 * @return string
-	 *
-	 * @throws JsonApiExceptions\IJsonApiException
-	 */
-	protected function hydrateValueAttribute(
-		JsonAPIDocument\Objects\IStandardObject $attributes
-	): string {
-		if (
-			!is_scalar($attributes->get('value'))
-			|| !$attributes->has('value')
-			|| $attributes->get('value') === ''
-		) {
-			throw new JsonApiExceptions\JsonApiErrorException(
-				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
-				$this->translator->translate('//triggers-module.base.messages.missingAttribute.message'),
-				[
-					'pointer' => '/data/attributes/value',
-				]
-			);
-		}
-
-		$value = $attributes->get('value');
-
-		return is_bool($value) ? ($value ? 'true' : 'false') : strtolower((string) $value);
 	}
 
 }

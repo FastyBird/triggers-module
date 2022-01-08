@@ -20,59 +20,50 @@ Triggers module DI container
 
 # pylint: disable=no-value-for-parameter
 
-# Python base dependencies
-from typing import Dict, Union
-
 # Library dependencies
 from kink import di
+from sqlalchemy.orm import Session as OrmSession
 
 # Library libs
-from triggers_module.exchange import ModuleExchange
-from triggers_module.models import db
-from triggers_module.repositories import (
-    ActionsRepository,
-    ConditionsRepository,
+from triggers_module.managers.action import ActionsManager
+from triggers_module.managers.condition import ConditionsManager
+from triggers_module.managers.notification import NotificationsManager
+from triggers_module.managers.trigger import TriggerControlsManager, TriggersManager
+from triggers_module.repositories.action import ActionsRepository
+from triggers_module.repositories.condition import ConditionsRepository
+from triggers_module.repositories.notification import NotificationsRepository
+from triggers_module.repositories.trigger import (
     TriggersControlsRepository,
     TriggersRepository,
 )
-
-default_settings: Dict[str, Dict[str, Union[str, int, bool, None]]] = {
-    "database": {
-        "provider": "mysql",
-        "host": "127.0.0.1",
-        "port": 3306,
-        "username": None,
-        "password": None,
-        "database": "fb_triggers_module",
-        "create_tables": False,
-    },
-}
+from triggers_module.subscriber import EntitiesSubscriber, EntityCreatedSubscriber
 
 
-def create_container(settings: Dict[str, Dict[str, Union[str, int, bool, None]]]) -> None:
+def create_container(database_session: OrmSession) -> None:
     """Register triggers module services"""
-    module_settings: Dict[str, Dict[str, Union[str, int, bool, None]]] = {**default_settings, **settings}
-
-    di["fb-triggers-module_database"] = db
-
-    di[TriggersRepository] = TriggersRepository()  # type: ignore[call-arg]
+    di[TriggersRepository] = TriggersRepository(session=database_session)
     di["fb-triggers-module_trigger-repository"] = di[TriggersRepository]
-    di[TriggersControlsRepository] = TriggersControlsRepository()  # type: ignore[call-arg]
+    di[TriggersControlsRepository] = TriggersControlsRepository(session=database_session)
     di["fb-triggers-module_trigger-control-repository"] = di[TriggersControlsRepository]
-    di[ActionsRepository] = ActionsRepository()  # type: ignore[call-arg]
+    di[ActionsRepository] = ActionsRepository(session=database_session)
     di["fb-triggers-module_action-repository"] = di[ActionsRepository]
-    di[ConditionsRepository] = ConditionsRepository()  # type: ignore[call-arg]
+    di[ConditionsRepository] = ConditionsRepository(session=database_session)
     di["fb-triggers-module_condition-repository"] = di[ConditionsRepository]
+    di[NotificationsRepository] = NotificationsRepository(session=database_session)
+    di["fb-triggers-module_notification-repository"] = di[NotificationsRepository]
 
-    di[ModuleExchange] = ModuleExchange()  # type: ignore[call-arg]
-    di["fb-triggers-module_exchange"] = di[ModuleExchange]
+    di[TriggersManager] = TriggersManager(session=database_session)
+    di["fb-triggers-module_triggers-manager"] = di[TriggersManager]
+    di[TriggerControlsManager] = TriggerControlsManager(session=database_session)
+    di["fb-triggers-module_trigger-controls-manager"] = di[TriggerControlsManager]
+    di[ActionsManager] = ActionsManager(session=database_session)
+    di["fb-triggers-module_actions-manager"] = di[ActionsManager]
+    di[ConditionsManager] = ConditionsManager(session=database_session)
+    di["fb-triggers-module_actions-manager"] = di[ConditionsManager]
+    di[NotificationsManager] = NotificationsManager(session=database_session)
+    di["fb-triggers-module_actions-manager"] = di[NotificationsManager]
 
-    db.bind(
-        provider="mysql",
-        host=module_settings.get("database", {}).get("host", "127.0.0.1"),
-        user=module_settings.get("database", {}).get("username", None),
-        passwd=module_settings.get("database", {}).get("password", None),
-        db=module_settings.get("database", {}).get("database", None),
-        port=int(str(module_settings.get("database", {}).get("port", 3306))),
-    )
-    db.generate_mapping(create_tables=settings.get("database", {}).get("create_tables", False))
+    di[EntitiesSubscriber] = EntitiesSubscriber()  # type: ignore[call-arg]
+    di["fb-devices-module_entities-subscriber"] = di[EntitiesSubscriber]
+    di[EntityCreatedSubscriber] = EntityCreatedSubscriber()
+    di["fb-devices-module_entity-created-subscriber"] = di[EntityCreatedSubscriber]

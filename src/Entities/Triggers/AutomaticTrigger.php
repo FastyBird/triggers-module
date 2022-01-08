@@ -17,6 +17,7 @@ namespace FastyBird\TriggersModule\Entities\Triggers;
 
 use Doctrine\Common;
 use Doctrine\ORM\Mapping as ORM;
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use Ramsey\Uuid;
@@ -57,6 +58,14 @@ class AutomaticTrigger extends Trigger implements IAutomaticTrigger
 		parent::__construct($name, $id);
 
 		$this->conditions = new Common\Collections\ArrayCollection();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getType(): ModulesMetadataTypes\TriggerTypeType
+	{
+		return ModulesMetadataTypes\TriggerTypeType::get(ModulesMetadataTypes\TriggerTypeType::TYPE_AUTOMATIC);
 	}
 
 	/**
@@ -119,16 +128,6 @@ class AutomaticTrigger extends Trigger implements IAutomaticTrigger
 			// ...and remove it from collection
 			$this->conditions->removeElement($condition);
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function toArray(): array
-	{
-		return array_merge(parent::toArray(), [
-			'type' => 'automatic',
-		]);
 	}
 
 }

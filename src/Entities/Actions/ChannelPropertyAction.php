@@ -16,6 +16,7 @@
 namespace FastyBird\TriggersModule\Entities\Actions;
 
 use Doctrine\ORM\Mapping as ORM;
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use Ramsey\Uuid;
@@ -80,6 +81,14 @@ class ChannelPropertyAction extends PropertyAction implements IChannelPropertyAc
 	/**
 	 * {@inheritDoc}
 	 */
+	public function getType(): ModulesMetadataTypes\TriggerActionTypeType
+	{
+		return ModulesMetadataTypes\TriggerActionTypeType::get(ModulesMetadataTypes\TriggerActionTypeType::TYPE_CHANNEL_PROPERTY);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getChannel(): Uuid\UuidInterface
 	{
 		return $this->channel;
@@ -99,7 +108,6 @@ class ChannelPropertyAction extends PropertyAction implements IChannelPropertyAc
 	public function toArray(): array
 	{
 		return array_merge(parent::toArray(), [
-			'type'     => 'channel-property',
 			'channel'  => $this->getChannel()->toString(),
 			'property' => $this->getProperty()->toString(),
 		]);

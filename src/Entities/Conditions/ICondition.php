@@ -15,6 +15,7 @@
 
 namespace FastyBird\TriggersModule\Entities\Conditions;
 
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineTimestampable;
 
@@ -29,6 +30,11 @@ use IPub\DoctrineTimestampable;
 interface ICondition extends Entities\IEntity,
 	DoctrineTimestampable\Entities\IEntityCreated, DoctrineTimestampable\Entities\IEntityUpdated
 {
+
+	/**
+	 * @return ModulesMetadataTypes\TriggerConditionTypeType
+	 */
+	public function getType(): ModulesMetadataTypes\TriggerConditionTypeType;
 
 	/**
 	 * @return Entities\Triggers\IAutomaticTrigger

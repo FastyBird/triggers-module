@@ -16,6 +16,7 @@
 namespace FastyBird\TriggersModule\Entities\Notifications;
 
 use Doctrine\ORM\Mapping as ORM;
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use IPub\DoctrineTimestampable;
@@ -33,7 +34,7 @@ use Throwable;
  *     }
  * )
  * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="notification_type", type="string", length=20)
+ * @ORM\DiscriminatorColumn(name="notification_type", type="string", length=40)
  * @ORM\DiscriminatorMap({
  *    "sms"     = "FastyBird\TriggersModule\Entities\Notifications\SmsNotification",
  *    "email"   = "FastyBird\TriggersModule\Entities\Notifications\EmailNotification",
@@ -91,6 +92,11 @@ abstract class Notification implements INotification
 	/**
 	 * {@inheritDoc}
 	 */
+	abstract public function getType(): ModulesMetadataTypes\TriggerNotificationTypeType;
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getTrigger(): Entities\Triggers\ITrigger
 	{
 		return $this->trigger;
@@ -119,8 +125,11 @@ abstract class Notification implements INotification
 	{
 		return [
 			'id'      => $this->getPlainId(),
+			'type'    => $this->getType()->getValue(),
 			'enabled' => $this->isEnabled(),
+
 			'trigger' => $this->getTrigger()->getPlainId(),
+
 			'owner'   => $this->getTrigger()->getOwnerId(),
 		];
 	}

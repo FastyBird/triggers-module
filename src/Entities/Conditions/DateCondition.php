@@ -17,6 +17,7 @@ namespace FastyBird\TriggersModule\Entities\Conditions;
 
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use Ramsey\Uuid;
@@ -64,6 +65,14 @@ class DateCondition extends Condition implements IDateCondition
 	/**
 	 * {@inheritDoc}
 	 */
+	public function getType(): ModulesMetadataTypes\TriggerConditionTypeType
+	{
+		return ModulesMetadataTypes\TriggerConditionTypeType::get(ModulesMetadataTypes\TriggerConditionTypeType::TYPE_DATE);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getDate(): DateTimeInterface
 	{
 		return $this->date;
@@ -91,7 +100,6 @@ class DateCondition extends Condition implements IDateCondition
 	public function toArray(): array
 	{
 		return array_merge(parent::toArray(), [
-			'type' => 'date',
 			'date' => $this->getDate()->format(DATE_ATOM),
 		]);
 	}

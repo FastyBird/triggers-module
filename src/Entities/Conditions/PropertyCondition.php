@@ -55,6 +55,7 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	protected string $operand;
 
 	/**
+	 * @param Uuid\UuidInterface $device
 	 * @param ModulesMetadataTypes\TriggerConditionOperatorType $operator
 	 * @param string $operand
 	 * @param Entities\Triggers\IAutomaticTrigger $trigger

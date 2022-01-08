@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 #     Copyright 2021. FastyBird s.r.o.
 #
 #     Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,160 +16,90 @@
 
 # Test dependencies
 import uuid
+
+# Library dependencies
 from kink import inject
 from modules_metadata.routing import RoutingKey
-from modules_metadata.triggers_module import TriggerActionType
-
-# Library libs
-from triggers_module.items import PropertyActionItem, ChannelPropertyActionItem
-from triggers_module.repositories import ActionsRepository
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
+
+# Library libs
+from triggers_module.entities.action import ChannelPropertyActionEntity
+from triggers_module.repositories.action import ActionsRepository
+from triggers_module.repositories.trigger import TriggersRepository
 
 
 class TestActionsRepository(DbTestCase):
     @inject
     def test_repository_iterator(self, action_repository: ActionsRepository) -> None:
-        action_repository.initialize()
-
-        self.assertEqual(13, len(action_repository))
+        self.assertEqual(13, len(action_repository.get_all()))
 
     # -----------------------------------------------------------------------------
 
     @inject
     def test_get_item(self, action_repository: ActionsRepository) -> None:
-        action_repository.initialize()
+        entity = action_repository.get_by_id(uuid.UUID("4aa84028-d8b7-4128-95b2-295763634aa4", version=4))
 
-        action_item = action_repository.get_by_id(
-            uuid.UUID("4aa84028-d8b7-4128-95b2-295763634aa4", version=4)
-        )
-
-        self.assertIsInstance(action_item, PropertyActionItem)
-        self.assertIsInstance(action_item, ChannelPropertyActionItem)
-        self.assertEqual("4aa84028-d8b7-4128-95b2-295763634aa4", action_item.action_id.__str__())
+        self.assertIsInstance(entity, ChannelPropertyActionEntity)
+        self.assertEqual("4aa84028-d8b7-4128-95b2-295763634aa4", entity.id.__str__())
 
     # -----------------------------------------------------------------------------
 
     @inject
-    def test_create_from_exchange(self, action_repository: ActionsRepository) -> None:
-        action_repository.initialize()
+    def test_get_all_for_trigger(
+        self,
+        trigger_repository: TriggersRepository,
+        action_repository: ActionsRepository,
+    ) -> None:
+        trigger = trigger_repository.get_by_id(
+            trigger_id=uuid.UUID("c64ba1c4-0eda-4cab-87a0-4d634f7b67f4", version=4)
+        )
 
-        result: bool = action_repository.create_from_exchange(
-            RoutingKey(RoutingKey.TRIGGERS_ACTIONS_ENTITY_CREATED),
+        self.assertIsNotNone(trigger)
+
+        entities = action_repository.get_all_by_trigger(trigger_id=trigger.id)
+
+        self.assertEqual(3, len(entities))
+
+    # -----------------------------------------------------------------------------
+
+    @inject
+    def test_transform_to_dict(self, action_repository: ActionsRepository) -> None:
+        entity = action_repository.get_by_id(uuid.UUID("4aa84028-d8b7-4128-95b2-295763634aa4", version=4))
+
+        self.assertIsInstance(entity, ChannelPropertyActionEntity)
+
+        self.assertEqual(
             {
                 "id": "4aa84028-d8b7-4128-95b2-295763634aa4",
-                "type": TriggerActionType(TriggerActionType.CHANNEL_PROPERTY).value,
+                "type": "channel-property",
                 "enabled": False,
+                "trigger": "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
                 "device": "a830828c-6768-4274-b909-20ce0e222347",
                 "channel": "4f692f94-5be6-4384-94a7-60c424a5f723",
                 "property": "7bc1fc81-8ace-409d-b044-810140e2361a",
                 "value": "on",
-                "trigger": "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
+                "owner": None,
             },
+            entity.to_dict(),
         )
-
-        self.assertTrue(result)
-
-        action_item = action_repository.get_by_id(
-            uuid.UUID("4aa84028-d8b7-4128-95b2-295763634aa4", version=4)
+        self.assertIsInstance(
+            self.validate_exchange_data(
+                routing_key=RoutingKey.TRIGGERS_ACTIONS_ENTITY_REPORTED,
+                data=entity.to_dict(),
+            ),
+            dict,
         )
-
-        self.assertIsInstance(action_item, PropertyActionItem)
-        self.assertIsInstance(action_item, ChannelPropertyActionItem)
-        self.assertEqual("4aa84028-d8b7-4128-95b2-295763634aa4", action_item.action_id.__str__())
-        self.assertEqual({
-            "id": "4aa84028-d8b7-4128-95b2-295763634aa4",
-            "type": TriggerActionType(TriggerActionType.CHANNEL_PROPERTY).value,
-            "enabled": False,
-            "device": "a830828c-6768-4274-b909-20ce0e222347",
-            "channel": "4f692f94-5be6-4384-94a7-60c424a5f723",
-            "property": "7bc1fc81-8ace-409d-b044-810140e2361a",
-            "value": "on",
-            "trigger": "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
-        }, action_item.to_dict())
 
     # -----------------------------------------------------------------------------
 
     @inject
-    def test_update_from_exchange(self, action_repository: ActionsRepository) -> None:
-        action_repository.initialize()
+    def test_validate(self, action_repository: ActionsRepository) -> None:
+        entity = action_repository.get_by_id(uuid.UUID("4aa84028-d8b7-4128-95b2-295763634aa4", version=4))
 
-        action_item = action_repository.get_by_id(
-            uuid.UUID("4aa84028-d8b7-4128-95b2-295763634aa4", version=4)
-        )
+        self.assertIsInstance(entity, ChannelPropertyActionEntity)
 
-        self.assertIsInstance(action_item, PropertyActionItem)
-        self.assertIsInstance(action_item, ChannelPropertyActionItem)
-        self.assertEqual("4aa84028-d8b7-4128-95b2-295763634aa4", action_item.action_id.__str__())
-        self.assertFalse(action_item.enabled)
+        self.assertTrue(entity.validate("on"))
 
-        result: bool = action_repository.update_from_exchange(
-            RoutingKey(RoutingKey.TRIGGERS_ACTIONS_ENTITY_UPDATED),
-            {
-                "id": "4aa84028-d8b7-4128-95b2-295763634aa4",
-                "type": TriggerActionType(TriggerActionType.CHANNEL_PROPERTY).value,
-                "enabled": True,
-                "device": "a830828c-6768-4274-b909-20ce0e222347",
-                "channel": "4f692f94-5be6-4384-94a7-60c424a5f723",
-                "property": "7bc1fc81-8ace-409d-b044-810140e2361a",
-                "value": "off",
-                "trigger": "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
-            },
-        )
-
-        self.assertTrue(result)
-
-        action_item = action_repository.get_by_id(
-            uuid.UUID("4aa84028-d8b7-4128-95b2-295763634aa4", version=4)
-        )
-
-        self.assertIsInstance(action_item, PropertyActionItem)
-        self.assertIsInstance(action_item, ChannelPropertyActionItem)
-        self.assertEqual("4aa84028-d8b7-4128-95b2-295763634aa4", action_item.action_id.__str__())
-        self.assertEqual({
-            "id": "4aa84028-d8b7-4128-95b2-295763634aa4",
-            "type": TriggerActionType(TriggerActionType.CHANNEL_PROPERTY).value,
-            "enabled": True,
-            "device": "a830828c-6768-4274-b909-20ce0e222347",
-            "channel": "4f692f94-5be6-4384-94a7-60c424a5f723",
-            "property": "7bc1fc81-8ace-409d-b044-810140e2361a",
-            "value": "off",
-            "trigger": "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
-        }, action_item.to_dict())
-
-    # -----------------------------------------------------------------------------
-
-    @inject
-    def test_delete_from_exchange(self, action_repository: ActionsRepository) -> None:
-        action_repository.initialize()
-
-        action_item = action_repository.get_by_id(
-            uuid.UUID("4aa84028-d8b7-4128-95b2-295763634aa4", version=4)
-        )
-
-        self.assertIsInstance(action_item, PropertyActionItem)
-        self.assertIsInstance(action_item, ChannelPropertyActionItem)
-        self.assertEqual("4aa84028-d8b7-4128-95b2-295763634aa4", action_item.action_id.__str__())
-
-        result: bool = action_repository.delete_from_exchange(
-            RoutingKey(RoutingKey.TRIGGERS_ACTIONS_ENTITY_DELETED),
-            {
-                "id": "4aa84028-d8b7-4128-95b2-295763634aa4",
-                "type": TriggerActionType(TriggerActionType.CHANNEL_PROPERTY).value,
-                "enabled": False,
-                "device": "a830828c-6768-4274-b909-20ce0e222347",
-                "channel": "4f692f94-5be6-4384-94a7-60c424a5f723",
-                "property": "7bc1fc81-8ace-409d-b044-810140e2361a",
-                "value": "on",
-                "trigger": "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
-            },
-        )
-
-        self.assertTrue(result)
-
-        action_item = action_repository.get_by_id(
-            uuid.UUID("4aa84028-d8b7-4128-95b2-295763634aa4", version=4)
-        )
-
-        self.assertIsNone(action_item)
+        self.assertFalse(entity.validate("off"))

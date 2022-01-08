@@ -48,6 +48,7 @@ final class ServicesTest extends BaseTestCase
 		Assert::notNull($container->getByType(Schemas\Triggers\AutomaticTriggerSchema::class));
 		Assert::notNull($container->getByType(Schemas\Triggers\ManualTriggerSchema::class));
 		Assert::notNull($container->getByType(Schemas\Triggers\Controls\ControlSchema::class));
+		Assert::notNull($container->getByType(Schemas\Actions\DevicePropertyActionSchema::class));
 		Assert::notNull($container->getByType(Schemas\Actions\ChannelPropertyActionSchema::class));
 		Assert::notNull($container->getByType(Schemas\Notifications\EmailNotificationSchema::class));
 		Assert::notNull($container->getByType(Schemas\Notifications\SmsNotificationSchema::class));
@@ -58,11 +59,13 @@ final class ServicesTest extends BaseTestCase
 
 		Assert::notNull($container->getByType(Hydrators\Triggers\AutomaticTriggerHydrator::class));
 		Assert::notNull($container->getByType(Hydrators\Triggers\ManualTriggerHydrator::class));
+		Assert::notNull($container->getByType(Hydrators\Actions\DevicePropertyActionHydrator::class));
 		Assert::notNull($container->getByType(Hydrators\Actions\ChannelPropertyActionHydrator::class));
 		Assert::notNull($container->getByType(Hydrators\Notifications\EmailNotificationHydrator::class));
 		Assert::notNull($container->getByType(Hydrators\Notifications\SmsNotificationHydrator::class));
 		Assert::notNull($container->getByType(Hydrators\Conditions\ChannelPropertyConditionHydrator::class));
 		Assert::notNull($container->getByType(Hydrators\Conditions\DevicePropertyConditionHydrator::class));
+		Assert::notNull($container->getByType(Hydrators\Conditions\DataConditionHydrator::class));
 		Assert::notNull($container->getByType(Hydrators\Conditions\TimeConditionHydrator::class));
 
 		Assert::notNull($container->getByType(Subscribers\EntitiesSubscriber::class));

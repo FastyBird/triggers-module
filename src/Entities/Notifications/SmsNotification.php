@@ -16,6 +16,7 @@
 namespace FastyBird\TriggersModule\Entities\Notifications;
 
 use Doctrine\ORM\Mapping as ORM;
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use IPub\Phone;
@@ -64,6 +65,14 @@ class SmsNotification extends Notification implements ISmsNotification
 	/**
 	 * {@inheritDoc}
 	 */
+	public function getType(): ModulesMetadataTypes\TriggerNotificationTypeType
+	{
+		return ModulesMetadataTypes\TriggerNotificationTypeType::get(ModulesMetadataTypes\TriggerNotificationTypeType::TYPE_SMS);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getPhone(): Phone\Entities\Phone
 	{
 		return $this->phone;
@@ -83,7 +92,6 @@ class SmsNotification extends Notification implements ISmsNotification
 	public function toArray(): array
 	{
 		return array_merge(parent::toArray(), [
-			'type'  => 'sms',
 			'phone' => $this->getPhone()->getInternationalNumber(),
 		]);
 	}

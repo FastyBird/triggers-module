@@ -16,6 +16,7 @@
 namespace FastyBird\TriggersModule\Entities\Actions;
 
 use Doctrine\ORM\Mapping as ORM;
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use IPub\DoctrineTimestampable;
@@ -32,7 +33,7 @@ use Ramsey\Uuid;
  *     }
  * )
  * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="action_type", type="string", length=20)
+ * @ORM\DiscriminatorColumn(name="action_type", type="string", length=40)
  * @ORM\DiscriminatorMap({
  *    "device-property"  = "FastyBird\TriggersModule\Entities\Actions\DevicePropertyAction",
  *    "channel-property" = "FastyBird\TriggersModule\Entities\Actions\ChannelPropertyAction"
@@ -88,6 +89,11 @@ abstract class Action implements IAction
 	/**
 	 * {@inheritDoc}
 	 */
+	abstract public function getType(): ModulesMetadataTypes\TriggerActionTypeType;
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getTrigger(): Entities\Triggers\ITrigger
 	{
 		return $this->trigger;
@@ -116,8 +122,11 @@ abstract class Action implements IAction
 	{
 		return [
 			'id'      => $this->getPlainId(),
+			'type'    => $this->getType()->getValue(),
 			'enabled' => $this->isEnabled(),
+
 			'trigger' => $this->getTrigger()->getPlainId(),
+
 			'owner'   => $this->getTrigger()->getOwnerId(),
 		];
 	}

@@ -171,8 +171,11 @@ class TriggersModuleExtension extends DI\CompilerExtension implements Translatio
 		$builder->addDefinition($this->prefix('schemas.triggers.manual'), new DI\Definitions\ServiceDefinition())
 			->setType(Schemas\Triggers\ManualTriggerSchema::class);
 
-		$builder->addDefinition($this->prefix('schemas.triggerControl'), new DI\Definitions\ServiceDefinition())
+		$builder->addDefinition($this->prefix('schemas.trigger.control'), new DI\Definitions\ServiceDefinition())
 			->setType(Schemas\Triggers\Controls\ControlSchema::class);
+
+		$builder->addDefinition($this->prefix('schemas.actions.deviceProperty'), new DI\Definitions\ServiceDefinition())
+			->setType(Schemas\Actions\DevicePropertyActionSchema::class);
 
 		$builder->addDefinition($this->prefix('schemas.actions.channelProperty'), new DI\Definitions\ServiceDefinition())
 			->setType(Schemas\Actions\ChannelPropertyActionSchema::class);
@@ -202,6 +205,9 @@ class TriggersModuleExtension extends DI\CompilerExtension implements Translatio
 		$builder->addDefinition($this->prefix('hydrators.triggers.manual'), new DI\Definitions\ServiceDefinition())
 			->setType(Hydrators\Triggers\ManualTriggerHydrator::class);
 
+		$builder->addDefinition($this->prefix('hydrators.actions.deviceProperty'), new DI\Definitions\ServiceDefinition())
+			->setType(Hydrators\Actions\DevicePropertyActionHydrator::class);
+
 		$builder->addDefinition($this->prefix('hydrators.actions.channelProperty'), new DI\Definitions\ServiceDefinition())
 			->setType(Hydrators\Actions\ChannelPropertyActionHydrator::class);
 
@@ -210,6 +216,9 @@ class TriggersModuleExtension extends DI\CompilerExtension implements Translatio
 
 		$builder->addDefinition($this->prefix('hydrators.conditions.deviceProperty'), new DI\Definitions\ServiceDefinition())
 			->setType(Hydrators\Conditions\DevicePropertyConditionHydrator::class);
+
+		$builder->addDefinition($this->prefix('hydrators.conditions.date'), new DI\Definitions\ServiceDefinition())
+			->setType(Hydrators\Conditions\DataConditionHydrator::class);
 
 		$builder->addDefinition($this->prefix('hydrators.conditions.time'), new DI\Definitions\ServiceDefinition())
 			->setType(Hydrators\Conditions\TimeConditionHydrator::class);

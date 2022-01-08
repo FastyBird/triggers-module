@@ -4,8 +4,9 @@ import * as exchangeEntitySchema
 import {
   ModuleOrigin,
   TriggerControlEntity as ExchangeEntity,
-  TriggersModule as RoutingKeys,
-  DataType,
+  TriggersModuleRoutes as RoutingKeys,
+  GlobalRoutes as GlobalRoutingKeys,
+  DataType, ControlAction,
 } from '@fastybird/modules-metadata'
 
 import {
@@ -160,9 +161,10 @@ const moduleActions: ActionTree<TriggerControlState, unknown> = {
 
     return new Promise((resolve, reject) => {
       TriggerControl.wamp().call<{ data: string }>({
-        routing_key: RoutingKeys.TRIGGERS_CONTROL_DATA,
+        routing_key: GlobalRoutingKeys.TRIGGERS_CONTROL_DATA,
         origin: TriggerControl.$triggersModuleOrigin,
         data: {
+          action: ControlAction.SET,
           trigger: trigger.id,
           control: payload.control.id,
           expected_value: payload.value,
@@ -188,6 +190,7 @@ const moduleActions: ActionTree<TriggerControlState, unknown> = {
 
     if (
       ![
+        RoutingKeys.TRIGGERS_CONTROL_ENTITY_REPORTED,
         RoutingKeys.TRIGGERS_CONTROL_ENTITY_CREATED,
         RoutingKeys.TRIGGERS_CONTROL_ENTITY_UPDATED,
         RoutingKeys.TRIGGERS_CONTROL_ENTITY_DELETED,
@@ -234,7 +237,7 @@ const moduleActions: ActionTree<TriggerControlState, unknown> = {
         }
 
         commit('SET_SEMAPHORE', {
-          type: payload.routingKey === RoutingKeys.TRIGGERS_CONTROL_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING,
+          type: payload.routingKey === RoutingKeys.TRIGGERS_CONTROL_ENTITY_REPORTED ? SemaphoreTypes.GETTING : (payload.routingKey === RoutingKeys.TRIGGERS_CONTROL_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING),
           id: body.id,
         })
 

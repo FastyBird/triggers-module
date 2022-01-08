@@ -61,6 +61,9 @@ final class ActionsV1Controller extends BaseV1Controller
 	/** @var Models\Actions\IActionsManager */
 	private Models\Actions\IActionsManager $actionsManager;
 
+	/** @var Hydrators\Actions\DevicePropertyActionHydrator */
+	private Hydrators\Actions\DevicePropertyActionHydrator $devicePropertyActionHydrator;
+
 	/** @var Hydrators\Actions\ChannelPropertyActionHydrator */
 	private Hydrators\Actions\ChannelPropertyActionHydrator $channelPropertyActionHydrator;
 
@@ -68,12 +71,14 @@ final class ActionsV1Controller extends BaseV1Controller
 		Models\Triggers\ITriggerRepository $triggerRepository,
 		Models\Actions\IActionRepository $actionRepository,
 		Models\Actions\IActionsManager $actionsManager,
+		Hydrators\Actions\DevicePropertyActionHydrator $devicePropertyActionHydrator,
 		Hydrators\Actions\ChannelPropertyActionHydrator $channelPropertyActionHydrator
 	) {
 		$this->triggerRepository = $triggerRepository;
 		$this->actionRepository = $actionRepository;
 		$this->actionsManager = $actionsManager;
 
+		$this->devicePropertyActionHydrator = $devicePropertyActionHydrator;
 		$this->channelPropertyActionHydrator = $channelPropertyActionHydrator;
 	}
 
@@ -185,7 +190,10 @@ final class ActionsV1Controller extends BaseV1Controller
 			// Start transaction connection to the database
 			$this->getOrmConnection()->beginTransaction();
 
-			if ($document->getResource()->getType() === Schemas\Actions\ChannelPropertyActionSchema::SCHEMA_TYPE) {
+			if ($document->getResource()->getType() === Schemas\Actions\DevicePropertyActionSchema::SCHEMA_TYPE) {
+				$action = $this->actionsManager->create($this->devicePropertyActionHydrator->hydrate($document));
+
+			} elseif ($document->getResource()->getType() === Schemas\Actions\ChannelPropertyActionSchema::SCHEMA_TYPE) {
 				$action = $this->actionsManager->create($this->channelPropertyActionHydrator->hydrate($document));
 
 			} else {
@@ -329,6 +337,15 @@ final class ActionsV1Controller extends BaseV1Controller
 			$this->getOrmConnection()->beginTransaction();
 
 			if (
+				$document->getResource()->getType() === Schemas\Actions\DevicePropertyActionSchema::SCHEMA_TYPE
+				&& $action instanceof Entities\Actions\DevicePropertyAction
+			) {
+				$action = $this->actionsManager->update(
+					$action,
+					$this->devicePropertyActionHydrator->hydrate($document, $action)
+				);
+
+			} elseif (
 				$document->getResource()->getType() === Schemas\Actions\ChannelPropertyActionSchema::SCHEMA_TYPE
 				&& $action instanceof Entities\Actions\ChannelPropertyAction
 			) {

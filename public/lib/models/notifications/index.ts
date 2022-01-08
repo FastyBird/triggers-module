@@ -4,8 +4,8 @@ import * as exchangeEntitySchema
 import {
   ModuleOrigin,
   NotificationEntity as ExchangeEntity,
-  TriggerNotificationType,
-  TriggersModule as RoutingKeys,
+  NotificationType,
+  TriggersModuleRoutes as RoutingKeys,
 } from '@fastybird/modules-metadata'
 
 import {
@@ -422,6 +422,7 @@ const moduleActions: ActionTree<NotificationState, any> = {
 
     if (
       ![
+        RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_REPORTED,
         RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_CREATED,
         RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_UPDATED,
         RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_DELETED,
@@ -468,7 +469,7 @@ const moduleActions: ActionTree<NotificationState, any> = {
         }
 
         commit('SET_SEMAPHORE', {
-          type: payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING,
+          type: payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_REPORTED ? SemaphoreTypes.GETTING : (payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING),
           id: body.id,
         })
 
@@ -488,11 +489,11 @@ const moduleActions: ActionTree<NotificationState, any> = {
               }
             } else if (camelName === 'type') {
               switch (body[attrName]) {
-                case TriggerNotificationType.SMS:
+                case NotificationType.SMS:
                   entityData[camelName] = NotificationEntityTypes.SMS
                   break
 
-                case TriggerNotificationType.EMAIL:
+                case NotificationType.EMAIL:
                   entityData[camelName] = NotificationEntityTypes.EMAIL
                   break
 

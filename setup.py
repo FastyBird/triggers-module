@@ -63,9 +63,10 @@ setup(
         "fastybird-exchange-plugin",
         "fastybird-modules-metadata",
         "kink",
-        "pony",
-        "setuptools",
         "mysqlclient",
+        "setuptools",
+        "sqlalchemy",
+        "pymysql",
     ],
     download_url="https://github.com/FastyBird/triggers-module/archive/%s.tar.gz" % VERSION,
     classifiers=[

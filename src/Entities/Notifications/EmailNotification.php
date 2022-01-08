@@ -16,6 +16,7 @@
 namespace FastyBird\TriggersModule\Entities\Notifications;
 
 use Doctrine\ORM\Mapping as ORM;
+use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use Ramsey\Uuid;
@@ -39,7 +40,7 @@ class EmailNotification extends Notification implements IEmailNotification
 	 * @var string
 	 *
 	 * @IPubDoctrine\Crud(is={"required", "writable"})
-	 * @ORM\Column(type="string", name="notification_email", length=150, nullable=true)
+	 * @ORM\Column(type="string", name="notification_email", nullable=true)
 	 */
 	private string $email;
 
@@ -58,6 +59,14 @@ class EmailNotification extends Notification implements IEmailNotification
 		parent::__construct($trigger, $id);
 
 		$this->email = $email;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getType(): ModulesMetadataTypes\TriggerNotificationTypeType
+	{
+		return ModulesMetadataTypes\TriggerNotificationTypeType::get(ModulesMetadataTypes\TriggerNotificationTypeType::TYPE_EMAIL);
 	}
 
 	/**
@@ -82,7 +91,6 @@ class EmailNotification extends Notification implements IEmailNotification
 	public function toArray(): array
 	{
 		return array_merge(parent::toArray(), [
-			'type'  => 'email',
 			'email' => $this->getEmail(),
 		]);
 	}
