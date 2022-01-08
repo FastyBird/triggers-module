@@ -50,7 +50,8 @@ from triggers_module.entities.notification import (
 from triggers_module.entities.trigger import (
     AutomaticTriggerEntity,
     ManualTriggerEntity,
-    TriggerControlEntity, TriggerEntity,
+    TriggerControlEntity,
+    TriggerEntity,
 )
 from triggers_module.repositories.state import (
     IActionStateRepository,
