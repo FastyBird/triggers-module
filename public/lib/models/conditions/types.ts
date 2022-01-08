@@ -1,4 +1,4 @@
-import { TriggerConditionOperator } from '@fastybird/modules-metadata'
+import { ConditionOperator } from '@fastybird/modules-metadata'
 
 import {
   TJsonApiBody,
@@ -36,7 +36,7 @@ export interface ConditionInterface {
   enabled: boolean
 
   // Device & Channel property conditions specific
-  operator?: TriggerConditionOperator
+  operator?: ConditionOperator
   operand?: string
   device?: string
   channel?: string
@@ -72,7 +72,7 @@ interface ConditionAttributesResponseInterface {
   enabled: boolean
 
   // Device & Channel property conditions specific
-  operator?: TriggerConditionOperator
+  operator?: ConditionOperator
   operand?: string
   device?: string
   channel?: string
@@ -126,14 +126,14 @@ export interface ConditionCreateInterface {
 }
 
 export interface CreateDevicePropertyConditionInterface extends ConditionCreateInterface {
-  operator: TriggerConditionOperator
+  operator: ConditionOperator
   operand: string
   device: string
   property: string
 }
 
 export interface CreateChannelPropertyConditionInterface extends ConditionCreateInterface {
-  operator: TriggerConditionOperator
+  operator: ConditionOperator
   operand: string
   device: string
   channel: string
@@ -157,12 +157,12 @@ export interface ConditionUpdateInterface {
 }
 
 export interface UpdateDevicePropertyConditionInterface extends ConditionUpdateInterface {
-  operator?: TriggerConditionOperator
+  operator?: ConditionOperator
   operand?: string
 }
 
 export interface UpdateChannelPropertyConditionInterface extends ConditionUpdateInterface {
-  operator?: TriggerConditionOperator
+  operator?: ConditionOperator
   operand?: string
 }
 
