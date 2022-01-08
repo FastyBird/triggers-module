@@ -3,7 +3,7 @@ import {
   Item,
   Model,
 } from '@vuex-orm/core'
-import { TriggerConditionOperator } from '@fastybird/modules-metadata'
+import { ConditionOperator } from '@fastybird/modules-metadata'
 
 import Trigger from '@/lib/models/triggers/Trigger'
 import { TriggerInterface } from '@/lib/models/triggers/types'
@@ -68,7 +68,7 @@ export default class Condition extends Model implements ConditionInterface {
 
   enabled!: boolean
 
-  operator!: TriggerConditionOperator
+  operator!: ConditionOperator
   operand!: string
   device!: string
   channel!: string
