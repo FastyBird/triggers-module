@@ -1,16 +1,16 @@
 <?php declare(strict_types = 1);
 
 /**
- * ITriggerItem.php
+ * IAction.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  * @package        FastyBird:TriggersModule!
  * @subpackage     States
- * @since          0.3.0
+ * @since          0.6.0
  *
- * @date           13.09.20
+ * @date           09.01.22
  */
 
 namespace FastyBird\TriggersModule\States;
@@ -18,14 +18,14 @@ namespace FastyBird\TriggersModule\States;
 use Ramsey\Uuid;
 
 /**
- * Property interface
+ * Action state interface
  *
  * @package        FastyBird:TriggersModule!
  * @subpackage     States
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-interface ITriggerItem
+interface IAction
 {
 
 	/**
@@ -38,16 +38,11 @@ interface ITriggerItem
 	 *
 	 * @return void
 	 */
-	public function setValidationResult(bool $result): void;
+	public function setTriggered(bool $result): void;
 
 	/**
 	 * @return bool
 	 */
-	public function getValidationResult(): bool;
-
-	/**
-	 * @return mixed[]
-	 */
-	public function toArray(): array;
+	public function isTriggered(): bool;
 
 }

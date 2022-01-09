@@ -46,15 +46,15 @@ abstract class ActionSchema extends JsonApiSchemas\JsonApiSchema
 	/** @var Routing\IRouter */
 	protected Routing\IRouter $router;
 
-	/** @var Models\States\ITriggerItemRepository|null */
-	private ?Models\States\ITriggerItemRepository $triggerItemRepository;
+	/** @var Models\States\IActionRepository|null */
+	private ?Models\States\IActionRepository $stateRepository;
 
 	public function __construct(
 		Routing\IRouter $router,
-		?Models\States\ITriggerItemRepository $triggerItemRepository
+		?Models\States\IActionRepository $stateRepository
 	) {
 		$this->router = $router;
-		$this->triggerItemRepository = $triggerItemRepository;
+		$this->stateRepository = $stateRepository;
 	}
 
 	/**
@@ -69,11 +69,11 @@ abstract class ActionSchema extends JsonApiSchemas\JsonApiSchema
 	 */
 	public function getAttributes($action, JsonApi\Contracts\Schema\ContextInterface $context): iterable
 	{
-		$state = $this->triggerItemRepository === null ? null : $this->triggerItemRepository->findOne($action->getId());
+		$state = $this->stateRepository === null ? null : $this->stateRepository->findOne($action);
 
 		return [
 			'enabled'      => $action->isEnabled(),
-			'is_triggered' => $state !== null && $state->getValidationResult(),
+			'is_triggered' => $state !== null && $state->isTriggered(),
 		];
 	}
 

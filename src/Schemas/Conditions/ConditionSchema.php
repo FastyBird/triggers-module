@@ -46,15 +46,15 @@ abstract class ConditionSchema extends JsonApiSchemas\JsonApiSchema
 	/** @var Routing\IRouter */
 	protected Routing\IRouter $router;
 
-	/** @var Models\States\ITriggerItemRepository|null */
-	private ?Models\States\ITriggerItemRepository $triggerItemRepository;
+	/** @var Models\States\IConditionRepository|null */
+	private ?Models\States\IConditionRepository $stateRepository;
 
 	public function __construct(
 		Routing\IRouter $router,
-		?Models\States\ITriggerItemRepository $triggerItemRepository
+		?Models\States\IConditionRepository $stateRepository
 	) {
 		$this->router = $router;
-		$this->triggerItemRepository = $triggerItemRepository;
+		$this->stateRepository = $stateRepository;
 	}
 
 	/**
@@ -69,11 +69,11 @@ abstract class ConditionSchema extends JsonApiSchemas\JsonApiSchema
 	 */
 	public function getAttributes($condition, JsonApi\Contracts\Schema\ContextInterface $context): iterable
 	{
-		$state = $this->triggerItemRepository === null ? null : $this->triggerItemRepository->findOne($condition->getId());
+		$state = $this->stateRepository === null ? null : $this->stateRepository->findOne($condition);
 
 		return [
 			'enabled'      => $condition->isEnabled(),
-			'is_fulfilled' => $state !== null && $state->getValidationResult(),
+			'is_fulfilled' => $state !== null && $state->isFulfilled(),
 		];
 	}
 

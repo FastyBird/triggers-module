@@ -1,75 +1,64 @@
 <?php declare(strict_types = 1);
 
 /**
- * ITriggersItemsManager.php
+ * IActionsManager.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  * @package        FastyBird:TriggersModule!
  * @subpackage     Models
- * @since          0.3.0
+ * @since          0.6.0
  *
- * @date           13.09.20
+ * @date           09.01.22
  */
 
 namespace FastyBird\TriggersModule\Models\States;
 
+use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\States;
 use Nette\Utils;
-use Ramsey\Uuid;
 
 /**
- * Base trigger item manager interface
+ * Actions states manager interface
  *
  * @package        FastyBird:TriggersModule!
  * @subpackage     Models
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-interface ITriggersItemsManager
+interface IActionsManager
 {
 
 	/**
-	 * @param Uuid\UuidInterface $id
+	 * @param Entities\Actions\IAction $action
 	 * @param Utils\ArrayHash $values
 	 *
-	 * @return States\ITriggerItem
+	 * @return States\IAction
 	 */
 	public function create(
-		Uuid\UuidInterface $id,
+		Entities\Actions\IAction $action,
 		Utils\ArrayHash $values
-	): States\ITriggerItem;
+	): States\IAction;
 
 	/**
-	 * @param States\ITriggerItem $state
+	 * @param States\IAction $state
 	 * @param Utils\ArrayHash $values
 	 *
-	 * @return States\ITriggerItem
+	 * @return States\IAction
 	 */
 	public function update(
-		States\ITriggerItem $state,
+		States\IAction $state,
 		Utils\ArrayHash $values
-	): States\ITriggerItem;
+	): States\IAction;
 
 	/**
-	 * @param States\ITriggerItem $state
-	 * @param Utils\ArrayHash $values
-	 *
-	 * @return States\ITriggerItem
-	 */
-	public function updateState(
-		States\ITriggerItem $state,
-		Utils\ArrayHash $values
-	): States\ITriggerItem;
-
-	/**
-	 * @param States\ITriggerItem $state
+	 * @param States\IAction $state
 	 *
 	 * @return bool
 	 */
 	public function delete(
-		States\ITriggerItem $state
+		States\IAction $state
 	): bool;
 
 }

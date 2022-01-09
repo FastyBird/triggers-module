@@ -1,41 +1,41 @@
 <?php declare(strict_types = 1);
 
 /**
- * ITriggerItemRepository.php
+ * IActionRepository.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  * @package        FastyBird:TriggersModule!
  * @subpackage     Models
- * @since          0.3.0
+ * @since          0.6.0
  *
- * @date           13.09.20
+ * @date           09.01.22
  */
 
 namespace FastyBird\TriggersModule\Models\States;
 
+use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\States;
-use Ramsey\Uuid;
 
 /**
- * Trigger item repository interface
+ * Action state repository interface
  *
  * @package        FastyBird:TriggersModule!
  * @subpackage     Models
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-interface ITriggerItemRepository
+interface IActionRepository
 {
 
 	/**
-	 * @param Uuid\UuidInterface $id
+	 * @param Entities\Actions\IAction $action
 	 *
-	 * @return States\ITriggerItem|null
+	 * @return States\IAction|null
 	 */
 	public function findOne(
-		Uuid\UuidInterface $id
-	): ?States\ITriggerItem;
+		Entities\Actions\IAction $action
+	): ?States\IAction;
 
 }

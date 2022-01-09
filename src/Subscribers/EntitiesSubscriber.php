@@ -45,8 +45,11 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 
 	use Nette\SmartObject;
 
-	/** @var Models\States\ITriggerItemRepository|null */
-	private ?Models\States\ITriggerItemRepository $triggerItemRepository;
+	/** @var Models\States\IActionRepository|null */
+	private ?Models\States\IActionRepository $actionStateRepository;
+
+	/** @var Models\States\IConditionRepository|null */
+	private ?Models\States\IConditionRepository $conditionStateRepository;
 
 	/** @var ExchangePluginPublisher\IPublisher */
 	private ExchangePluginPublisher\IPublisher $publisher;
@@ -57,9 +60,11 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 	public function __construct(
 		ExchangePluginPublisher\IPublisher $publisher,
 		ORM\EntityManagerInterface $entityManager,
-		?Models\States\ITriggerItemRepository $triggerItemRepository = null
+		?Models\States\IActionRepository $actionStateRepository = null,
+		?Models\States\IConditionRepository $conditionStateRepository = null
 	) {
-		$this->triggerItemRepository = $triggerItemRepository;
+		$this->actionStateRepository = $actionStateRepository;
+		$this->conditionStateRepository = $conditionStateRepository;
 		$this->publisher = $publisher;
 		$this->entityManager = $entityManager;
 	}
@@ -229,35 +234,39 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 		}
 
 		if ($publishRoutingKey !== null) {
-			if ($entity instanceof Entities\Actions\IAction && $this->triggerItemRepository !== null) {
-				$state = $this->triggerItemRepository->findOne($entity->getId());
+			if ($entity instanceof Entities\Actions\IAction && $this->actionStateRepository !== null) {
+				$state = $this->actionStateRepository->findOne($entity);
 
 				$this->publisher->publish(
 					ModulesMetadataTypes\ModuleOriginType::get(ModulesMetadataTypes\ModuleOriginType::ORIGIN_MODULE_TRIGGERS),
 					$publishRoutingKey,
 					Utils\ArrayHash::from(array_merge($state !== null ? [
-						'is_triggered' => $state->getValidationResult(),
+						'is_triggered' => $state->isTriggered(),
 					] : [], $entity->toArray()))
 				);
 
-			} elseif ($entity instanceof Entities\Conditions\ICondition && $this->triggerItemRepository !== null) {
-				$state = $this->triggerItemRepository->findOne($entity->getId());
+			} elseif ($entity instanceof Entities\Conditions\ICondition && $this->conditionStateRepository !== null) {
+				$state = $this->conditionStateRepository->findOne($entity);
 
 				$this->publisher->publish(
 					ModulesMetadataTypes\ModuleOriginType::get(ModulesMetadataTypes\ModuleOriginType::ORIGIN_MODULE_TRIGGERS),
 					$publishRoutingKey,
 					Utils\ArrayHash::from(array_merge($state !== null ? [
-						'is_fulfilled' => $state->getValidationResult(),
+						'is_fulfilled' => $state->isFulfilled(),
 					] : [], $entity->toArray()))
 				);
 
-			} elseif ($entity instanceof Entities\Triggers\ITrigger && $this->triggerItemRepository !== null) {
+			} elseif (
+				$entity instanceof Entities\Triggers\ITrigger
+				&& $this->actionStateRepository !== null
+				&& $this->conditionStateRepository !== null
+			) {
 				$isTriggered = true;
 
 				foreach ($entity->getActions() as $action) {
-					$state = $this->triggerItemRepository->findOne($action->getId());
+					$state = $this->actionStateRepository->findOne($action);
 
-					if ($state === null || $state->getValidationResult() === false) {
+					if ($state === null || $state->isTriggered() === false) {
 						$isTriggered = false;
 					}
 				}
@@ -266,9 +275,9 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 					$isFulfilled = true;
 
 					foreach ($entity->getConditions() as $condition) {
-						$state = $this->triggerItemRepository->findOne($condition->getId());
+						$state = $this->conditionStateRepository->findOne($condition);
 
-						if ($state === null || $state->getValidationResult() === false) {
+						if ($state === null || $state->isFulfilled() === false) {
 							$isFulfilled = false;
 						}
 					}
