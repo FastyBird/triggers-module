@@ -119,75 +119,53 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 	}
 
 	/**
-	 * @param ORM\Event\LifecycleEventArgs $eventArgs
+	 * @param object $entity
 	 *
-	 * @return void
+	 * @return bool
 	 */
-	public function prePersist(ORM\Event\LifecycleEventArgs $eventArgs): void
+	private function validateNamespace(object $entity): bool
 	{
-		$entity = $eventArgs->getObject();
+		try {
+			$rc = new ReflectionClass($entity);
 
-		// Check for valid entity
-		if (!$entity instanceof Entities\IEntity || !$this->validateNamespace($entity)) {
-			return;
+		} catch (ReflectionException $ex) {
+			return false;
 		}
 
-		if ($entity instanceof Entities\Triggers\IManualTrigger) {
-			new Entities\Triggers\Controls\Control(
-				MetadataTypes\ControlNameType::NAME_TRIGGER,
-				$entity,
-			);
-		}
+		return str_starts_with($rc->getNamespaceName(), 'FastyBird\TriggersModule');
 	}
 
 	/**
-	 * @param ORM\Event\LifecycleEventArgs $eventArgs
+	 * @param Entities\IEntity $entity
+	 * @param mixed[] $identifier
 	 *
-	 * @return void
+	 * @return string
 	 */
-	public function postPersist(ORM\Event\LifecycleEventArgs $eventArgs): void
+	private function getHash(Entities\IEntity $entity, array $identifier): string
 	{
-		// onFlush was executed before, everything already initialized
-		$entity = $eventArgs->getObject();
-
-		// Check for valid entity
-		if (!$entity instanceof Entities\IEntity || !$this->validateNamespace($entity)) {
-			return;
-		}
-
-		$this->publishEntity($entity, self::ACTION_CREATED);
+		return implode(
+			' ',
+			array_merge(
+				[$this->getRealClass(get_class($entity))],
+				$identifier
+			)
+		);
 	}
 
 	/**
-	 * @param ORM\Event\LifecycleEventArgs $eventArgs
+	 * @param string $class
 	 *
-	 * @return void
+	 * @return string
 	 */
-	public function postUpdate(ORM\Event\LifecycleEventArgs $eventArgs): void
+	private function getRealClass(string $class): string
 	{
-		$uow = $this->entityManager->getUnitOfWork();
+		$pos = strrpos($class, '\\' . Persistence\Proxy::MARKER . '\\');
 
-		// onFlush was executed before, everything already initialized
-		$entity = $eventArgs->getObject();
-
-		// Get changes => should be already computed here (is a listener)
-		$changeset = $uow->getEntityChangeSet($entity);
-
-		// If we have no changes left => don't create revision log
-		if (count($changeset) === 0) {
-			return;
+		if ($pos === false) {
+			return $class;
 		}
 
-		// Check for valid entity
-		if (
-			!$entity instanceof Entities\IEntity
-			|| !$this->validateNamespace($entity)
-			|| $uow->isScheduledForDelete($entity)
-		) {
-			return;
-		}
-
-		$this->publishEntity($entity, self::ACTION_UPDATED);
+		return substr($class, $pos + Persistence\Proxy::MARKER_LENGTH + 2);
 	}
 
 	/**
@@ -336,53 +314,75 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 	}
 
 	/**
-	 * @param Entities\IEntity $entity
-	 * @param mixed[] $identifier
+	 * @param ORM\Event\LifecycleEventArgs $eventArgs
 	 *
-	 * @return string
+	 * @return void
 	 */
-	private function getHash(Entities\IEntity $entity, array $identifier): string
+	public function prePersist(ORM\Event\LifecycleEventArgs $eventArgs): void
 	{
-		return implode(
-			' ',
-			array_merge(
-				[$this->getRealClass(get_class($entity))],
-				$identifier
-			)
-		);
+		$entity = $eventArgs->getObject();
+
+		// Check for valid entity
+		if (!$entity instanceof Entities\IEntity || !$this->validateNamespace($entity)) {
+			return;
+		}
+
+		if ($entity instanceof Entities\Triggers\IManualTrigger) {
+			new Entities\Triggers\Controls\Control(
+				MetadataTypes\ControlNameType::NAME_TRIGGER,
+				$entity,
+			);
+		}
 	}
 
 	/**
-	 * @param string $class
+	 * @param ORM\Event\LifecycleEventArgs $eventArgs
 	 *
-	 * @return string
+	 * @return void
 	 */
-	private function getRealClass(string $class): string
+	public function postPersist(ORM\Event\LifecycleEventArgs $eventArgs): void
 	{
-		$pos = strrpos($class, '\\' . Persistence\Proxy::MARKER . '\\');
+		// onFlush was executed before, everything already initialized
+		$entity = $eventArgs->getObject();
 
-		if ($pos === false) {
-			return $class;
+		// Check for valid entity
+		if (!$entity instanceof Entities\IEntity || !$this->validateNamespace($entity)) {
+			return;
 		}
 
-		return substr($class, $pos + Persistence\Proxy::MARKER_LENGTH + 2);
+		$this->publishEntity($entity, self::ACTION_CREATED);
 	}
 
 	/**
-	 * @param object $entity
+	 * @param ORM\Event\LifecycleEventArgs $eventArgs
 	 *
-	 * @return bool
+	 * @return void
 	 */
-	private function validateNamespace(object $entity): bool
+	public function postUpdate(ORM\Event\LifecycleEventArgs $eventArgs): void
 	{
-		try {
-			$rc = new ReflectionClass($entity);
+		$uow = $this->entityManager->getUnitOfWork();
 
-		} catch (ReflectionException $ex) {
-			return false;
+		// onFlush was executed before, everything already initialized
+		$entity = $eventArgs->getObject();
+
+		// Get changes => should be already computed here (is a listener)
+		$changeset = $uow->getEntityChangeSet($entity);
+
+		// If we have no changes left => don't create revision log
+		if (count($changeset) === 0) {
+			return;
 		}
 
-		return str_starts_with($rc->getNamespaceName(), 'FastyBird\TriggersModule');
+		// Check for valid entity
+		if (
+			!$entity instanceof Entities\IEntity
+			|| !$this->validateNamespace($entity)
+			|| $uow->isScheduledForDelete($entity)
+		) {
+			return;
+		}
+
+		$this->publishEntity($entity, self::ACTION_UPDATED);
 	}
 
 }

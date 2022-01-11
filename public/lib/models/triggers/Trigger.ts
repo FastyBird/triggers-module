@@ -29,63 +29,24 @@ import { TriggerControlInterface } from '@/lib/models/trigger-controls/types'
 // ENTITY MODEL
 // ============
 export default class Trigger extends Model implements TriggerInterface {
-  static get entity(): string {
-    return 'triggers_trigger'
-  }
-
-  static fields(): Fields {
-    return {
-      id: this.string(''),
-      type: this.string(''),
-
-      draft: this.boolean(false),
-
-      name: this.string(''),
-      comment: this.string(null).nullable(),
-      enabled: this.boolean(true),
-
-      owner: this.string(null).nullable(),
-
-      isTriggered: this.attr(null),
-      isFulfilled: this.attr(null),
-
-      // Relations
-      relationshipNames: this.attr([]),
-
-      actions: this.hasMany(Action, 'triggerId'),
-      conditions: this.hasMany(Condition, 'triggerId'),
-      notifications: this.hasMany(Notification, 'triggerId'),
-      controls: this.hasMany(TriggerControl, 'triggerId'),
-
-      // Channel property trigger
-      device: this.string(null).nullable(),
-      channel: this.string(null).nullable(),
-      property: this.string(null).nullable(),
-      operator: this.string(null).nullable(),
-      operand: this.string(null).nullable(),
-    }
-  }
-
   id!: string
   type!: TriggerEntityTypes
-
   draft!: boolean
-
   name!: string
   comment!: string | null
   enabled!: boolean
-
   owner!: string | null
-
   isTriggered!: boolean | null
   isFulfilled!: boolean | null
-
   relationshipNames!: string[]
-
   actions!: ActionInterface[]
   conditions!: ConditionInterface[]
   notifications!: NotificationInterface[]
   controls!: TriggerControlInterface[]
+
+  static get entity(): string {
+    return 'triggers_trigger'
+  }
 
   get isEnabled(): boolean {
     return this.enabled
@@ -197,6 +158,39 @@ export default class Trigger extends Model implements TriggerInterface {
       .where('triggerId', this.id)
       .where('type', ConditionEntityTypes.TIME)
       .exists()
+  }
+
+  static fields(): Fields {
+    return {
+      id: this.string(''),
+      type: this.string(''),
+
+      draft: this.boolean(false),
+
+      name: this.string(''),
+      comment: this.string(null).nullable(),
+      enabled: this.boolean(true),
+
+      owner: this.string(null).nullable(),
+
+      isTriggered: this.attr(null),
+      isFulfilled: this.attr(null),
+
+      // Relations
+      relationshipNames: this.attr([]),
+
+      actions: this.hasMany(Action, 'triggerId'),
+      conditions: this.hasMany(Condition, 'triggerId'),
+      notifications: this.hasMany(Notification, 'triggerId'),
+      controls: this.hasMany(TriggerControl, 'triggerId'),
+
+      // Channel property trigger
+      device: this.string(null).nullable(),
+      channel: this.string(null).nullable(),
+      property: this.string(null).nullable(),
+      operator: this.string(null).nullable(),
+      operand: this.string(null).nullable(),
+    }
   }
 
   static async get(id: string): Promise<boolean> {

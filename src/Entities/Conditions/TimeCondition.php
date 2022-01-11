@@ -87,21 +87,13 @@ class TimeCondition extends Condition implements ITimeCondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getTime(): DateTimeInterface
+	public function validate(DateTimeInterface $date): bool
 	{
-		return $this->time;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function setTime(DateTimeInterface $time): void
-	{
-		if (method_exists($time, 'setTimezone')) {
-			$time->setTimezone(new DateTimeZone('UTC'));
+		if (in_array((int) $date->format('N'), (array) $this->getDays()) === false) {
+			return false;
 		}
 
-		$this->time = $time;
+		return $date->format('h:i:s') === $this->getTime()->format('h:i:s');
 	}
 
 	/**
@@ -139,13 +131,21 @@ class TimeCondition extends Condition implements ITimeCondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function validate(DateTimeInterface $date): bool
+	public function getTime(): DateTimeInterface
 	{
-		if (in_array((int) $date->format('N'), (array) $this->getDays()) === false) {
-			return false;
+		return $this->time;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setTime(DateTimeInterface $time): void
+	{
+		if (method_exists($time, 'setTimezone')) {
+			$time->setTimezone(new DateTimeZone('UTC'));
 		}
 
-		return $date->format('h:i:s') === $this->getTime()->format('h:i:s');
+		$this->time = $time;
 	}
 
 	/**

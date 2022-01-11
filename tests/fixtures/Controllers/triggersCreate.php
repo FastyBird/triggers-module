@@ -10,7 +10,7 @@ const VALID_TOKEN_USER = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJjb20uZ
 return [
 	// Valid responses
 	//////////////////
-	'createManual'          => [
+	'createManual'    => [
 		'/v1/triggers',
 		'Bearer ' . VALID_TOKEN,
 		file_get_contents(__DIR__ . '/requests/triggers.createManual.json'),
@@ -20,49 +20,49 @@ return [
 
 	// Invalid responses
 	////////////////////
-	'notAllowed'            => [
+	'notAllowed'      => [
 		'/v1/triggers',
 		'Bearer ' . VALID_TOKEN_USER,
 		file_get_contents(__DIR__ . '/requests/triggers.createManual.json'),
 		StatusCodeInterface::STATUS_FORBIDDEN,
 		__DIR__ . '/responses/generic/forbidden.json',
 	],
-	'missingRequired'       => [
+	'missingRequired' => [
 		'/v1/triggers',
 		'Bearer ' . VALID_TOKEN,
 		file_get_contents(__DIR__ . '/requests/triggers.create.missing.required.json'),
 		StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
 		__DIR__ . '/responses/triggers.create.missing.required.json',
 	],
-	'invalidType'           => [
+	'invalidType'     => [
 		'/v1/triggers',
 		'Bearer ' . VALID_TOKEN,
 		file_get_contents(__DIR__ . '/requests/triggers.create.invalidType.json'),
 		StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
 		__DIR__ . '/responses/generic/invalid.type.json',
 	],
-	'missingToken'          => [
+	'missingToken'    => [
 		'/v1/triggers',
 		null,
 		file_get_contents(__DIR__ . '/requests/triggers.createManual.json'),
 		StatusCodeInterface::STATUS_FORBIDDEN,
 		__DIR__ . '/responses/generic/forbidden.json',
 	],
-	'emptyToken'            => [
+	'emptyToken'      => [
 		'/v1/triggers',
 		'',
 		file_get_contents(__DIR__ . '/requests/triggers.createManual.json'),
 		StatusCodeInterface::STATUS_FORBIDDEN,
 		__DIR__ . '/responses/generic/forbidden.json',
 	],
-	'invalidToken'          => [
+	'invalidToken'    => [
 		'/v1/triggers',
 		'Bearer ' . INVALID_TOKEN,
 		file_get_contents(__DIR__ . '/requests/triggers.createManual.json'),
 		StatusCodeInterface::STATUS_UNAUTHORIZED,
 		__DIR__ . '/responses/generic/unauthorized.json',
 	],
-	'expiredToken'          => [
+	'expiredToken'    => [
 		'/v1/triggers',
 		'Bearer ' . EXPIRED_TOKEN,
 		file_get_contents(__DIR__ . '/requests/triggers.createManual.json'),

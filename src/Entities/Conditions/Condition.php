@@ -94,15 +94,23 @@ abstract class Condition implements ICondition
 	/**
 	 * {@inheritDoc}
 	 */
-	abstract public function getType(): MetadataTypes\TriggerConditionTypeType;
+	public function toArray(): array
+	{
+		return [
+			'id'      => $this->getPlainId(),
+			'type'    => $this->getType()->getValue(),
+			'enabled' => $this->isEnabled(),
+
+			'trigger' => $this->getTrigger()->getPlainId(),
+
+			'owner' => $this->getTrigger()->getOwnerId(),
+		];
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getTrigger(): Entities\Triggers\IAutomaticTrigger
-	{
-		return $this->trigger;
-	}
+	abstract public function getType(): MetadataTypes\TriggerConditionTypeType;
 
 	/**
 	 * {@inheritDoc}
@@ -123,17 +131,9 @@ abstract class Condition implements ICondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function toArray(): array
+	public function getTrigger(): Entities\Triggers\IAutomaticTrigger
 	{
-		return [
-			'id'      => $this->getPlainId(),
-			'type'    => $this->getType()->getValue(),
-			'enabled' => $this->isEnabled(),
-
-			'trigger' => $this->getTrigger()->getPlainId(),
-
-			'owner'   => $this->getTrigger()->getOwnerId(),
-		];
+		return $this->trigger;
 	}
 
 }

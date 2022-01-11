@@ -203,7 +203,10 @@ const moduleActions: ActionTree<ConditionState, any> = {
     }
   },
 
-  async edit({ state, commit }, payload: { condition: ConditionInterface, data: UpdateDevicePropertyConditionInterface | UpdateChannelPropertyConditionInterface | UpdateDateConditionInterface | UpdateTimeConditionInterface }): Promise<Item<Condition>> {
+  async edit({
+               state,
+               commit,
+             }, payload: { condition: ConditionInterface, data: UpdateDevicePropertyConditionInterface | UpdateChannelPropertyConditionInterface | UpdateDateConditionInterface | UpdateTimeConditionInterface }): Promise<Item<Condition>> {
     if (state.semaphore.updating.includes(payload.condition.id)) {
       throw new Error('triggers-module.conditions.update.inProgress')
     }

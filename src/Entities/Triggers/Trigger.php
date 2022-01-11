@@ -131,59 +131,6 @@ abstract class Trigger implements ITrigger
 	/**
 	 * {@inheritDoc}
 	 */
-	abstract public function getType(): MetadataTypes\TriggerTypeType;
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getName(): string
-	{
-		return $this->name;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function setName(string $name): void
-	{
-		$this->name = $name;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function getComment(): ?string
-	{
-		return $this->comment;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function setComment(?string $comment = null): void
-	{
-		$this->comment = $comment;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function isEnabled(): bool
-	{
-		return $this->enabled;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function setEnabled(bool $enabled): void
-	{
-		$this->enabled = $enabled;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getActions(): array
 	{
 		return $this->actions->toArray();
@@ -369,6 +316,14 @@ abstract class Trigger implements ITrigger
 	/**
 	 * {@inheritDoc}
 	 */
+	public function hasControl(string $name): bool
+	{
+		return $this->findControl($name) !== null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function findControl(string $name): ?Entities\Triggers\Controls\IControl
 	{
 		$found = $this->controls
@@ -377,14 +332,6 @@ abstract class Trigger implements ITrigger
 			});
 
 		return $found->isEmpty() ? null : $found->first();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function hasControl(string $name): bool
-	{
-		return $this->findControl($name) !== null;
 	}
 
 	/**
@@ -399,8 +346,61 @@ abstract class Trigger implements ITrigger
 			'comment' => $this->getComment(),
 			'enabled' => $this->isEnabled(),
 
-			'owner'   => $this->getOwnerId(),
+			'owner' => $this->getOwnerId(),
 		];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	abstract public function getType(): MetadataTypes\TriggerTypeType;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getName(): string
+	{
+		return $this->name;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setName(string $name): void
+	{
+		$this->name = $name;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getComment(): ?string
+	{
+		return $this->comment;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setComment(?string $comment = null): void
+	{
+		$this->comment = $comment;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function isEnabled(): bool
+	{
+		return $this->enabled;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setEnabled(bool $enabled): void
+	{
+		$this->enabled = $enabled;
 	}
 
 }

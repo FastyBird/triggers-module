@@ -89,6 +89,17 @@ class ChannelPropertyAction extends PropertyAction implements IChannelPropertyAc
 	/**
 	 * {@inheritDoc}
 	 */
+	public function toArray(): array
+	{
+		return array_merge(parent::toArray(), [
+			'channel'  => $this->getChannel()->toString(),
+			'property' => $this->getProperty()->toString(),
+		]);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getChannel(): Uuid\UuidInterface
 	{
 		return $this->channel;
@@ -100,17 +111,6 @@ class ChannelPropertyAction extends PropertyAction implements IChannelPropertyAc
 	public function getProperty(): Uuid\UuidInterface
 	{
 		return $this->property;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function toArray(): array
-	{
-		return array_merge(parent::toArray(), [
-			'channel'  => $this->getChannel()->toString(),
-			'property' => $this->getProperty()->toString(),
-		]);
 	}
 
 }

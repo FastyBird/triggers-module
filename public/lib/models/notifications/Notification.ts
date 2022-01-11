@@ -18,8 +18,27 @@ import {
 // ENTITY MODEL
 // ============
 export default class Notification extends Model implements NotificationInterface {
+  id!: string
+  type!: NotificationEntityTypes
+  draft!: boolean
+  enabled!: boolean
+  email!: string
+  phone!: string
+  relationshipNames!: string[]
+  trigger!: TriggerInterface | null
+  triggerBackward!: TriggerInterface | null
+  triggerId!: string
+
   static get entity(): string {
     return 'triggers_notification'
+  }
+
+  get isSms(): boolean {
+    return this.type === NotificationEntityTypes.SMS
+  }
+
+  get isEmail(): boolean {
+    return this.type === NotificationEntityTypes.EMAIL
   }
 
   static fields(): Fields {
@@ -44,32 +63,6 @@ export default class Notification extends Model implements NotificationInterface
 
       triggerId: this.string(''),
     }
-  }
-
-  id!: string
-  type!: NotificationEntityTypes
-
-  draft!: boolean
-
-  enabled!: boolean
-
-  email!: string
-
-  phone!: string
-
-  relationshipNames!: string[]
-
-  trigger!: TriggerInterface | null
-  triggerBackward!: TriggerInterface | null
-
-  triggerId!: string
-
-  get isSms(): boolean {
-    return this.type === NotificationEntityTypes.SMS
-  }
-
-  get isEmail(): boolean {
-    return this.type === NotificationEntityTypes.EMAIL
   }
 
   static async get(trigger: TriggerInterface, id: string): Promise<boolean> {

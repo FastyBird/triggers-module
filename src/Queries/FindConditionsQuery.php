@@ -62,7 +62,8 @@ class FindConditionsQuery extends DoctrineOrmQuery\QueryObject
 	public function forTrigger(Entities\Triggers\ITrigger $trigger): void
 	{
 		$this->filter[] = function (ORM\QueryBuilder $qb) use ($trigger): void {
-			$qb->andWhere('trigger.id = :trigger')->setParameter('trigger', $trigger->getId(), Uuid\Doctrine\UuidBinaryType::NAME);
+			$qb->andWhere('trigger.id = :trigger')
+				->setParameter('trigger', $trigger->getId(), Uuid\Doctrine\UuidBinaryType::NAME);
 		};
 	}
 
@@ -86,7 +87,8 @@ class FindConditionsQuery extends DoctrineOrmQuery\QueryObject
 	public function forChannel(Uuid\UuidInterface $channel): void
 	{
 		$this->filter[] = function (ORM\QueryBuilder $qb) use ($channel): void {
-			$qb->andWhere('cdc.channel = :channel')->setParameter('channel', $channel, Uuid\Doctrine\UuidBinaryType::NAME);
+			$qb->andWhere('cdc.channel = :channel')
+				->setParameter('channel', $channel, Uuid\Doctrine\UuidBinaryType::NAME);
 		};
 	}
 
@@ -98,7 +100,8 @@ class FindConditionsQuery extends DoctrineOrmQuery\QueryObject
 	public function forProperty(Uuid\UuidInterface $property): void
 	{
 		$this->filter[] = function (ORM\QueryBuilder $qb) use ($property): void {
-			$qb->andWhere('cdc.property = :property')->setParameter('property', $property, Uuid\Doctrine\UuidBinaryType::NAME);
+			$qb->andWhere('cdc.property = :property')
+				->setParameter('property', $property, Uuid\Doctrine\UuidBinaryType::NAME);
 		};
 	}
 

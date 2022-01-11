@@ -128,6 +128,43 @@ final class ConditionsV1Controller extends BaseV1Controller
 	}
 
 	/**
+	 * @param string $id
+	 * @param Entities\Triggers\ITrigger $trigger
+	 *
+	 * @return Entities\Conditions\ICondition
+	 *
+	 * @throws JsonApiExceptions\IJsonApiException
+	 */
+	protected function findCondition(
+		string $id,
+		Entities\Triggers\ITrigger $trigger
+	): Entities\Conditions\ICondition {
+		try {
+			$findQuery = new Queries\FindConditionsQuery();
+			$findQuery->byId(Uuid\Uuid::fromString($id));
+			$findQuery->forTrigger($trigger);
+
+			$condition = $this->conditionRepository->findOneBy($findQuery);
+
+			if ($condition === null) {
+				throw new JsonApiExceptions\JsonApiErrorException(
+					StatusCodeInterface::STATUS_NOT_FOUND,
+					$this->translator->translate('//triggers-module.base.messages.notFound.heading'),
+					$this->translator->translate('//triggers-module.base.messages.notFound.message')
+				);
+			}
+		} catch (Uuid\Exception\InvalidUuidStringException $ex) {
+			throw new JsonApiExceptions\JsonApiErrorException(
+				StatusCodeInterface::STATUS_NOT_FOUND,
+				$this->translator->translate('//triggers-module.base.messages.notFound.heading'),
+				$this->translator->translate('//triggers-module.base.messages.notFound.message')
+			);
+		}
+
+		return $condition;
+	}
+
+	/**
 	 * @param Message\ServerRequestInterface $request
 	 * @param Message\ResponseInterface $response
 	 *
@@ -451,43 +488,6 @@ final class ConditionsV1Controller extends BaseV1Controller
 		}
 
 		return parent::readRelationship($request, $response);
-	}
-
-	/**
-	 * @param string $id
-	 * @param Entities\Triggers\ITrigger $trigger
-	 *
-	 * @return Entities\Conditions\ICondition
-	 *
-	 * @throws JsonApiExceptions\IJsonApiException
-	 */
-	protected function findCondition(
-		string $id,
-		Entities\Triggers\ITrigger $trigger
-	): Entities\Conditions\ICondition {
-		try {
-			$findQuery = new Queries\FindConditionsQuery();
-			$findQuery->byId(Uuid\Uuid::fromString($id));
-			$findQuery->forTrigger($trigger);
-
-			$condition = $this->conditionRepository->findOneBy($findQuery);
-
-			if ($condition === null) {
-				throw new JsonApiExceptions\JsonApiErrorException(
-					StatusCodeInterface::STATUS_NOT_FOUND,
-					$this->translator->translate('//triggers-module.base.messages.notFound.heading'),
-					$this->translator->translate('//triggers-module.base.messages.notFound.message')
-				);
-			}
-		} catch (Uuid\Exception\InvalidUuidStringException $ex) {
-			throw new JsonApiExceptions\JsonApiErrorException(
-				StatusCodeInterface::STATUS_NOT_FOUND,
-				$this->translator->translate('//triggers-module.base.messages.notFound.heading'),
-				$this->translator->translate('//triggers-module.base.messages.notFound.message')
-			);
-		}
-
-		return $condition;
 	}
 
 }

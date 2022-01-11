@@ -77,19 +77,19 @@ class DevicePropertyAction extends PropertyAction implements IDevicePropertyActi
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getProperty(): Uuid\UuidInterface
-	{
-		return $this->property;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function toArray(): array
 	{
 		return array_merge(parent::toArray(), [
 			'property' => $this->getProperty()->toString(),
 		]);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getProperty(): Uuid\UuidInterface
+	{
+		return $this->property;
 	}
 
 }

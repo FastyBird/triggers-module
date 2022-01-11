@@ -91,9 +91,13 @@ class Control implements IControl
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getTrigger(): Entities\Triggers\ITrigger
+	public function toArray(): array
 	{
-		return $this->trigger;
+		return [
+			'id'      => $this->getPlainId(),
+			'name'    => $this->getName(),
+			'trigger' => $this->getTrigger()->getPlainId(),
+		];
 	}
 
 	/**
@@ -107,13 +111,9 @@ class Control implements IControl
 	/**
 	 * {@inheritDoc}
 	 */
-	public function toArray(): array
+	public function getTrigger(): Entities\Triggers\ITrigger
 	{
-		return [
-			'id'      => $this->getPlainId(),
-			'name'    => $this->getName(),
-			'trigger' => $this->getTrigger()->getPlainId(),
-		];
+		return $this->trigger;
 	}
 
 }

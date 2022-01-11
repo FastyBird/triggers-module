@@ -59,7 +59,7 @@ export class JsonApiModelPropertiesMapper extends ModelPropertiesMapper implemen
             Object.keys(model[attrName]).forEach((subAttrName) => {
               const snakeSubName = subAttrName.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)
 
-              Object.assign(jsonAttributes, {[snakeSubName]: model[attrName][subAttrName]})
+              Object.assign(jsonAttributes, { [snakeSubName]: model[attrName][subAttrName] })
             })
           }
 

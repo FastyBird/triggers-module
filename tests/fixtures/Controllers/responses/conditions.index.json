@@ -1,23 +1,23 @@
 {
-  "meta": {
-    "author": "FastyBird team",
-    "copyright": "FastyBird s.r.o"
+  "meta" : {
+    "author" : "FastyBird team",
+    "copyright" : "FastyBird s.r.o"
   },
-  "jsonapi": {
-    "version": "1.1"
+  "jsonapi" : {
+    "version" : "1.1"
   },
-  "links": {
-    "self": "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/conditions"
+  "links" : {
+    "self" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/conditions"
   },
-  "data": [
+  "data" : [
     {
-      "type": "triggers-module/condition-time",
-      "id": "09c453b3-c55f-4050-8f1c-b50f8d5728c2",
-      "attributes": {
-        "enabled": true,
-        "is_fulfilled": false,
-        "time": "1970-01-01T07:30:00+01:00",
-        "days": [
+      "type" : "triggers-module/condition-time",
+      "id" : "09c453b3-c55f-4050-8f1c-b50f8d5728c2",
+      "attributes" : {
+        "enabled" : true,
+        "is_fulfilled" : false,
+        "time" : "1970-01-01T07:30:00+01:00",
+        "days" : [
           1,
           2,
           3,
@@ -27,20 +27,20 @@
           7
         ]
       },
-      "relationships": {
-        "trigger": {
-          "links": {
-            "self": "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/conditions/09c453b3-c55f-4050-8f1c-b50f8d5728c2/relationships/trigger",
-            "related": "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae"
+      "relationships" : {
+        "trigger" : {
+          "links" : {
+            "self" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/conditions/09c453b3-c55f-4050-8f1c-b50f8d5728c2/relationships/trigger",
+            "related" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae"
           },
-          "data": {
-            "type": "triggers-module/trigger-automatic",
-            "id": "1b17bcaa-a19e-45f0-98b4-56211cc648ae"
+          "data" : {
+            "type" : "triggers-module/trigger-automatic",
+            "id" : "1b17bcaa-a19e-45f0-98b4-56211cc648ae"
           }
         }
       },
-      "links": {
-        "self": "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/conditions/09c453b3-c55f-4050-8f1c-b50f8d5728c2"
+      "links" : {
+        "self" : "/v1/triggers/1b17bcaa-a19e-45f0-98b4-56211cc648ae/conditions/09c453b3-c55f-4050-8f1c-b50f8d5728c2"
       }
     }
   ]

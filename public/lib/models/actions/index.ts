@@ -198,7 +198,10 @@ const moduleActions: ActionTree<ActionState, any> = {
     }
   },
 
-  async edit({ state, commit }, payload: { action: ActionInterface, data: UpdateDevicePropertyActionInterface | UpdateChannelPropertyActionInterface }): Promise<Item<Action>> {
+  async edit({
+               state,
+               commit,
+             }, payload: { action: ActionInterface, data: UpdateDevicePropertyActionInterface | UpdateChannelPropertyActionInterface }): Promise<Item<Action>> {
     if (state.semaphore.updating.includes(payload.action.id)) {
       throw new Error('triggers-module.actions.update.inProgress')
     }

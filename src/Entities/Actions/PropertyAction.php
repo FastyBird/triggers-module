@@ -64,6 +64,25 @@ abstract class PropertyAction extends Action implements IPropertyAction
 	/**
 	 * {@inheritDoc}
 	 */
+	public function validate(string $value): bool
+	{
+		return (string) $this->value === $value;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function toArray(): array
+	{
+		return array_merge(parent::toArray(), [
+			'device' => $this->getDevice()->toString(),
+			'value'  => (string) $this->getValue(),
+		]);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getDevice(): Uuid\UuidInterface
 	{
 		return $this->device;
@@ -83,25 +102,6 @@ abstract class PropertyAction extends Action implements IPropertyAction
 		}
 
 		return $this->value;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function validate(string $value): bool
-	{
-		return (string) $this->value === $value;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function toArray(): array
-	{
-		return array_merge(parent::toArray(), [
-			'device' => $this->getDevice()->toString(),
-			'value'  => (string) $this->getValue(),
-		]);
 	}
 
 }

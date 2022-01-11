@@ -18,8 +18,30 @@ import {
 // ENTITY MODEL
 // ============
 export default class Action extends Model implements ActionInterface {
+  id!: string
+  type!: ActionEntityTypes
+  draft!: boolean
+  enabled!: boolean
+  value!: string
+  device!: string
+  channel!: string
+  property!: string
+  isTriggered!: boolean | null
+  relationshipNames!: string[]
+  trigger!: TriggerInterface | null
+  triggerBackward!: TriggerInterface | null
+  triggerId!: string
+
   static get entity(): string {
     return 'triggers_action'
+  }
+
+  get isDeviceProperty(): boolean {
+    return this.type === ActionEntityTypes.DEVICE_PROPERTY
+  }
+
+  get isChannelProperty(): boolean {
+    return this.type === ActionEntityTypes.CHANNEL_PROPERTY
   }
 
   static fields(): Fields {
@@ -46,35 +68,6 @@ export default class Action extends Model implements ActionInterface {
 
       triggerId: this.string(''),
     }
-  }
-
-  id!: string
-  type!: ActionEntityTypes
-
-  draft!: boolean
-
-  enabled!: boolean
-
-  value!: string
-  device!: string
-  channel!: string
-  property!: string
-
-  isTriggered!: boolean | null
-
-  relationshipNames!: string[]
-
-  trigger!: TriggerInterface | null
-  triggerBackward!: TriggerInterface | null
-
-  triggerId!: string
-
-  get isDeviceProperty(): boolean {
-    return this.type === ActionEntityTypes.DEVICE_PROPERTY
-  }
-
-  get isChannelProperty(): boolean {
-    return this.type === ActionEntityTypes.CHANNEL_PROPERTY
   }
 
   static async get(trigger: TriggerInterface, id: string): Promise<boolean> {

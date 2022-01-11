@@ -431,7 +431,10 @@ const moduleActions: ActionTree<TriggerState, any> = {
     }
   },
 
-  async edit({ state, commit }, payload: { trigger: TriggerInterface, data: TriggerUpdateInterface }): Promise<Item<Trigger>> {
+  async edit({
+               state,
+               commit,
+             }, payload: { trigger: TriggerInterface, data: TriggerUpdateInterface }): Promise<Item<Trigger>> {
     if (state.semaphore.updating.includes(payload.trigger.id)) {
       throw new Error('triggers-module.triggers.update.inProgress')
     }

@@ -23,8 +23,42 @@ import {
 // ENTITY MODEL
 // ============
 export default class Condition extends Model implements ConditionInterface {
+  id!: string
+  type!: ConditionEntityTypes
+  draft!: boolean
+  enabled!: boolean
+  operator!: ConditionOperator
+  operand!: string
+  device!: string
+  channel!: string
+  property!: string
+  time!: string
+  days!: number[]
+  date!: string
+  isFulfilled!: boolean | null
+  relationshipNames!: string[]
+  trigger!: TriggerInterface | null
+  triggerBackward!: TriggerInterface | null
+  triggerId!: string
+
   static get entity(): string {
     return 'triggers_condition'
+  }
+
+  get isDeviceProperty(): boolean {
+    return this.type === ConditionEntityTypes.DEVICE_PROPERTY
+  }
+
+  get isChannelProperty(): boolean {
+    return this.type === ConditionEntityTypes.CHANNEL_PROPERTY
+  }
+
+  get isTime(): boolean {
+    return this.type === ConditionEntityTypes.TIME
+  }
+
+  get isDate(): boolean {
+    return this.type === ConditionEntityTypes.DATE
   }
 
   static fields(): Fields {
@@ -59,49 +93,6 @@ export default class Condition extends Model implements ConditionInterface {
 
       triggerId: this.string(''),
     }
-  }
-
-  id!: string
-  type!: ConditionEntityTypes
-
-  draft!: boolean
-
-  enabled!: boolean
-
-  operator!: ConditionOperator
-  operand!: string
-  device!: string
-  channel!: string
-  property!: string
-
-  time!: string
-  days!: number[]
-
-  date!: string
-
-  isFulfilled!: boolean | null
-
-  relationshipNames!: string[]
-
-  trigger!: TriggerInterface | null
-  triggerBackward!: TriggerInterface | null
-
-  triggerId!: string
-
-  get isDeviceProperty(): boolean {
-    return this.type === ConditionEntityTypes.DEVICE_PROPERTY
-  }
-
-  get isChannelProperty(): boolean {
-    return this.type === ConditionEntityTypes.CHANNEL_PROPERTY
-  }
-
-  get isTime(): boolean {
-    return this.type === ConditionEntityTypes.TIME
-  }
-
-  get isDate(): boolean {
-    return this.type === ConditionEntityTypes.DATE
   }
 
   static async get(trigger: TriggerInterface, id: string): Promise<boolean> {

@@ -199,7 +199,10 @@ const moduleActions: ActionTree<NotificationState, any> = {
     }
   },
 
-  async edit({ state, commit }, payload: { notification: NotificationInterface, data: UpdateSmsNotificationInterface | UpdateEmailNotificationInterface }): Promise<Item<Notification>> {
+  async edit({
+               state,
+               commit,
+             }, payload: { notification: NotificationInterface, data: UpdateSmsNotificationInterface | UpdateEmailNotificationInterface }): Promise<Item<Notification>> {
     if (state.semaphore.updating.includes(payload.notification.id)) {
       throw new Error('triggers-module.notifications.update.inProgress')
     }

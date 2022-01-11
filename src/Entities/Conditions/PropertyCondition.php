@@ -80,6 +80,38 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	/**
 	 * {@inheritDoc}
 	 */
+	public function validate(string $value): bool
+	{
+		if ($this->operator->equalsValue(MetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_EQUAL)) {
+			return (string) $this->operand === $value;
+		}
+
+		if ($this->operator->equalsValue(MetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_ABOVE)) {
+			return (float) ((string) $this->operand) < (float) $value;
+		}
+
+		if ($this->operator->equalsValue(MetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_BELOW)) {
+			return (float) ((string) $this->operand) > (float) $value;
+		}
+
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function toArray(): array
+	{
+		return array_merge(parent::toArray(), [
+			'device'   => $this->getDevice()->toString(),
+			'operator' => $this->getOperator()->getValue(),
+			'operand'  => (string) $this->getOperand(),
+		]);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getDevice(): Uuid\UuidInterface
 	{
 		return $this->device;
@@ -123,38 +155,6 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	public function setOperand(string $operand): void
 	{
 		$this->operand = $operand;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function validate(string $value): bool
-	{
-		if ($this->operator->equalsValue(MetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_EQUAL)) {
-			return (string) $this->operand === $value;
-		}
-
-		if ($this->operator->equalsValue(MetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_ABOVE)) {
-			return (float) ((string) $this->operand) < (float) $value;
-		}
-
-		if ($this->operator->equalsValue(MetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_BELOW)) {
-			return (float) ((string) $this->operand) > (float) $value;
-		}
-
-		return false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function toArray(): array
-	{
-		return array_merge(parent::toArray(), [
-			'device'   => $this->getDevice()->toString(),
-			'operator' => $this->getOperator()->getValue(),
-			'operand'  => (string) $this->getOperand(),
-		]);
 	}
 
 }

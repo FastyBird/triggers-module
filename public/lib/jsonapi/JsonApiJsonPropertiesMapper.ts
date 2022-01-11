@@ -18,11 +18,11 @@ class JsonApiJsonPropertiesMapper extends JsonPropertiesMapper implements IJsonP
   private caseRegExp = '_([a-z0-9])'
 
   createModel(type: string): TJsonaModel {
-    return {type}
+    return { type }
   }
 
   setId(model: TJsonaModel, id: string): void {
-    Object.assign(model, {id})
+    Object.assign(model, { id })
   }
 
   setAttributes(model: TJsonaModel, attributes: TAnyKeyValueObject): void {
@@ -39,7 +39,7 @@ class JsonApiJsonPropertiesMapper extends JsonPropertiesMapper implements IJsonP
         Object.keys(attributes[propName]).forEach((subPropName) => {
           const camelSubName = subPropName.replace(regex, g => g[1].toUpperCase())
 
-          Object.assign(modelAttributes, {[camelSubName]: attributes[propName][subPropName]})
+          Object.assign(modelAttributes, { [camelSubName]: attributes[propName][subPropName] })
         })
       }
 
@@ -49,11 +49,11 @@ class JsonApiJsonPropertiesMapper extends JsonPropertiesMapper implements IJsonP
         modelAttributes = (new Date(attributes[propName])).toISOString()
       }
 
-      Object.assign(model, {[camelName]: modelAttributes})
+      Object.assign(model, { [camelName]: modelAttributes })
     })
 
     // Entity received via api is not a draft entity
-    Object.assign(model, {draft: false})
+    Object.assign(model, { draft: false })
   }
 
   setRelationships(model: TJsonaModel, relationships: TJsonaRelationships): void {
@@ -84,9 +84,9 @@ class JsonApiJsonPropertiesMapper extends JsonPropertiesMapper implements IJsonP
             get(relation, 'type') === TriggerEntityTypes.AUTOMATIC ||
             get(relation, 'type') === TriggerEntityTypes.MANUAL
           ) {
-            Object.assign(model, {triggerId: get(relation, 'id')})
+            Object.assign(model, { triggerId: get(relation, 'id') })
           } else {
-            Object.assign(model, {[camelName]: relation})
+            Object.assign(model, { [camelName]: relation })
           }
         }
       })
@@ -95,15 +95,15 @@ class JsonApiJsonPropertiesMapper extends JsonPropertiesMapper implements IJsonP
     const currentNames = model[RELATIONSHIP_NAMES_PROP]
 
     if (currentNames && currentNames.length) {
-      Object.assign(model, {[RELATIONSHIP_NAMES_PROP]: [...currentNames, ...newNames].filter((value, i, self) => self.indexOf(value) === i)})
+      Object.assign(model, { [RELATIONSHIP_NAMES_PROP]: [...currentNames, ...newNames].filter((value, i, self) => self.indexOf(value) === i) })
     } else {
-      Object.assign(model, {[RELATIONSHIP_NAMES_PROP]: newNames})
+      Object.assign(model, { [RELATIONSHIP_NAMES_PROP]: newNames })
     }
   }
 
   transformTrigger(item: TJsonaModel): TJsonaModel {
     if (Object.prototype.hasOwnProperty.call(item, 'trigger')) {
-      Object.assign(item, {triggerId: item.trigger.id})
+      Object.assign(item, { triggerId: item.trigger.id })
       Reflect.deleteProperty(item, 'trigger')
     }
 

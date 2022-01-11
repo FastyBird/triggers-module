@@ -13,8 +13,19 @@ import {
 // ENTITY MODEL
 // ============
 export default class TriggerControl extends Model implements TriggerControlInterface {
+  id!: string
+  type!: TriggerControlEntityTypes
+  name!: string
+  trigger!: TriggerInterface | null
+  triggerBackward!: TriggerInterface | null
+  triggerId!: string
+
   static get entity(): string {
     return 'triggers_trigger_control'
+  }
+
+  get triggerInstance(): TriggerInterface | null {
+    return this.trigger
   }
 
   static fields(): Fields {
@@ -29,20 +40,6 @@ export default class TriggerControl extends Model implements TriggerControlInter
 
       triggerId: this.string(''),
     }
-  }
-
-  id!: string
-  type!: TriggerControlEntityTypes
-
-  name!: string
-
-  trigger!: TriggerInterface | null
-  triggerBackward!: TriggerInterface | null
-
-  triggerId!: string
-
-  get triggerInstance(): TriggerInterface | null {
-    return this.trigger
   }
 
   static async get(trigger: TriggerInterface, id: string): Promise<boolean> {

@@ -65,7 +65,8 @@ final class NotificationEntitySubscriber implements Common\EventSubscriber
 					if (
 						!$notification->getId()->equals($object->getId())
 						&& $notification instanceof Entities\Notifications\ISmsNotification
-						&& $notification->getPhone()->getInternationalNumber() === $object->getPhone()->getInternationalNumber()
+						&& $notification->getPhone()->getInternationalNumber() === $object->getPhone()
+							->getInternationalNumber()
 					) {
 						throw new Exceptions\UniqueNotificationNumberConstraint('Not same phone number in trigger');
 					}

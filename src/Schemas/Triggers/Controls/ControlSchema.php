@@ -51,8 +51,7 @@ final class ControlSchema extends JsonApiSchemas\JsonApiSchema
 
 	public function __construct(
 		Routing\IRouter $router
-	)
-	{
+	) {
 		$this->router = $router;
 	}
 
@@ -102,7 +101,7 @@ final class ControlSchema extends JsonApiSchemas\JsonApiSchema
 				TriggersModule\Constants::ROUTE_NAME_TRIGGER_CONTROL,
 				[
 					Router\Routes::URL_TRIGGER_ID => $control->getTrigger()->getPlainId(),
-					Router\Routes::URL_ITEM_ID      => $control->getPlainId(),
+					Router\Routes::URL_ITEM_ID    => $control->getPlainId(),
 				]
 			),
 			false
@@ -144,7 +143,7 @@ final class ControlSchema extends JsonApiSchemas\JsonApiSchema
 				$this->router->urlFor(
 					TriggersModule\Constants::ROUTE_NAME_TRIGGER,
 					[
-						Router\Routes::URL_ITEM_ID   => $control->getTrigger()->getPlainId(),
+						Router\Routes::URL_ITEM_ID => $control->getTrigger()->getPlainId(),
 					]
 				),
 				false

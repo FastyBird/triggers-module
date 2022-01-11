@@ -89,15 +89,23 @@ abstract class Action implements IAction
 	/**
 	 * {@inheritDoc}
 	 */
-	abstract public function getType(): MetadataTypes\TriggerActionTypeType;
+	public function toArray(): array
+	{
+		return [
+			'id'      => $this->getPlainId(),
+			'type'    => $this->getType()->getValue(),
+			'enabled' => $this->isEnabled(),
+
+			'trigger' => $this->getTrigger()->getPlainId(),
+
+			'owner' => $this->getTrigger()->getOwnerId(),
+		];
+	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getTrigger(): Entities\Triggers\ITrigger
-	{
-		return $this->trigger;
-	}
+	abstract public function getType(): MetadataTypes\TriggerActionTypeType;
 
 	/**
 	 * {@inheritDoc}
@@ -118,17 +126,9 @@ abstract class Action implements IAction
 	/**
 	 * {@inheritDoc}
 	 */
-	public function toArray(): array
+	public function getTrigger(): Entities\Triggers\ITrigger
 	{
-		return [
-			'id'      => $this->getPlainId(),
-			'type'    => $this->getType()->getValue(),
-			'enabled' => $this->isEnabled(),
-
-			'trigger' => $this->getTrigger()->getPlainId(),
-
-			'owner'   => $this->getTrigger()->getOwnerId(),
-		];
+		return $this->trigger;
 	}
 
 }

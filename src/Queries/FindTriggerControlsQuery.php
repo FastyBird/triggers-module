@@ -86,7 +86,8 @@ class FindTriggerControlsQuery extends DoctrineOrmQuery\QueryObject
 	public function forTrigger(Entities\Triggers\ITrigger $trigger): void
 	{
 		$this->filter[] = function (ORM\QueryBuilder $qb) use ($trigger): void {
-			$qb->andWhere('trigger.id = :trigger')->setParameter('trigger', $trigger->getId(), Uuid\Doctrine\UuidBinaryType::NAME);
+			$qb->andWhere('trigger.id = :trigger')
+				->setParameter('trigger', $trigger->getId(), Uuid\Doctrine\UuidBinaryType::NAME);
 		};
 	}
 
