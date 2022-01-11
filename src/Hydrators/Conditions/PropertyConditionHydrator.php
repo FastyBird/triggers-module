@@ -16,7 +16,7 @@
 namespace FastyBird\TriggersModule\Hydrators\Conditions;
 
 use FastyBird\JsonApi\Exceptions as JsonApiExceptions;
-use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
+use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use Fig\Http\Message\StatusCodeInterface;
 use IPub\JsonAPIDocument;
@@ -106,13 +106,13 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 	/**
 	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *
-	 * @return ModulesMetadataTypes\TriggerConditionOperatorType
+	 * @return MetadataTypes\TriggerConditionOperatorType
 	 *
 	 * @throws JsonApiExceptions\IJsonApiException
 	 */
 	protected function hydrateOperatorAttribute(
 		JsonAPIDocument\Objects\IStandardObject $attributes
-	): ModulesMetadataTypes\TriggerConditionOperatorType {
+	): MetadataTypes\TriggerConditionOperatorType {
 		// Condition operator have to be set
 		if (
 			!is_scalar($attributes->get('operator'))
@@ -129,18 +129,18 @@ abstract class PropertyConditionHydrator extends ConditionHydrator
 			);
 
 			// ...and have to be valid value
-		} elseif (!ModulesMetadataTypes\TriggerConditionOperatorType::isValidValue($attributes->get('operator'))) {
+		} elseif (!MetadataTypes\TriggerConditionOperatorType::isValidValue($attributes->get('operator'))) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('messages.invalidOperator.heading'),
-				$this->translator->translate('messages.invalidOperator.message'),
+				$this->translator->translate('//triggers-module.conditions.messages.invalidOperator.heading'),
+				$this->translator->translate('//triggers-module.conditions.messages.invalidOperator.message'),
 				[
 					'pointer' => '/data/attributes/operator',
 				]
 			);
 		}
 
-		return ModulesMetadataTypes\TriggerConditionOperatorType::get($attributes->get('operator'));
+		return MetadataTypes\TriggerConditionOperatorType::get($attributes->get('operator'));
 	}
 
 	/**

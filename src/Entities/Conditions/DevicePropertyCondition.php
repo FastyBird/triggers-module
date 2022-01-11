@@ -16,7 +16,7 @@
 namespace FastyBird\TriggersModule\Entities\Conditions;
 
 use Doctrine\ORM\Mapping as ORM;
-use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
+use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use Ramsey\Uuid;
@@ -51,7 +51,7 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 	/**
 	 * @param Uuid\UuidInterface $device
 	 * @param Uuid\UuidInterface $property
-	 * @param ModulesMetadataTypes\TriggerConditionOperatorType $operator
+	 * @param MetadataTypes\TriggerConditionOperatorType $operator
 	 * @param string $operand
 	 * @param Entities\Triggers\IAutomaticTrigger $trigger
 	 * @param Uuid\UuidInterface|null $id
@@ -61,7 +61,7 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 	public function __construct(
 		Uuid\UuidInterface $device,
 		Uuid\UuidInterface $property,
-		ModulesMetadataTypes\TriggerConditionOperatorType $operator,
+		MetadataTypes\TriggerConditionOperatorType $operator,
 		string $operand,
 		Entities\Triggers\IAutomaticTrigger $trigger,
 		?Uuid\UuidInterface $id = null
@@ -74,9 +74,9 @@ class DevicePropertyCondition extends PropertyCondition implements IDeviceProper
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getType(): ModulesMetadataTypes\TriggerConditionTypeType
+	public function getType(): MetadataTypes\TriggerConditionTypeType
 	{
-		return ModulesMetadataTypes\TriggerConditionTypeType::get(ModulesMetadataTypes\TriggerConditionTypeType::TYPE_DEVICE_PROPERTY);
+		return MetadataTypes\TriggerConditionTypeType::get(MetadataTypes\TriggerConditionTypeType::TYPE_DEVICE_PROPERTY);
 	}
 
 	/**

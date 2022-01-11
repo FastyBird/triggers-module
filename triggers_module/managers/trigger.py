@@ -21,15 +21,11 @@ Triggers module trigger managers module
 # Python base dependencies
 from typing import Dict, List, Type
 
-# Library dependencies
-from kink import inject
-
 # Library libs
 from triggers_module.entities.trigger import TriggerControlEntity, TriggerEntity
 from triggers_module.managers.base import BaseManager
 
 
-@inject
 class TriggersManager(BaseManager[TriggerEntity]):
     """
     Triggers manager
@@ -72,7 +68,6 @@ class TriggersManager(BaseManager[TriggerEntity]):
         return super().delete_entity(entity_id=trigger.id, entity_type=TriggerEntity)
 
 
-@inject
 class TriggerControlsManager(BaseManager[TriggerControlEntity]):
     """
     Trigger controls manager

@@ -24,7 +24,7 @@ from abc import abstractmethod
 from typing import Dict, Optional, Union
 
 # Library dependencies
-from modules_metadata.triggers_module import NotificationType
+from metadata.triggers_module import NotificationType
 from sqlalchemy import BINARY, BOOLEAN, VARCHAR, Column, ForeignKey
 from sqlalchemy.orm import relationship
 

@@ -25,8 +25,8 @@ from abc import abstractmethod
 from typing import Dict, List, Optional, Union
 
 # Library dependencies
-from modules_metadata.triggers_module import ConditionOperator, ConditionType
-from modules_metadata.types import ButtonPayload, SwitchPayload
+from metadata.triggers_module import ConditionOperator, ConditionType
+from metadata.types import ButtonPayload, SwitchPayload
 from sqlalchemy import BINARY, BOOLEAN, DATE, TEXT, TIME, VARCHAR, Column, ForeignKey
 from sqlalchemy.orm import relationship
 

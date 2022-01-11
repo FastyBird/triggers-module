@@ -16,7 +16,7 @@
 namespace FastyBird\TriggersModule\Entities\Actions;
 
 use Doctrine\ORM\Mapping as ORM;
-use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
+use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use Ramsey\Uuid;
@@ -69,9 +69,9 @@ class DevicePropertyAction extends PropertyAction implements IDevicePropertyActi
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getType(): ModulesMetadataTypes\TriggerActionTypeType
+	public function getType(): MetadataTypes\TriggerActionTypeType
 	{
-		return ModulesMetadataTypes\TriggerActionTypeType::get(ModulesMetadataTypes\TriggerActionTypeType::TYPE_DEVICE_PROPERTY);
+		return MetadataTypes\TriggerActionTypeType::get(MetadataTypes\TriggerActionTypeType::TYPE_DEVICE_PROPERTY);
 	}
 
 	/**

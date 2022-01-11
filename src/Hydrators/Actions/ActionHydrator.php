@@ -40,9 +40,6 @@ abstract class ActionHydrator extends JsonApiHydrators\Hydrator
 		Schemas\Actions\ActionSchema::RELATIONSHIPS_TRIGGER,
 	];
 
-	/** @var string */
-	protected string $translationDomain = 'triggers-module.actions';
-
 	/**
 	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *

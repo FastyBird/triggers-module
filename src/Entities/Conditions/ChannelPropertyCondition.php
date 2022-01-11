@@ -16,7 +16,7 @@
 namespace FastyBird\TriggersModule\Entities\Conditions;
 
 use Doctrine\ORM\Mapping as ORM;
-use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
+use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use Ramsey\Uuid;
@@ -61,7 +61,7 @@ class ChannelPropertyCondition extends PropertyCondition implements IChannelProp
 	 * @param Uuid\UuidInterface $device
 	 * @param Uuid\UuidInterface $channel
 	 * @param Uuid\UuidInterface $property
-	 * @param ModulesMetadataTypes\TriggerConditionOperatorType $operator
+	 * @param MetadataTypes\TriggerConditionOperatorType $operator
 	 * @param string $operand
 	 * @param Entities\Triggers\IAutomaticTrigger $trigger
 	 * @param Uuid\UuidInterface|null $id
@@ -72,7 +72,7 @@ class ChannelPropertyCondition extends PropertyCondition implements IChannelProp
 		Uuid\UuidInterface $device,
 		Uuid\UuidInterface $channel,
 		Uuid\UuidInterface $property,
-		ModulesMetadataTypes\TriggerConditionOperatorType $operator,
+		MetadataTypes\TriggerConditionOperatorType $operator,
 		string $operand,
 		Entities\Triggers\IAutomaticTrigger $trigger,
 		?Uuid\UuidInterface $id = null
@@ -86,9 +86,9 @@ class ChannelPropertyCondition extends PropertyCondition implements IChannelProp
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getType(): ModulesMetadataTypes\TriggerConditionTypeType
+	public function getType(): MetadataTypes\TriggerConditionTypeType
 	{
-		return ModulesMetadataTypes\TriggerConditionTypeType::get(ModulesMetadataTypes\TriggerConditionTypeType::TYPE_CHANNEL_PROPERTY);
+		return MetadataTypes\TriggerConditionTypeType::get(MetadataTypes\TriggerConditionTypeType::TYPE_CHANNEL_PROPERTY);
 	}
 
 	/**

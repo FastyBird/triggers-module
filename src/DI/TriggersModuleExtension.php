@@ -15,7 +15,6 @@
 
 namespace FastyBird\TriggersModule\DI;
 
-use Contributte\Translation;
 use Doctrine\Persistence;
 use FastyBird\TriggersModule\Commands;
 use FastyBird\TriggersModule\Controllers;
@@ -41,7 +40,7 @@ use stdClass;
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-class TriggersModuleExtension extends DI\CompilerExtension implements Translation\DI\TranslationProviderInterface
+class TriggersModuleExtension extends DI\CompilerExtension
 {
 
 	/**
@@ -88,6 +87,9 @@ class TriggersModuleExtension extends DI\CompilerExtension implements Translatio
 		$builder->addDefinition($this->prefix('router.routes'), new DI\Definitions\ServiceDefinition())
 			->setType(Router\Routes::class)
 			->setArguments(['usePrefix' => $configuration->apiPrefix]);
+
+		$builder->addDefinition($this->prefix('router.validator'), new DI\Definitions\ServiceDefinition())
+			->setType(Router\Validator::class);
 
 		// Console commands
 		$builder->addDefinition($this->prefix('commands.initialize'), new DI\Definitions\ServiceDefinition())
@@ -283,16 +285,6 @@ class TriggersModuleExtension extends DI\CompilerExtension implements Translatio
 
 		$notificationsManagerService = $class->getMethod('createService' . ucfirst($this->name) . '__models__notificationsManager');
 		$notificationsManagerService->setBody('return new ' . Models\Notifications\NotificationsManager::class . '($this->getService(\'' . $entityFactoryServiceName . '\')->create(\'' . Entities\Notifications\Notification::class . '\'));');
-	}
-
-	/**
-	 * @return string[]
-	 */
-	public function getTranslationResources(): array
-	{
-		return [
-			__DIR__ . '/../Translations',
-		];
 	}
 
 }

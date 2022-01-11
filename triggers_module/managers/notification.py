@@ -21,15 +21,11 @@ Triggers module notification managers module
 # Python base dependencies
 from typing import Dict, List, Type
 
-# Library dependencies
-from kink import inject
-
 # Library libs
 from triggers_module.entities.notification import NotificationEntity
 from triggers_module.managers.base import BaseManager
 
 
-@inject
 class NotificationsManager(BaseManager[NotificationEntity]):
     """
     Notifications manager

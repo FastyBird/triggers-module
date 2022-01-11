@@ -39,9 +39,6 @@ abstract class NotificationHydrator extends JsonApiHydrators\Hydrator
 		Schemas\Notifications\NotificationSchema::RELATIONSHIPS_TRIGGER,
 	];
 
-	/** @var string */
-	protected string $translationDomain = 'triggers-module.notifications';
-
 	/**
 	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *

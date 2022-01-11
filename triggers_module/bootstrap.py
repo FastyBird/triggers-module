@@ -63,7 +63,7 @@ def create_container(database_session: OrmSession) -> None:
     di[NotificationsManager] = NotificationsManager(session=database_session)
     di["fb-triggers-module_actions-manager"] = di[NotificationsManager]
 
-    di[EntitiesSubscriber] = EntitiesSubscriber()  # type: ignore[call-arg]
+    di[EntitiesSubscriber] = EntitiesSubscriber()
     di["fb-devices-module_entities-subscriber"] = di[EntitiesSubscriber]
     di[EntityCreatedSubscriber] = EntityCreatedSubscriber()
     di["fb-devices-module_entity-created-subscriber"] = di[EntityCreatedSubscriber]

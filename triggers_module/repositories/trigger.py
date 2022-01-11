@@ -25,14 +25,12 @@ import uuid
 from typing import List, Optional
 
 # Library dependencies
-from kink import inject
 from sqlalchemy.orm import Session as OrmSession
 
 # Library libs
 from triggers_module.entities.trigger import TriggerControlEntity, TriggerEntity
 
 
-@inject
 class TriggersRepository:
     """
     Triggers repository

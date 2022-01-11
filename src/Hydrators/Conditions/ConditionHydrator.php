@@ -40,9 +40,6 @@ abstract class ConditionHydrator extends JsonApiHydrators\Hydrator
 		Schemas\Conditions\ConditionSchema::RELATIONSHIPS_TRIGGER,
 	];
 
-	/** @var string */
-	protected string $translationDomain = 'triggers-module.conditions';
-
 	/**
 	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *

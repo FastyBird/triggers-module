@@ -19,11 +19,10 @@ import uuid
 from unittest.mock import patch
 
 # Library dependencies
-from exchange_plugin.publisher import Publisher
 from kink import inject
 
 # Tests libs
-from tests.pytests.tests import DbTestCase
+from tests.pytests.tests import DbTestCase, Publisher
 
 # Library libs
 from triggers_module.entities.trigger import ManualTriggerEntity, TriggerEntity

@@ -15,7 +15,7 @@
 
 namespace FastyBird\TriggersModule\Entities\Conditions;
 
-use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
+use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineTimestampable;
 
@@ -32,9 +32,9 @@ interface ICondition extends Entities\IEntity,
 {
 
 	/**
-	 * @return ModulesMetadataTypes\TriggerConditionTypeType
+	 * @return MetadataTypes\TriggerConditionTypeType
 	 */
-	public function getType(): ModulesMetadataTypes\TriggerConditionTypeType;
+	public function getType(): MetadataTypes\TriggerConditionTypeType;
 
 	/**
 	 * @return Entities\Triggers\IAutomaticTrigger

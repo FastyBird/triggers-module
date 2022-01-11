@@ -16,7 +16,7 @@
 namespace FastyBird\TriggersModule\Entities\Notifications;
 
 use Doctrine\ORM\Mapping as ORM;
-use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
+use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use Ramsey\Uuid;
@@ -64,9 +64,9 @@ class EmailNotification extends Notification implements IEmailNotification
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getType(): ModulesMetadataTypes\TriggerNotificationTypeType
+	public function getType(): MetadataTypes\TriggerNotificationTypeType
 	{
-		return ModulesMetadataTypes\TriggerNotificationTypeType::get(ModulesMetadataTypes\TriggerNotificationTypeType::TYPE_EMAIL);
+		return MetadataTypes\TriggerNotificationTypeType::get(MetadataTypes\TriggerNotificationTypeType::TYPE_EMAIL);
 	}
 
 	/**

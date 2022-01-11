@@ -1,12 +1,12 @@
 import { Item } from '@vuex-orm/core'
 import * as exchangeEntitySchema
-  from '@fastybird/modules-metadata/resources/schemas/triggers-module/entity.trigger.json'
+  from '@fastybird/metadata/resources/schemas/modules/triggers-module/entity.trigger.json'
 import {
   ModuleOrigin,
   TriggerEntity as ExchangeEntity,
   TriggersModuleRoutes as RoutingKeys,
   TriggerType,
-} from '@fastybird/modules-metadata'
+} from '@fastybird/metadata'
 
 import {
   ActionTree,

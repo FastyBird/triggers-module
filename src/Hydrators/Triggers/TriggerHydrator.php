@@ -47,9 +47,6 @@ abstract class TriggerHydrator extends JsonApiHydrators\Hydrator
 		Schemas\Triggers\TriggerSchema::RELATIONSHIPS_NOTIFICATIONS,
 	];
 
-	/** @var string */
-	protected string $translationDomain = 'triggers-module.triggers';
-
 	/**
 	 * @param JsonAPIDocument\Objects\IStandardObject $attributes
 	 *

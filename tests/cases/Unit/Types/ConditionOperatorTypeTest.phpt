@@ -2,7 +2,7 @@
 
 namespace Tests\Cases;
 
-use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
+use FastyBird\Metadata\Types as MetadataTypes;
 use Ninjify\Nunjuck\TestCase\BaseTestCase;
 use Tester\Assert;
 
@@ -16,17 +16,17 @@ final class ConditionOperatorTypeTest extends BaseTestCase
 
 	public function testCreateOperator(): void
 	{
-		$operatorType = ModulesMetadataTypes\TriggerConditionOperatorType::get(ModulesMetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_EQUAL);
+		$operatorType = MetadataTypes\TriggerConditionOperatorType::get(MetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_EQUAL);
 
-		Assert::type(ModulesMetadataTypes\TriggerConditionOperatorType::class, $operatorType);
+		Assert::type(MetadataTypes\TriggerConditionOperatorType::class, $operatorType);
 
-		$operatorType = ModulesMetadataTypes\TriggerConditionOperatorType::get(ModulesMetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_ABOVE);
+		$operatorType = MetadataTypes\TriggerConditionOperatorType::get(MetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_ABOVE);
 
-		Assert::type(ModulesMetadataTypes\TriggerConditionOperatorType::class, $operatorType);
+		Assert::type(MetadataTypes\TriggerConditionOperatorType::class, $operatorType);
 
-		$operatorType = ModulesMetadataTypes\TriggerConditionOperatorType::get(ModulesMetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_BELOW);
+		$operatorType = MetadataTypes\TriggerConditionOperatorType::get(MetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_BELOW);
 
-		Assert::type(ModulesMetadataTypes\TriggerConditionOperatorType::class, $operatorType);
+		Assert::type(MetadataTypes\TriggerConditionOperatorType::class, $operatorType);
 	}
 
 	/**
@@ -34,7 +34,7 @@ final class ConditionOperatorTypeTest extends BaseTestCase
 	 */
 	public function testInvalidOperator(): void
 	{
-		ModulesMetadataTypes\TriggerConditionOperatorType::get('invalidtype');
+		MetadataTypes\TriggerConditionOperatorType::get('invalidtype');
 	}
 
 }

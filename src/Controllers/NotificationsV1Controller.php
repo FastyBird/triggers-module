@@ -20,12 +20,10 @@ use FastyBird\JsonApi\Exceptions as JsonApiExceptions;
 use FastyBird\TriggersModule\Controllers;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Exceptions;
-use FastyBird\TriggersModule\Hydrators;
 use FastyBird\TriggersModule\Models;
 use FastyBird\TriggersModule\Queries;
 use FastyBird\TriggersModule\Router;
 use FastyBird\TriggersModule\Schemas;
-use FastyBird\WebServer\Http as WebServerHttp;
 use Fig\Http\Message\StatusCodeInterface;
 use IPub\DoctrineCrud\Exceptions as DoctrineCrudExceptions;
 use Nette\Utils;
@@ -52,48 +50,34 @@ final class NotificationsV1Controller extends BaseV1Controller
 	/** @var Models\Triggers\ITriggerRepository */
 	protected Models\Triggers\ITriggerRepository $triggerRepository;
 
-	/** @var string */
-	protected string $translationDomain = 'triggers-module.notifications';
-
 	/** @var Models\Notifications\INotificationRepository */
 	private Models\Notifications\INotificationRepository $notificationRepository;
 
 	/** @var Models\Notifications\INotificationsManager */
 	private Models\Notifications\INotificationsManager $notificationsManager;
 
-	/** @var Hydrators\Notifications\SmsNotificationHydrator */
-	private Hydrators\Notifications\SmsNotificationHydrator $smsNotificationHydrator;
-
-	/** @var Hydrators\Notifications\EmailNotificationHydrator */
-	private Hydrators\Notifications\EmailNotificationHydrator $emailNotificationHydrator;
-
 	public function __construct(
 		Models\Triggers\ITriggerRepository $triggerRepository,
 		Models\Notifications\INotificationRepository $notificationRepository,
-		Models\Notifications\INotificationsManager $notificationsManager,
-		Hydrators\Notifications\SmsNotificationHydrator $smsNotificationHydrator,
-		Hydrators\Notifications\EmailNotificationHydrator $emailNotificationHydrator
+		Models\Notifications\INotificationsManager $notificationsManager
 	) {
 		$this->triggerRepository = $triggerRepository;
 		$this->notificationRepository = $notificationRepository;
 		$this->notificationsManager = $notificationsManager;
-
-		$this->smsNotificationHydrator = $smsNotificationHydrator;
-		$this->emailNotificationHydrator = $emailNotificationHydrator;
 	}
 
 	/**
 	 * @param Message\ServerRequestInterface $request
-	 * @param WebServerHttp\Response $response
+	 * @param Message\ResponseInterface $response
 	 *
-	 * @return WebServerHttp\Response
+	 * @return Message\ResponseInterface
 	 *
 	 * @throws JsonApiExceptions\IJsonApiException
 	 */
 	public function index(
 		Message\ServerRequestInterface $request,
-		WebServerHttp\Response $response
-	): WebServerHttp\Response {
+		Message\ResponseInterface $response
+	): Message\ResponseInterface {
 		// At first, try to load trigger
 		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
@@ -102,30 +86,29 @@ final class NotificationsV1Controller extends BaseV1Controller
 
 		$rows = $this->notificationRepository->getResultSet($findQuery);
 
-		return $response
-			->withEntity(WebServerHttp\ScalarEntity::from($rows));
+		// @phpstan-ignore-next-line
+		return $this->buildResponse($request, $response, $rows);
 	}
 
 	/**
 	 * @param Message\ServerRequestInterface $request
-	 * @param WebServerHttp\Response $response
+	 * @param Message\ResponseInterface $response
 	 *
-	 * @return WebServerHttp\Response
+	 * @return Message\ResponseInterface
 	 *
 	 * @throws JsonApiExceptions\IJsonApiException
 	 */
 	public function read(
 		Message\ServerRequestInterface $request,
-		WebServerHttp\Response $response
-	): WebServerHttp\Response {
+		Message\ResponseInterface $response
+	): Message\ResponseInterface {
 		// At first, try to load trigger
 		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
 		// & notification
-		$action = $this->findNotification($request->getAttribute(Router\Routes::URL_ITEM_ID), $trigger);
+		$notification = $this->findNotification($request->getAttribute(Router\Routes::URL_ITEM_ID), $trigger);
 
-		return $response
-			->withEntity(WebServerHttp\ScalarEntity::from($action));
+		return $this->buildResponse($request, $response, $notification);
 	}
 
 	/**
@@ -167,9 +150,9 @@ final class NotificationsV1Controller extends BaseV1Controller
 
 	/**
 	 * @param Message\ServerRequestInterface $request
-	 * @param WebServerHttp\Response $response
+	 * @param Message\ResponseInterface $response
 	 *
-	 * @return WebServerHttp\Response
+	 * @return Message\ResponseInterface
 	 *
 	 * @throws JsonApiExceptions\IJsonApiException
 	 * @throws Doctrine\DBAL\ConnectionException
@@ -179,148 +162,142 @@ final class NotificationsV1Controller extends BaseV1Controller
 	 */
 	public function create(
 		Message\ServerRequestInterface $request,
-		WebServerHttp\Response $response
-	): WebServerHttp\Response {
+		Message\ResponseInterface $response
+	): Message\ResponseInterface {
 		// At first, try to load trigger
 		$this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
 		$document = $this->createDocument($request);
 
-		try {
-			// Start transaction connection to the database
-			$this->getOrmConnection()->beginTransaction();
+		$hydrator = $this->hydratorsContainer->findHydrator($document);
 
-			if ($document->getResource()->getType() === Schemas\Notifications\SmsNotificationSchema::SCHEMA_TYPE) {
-				$notification = $this->notificationsManager->create($this->smsNotificationHydrator->hydrate($document));
+		if ($hydrator !== null) {
+			try {
+				// Start transaction connection to the database
+				$this->getOrmConnection()->beginTransaction();
 
-			} elseif ($document->getResource()->getType() === Schemas\Notifications\EmailNotificationSchema::SCHEMA_TYPE) {
-				$notification = $this->notificationsManager->create($this->emailNotificationHydrator->hydrate($document));
+				$notification = $this->notificationsManager->create($hydrator->hydrate($document));
 
-			} else {
+				// Commit all changes into database
+				$this->getOrmConnection()->commit();
+
+			} catch (JsonApiExceptions\IJsonApiException $ex) {
+				throw $ex;
+
+			} catch (DoctrineCrudExceptions\MissingRequiredFieldException $ex) {
 				throw new JsonApiExceptions\JsonApiErrorException(
 					StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-					$this->translator->translate('//triggers-module.base.messages.invalidType.heading'),
-					$this->translator->translate('//triggers-module.base.messages.invalidType.message'),
+					$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
+					$this->translator->translate('//triggers-module.base.messages.missingAttribute.message'),
 					[
-						'pointer' => '/data/type',
-					]
-				);
-			}
-
-			// Commit all changes into database
-			$this->getOrmConnection()->commit();
-
-		} catch (JsonApiExceptions\IJsonApiException $ex) {
-			throw $ex;
-
-		} catch (DoctrineCrudExceptions\MissingRequiredFieldException $ex) {
-			throw new JsonApiExceptions\JsonApiErrorException(
-				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
-				$this->translator->translate('//triggers-module.base.messages.missingAttribute.message'),
-				[
-					'pointer' => 'data/attributes/' . $ex->getField(),
-				]
-			);
-
-		} catch (DoctrineCrudExceptions\EntityCreationException $ex) {
-			throw new JsonApiExceptions\JsonApiErrorException(
-				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
-				$this->translator->translate('//triggers-module.base.messages.missingAttribute.message'),
-				[
-					'pointer' => 'data/attributes/' . $ex->getField(),
-				]
-			);
-
-		} catch (Exceptions\UniqueNotificationNumberConstraint $ex) {
-			throw new JsonApiExceptions\JsonApiErrorException(
-				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('messages.phoneNotUnique.heading'),
-				$this->translator->translate('messages.phoneNotUnique.message'),
-				[
-					'pointer' => '/data/attributes/phone',
-				]
-			);
-
-		} catch (Exceptions\UniqueNotificationEmailConstraint $ex) {
-			throw new JsonApiExceptions\JsonApiErrorException(
-				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('messages.emailNotUnique.heading'),
-				$this->translator->translate('messages.emailNotUnique.message'),
-				[
-					'pointer' => '/data/attributes/email',
-				]
-			);
-
-		} catch (Doctrine\DBAL\Exception\UniqueConstraintViolationException $ex) {
-			if (preg_match("%PRIMARY'%", $ex->getMessage(), $match) === 1) {
-				throw new JsonApiExceptions\JsonApiErrorException(
-					StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-					$this->translator->translate('//triggers-module.base.messages.uniqueIdentifier.heading'),
-					$this->translator->translate('//triggers-module.base.messages.uniqueIdentifier.message'),
-					[
-						'pointer' => '/data/id',
+						'pointer' => 'data/attributes/' . $ex->getField(),
 					]
 				);
 
-			} elseif (preg_match("%key '(?P<key>.+)_unique'%", $ex->getMessage(), $match) === 1) {
-				$columnParts = explode('.', $match['key']);
-				$columnKey = end($columnParts);
+			} catch (DoctrineCrudExceptions\EntityCreationException $ex) {
+				throw new JsonApiExceptions\JsonApiErrorException(
+					StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
+					$this->translator->translate('//triggers-module.base.messages.missingAttribute.heading'),
+					$this->translator->translate('//triggers-module.base.messages.missingAttribute.message'),
+					[
+						'pointer' => 'data/attributes/' . $ex->getField(),
+					]
+				);
 
-				if (is_string($columnKey) && Utils\Strings::startsWith($columnKey, 'notification_')) {
+			} catch (Exceptions\UniqueNotificationNumberConstraint $ex) {
+				throw new JsonApiExceptions\JsonApiErrorException(
+					StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
+					$this->translator->translate('//triggers-module.notifications.messages.phoneNotUnique.heading'),
+					$this->translator->translate('//triggers-module.notifications.messages.phoneNotUnique.message'),
+					[
+						'pointer' => '/data/attributes/phone',
+					]
+				);
+
+			} catch (Exceptions\UniqueNotificationEmailConstraint $ex) {
+				throw new JsonApiExceptions\JsonApiErrorException(
+					StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
+					$this->translator->translate('//triggers-module.notifications.messages.emailNotUnique.heading'),
+					$this->translator->translate('//triggers-module.notifications.messages.emailNotUnique.message'),
+					[
+						'pointer' => '/data/attributes/email',
+					]
+				);
+
+			} catch (Doctrine\DBAL\Exception\UniqueConstraintViolationException $ex) {
+				if (preg_match("%PRIMARY'%", $ex->getMessage(), $match) === 1) {
 					throw new JsonApiExceptions\JsonApiErrorException(
 						StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-						$this->translator->translate('//triggers-module.base.messages.uniqueAttribute.heading'),
-						$this->translator->translate('//triggers-module.base.messages.uniqueAttribute.message'),
+						$this->translator->translate('//triggers-module.base.messages.uniqueIdentifier.heading'),
+						$this->translator->translate('//triggers-module.base.messages.uniqueIdentifier.message'),
 						[
-							'pointer' => '/data/attributes/' . Utils\Strings::substring($columnKey, 13),
+							'pointer' => '/data/id',
 						]
 					);
+
+				} elseif (preg_match("%key '(?P<key>.+)_unique'%", $ex->getMessage(), $match) === 1) {
+					$columnParts = explode('.', $match['key']);
+					$columnKey = end($columnParts);
+
+					if (is_string($columnKey) && Utils\Strings::startsWith($columnKey, 'notification_')) {
+						throw new JsonApiExceptions\JsonApiErrorException(
+							StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
+							$this->translator->translate('//triggers-module.base.messages.uniqueAttribute.heading'),
+							$this->translator->translate('//triggers-module.base.messages.uniqueAttribute.message'),
+							[
+								'pointer' => '/data/attributes/' . Utils\Strings::substring($columnKey, 13),
+							]
+						);
+					}
+				}
+
+				throw new JsonApiExceptions\JsonApiErrorException(
+					StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
+					$this->translator->translate('//triggers-module.base.messages.uniqueAttribute.heading'),
+					$this->translator->translate('//triggers-module.base.messages.uniqueAttribute.message')
+				);
+
+			} catch (Throwable $ex) {
+				// Log caught exception
+				$this->logger->error('[FB:TRIGGERS_MODULE:CONTROLLER] ' . $ex->getMessage(), [
+					'exception' => [
+						'message' => $ex->getMessage(),
+						'code'    => $ex->getCode(),
+					],
+				]);
+
+				throw new JsonApiExceptions\JsonApiErrorException(
+					StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
+					$this->translator->translate('//triggers-module.base.messages.notCreated.heading'),
+					$this->translator->translate('//triggers-module.base.messages.notCreated.message')
+				);
+
+			} finally {
+				// Revert all changes when error occur
+				if ($this->getOrmConnection()->isTransactionActive()) {
+					$this->getOrmConnection()->rollBack();
 				}
 			}
 
-			throw new JsonApiExceptions\JsonApiErrorException(
-				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('//triggers-module.base.messages.uniqueAttribute.heading'),
-				$this->translator->translate('//triggers-module.base.messages.uniqueAttribute.message')
-			);
-
-		} catch (Throwable $ex) {
-			// Log caught exception
-			$this->logger->error('[FB:TRIGGERS_MODULE:CONTROLLER] ' . $ex->getMessage(), [
-				'exception' => [
-					'message' => $ex->getMessage(),
-					'code'    => $ex->getCode(),
-				],
-			]);
-
-			throw new JsonApiExceptions\JsonApiErrorException(
-				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('//triggers-module.base.messages.notCreated.heading'),
-				$this->translator->translate('//triggers-module.base.messages.notCreated.message')
-			);
-
-		} finally {
-			// Revert all changes when error occur
-			if ($this->getOrmConnection()->isTransactionActive()) {
-				$this->getOrmConnection()->rollBack();
-			}
+			$response = $this->buildResponse($request, $response, $notification);
+			return $response->withStatus(StatusCodeInterface::STATUS_CREATED);
 		}
 
-		/** @var WebServerHttp\Response $response */
-		$response = $response
-			->withEntity(WebServerHttp\ScalarEntity::from($notification))
-			->withStatus(StatusCodeInterface::STATUS_CREATED);
-
-		return $response;
+		throw new JsonApiExceptions\JsonApiErrorException(
+			StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
+			$this->translator->translate('//triggers-module.base.messages.invalidType.heading'),
+			$this->translator->translate('//triggers-module.base.messages.invalidType.message'),
+			[
+				'pointer' => '/data/type',
+			]
+		);
 	}
 
 	/**
 	 * @param Message\ServerRequestInterface $request
-	 * @param WebServerHttp\Response $response
+	 * @param Message\ResponseInterface $response
 	 *
-	 * @return WebServerHttp\Response
+	 * @return Message\ResponseInterface
 	 *
 	 * @throws JsonApiExceptions\IJsonApiException
 	 * @throws Doctrine\DBAL\ConnectionException
@@ -330,8 +307,8 @@ final class NotificationsV1Controller extends BaseV1Controller
 	 */
 	public function update(
 		Message\ServerRequestInterface $request,
-		WebServerHttp\Response $response
-	): WebServerHttp\Response {
+		Message\ResponseInterface $response
+	): Message\ResponseInterface {
 		// At first, try to load trigger
 		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
@@ -342,76 +319,61 @@ final class NotificationsV1Controller extends BaseV1Controller
 
 		$this->validateIdentifier($request, $document);
 
-		try {
-			// Start transaction connection to the database
-			$this->getOrmConnection()->beginTransaction();
+		$hydrator = $this->hydratorsContainer->findHydrator($document);
 
-			if (
-				$document->getResource()->getType() === Schemas\Notifications\SmsNotificationSchema::SCHEMA_TYPE
-				&& $notification instanceof Entities\Notifications\SmsNotification
-			) {
-				$notification = $this->notificationsManager->update(
-					$notification,
-					$this->smsNotificationHydrator->hydrate($document, $notification)
-				);
+		if ($hydrator !== null) {
+			try {
+				// Start transaction connection to the database
+				$this->getOrmConnection()->beginTransaction();
 
-			} elseif (
-				$document->getResource()->getType() === Schemas\Notifications\EmailNotificationSchema::SCHEMA_TYPE
-				&& $notification instanceof Entities\Notifications\EmailNotification
-			) {
-				$notification = $this->notificationsManager->update(
-					$notification,
-					$this->emailNotificationHydrator->hydrate($document, $notification)
-				);
+				$notification = $this->notificationsManager->update($notification, $hydrator->hydrate($document, $notification));
 
-			} else {
+				// Commit all changes into database
+				$this->getOrmConnection()->commit();
+
+			} catch (JsonApiExceptions\IJsonApiException $ex) {
+				throw $ex;
+
+			} catch (Throwable $ex) {
+				// Log caught exception
+				$this->logger->error('[FB:TRIGGERS_MODULE:CONTROLLER] ' . $ex->getMessage(), [
+					'exception' => [
+						'message' => $ex->getMessage(),
+						'code'    => $ex->getCode(),
+					],
+				]);
+
 				throw new JsonApiExceptions\JsonApiErrorException(
 					StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-					$this->translator->translate('//triggers-module.base.messages.invalidType.heading'),
-					$this->translator->translate('//triggers-module.base.messages.invalidType.message'),
-					[
-						'pointer' => '/data/type',
-					]
+					$this->translator->translate('//triggers-module.base.messages.notUpdated.heading'),
+					$this->translator->translate('//triggers-module.base.messages.notUpdated.message')
 				);
+
+			} finally {
+				// Revert all changes when error occur
+				if ($this->getOrmConnection()->isTransactionActive()) {
+					$this->getOrmConnection()->rollBack();
+				}
 			}
 
-			// Commit all changes into database
-			$this->getOrmConnection()->commit();
-
-		} catch (JsonApiExceptions\IJsonApiException $ex) {
-			throw $ex;
-
-		} catch (Throwable $ex) {
-			// Log caught exception
-			$this->logger->error('[FB:TRIGGERS_MODULE:CONTROLLER] ' . $ex->getMessage(), [
-				'exception' => [
-					'message' => $ex->getMessage(),
-					'code'    => $ex->getCode(),
-				],
-			]);
-
-			throw new JsonApiExceptions\JsonApiErrorException(
-				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('//triggers-module.base.messages.notUpdated.heading'),
-				$this->translator->translate('//triggers-module.base.messages.notUpdated.message')
-			);
-
-		} finally {
-			// Revert all changes when error occur
-			if ($this->getOrmConnection()->isTransactionActive()) {
-				$this->getOrmConnection()->rollBack();
-			}
+			return $this->buildResponse($request, $response, $notification);
 		}
 
-		return $response
-			->withEntity(WebServerHttp\ScalarEntity::from($notification));
+		throw new JsonApiExceptions\JsonApiErrorException(
+			StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
+			$this->translator->translate('//triggers-module.base.messages.invalidType.heading'),
+			$this->translator->translate('//triggers-module.base.messages.invalidType.message'),
+			[
+				'pointer' => '/data/type',
+			]
+		);
 	}
 
 	/**
 	 * @param Message\ServerRequestInterface $request
-	 * @param WebServerHttp\Response $response
+	 * @param Message\ResponseInterface $response
 	 *
-	 * @return WebServerHttp\Response
+	 * @return Message\ResponseInterface
 	 *
 	 * @throws JsonApiExceptions\IJsonApiException
 	 * @throws Doctrine\DBAL\ConnectionException
@@ -421,8 +383,8 @@ final class NotificationsV1Controller extends BaseV1Controller
 	 */
 	public function delete(
 		Message\ServerRequestInterface $request,
-		WebServerHttp\Response $response
-	): WebServerHttp\Response {
+		Message\ResponseInterface $response
+	): Message\ResponseInterface {
 		// At first, try to load trigger
 		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
@@ -460,24 +422,21 @@ final class NotificationsV1Controller extends BaseV1Controller
 			}
 		}
 
-		/** @var WebServerHttp\Response $response */
-		$response = $response->withStatus(StatusCodeInterface::STATUS_NO_CONTENT);
-
-		return $response;
+		return $response->withStatus(StatusCodeInterface::STATUS_NO_CONTENT);
 	}
 
 	/**
 	 * @param Message\ServerRequestInterface $request
-	 * @param WebServerHttp\Response $response
+	 * @param Message\ResponseInterface $response
 	 *
-	 * @return WebServerHttp\Response
+	 * @return Message\ResponseInterface
 	 *
 	 * @throws JsonApiExceptions\IJsonApiException
 	 */
 	public function readRelationship(
 		Message\ServerRequestInterface $request,
-		WebServerHttp\Response $response
-	): WebServerHttp\Response {
+		Message\ResponseInterface $response
+	): Message\ResponseInterface {
 		// At first, try to load trigger
 		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
@@ -487,8 +446,7 @@ final class NotificationsV1Controller extends BaseV1Controller
 		$relationEntity = strtolower($request->getAttribute(Router\Routes::RELATION_ENTITY));
 
 		if ($relationEntity === Schemas\Notifications\NotificationSchema::RELATIONSHIPS_TRIGGER) {
-			return $response
-				->withEntity(WebServerHttp\ScalarEntity::from($notification->getTrigger()));
+			return $this->buildResponse($request, $response, $notification->getTrigger());
 		}
 
 		return parent::readRelationship($request, $response);

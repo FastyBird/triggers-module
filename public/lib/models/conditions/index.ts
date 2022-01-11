@@ -1,12 +1,12 @@
 import { Item } from '@vuex-orm/core'
 import * as exchangeEntitySchema
-  from '@fastybird/modules-metadata/resources/schemas/triggers-module/entity.condition.json'
+  from '@fastybird/metadata/resources/schemas/modules/triggers-module/entity.condition.json'
 import {
   ModuleOrigin,
   ConditionEntity as ExchangeEntity,
   TriggersModuleRoutes as RoutingKeys,
   ConditionType,
-} from '@fastybird/modules-metadata'
+} from '@fastybird/metadata'
 
 import {
   ActionTree,
@@ -426,10 +426,10 @@ const moduleActions: ActionTree<ConditionState, any> = {
 
     if (
       ![
-        RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_REPORTED,
-        RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_CREATED,
-        RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_UPDATED,
-        RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_DELETED,
+        RoutingKeys.CONDITIONS_ENTITY_REPORTED,
+        RoutingKeys.CONDITIONS_ENTITY_CREATED,
+        RoutingKeys.CONDITIONS_ENTITY_UPDATED,
+        RoutingKeys.CONDITIONS_ENTITY_DELETED,
       ].includes(payload.routingKey as RoutingKeys)
     ) {
       return false
@@ -442,12 +442,12 @@ const moduleActions: ActionTree<ConditionState, any> = {
     if (validate(body)) {
       if (
         !Condition.query().where('id', body.id).exists() &&
-        payload.routingKey === RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_DELETED
+        payload.routingKey === RoutingKeys.CONDITIONS_ENTITY_DELETED
       ) {
         return true
       }
 
-      if (payload.routingKey === RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_DELETED) {
+      if (payload.routingKey === RoutingKeys.CONDITIONS_ENTITY_DELETED) {
         commit('SET_SEMAPHORE', {
           type: SemaphoreTypes.DELETING,
           id: body.id,
@@ -468,12 +468,12 @@ const moduleActions: ActionTree<ConditionState, any> = {
           })
         }
       } else {
-        if (payload.routingKey === RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_UPDATED && state.semaphore.updating.includes(body.id)) {
+        if (payload.routingKey === RoutingKeys.CONDITIONS_ENTITY_UPDATED && state.semaphore.updating.includes(body.id)) {
           return true
         }
 
         commit('SET_SEMAPHORE', {
-          type: payload.routingKey === RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_REPORTED ? SemaphoreTypes.GETTING : (payload.routingKey === RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING),
+          type: payload.routingKey === RoutingKeys.CONDITIONS_ENTITY_REPORTED ? SemaphoreTypes.GETTING : (payload.routingKey === RoutingKeys.CONDITIONS_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING),
           id: body.id,
         })
 
@@ -539,7 +539,7 @@ const moduleActions: ActionTree<ConditionState, any> = {
           )
         } finally {
           commit('CLEAR_SEMAPHORE', {
-            type: payload.routingKey === RoutingKeys.TRIGGERS_CONDITIONS_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING,
+            type: payload.routingKey === RoutingKeys.CONDITIONS_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING,
             id: body.id,
           })
         }

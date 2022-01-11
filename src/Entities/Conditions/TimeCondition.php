@@ -18,7 +18,7 @@ namespace FastyBird\TriggersModule\Entities\Conditions;
 use DateTimeInterface;
 use DateTimeZone;
 use Doctrine\ORM\Mapping as ORM;
-use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
+use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Exceptions;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
@@ -79,9 +79,9 @@ class TimeCondition extends Condition implements ITimeCondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getType(): ModulesMetadataTypes\TriggerConditionTypeType
+	public function getType(): MetadataTypes\TriggerConditionTypeType
 	{
-		return ModulesMetadataTypes\TriggerConditionTypeType::get(ModulesMetadataTypes\TriggerConditionTypeType::TYPE_TIME);
+		return MetadataTypes\TriggerConditionTypeType::get(MetadataTypes\TriggerConditionTypeType::TYPE_TIME);
 	}
 
 	/**

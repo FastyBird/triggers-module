@@ -44,7 +44,7 @@ final class DataConditionHydrator extends ConditionHydrator
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function getEntityName(): string
+	public function getEntityName(): string
 	{
 		return Entities\Conditions\DateCondition::class;
 	}
@@ -76,8 +76,8 @@ final class DataConditionHydrator extends ConditionHydrator
 		if (!$date instanceof DateTimeInterface || $date->format(DateTimeInterface::ATOM) !== $attributes->get('date')) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('messages.invalidTime.heading'),
-				$this->translator->translate('messages.invalidTime.message'),
+				$this->translator->translate('//triggers-module.conditions.messages.invalidTime.heading'),
+				$this->translator->translate('//triggers-module.conditions.messages.invalidTime.message'),
 				[
 					'pointer' => '/data/attributes/date',
 				]

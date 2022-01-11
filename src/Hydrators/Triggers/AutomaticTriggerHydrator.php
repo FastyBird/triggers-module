@@ -41,7 +41,7 @@ final class AutomaticTriggerHydrator extends TriggerHydrator
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function getEntityName(): string
+	public function getEntityName(): string
 	{
 		return Entities\Triggers\AutomaticTrigger::class;
 	}

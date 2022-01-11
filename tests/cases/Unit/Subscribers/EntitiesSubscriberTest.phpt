@@ -3,9 +3,9 @@
 namespace Tests\Cases;
 
 use Doctrine\ORM;
-use FastyBird\ExchangePlugin\Publisher as ExchangePluginPublisher;
-use FastyBird\ModulesMetadata;
+use FastyBird\Metadata;
 use FastyBird\TriggersModule\Entities;
+use FastyBird\TriggersModule\Exchange;
 use FastyBird\TriggersModule\Subscribers;
 use Mockery;
 use Nette\Utils;
@@ -23,12 +23,12 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 
 	public function testSubscriberEvents(): void
 	{
-		$publisher = Mockery::mock(ExchangePluginPublisher\IPublisher::class);
+		$publisher = Mockery::mock(Exchange\IPublisher::class);
 		$entityManager = Mockery::mock(ORM\EntityManagerInterface::class);
 
 		$subscriber = new Subscribers\EntitiesSubscriber(
-			$publisher,
-			$entityManager
+			$entityManager,
+			$publisher
 		);
 
 		Assert::same(['onFlush', 'prePersist', 'postPersist', 'postUpdate'], $subscriber->getSubscribedEvents());
@@ -36,15 +36,15 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 
 	public function testPublishCreatedEntity(): void
 	{
-		$publisher = Mockery::mock(ExchangePluginPublisher\IPublisher::class);
+		$publisher = Mockery::mock(Exchange\IPublisher::class);
 		$publisher
 			->shouldReceive('publish')
 			->withArgs(function (string $origin, string $key, Utils\ArrayHash $data): bool {
-				Assert::same(ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN, $origin);
+				Assert::same(Metadata\Constants::MODULE_TRIGGERS_ORIGIN, $origin);
 
 				unset($data['id']);
 
-				Assert::same('fb.bus.entity.created.trigger', $key);
+				Assert::same(Metadata\Constants::MESSAGE_BUS_TRIGGERS_CREATED_ENTITY_ROUTING_KEY, $key);
 				Assert::equal(Utils\ArrayHash::from([
 					'name'     => 'Trigger name',
 					'comment'  => null,
@@ -60,8 +60,8 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 		$entityManager = $this->getEntityManager();
 
 		$subscriber = new Subscribers\EntitiesSubscriber(
-			$publisher,
-			$entityManager
+			$entityManager,
+			$publisher
 		);
 
 		$entity = new Entities\Triggers\ManualTrigger(
@@ -127,15 +127,15 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 
 	public function testPublishUpdatedEntity(): void
 	{
-		$publisher = Mockery::mock(ExchangePluginPublisher\IPublisher::class);
+		$publisher = Mockery::mock(Exchange\IPublisher::class);
 		$publisher
 			->shouldReceive('publish')
 			->withArgs(function (string $origin, string $key, Utils\ArrayHash $data): bool {
-				Assert::same(ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN, $origin);
+				Assert::same(Metadata\Constants::MODULE_TRIGGERS_ORIGIN, $origin);
 
 				unset($data['id']);
 
-				Assert::same('fb.bus.entity.updated.trigger', $key);
+				Assert::same(Metadata\Constants::MESSAGE_BUS_TRIGGERS_UPDATED_ENTITY_ROUTING_KEY, $key);
 				Assert::equal(Utils\ArrayHash::from([
 					'name'     => 'Trigger name',
 					'comment'  => null,
@@ -151,8 +151,8 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 		$entityManager = $this->getEntityManager(true);
 
 		$subscriber = new Subscribers\EntitiesSubscriber(
-			$publisher,
-			$entityManager
+			$entityManager,
+			$publisher
 		);
 
 		$entity = new Entities\Triggers\ManualTrigger(
@@ -170,15 +170,15 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 
 	public function testPublishDeletedEntity(): void
 	{
-		$publisher = Mockery::mock(ExchangePluginPublisher\IPublisher::class);
+		$publisher = Mockery::mock(Exchange\IPublisher::class);
 		$publisher
 			->shouldReceive('publish')
 			->withArgs(function (string $origin, string $key, Utils\ArrayHash $data): bool {
-				Assert::same(ModulesMetadata\Constants::MODULE_TRIGGERS_ORIGIN, $origin);
+				Assert::same(Metadata\Constants::MODULE_TRIGGERS_ORIGIN, $origin);
 
 				unset($data['id']);
 
-				Assert::same('fb.bus.entity.deleted.trigger', $key);
+				Assert::same(Metadata\Constants::MESSAGE_BUS_TRIGGERS_DELETED_ENTITY_ROUTING_KEY, $key);
 				Assert::equal(Utils\ArrayHash::from([
 					'name'     => 'Trigger name',
 					'comment'  => null,
@@ -216,8 +216,8 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 			->times(1);
 
 		$subscriber = new Subscribers\EntitiesSubscriber(
-			$publisher,
-			$entityManager
+			$entityManager,
+			$publisher
 		);
 
 		$subscriber->onFlush();

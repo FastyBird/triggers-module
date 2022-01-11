@@ -16,7 +16,7 @@
 namespace FastyBird\TriggersModule\Entities\Triggers;
 
 use Doctrine\ORM\Mapping as ORM;
-use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
+use FastyBird\Metadata\Types as MetadataTypes;
 
 /**
  * @ORM\Entity
@@ -35,9 +35,9 @@ class ManualTrigger extends Trigger implements IManualTrigger
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getType(): ModulesMetadataTypes\TriggerTypeType
+	public function getType(): MetadataTypes\TriggerTypeType
 	{
-		return ModulesMetadataTypes\TriggerTypeType::get(ModulesMetadataTypes\TriggerTypeType::TYPE_MANUAL);
+		return MetadataTypes\TriggerTypeType::get(MetadataTypes\TriggerTypeType::TYPE_MANUAL);
 	}
 
 }

@@ -41,7 +41,7 @@ final class DevicePropertyActionHydrator extends PropertyActionHydrator
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function getEntityName(): string
+	public function getEntityName(): string
 	{
 		return Entities\Actions\DevicePropertyAction::class;
 	}

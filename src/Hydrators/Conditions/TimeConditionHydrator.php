@@ -45,7 +45,7 @@ final class TimeConditionHydrator extends ConditionHydrator
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function getEntityName(): string
+	public function getEntityName(): string
 	{
 		return Entities\Conditions\TimeCondition::class;
 	}
@@ -77,8 +77,8 @@ final class TimeConditionHydrator extends ConditionHydrator
 		if (!$date instanceof DateTimeInterface || $date->format(DateTimeInterface::ATOM) !== $attributes->get('time')) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('messages.invalidTime.heading'),
-				$this->translator->translate('messages.invalidTime.message'),
+				$this->translator->translate('//triggers-module.conditions.messages.invalidTime.heading'),
+				$this->translator->translate('//triggers-module.conditions.messages.invalidTime.message'),
 				[
 					'pointer' => '/data/attributes/time',
 				]
@@ -112,8 +112,8 @@ final class TimeConditionHydrator extends ConditionHydrator
 		} elseif (!is_array($attributes->get('days'))) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('messages.invalidDays.heading'),
-				$this->translator->translate('messages.invalidDays.message'),
+				$this->translator->translate('//triggers-module.conditions.messages.invalidDays.heading'),
+				$this->translator->translate('//triggers-module.conditions.messages.invalidDays.message'),
 				[
 					'pointer' => '/data/attributes/days',
 				]

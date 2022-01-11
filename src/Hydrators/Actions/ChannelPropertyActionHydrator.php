@@ -46,7 +46,7 @@ final class ChannelPropertyActionHydrator extends PropertyActionHydrator
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function getEntityName(): string
+	public function getEntityName(): string
 	{
 		return Entities\Actions\ChannelPropertyAction::class;
 	}

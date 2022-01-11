@@ -22,7 +22,6 @@ use FastyBird\TriggersModule\Models;
 use FastyBird\TriggersModule\Queries;
 use FastyBird\TriggersModule\Router;
 use FastyBird\TriggersModule\Schemas;
-use FastyBird\WebServer\Http as WebServerHttp;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message;
 use Ramsey\Uuid;
@@ -43,9 +42,6 @@ final class TriggerControlsV1Controller extends BaseV1Controller
 
 	use Controllers\Finders\TTriggerFinder;
 
-	/** @var string */
-	protected string $translationDomain = 'triggers-module.triggerControls';
-
 	/** @var Models\Triggers\ITriggerRepository */
 	protected Models\Triggers\ITriggerRepository $triggerRepository;
 
@@ -62,16 +58,16 @@ final class TriggerControlsV1Controller extends BaseV1Controller
 
 	/**
 	 * @param Message\ServerRequestInterface $request
-	 * @param WebServerHttp\Response $response
+	 * @param Message\ResponseInterface $response
 	 *
-	 * @return WebServerHttp\Response
+	 * @return Message\ResponseInterface
 	 *
 	 * @throws JsonApiExceptions\IJsonApiException
 	 */
 	public function index(
 		Message\ServerRequestInterface $request,
-		WebServerHttp\Response $response
-	): WebServerHttp\Response {
+		Message\ResponseInterface $response
+	): Message\ResponseInterface {
 		// At first, try to load trigger
 		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
@@ -88,22 +84,22 @@ final class TriggerControlsV1Controller extends BaseV1Controller
 
 		$controls = $this->controlRepository->getResultSet($findQuery);
 
-		return $response
-			->withEntity(WebServerHttp\ScalarEntity::from($controls));
+		// @phpstan-ignore-next-line
+		return $this->buildResponse($request, $response, $controls);
 	}
 
 	/**
 	 * @param Message\ServerRequestInterface $request
-	 * @param WebServerHttp\Response $response
+	 * @param Message\ResponseInterface $response
 	 *
-	 * @return WebServerHttp\Response
+	 * @return Message\ResponseInterface
 	 *
 	 * @throws JsonApiExceptions\IJsonApiException
 	 */
 	public function read(
 		Message\ServerRequestInterface $request,
-		WebServerHttp\Response $response
-	): WebServerHttp\Response {
+		Message\ResponseInterface $response
+	): Message\ResponseInterface {
 		// At first, try to load trigger
 		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
@@ -124,8 +120,7 @@ final class TriggerControlsV1Controller extends BaseV1Controller
 			$control = $this->controlRepository->findOneBy($findQuery);
 
 			if ($control !== null) {
-				return $response
-					->withEntity(WebServerHttp\ScalarEntity::from($control));
+				return $this->buildResponse($request, $response, $control);
 			}
 		}
 
@@ -138,16 +133,16 @@ final class TriggerControlsV1Controller extends BaseV1Controller
 
 	/**
 	 * @param Message\ServerRequestInterface $request
-	 * @param WebServerHttp\Response $response
+	 * @param Message\ResponseInterface $response
 	 *
-	 * @return WebServerHttp\Response
+	 * @return Message\ResponseInterface
 	 *
 	 * @throws JsonApiExceptions\IJsonApiException
 	 */
 	public function readRelationship(
 		Message\ServerRequestInterface $request,
-		WebServerHttp\Response $response
-	): WebServerHttp\Response {
+		Message\ResponseInterface $response
+	): Message\ResponseInterface {
 		// At first, try to load trigger
 		$trigger = $this->findTrigger($request->getAttribute(Router\Routes::URL_TRIGGER_ID));
 
@@ -172,8 +167,7 @@ final class TriggerControlsV1Controller extends BaseV1Controller
 
 			if ($control !== null) {
 				if ($relationEntity === Schemas\Triggers\Controls\ControlSchema::RELATIONSHIPS_TRIGGER) {
-					return $response
-						->withEntity(WebServerHttp\ScalarEntity::from($trigger));
+					return $this->buildResponse($request, $response, $control->getTrigger());
 				}
 			} else {
 				throw new JsonApiExceptions\JsonApiErrorException(

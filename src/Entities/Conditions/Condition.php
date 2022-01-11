@@ -16,7 +16,7 @@
 namespace FastyBird\TriggersModule\Entities\Conditions;
 
 use Doctrine\ORM\Mapping as ORM;
-use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
+use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use IPub\DoctrineTimestampable;
@@ -94,7 +94,7 @@ abstract class Condition implements ICondition
 	/**
 	 * {@inheritDoc}
 	 */
-	abstract public function getType(): ModulesMetadataTypes\TriggerConditionTypeType;
+	abstract public function getType(): MetadataTypes\TriggerConditionTypeType;
 
 	/**
 	 * {@inheritDoc}

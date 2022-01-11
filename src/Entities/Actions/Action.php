@@ -16,7 +16,7 @@
 namespace FastyBird\TriggersModule\Entities\Actions;
 
 use Doctrine\ORM\Mapping as ORM;
-use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
+use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use IPub\DoctrineTimestampable;
@@ -89,7 +89,7 @@ abstract class Action implements IAction
 	/**
 	 * {@inheritDoc}
 	 */
-	abstract public function getType(): ModulesMetadataTypes\TriggerActionTypeType;
+	abstract public function getType(): MetadataTypes\TriggerActionTypeType;
 
 	/**
 	 * {@inheritDoc}

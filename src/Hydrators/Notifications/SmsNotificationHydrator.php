@@ -58,7 +58,7 @@ final class SmsNotificationHydrator extends NotificationHydrator
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function getEntityName(): string
+	public function getEntityName(): string
 	{
 		return Entities\Notifications\SmsNotification::class;
 	}
@@ -84,8 +84,8 @@ final class SmsNotificationHydrator extends NotificationHydrator
 		) {
 			throw new JsonApiExceptions\JsonApiErrorException(
 				StatusCodeInterface::STATUS_UNPROCESSABLE_ENTITY,
-				$this->translator->translate('messages.invalidPhone.heading'),
-				$this->translator->translate('messages.invalidPhone.message'),
+				$this->translator->translate('//triggers-module.notifications.messages.invalidPhone.heading'),
+				$this->translator->translate('//triggers-module.notifications.messages.invalidPhone.message'),
 				[
 					'pointer' => '/data/attributes/phone',
 				]

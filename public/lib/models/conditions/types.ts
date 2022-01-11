@@ -1,4 +1,4 @@
-import { ConditionOperator } from '@fastybird/modules-metadata'
+import { ConditionOperator } from '@fastybird/metadata'
 
 import {
   TJsonApiBody,

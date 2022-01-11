@@ -47,7 +47,7 @@ final class ChannelPropertyConditionHydrator extends PropertyConditionHydrator
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function getEntityName(): string
+	public function getEntityName(): string
 	{
 		return Entities\Conditions\ChannelPropertyCondition::class;
 	}

@@ -1,11 +1,11 @@
 import { Item } from '@vuex-orm/core'
-import * as exchangeEntitySchema from '@fastybird/modules-metadata/resources/schemas/triggers-module/entity.action.json'
+import * as exchangeEntitySchema from '@fastybird/metadata/resources/schemas/modules/triggers-module/entity.action.json'
 import {
   ModuleOrigin,
   ActionEntity as ExchangeEntity,
   TriggersModuleRoutes as RoutingKeys,
   ActionType,
-} from '@fastybird/modules-metadata'
+} from '@fastybird/metadata'
 
 import {
   ActionTree,
@@ -421,10 +421,10 @@ const moduleActions: ActionTree<ActionState, any> = {
 
     if (
       ![
-        RoutingKeys.TRIGGERS_ACTIONS_ENTITY_REPORTED,
-        RoutingKeys.TRIGGERS_ACTIONS_ENTITY_CREATED,
-        RoutingKeys.TRIGGERS_ACTIONS_ENTITY_UPDATED,
-        RoutingKeys.TRIGGERS_ACTIONS_ENTITY_DELETED,
+        RoutingKeys.ACTIONS_ENTITY_REPORTED,
+        RoutingKeys.ACTIONS_ENTITY_CREATED,
+        RoutingKeys.ACTIONS_ENTITY_UPDATED,
+        RoutingKeys.ACTIONS_ENTITY_DELETED,
       ].includes(payload.routingKey as RoutingKeys)
     ) {
       return false
@@ -437,12 +437,12 @@ const moduleActions: ActionTree<ActionState, any> = {
     if (validate(body)) {
       if (
         !Action.query().where('id', body.id).exists()
-        && payload.routingKey === RoutingKeys.TRIGGERS_ACTIONS_ENTITY_DELETED
+        && payload.routingKey === RoutingKeys.ACTIONS_ENTITY_DELETED
       ) {
         return true
       }
 
-      if (payload.routingKey === RoutingKeys.TRIGGERS_ACTIONS_ENTITY_DELETED) {
+      if (payload.routingKey === RoutingKeys.ACTIONS_ENTITY_DELETED) {
         commit('SET_SEMAPHORE', {
           type: SemaphoreTypes.DELETING,
           id: body.id,
@@ -463,12 +463,12 @@ const moduleActions: ActionTree<ActionState, any> = {
           })
         }
       } else {
-        if (payload.routingKey === RoutingKeys.TRIGGERS_ACTIONS_ENTITY_UPDATED && state.semaphore.updating.includes(body.id)) {
+        if (payload.routingKey === RoutingKeys.ACTIONS_ENTITY_UPDATED && state.semaphore.updating.includes(body.id)) {
           return true
         }
 
         commit('SET_SEMAPHORE', {
-          type: payload.routingKey === RoutingKeys.TRIGGERS_ACTIONS_ENTITY_REPORTED ? SemaphoreTypes.GETTING : (payload.routingKey === RoutingKeys.TRIGGERS_ACTIONS_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING),
+          type: payload.routingKey === RoutingKeys.ACTIONS_ENTITY_REPORTED ? SemaphoreTypes.GETTING : (payload.routingKey === RoutingKeys.ACTIONS_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING),
           id: body.id,
         })
 
@@ -526,7 +526,7 @@ const moduleActions: ActionTree<ActionState, any> = {
           )
         } finally {
           commit('CLEAR_SEMAPHORE', {
-            type: payload.routingKey === RoutingKeys.TRIGGERS_ACTIONS_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING,
+            type: payload.routingKey === RoutingKeys.ACTIONS_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING,
             id: body.id,
           })
         }

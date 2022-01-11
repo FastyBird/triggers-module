@@ -15,7 +15,7 @@
 
 namespace FastyBird\TriggersModule\Entities\Actions;
 
-use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
+use FastyBird\Metadata\Types as MetadataTypes;
 
 /**
  * Property action entity interface
@@ -29,7 +29,7 @@ interface IPropertyAction extends IAction
 {
 
 	/**
-	 * @return string|ModulesMetadataTypes\ButtonPayloadType|ModulesMetadataTypes\SwitchPayloadType
+	 * @return string|MetadataTypes\ButtonPayloadType|MetadataTypes\SwitchPayloadType
 	 */
 	public function getValue();
 

@@ -17,7 +17,7 @@ namespace FastyBird\TriggersModule\Entities\Triggers;
 
 use Doctrine\Common;
 use Doctrine\ORM\Mapping as ORM;
-use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
+use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use Ramsey\Uuid;
@@ -63,9 +63,9 @@ class AutomaticTrigger extends Trigger implements IAutomaticTrigger
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getType(): ModulesMetadataTypes\TriggerTypeType
+	public function getType(): MetadataTypes\TriggerTypeType
 	{
-		return ModulesMetadataTypes\TriggerTypeType::get(ModulesMetadataTypes\TriggerTypeType::TYPE_AUTOMATIC);
+		return MetadataTypes\TriggerTypeType::get(MetadataTypes\TriggerTypeType::TYPE_AUTOMATIC);
 	}
 
 	/**

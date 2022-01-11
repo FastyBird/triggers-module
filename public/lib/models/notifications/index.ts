@@ -1,12 +1,12 @@
 import { Item } from '@vuex-orm/core'
 import * as exchangeEntitySchema
-  from '@fastybird/modules-metadata/resources/schemas/triggers-module/entity.notification.json'
+  from '@fastybird/metadata/resources/schemas/modules/triggers-module/entity.notification.json'
 import {
   ModuleOrigin,
   NotificationEntity as ExchangeEntity,
   NotificationType,
   TriggersModuleRoutes as RoutingKeys,
-} from '@fastybird/modules-metadata'
+} from '@fastybird/metadata'
 
 import {
   ActionTree,
@@ -422,10 +422,10 @@ const moduleActions: ActionTree<NotificationState, any> = {
 
     if (
       ![
-        RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_REPORTED,
-        RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_CREATED,
-        RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_UPDATED,
-        RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_DELETED,
+        RoutingKeys.NOTIFICATIONS_ENTITY_REPORTED,
+        RoutingKeys.NOTIFICATIONS_ENTITY_CREATED,
+        RoutingKeys.NOTIFICATIONS_ENTITY_UPDATED,
+        RoutingKeys.NOTIFICATIONS_ENTITY_DELETED,
       ].includes(payload.routingKey as RoutingKeys)
     ) {
       return false
@@ -438,12 +438,12 @@ const moduleActions: ActionTree<NotificationState, any> = {
     if (validate(body)) {
       if (
         !Notification.query().where('id', body.id).exists() &&
-        payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_DELETED
+        payload.routingKey === RoutingKeys.NOTIFICATIONS_ENTITY_DELETED
       ) {
         return true
       }
 
-      if (payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_DELETED) {
+      if (payload.routingKey === RoutingKeys.NOTIFICATIONS_ENTITY_DELETED) {
         commit('SET_SEMAPHORE', {
           type: SemaphoreTypes.DELETING,
           id: body.id,
@@ -464,12 +464,12 @@ const moduleActions: ActionTree<NotificationState, any> = {
           })
         }
       } else {
-        if (payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_UPDATED && state.semaphore.updating.includes(body.id)) {
+        if (payload.routingKey === RoutingKeys.NOTIFICATIONS_ENTITY_UPDATED && state.semaphore.updating.includes(body.id)) {
           return true
         }
 
         commit('SET_SEMAPHORE', {
-          type: payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_REPORTED ? SemaphoreTypes.GETTING : (payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING),
+          type: payload.routingKey === RoutingKeys.NOTIFICATIONS_ENTITY_REPORTED ? SemaphoreTypes.GETTING : (payload.routingKey === RoutingKeys.NOTIFICATIONS_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING),
           id: body.id,
         })
 
@@ -527,7 +527,7 @@ const moduleActions: ActionTree<NotificationState, any> = {
           )
         } finally {
           commit('CLEAR_SEMAPHORE', {
-            type: payload.routingKey === RoutingKeys.TRIGGERS_NOTIFICATIONS_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING,
+            type: payload.routingKey === RoutingKeys.NOTIFICATIONS_ENTITY_UPDATED ? SemaphoreTypes.UPDATING : SemaphoreTypes.CREATING,
             id: body.id,
           })
         }

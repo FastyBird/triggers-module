@@ -16,7 +16,7 @@
 namespace FastyBird\TriggersModule\Entities\Notifications;
 
 use Doctrine\ORM\Mapping as ORM;
-use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
+use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use IPub\DoctrineTimestampable;
@@ -92,7 +92,7 @@ abstract class Notification implements INotification
 	/**
 	 * {@inheritDoc}
 	 */
-	abstract public function getType(): ModulesMetadataTypes\TriggerNotificationTypeType;
+	abstract public function getType(): MetadataTypes\TriggerNotificationTypeType;
 
 	/**
 	 * {@inheritDoc}

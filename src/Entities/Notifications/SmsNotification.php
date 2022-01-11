@@ -16,7 +16,7 @@
 namespace FastyBird\TriggersModule\Entities\Notifications;
 
 use Doctrine\ORM\Mapping as ORM;
-use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
+use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use IPub\Phone;
@@ -65,9 +65,9 @@ class SmsNotification extends Notification implements ISmsNotification
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getType(): ModulesMetadataTypes\TriggerNotificationTypeType
+	public function getType(): MetadataTypes\TriggerNotificationTypeType
 	{
-		return ModulesMetadataTypes\TriggerNotificationTypeType::get(ModulesMetadataTypes\TriggerNotificationTypeType::TYPE_SMS);
+		return MetadataTypes\TriggerNotificationTypeType::get(MetadataTypes\TriggerNotificationTypeType::TYPE_SMS);
 	}
 
 	/**

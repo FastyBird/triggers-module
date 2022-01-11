@@ -7,6 +7,7 @@ use FastyBird\TriggersModule\Controllers;
 use FastyBird\TriggersModule\DI;
 use FastyBird\TriggersModule\Hydrators;
 use FastyBird\TriggersModule\Models;
+use FastyBird\TriggersModule\Router;
 use FastyBird\TriggersModule\Schemas;
 use FastyBird\TriggersModule\Subscribers;
 use Nette;
@@ -67,6 +68,9 @@ final class ServicesTest extends BaseTestCase
 		Assert::notNull($container->getByType(Hydrators\Conditions\DevicePropertyConditionHydrator::class));
 		Assert::notNull($container->getByType(Hydrators\Conditions\DataConditionHydrator::class));
 		Assert::notNull($container->getByType(Hydrators\Conditions\TimeConditionHydrator::class));
+
+		Assert::notNull($container->getByType(Router\Validator::class));
+		Assert::notNull($container->getByType(Router\Routes::class));
 
 		Assert::notNull($container->getByType(Subscribers\EntitiesSubscriber::class));
 		Assert::notNull($container->getByType(Subscribers\ActionEntitySubscriber::class));

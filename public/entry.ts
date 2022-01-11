@@ -1,4 +1,4 @@
-import { ModuleOrigin } from '@fastybird/modules-metadata'
+import { ModuleOrigin } from '@fastybird/metadata'
 import { Plugin } from '@vuex-orm/core/dist/src/plugins/use'
 
 import Trigger from '@/lib/models/triggers/Trigger'

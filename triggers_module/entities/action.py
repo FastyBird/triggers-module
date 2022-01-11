@@ -24,8 +24,8 @@ from abc import abstractmethod
 from typing import Dict, Optional, Union
 
 # Library dependencies
-from modules_metadata.triggers_module import ActionType
-from modules_metadata.types import ButtonPayload, SwitchPayload
+from metadata.triggers_module import ActionType
+from metadata.types import ButtonPayload, SwitchPayload
 from sqlalchemy import BINARY, BOOLEAN, VARCHAR, Column, ForeignKey
 from sqlalchemy.orm import relationship
 

@@ -17,7 +17,7 @@ namespace FastyBird\TriggersModule\Entities\Conditions;
 
 use Consistence\Doctrine\Enum\EnumAnnotation as Enum;
 use Doctrine\ORM\Mapping as ORM;
-use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
+use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use Ramsey\Uuid;
@@ -38,10 +38,10 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	protected Uuid\UuidInterface $device;
 
 	/**
-	 * @var ModulesMetadataTypes\TriggerConditionOperatorType
+	 * @var MetadataTypes\TriggerConditionOperatorType
 	 *
 	 * @IPubDoctrine\Crud(is={"required", "writable"})
-	 * @Enum(class=ModulesMetadataTypes\TriggerConditionOperatorType::class)
+	 * @Enum(class=MetadataTypes\TriggerConditionOperatorType::class)
 	 * @ORM\Column(type="string_enum", name="condition_operator", length=15, nullable=true)
 	 */
 	protected $operator;
@@ -56,7 +56,7 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 
 	/**
 	 * @param Uuid\UuidInterface $device
-	 * @param ModulesMetadataTypes\TriggerConditionOperatorType $operator
+	 * @param MetadataTypes\TriggerConditionOperatorType $operator
 	 * @param string $operand
 	 * @param Entities\Triggers\IAutomaticTrigger $trigger
 	 * @param Uuid\UuidInterface|null $id
@@ -65,7 +65,7 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	 */
 	public function __construct(
 		Uuid\UuidInterface $device,
-		ModulesMetadataTypes\TriggerConditionOperatorType $operator,
+		MetadataTypes\TriggerConditionOperatorType $operator,
 		string $operand,
 		Entities\Triggers\IAutomaticTrigger $trigger,
 		?Uuid\UuidInterface $id = null
@@ -88,7 +88,7 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getOperator(): ModulesMetadataTypes\TriggerConditionOperatorType
+	public function getOperator(): MetadataTypes\TriggerConditionOperatorType
 	{
 		return $this->operator;
 	}
@@ -96,7 +96,7 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setOperator(ModulesMetadataTypes\TriggerConditionOperatorType $operator): void
+	public function setOperator(MetadataTypes\TriggerConditionOperatorType $operator): void
 	{
 		$this->operator = $operator;
 	}
@@ -106,12 +106,12 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	 */
 	public function getOperand()
 	{
-		if (ModulesMetadataTypes\ButtonPayloadType::isValidValue($this->operand)) {
-			return ModulesMetadataTypes\ButtonPayloadType::get($this->operand);
+		if (MetadataTypes\ButtonPayloadType::isValidValue($this->operand)) {
+			return MetadataTypes\ButtonPayloadType::get($this->operand);
 		}
 
-		if (ModulesMetadataTypes\SwitchPayloadType::isValidValue($this->operand)) {
-			return ModulesMetadataTypes\SwitchPayloadType::get($this->operand);
+		if (MetadataTypes\SwitchPayloadType::isValidValue($this->operand)) {
+			return MetadataTypes\SwitchPayloadType::get($this->operand);
 		}
 
 		return $this->operand;
@@ -130,15 +130,15 @@ abstract class PropertyCondition extends Condition implements IPropertyCondition
 	 */
 	public function validate(string $value): bool
 	{
-		if ($this->operator->equalsValue(ModulesMetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_EQUAL)) {
+		if ($this->operator->equalsValue(MetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_EQUAL)) {
 			return (string) $this->operand === $value;
 		}
 
-		if ($this->operator->equalsValue(ModulesMetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_ABOVE)) {
+		if ($this->operator->equalsValue(MetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_ABOVE)) {
 			return (float) ((string) $this->operand) < (float) $value;
 		}
 
-		if ($this->operator->equalsValue(ModulesMetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_BELOW)) {
+		if ($this->operator->equalsValue(MetadataTypes\TriggerConditionOperatorType::OPERATOR_VALUE_BELOW)) {
 			return (float) ((string) $this->operand) > (float) $value;
 		}
 

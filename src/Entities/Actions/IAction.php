@@ -15,7 +15,7 @@
 
 namespace FastyBird\TriggersModule\Entities\Actions;
 
-use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
+use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineTimestampable;
 
@@ -32,9 +32,9 @@ interface IAction extends Entities\IEntity,
 {
 
 	/**
-	 * @return ModulesMetadataTypes\TriggerActionTypeType
+	 * @return MetadataTypes\TriggerActionTypeType
 	 */
-	public function getType(): ModulesMetadataTypes\TriggerActionTypeType;
+	public function getType(): MetadataTypes\TriggerActionTypeType;
 
 	/**
 	 * @return Entities\Triggers\ITrigger

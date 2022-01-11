@@ -3,7 +3,7 @@ import {
   Item,
   Model,
 } from '@vuex-orm/core'
-import { ConditionOperator } from '@fastybird/modules-metadata'
+import { ConditionOperator } from '@fastybird/metadata'
 
 import Trigger from '@/lib/models/triggers/Trigger'
 import { TriggerInterface } from '@/lib/models/triggers/types'

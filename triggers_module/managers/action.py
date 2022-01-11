@@ -21,15 +21,11 @@ Triggers module action managers module
 # Python base dependencies
 from typing import Dict, List, Type
 
-# Library dependencies
-from kink import inject
-
 # Library libs
 from triggers_module.entities.action import ActionEntity
 from triggers_module.managers.base import BaseManager
 
 
-@inject
 class ActionsManager(BaseManager[ActionEntity]):
     """
     Actions manager

@@ -16,7 +16,7 @@
 namespace FastyBird\TriggersModule\Entities\Actions;
 
 use Doctrine\ORM\Mapping as ORM;
-use FastyBird\ModulesMetadata\Types as ModulesMetadataTypes;
+use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use Ramsey\Uuid;
@@ -74,12 +74,12 @@ abstract class PropertyAction extends Action implements IPropertyAction
 	 */
 	public function getValue()
 	{
-		if (ModulesMetadataTypes\ButtonPayloadType::isValidValue($this->value)) {
-			return ModulesMetadataTypes\ButtonPayloadType::get($this->value);
+		if (MetadataTypes\ButtonPayloadType::isValidValue($this->value)) {
+			return MetadataTypes\ButtonPayloadType::get($this->value);
 		}
 
-		if (ModulesMetadataTypes\SwitchPayloadType::isValidValue($this->value)) {
-			return ModulesMetadataTypes\SwitchPayloadType::get($this->value);
+		if (MetadataTypes\SwitchPayloadType::isValidValue($this->value)) {
+			return MetadataTypes\SwitchPayloadType::get($this->value);
 		}
 
 		return $this->value;

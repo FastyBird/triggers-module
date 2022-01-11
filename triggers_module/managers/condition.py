@@ -21,15 +21,11 @@ Triggers module condition managers module
 # Python base dependencies
 from typing import Dict, List, Type
 
-# Library dependencies
-from kink import inject
-
 # Library libs
 from triggers_module.entities.condition import ConditionEntity
 from triggers_module.managers.base import BaseManager
 
 
-@inject
 class ConditionsManager(BaseManager[ConditionEntity]):
     """
     Conditions manager

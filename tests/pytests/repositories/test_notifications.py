@@ -19,7 +19,7 @@ import uuid
 
 # Library dependencies
 from kink import inject
-from modules_metadata.routing import RoutingKey
+from metadata.routing import RoutingKey
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
@@ -52,9 +52,7 @@ class TestNotificationsRepository(DbTestCase):
         trigger_repository: TriggersRepository,
         notification_repository: NotificationsRepository,
     ) -> None:
-        trigger = trigger_repository.get_by_id(
-            trigger_id=uuid.UUID("c64ba1c4-0eda-4cab-87a0-4d634f7b67f4", version=4)
-        )
+        trigger = trigger_repository.get_by_id(trigger_id=uuid.UUID("c64ba1c4-0eda-4cab-87a0-4d634f7b67f4", version=4))
 
         self.assertIsNotNone(trigger)
 

@@ -23,14 +23,11 @@ import uuid
 from abc import ABC, abstractmethod
 from typing import Optional
 
-# Library dependencies
-from kink import inject
-
+# Library libs
 from triggers_module.state.action import ActionState
 from triggers_module.state.condition import ConditionState
 
 
-@inject
 class IActionStateRepository(ABC):
     """
     State repository for action
@@ -46,7 +43,6 @@ class IActionStateRepository(ABC):
         """Find trigger action state record by provided database identifier"""
 
 
-@inject
 class IConditionStateRepository(ABC):
     """
     State repository for condition

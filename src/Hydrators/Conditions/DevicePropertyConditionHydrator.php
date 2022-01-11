@@ -42,7 +42,7 @@ final class DevicePropertyConditionHydrator extends PropertyConditionHydrator
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function getEntityName(): string
+	public function getEntityName(): string
 	{
 		return Entities\Conditions\DevicePropertyCondition::class;
 	}

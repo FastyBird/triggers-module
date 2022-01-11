@@ -24,7 +24,7 @@ from abc import abstractmethod
 from typing import Dict, List, Optional, Union
 
 # Library dependencies
-from modules_metadata.triggers_module import TriggerType
+from metadata.triggers_module import TriggerType
 from sqlalchemy import (
     BINARY,
     BOOLEAN,

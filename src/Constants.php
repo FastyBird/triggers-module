@@ -15,7 +15,7 @@
 
 namespace FastyBird\TriggersModule;
 
-use FastyBird\ModulesMetadata;
+use FastyBird\Metadata;
 use FastyBird\TriggersModule\Entities as TriggersModuleEntities;
 
 /**
@@ -53,24 +53,24 @@ final class Constants
 	 * Message bus routing keys mapping
 	 */
 	public const MESSAGE_BUS_CREATED_ENTITIES_ROUTING_KEYS_MAPPING = [
-		TriggersModuleEntities\Triggers\Trigger::class           => ModulesMetadata\Constants::MESSAGE_BUS_TRIGGERS_CREATED_ENTITY_ROUTING_KEY,
-		TriggersModuleEntities\Actions\Action::class             => ModulesMetadata\Constants::MESSAGE_BUS_TRIGGERS_ACTIONS_CREATED_ENTITY_ROUTING_KEY,
-		TriggersModuleEntities\Notifications\Notification::class => ModulesMetadata\Constants::MESSAGE_BUS_TRIGGERS_NOTIFICATIONS_CREATED_ENTITY_ROUTING_KEY,
-		TriggersModuleEntities\Conditions\Condition::class       => ModulesMetadata\Constants::MESSAGE_BUS_TRIGGERS_CONDITIONS_CREATED_ENTITY_ROUTING_KEY,
+		TriggersModuleEntities\Triggers\Trigger::class           => Metadata\Constants::MESSAGE_BUS_TRIGGERS_CREATED_ENTITY_ROUTING_KEY,
+		TriggersModuleEntities\Actions\Action::class             => Metadata\Constants::MESSAGE_BUS_TRIGGERS_ACTIONS_CREATED_ENTITY_ROUTING_KEY,
+		TriggersModuleEntities\Notifications\Notification::class => Metadata\Constants::MESSAGE_BUS_TRIGGERS_NOTIFICATIONS_CREATED_ENTITY_ROUTING_KEY,
+		TriggersModuleEntities\Conditions\Condition::class       => Metadata\Constants::MESSAGE_BUS_TRIGGERS_CONDITIONS_CREATED_ENTITY_ROUTING_KEY,
 	];
 
 	public const MESSAGE_BUS_UPDATED_ENTITIES_ROUTING_KEYS_MAPPING = [
-		TriggersModuleEntities\Triggers\Trigger::class           => ModulesMetadata\Constants::MESSAGE_BUS_TRIGGERS_UPDATED_ENTITY_ROUTING_KEY,
-		TriggersModuleEntities\Actions\Action::class             => ModulesMetadata\Constants::MESSAGE_BUS_TRIGGERS_ACTIONS_UPDATED_ENTITY_ROUTING_KEY,
-		TriggersModuleEntities\Notifications\Notification::class => ModulesMetadata\Constants::MESSAGE_BUS_TRIGGERS_NOTIFICATIONS_UPDATED_ENTITY_ROUTING_KEY,
-		TriggersModuleEntities\Conditions\Condition::class       => ModulesMetadata\Constants::MESSAGE_BUS_TRIGGERS_CONDITIONS_UPDATED_ENTITY_ROUTING_KEY,
+		TriggersModuleEntities\Triggers\Trigger::class           => Metadata\Constants::MESSAGE_BUS_TRIGGERS_UPDATED_ENTITY_ROUTING_KEY,
+		TriggersModuleEntities\Actions\Action::class             => Metadata\Constants::MESSAGE_BUS_TRIGGERS_ACTIONS_UPDATED_ENTITY_ROUTING_KEY,
+		TriggersModuleEntities\Notifications\Notification::class => Metadata\Constants::MESSAGE_BUS_TRIGGERS_NOTIFICATIONS_UPDATED_ENTITY_ROUTING_KEY,
+		TriggersModuleEntities\Conditions\Condition::class       => Metadata\Constants::MESSAGE_BUS_TRIGGERS_CONDITIONS_UPDATED_ENTITY_ROUTING_KEY,
 	];
 
 	public const MESSAGE_BUS_DELETED_ENTITIES_ROUTING_KEYS_MAPPING = [
-		TriggersModuleEntities\Triggers\Trigger::class           => ModulesMetadata\Constants::MESSAGE_BUS_TRIGGERS_DELETED_ENTITY_ROUTING_KEY,
-		TriggersModuleEntities\Actions\Action::class             => ModulesMetadata\Constants::MESSAGE_BUS_TRIGGERS_ACTIONS_DELETED_ENTITY_ROUTING_KEY,
-		TriggersModuleEntities\Notifications\Notification::class => ModulesMetadata\Constants::MESSAGE_BUS_TRIGGERS_NOTIFICATIONS_DELETED_ENTITY_ROUTING_KEY,
-		TriggersModuleEntities\Conditions\Condition::class       => ModulesMetadata\Constants::MESSAGE_BUS_TRIGGERS_CONDITIONS_DELETED_ENTITY_ROUTING_KEY,
+		TriggersModuleEntities\Triggers\Trigger::class           => Metadata\Constants::MESSAGE_BUS_TRIGGERS_DELETED_ENTITY_ROUTING_KEY,
+		TriggersModuleEntities\Actions\Action::class             => Metadata\Constants::MESSAGE_BUS_TRIGGERS_ACTIONS_DELETED_ENTITY_ROUTING_KEY,
+		TriggersModuleEntities\Notifications\Notification::class => Metadata\Constants::MESSAGE_BUS_TRIGGERS_NOTIFICATIONS_DELETED_ENTITY_ROUTING_KEY,
+		TriggersModuleEntities\Conditions\Condition::class       => Metadata\Constants::MESSAGE_BUS_TRIGGERS_CONDITIONS_DELETED_ENTITY_ROUTING_KEY,
 	];
 
 }

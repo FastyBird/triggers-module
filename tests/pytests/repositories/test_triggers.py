@@ -19,7 +19,7 @@ import uuid
 
 # Library dependencies
 from kink import inject
-from modules_metadata.routing import RoutingKey
+from metadata.routing import RoutingKey
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
