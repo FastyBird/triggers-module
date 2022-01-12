@@ -249,7 +249,9 @@ final class ActionsV1Controller extends BaseV1Controller
 
 			} catch (Throwable $ex) {
 				// Log caught exception
-				$this->logger->error('[FB:TRIGGERS_MODULE:CONTROLLER] ' . $ex->getMessage(), [
+				$this->logger->error('An unhandled error occurred', [
+					'source'    => 'triggers-module-actions-controller',
+					'type'      => 'create',
 					'exception' => [
 						'message' => $ex->getMessage(),
 						'code'    => $ex->getCode(),
@@ -326,7 +328,9 @@ final class ActionsV1Controller extends BaseV1Controller
 
 			} catch (Throwable $ex) {
 				// Log caught exception
-				$this->logger->error('[FB:TRIGGERS_MODULE:CONTROLLER] ' . $ex->getMessage(), [
+				$this->logger->error('An unhandled error occurred', [
+					'source'    => 'triggers-module-actions-controller',
+					'type'      => 'update',
 					'exception' => [
 						'message' => $ex->getMessage(),
 						'code'    => $ex->getCode(),
@@ -392,7 +396,9 @@ final class ActionsV1Controller extends BaseV1Controller
 
 		} catch (Throwable $ex) {
 			// Log caught exception
-			$this->logger->error('[FB:TRIGGERS_MODULE:CONTROLLER] ' . $ex->getMessage(), [
+			$this->logger->error('An unhandled error occurred', [
+				'source'    => 'triggers-module-actions-controller',
+				'type'      => 'delete',
 				'exception' => [
 					'message' => $ex->getMessage(),
 					'code'    => $ex->getCode(),

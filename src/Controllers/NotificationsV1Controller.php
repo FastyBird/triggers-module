@@ -259,7 +259,9 @@ final class NotificationsV1Controller extends BaseV1Controller
 
 			} catch (Throwable $ex) {
 				// Log caught exception
-				$this->logger->error('[FB:TRIGGERS_MODULE:CONTROLLER] ' . $ex->getMessage(), [
+				$this->logger->error('An unhandled error occurred', [
+					'source'    => 'triggers-module-notifications-controller',
+					'type'      => 'create',
 					'exception' => [
 						'message' => $ex->getMessage(),
 						'code'    => $ex->getCode(),
@@ -336,7 +338,9 @@ final class NotificationsV1Controller extends BaseV1Controller
 
 			} catch (Throwable $ex) {
 				// Log caught exception
-				$this->logger->error('[FB:TRIGGERS_MODULE:CONTROLLER] ' . $ex->getMessage(), [
+				$this->logger->error('An unhandled error occurred', [
+					'source'    => 'triggers-module-notifications-controller',
+					'type'      => 'update',
 					'exception' => [
 						'message' => $ex->getMessage(),
 						'code'    => $ex->getCode(),
@@ -402,7 +406,9 @@ final class NotificationsV1Controller extends BaseV1Controller
 
 		} catch (Throwable $ex) {
 			// Log caught exception
-			$this->logger->error('[FB:TRIGGERS_MODULE:CONTROLLER] ' . $ex->getMessage(), [
+			$this->logger->error('An unhandled error occurred', [
+				'source'    => 'triggers-module-notifications-controller',
+				'type'      => 'delete',
 				'exception' => [
 					'message' => $ex->getMessage(),
 					'code'    => $ex->getCode(),
