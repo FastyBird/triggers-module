@@ -478,7 +478,7 @@ class DateConditionEntity(ConditionEntity):
         return {
             **super().to_dict(),
             **{
-                "date": self.date.strftime(r"%Y-%m-%d\T%H:%M:%S+00:00"),
+                "date": self.date.strftime(r"%Y-%m-%dT%H:%M:%S+00:00"),
             },
         }
 
