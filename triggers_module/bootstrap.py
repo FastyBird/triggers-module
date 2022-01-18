@@ -20,6 +20,9 @@ Triggers module DI container
 
 # pylint: disable=no-value-for-parameter
 
+# Python base dependencies
+import logging
+
 # Library dependencies
 from kink import di
 from sqlalchemy.orm import Session as OrmSession
@@ -39,28 +42,35 @@ from triggers_module.repositories.trigger import (
 from triggers_module.subscriber import EntitiesSubscriber, EntityCreatedSubscriber
 
 
-def create_container(database_session: OrmSession) -> None:
+def register_services(
+    logger: logging.Logger = logging.getLogger("dummy"),
+) -> None:
     """Register triggers module services"""
-    di[TriggersRepository] = TriggersRepository(session=database_session)
+    if OrmSession not in di:
+        logger.error("SQLAlchemy database session is not registered in container!")
+
+        return
+
+    di[TriggersRepository] = TriggersRepository(session=di[OrmSession])
     di["fb-triggers-module_trigger-repository"] = di[TriggersRepository]
-    di[TriggersControlsRepository] = TriggersControlsRepository(session=database_session)
+    di[TriggersControlsRepository] = TriggersControlsRepository(session=di[OrmSession])
     di["fb-triggers-module_trigger-control-repository"] = di[TriggersControlsRepository]
-    di[ActionsRepository] = ActionsRepository(session=database_session)
+    di[ActionsRepository] = ActionsRepository(session=di[OrmSession])
     di["fb-triggers-module_action-repository"] = di[ActionsRepository]
-    di[ConditionsRepository] = ConditionsRepository(session=database_session)
+    di[ConditionsRepository] = ConditionsRepository(session=di[OrmSession])
     di["fb-triggers-module_condition-repository"] = di[ConditionsRepository]
-    di[NotificationsRepository] = NotificationsRepository(session=database_session)
+    di[NotificationsRepository] = NotificationsRepository(session=di[OrmSession])
     di["fb-triggers-module_notification-repository"] = di[NotificationsRepository]
 
-    di[TriggersManager] = TriggersManager(session=database_session)
+    di[TriggersManager] = TriggersManager(session=di[OrmSession])
     di["fb-triggers-module_triggers-manager"] = di[TriggersManager]
-    di[TriggerControlsManager] = TriggerControlsManager(session=database_session)
+    di[TriggerControlsManager] = TriggerControlsManager(session=di[OrmSession])
     di["fb-triggers-module_trigger-controls-manager"] = di[TriggerControlsManager]
-    di[ActionsManager] = ActionsManager(session=database_session)
+    di[ActionsManager] = ActionsManager(session=di[OrmSession])
     di["fb-triggers-module_actions-manager"] = di[ActionsManager]
-    di[ConditionsManager] = ConditionsManager(session=database_session)
+    di[ConditionsManager] = ConditionsManager(session=di[OrmSession])
     di["fb-triggers-module_actions-manager"] = di[ConditionsManager]
-    di[NotificationsManager] = NotificationsManager(session=database_session)
+    di[NotificationsManager] = NotificationsManager(session=di[OrmSession])
     di["fb-triggers-module_actions-manager"] = di[NotificationsManager]
 
     di[EntitiesSubscriber] = EntitiesSubscriber()

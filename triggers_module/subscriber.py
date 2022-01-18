@@ -23,6 +23,7 @@ import datetime
 from typing import Dict, Optional, Type
 
 # Library dependencies
+from exchange.publisher import Publisher
 from kink import inject
 from metadata.routing import RoutingKey
 from metadata.types import ModuleOrigin
@@ -52,7 +53,6 @@ from triggers_module.entities.trigger import (
     TriggerControlEntity,
     TriggerEntity,
 )
-from triggers_module.exchange import IPublisher
 from triggers_module.repositories.state import (
     IActionStateRepository,
     IConditionStateRepository,
@@ -160,7 +160,7 @@ class EntitiesSubscriber:
         EmailNotificationEntity: RoutingKey.TRIGGERS_NOTIFICATIONS_ENTITY_DELETED,
     }
 
-    __publisher: Optional[IPublisher]
+    __publisher: Optional[Publisher]
 
     __action_state_repository: Optional[IActionStateRepository]
     __condition_state_repository: Optional[IConditionStateRepository]
@@ -169,7 +169,7 @@ class EntitiesSubscriber:
 
     def __init__(
         self,
-        publisher: IPublisher = None,  # type: ignore[assignment]
+        publisher: Publisher = None,  # type: ignore[assignment]
         action_state_repository: IActionStateRepository = None,  # type: ignore[assignment]
         condition_state_repository: IConditionStateRepository = None,  # type: ignore[assignment]
     ) -> None:

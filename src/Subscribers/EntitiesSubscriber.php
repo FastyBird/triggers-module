@@ -18,10 +18,10 @@ namespace FastyBird\TriggersModule\Subscribers;
 use Doctrine\Common;
 use Doctrine\ORM;
 use Doctrine\Persistence;
+use FastyBird\Exchange\Publisher as ExchangePublisher;
 use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule;
 use FastyBird\TriggersModule\Entities;
-use FastyBird\TriggersModule\Exchange;
 use FastyBird\TriggersModule\Models;
 use Nette;
 use Nette\Utils;
@@ -51,15 +51,15 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 	/** @var Models\States\IConditionRepository|null */
 	private ?Models\States\IConditionRepository $conditionStateRepository;
 
-	/** @var Exchange\IPublisher|null */
-	private ?Exchange\IPublisher $publisher;
+	/** @var ExchangePublisher\Publisher|null */
+	private ?ExchangePublisher\Publisher $publisher;
 
 	/** @var ORM\EntityManagerInterface */
 	private ORM\EntityManagerInterface $entityManager;
 
 	public function __construct(
 		ORM\EntityManagerInterface $entityManager,
-		?Exchange\IPublisher $publisher = null,
+		?ExchangePublisher\Publisher $publisher = null,
 		?Models\States\IActionRepository $actionStateRepository = null,
 		?Models\States\IConditionRepository $conditionStateRepository = null
 	) {

@@ -19,10 +19,11 @@ import uuid
 from unittest.mock import patch
 
 # Library dependencies
+from exchange.publisher import Publisher
 from kink import inject
 
 # Tests libs
-from tests.pytests.tests import DbTestCase, Publisher
+from tests.pytests.tests import DbTestCase
 
 # Library libs
 from triggers_module.entities.action import ChannelPropertyActionEntity

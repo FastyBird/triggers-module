@@ -22,32 +22,20 @@ from typing import Dict, Optional
 
 # Library dependencies
 import MySQLdb
+from exchange.bootstrap import register_services as register_services_exchange
 from metadata.loader import load_schema_by_routing_key
 from metadata.routing import RoutingKey
-from metadata.types import ModuleOrigin
 from metadata.validator import validate
 from MySQLdb import OperationalError
 from MySQLdb.cursors import Cursor
-from kink import di, inject
+from kink import di
 from sqlalchemy import create_engine
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.orm import Session
 
 # Library libs
-from triggers_module.bootstrap import create_container
+from triggers_module.bootstrap import register_services
 from triggers_module.entities.base import Base
-from triggers_module.exchange import IPublisher
-
-
-@inject(alias=IPublisher)
-class Publisher(IPublisher):
-    def publish(
-        self,
-        origin: ModuleOrigin,
-        routing_key: RoutingKey,
-        data: Optional[Dict],
-    ) -> None:
-        """Publish data to exchange bus"""
 
 
 class DbTestCase(unittest.TestCase):
@@ -76,10 +64,11 @@ class DbTestCase(unittest.TestCase):
 
         cls.__setup_database()
 
-        # Mock publisher service
-        di[Publisher] = Publisher()
+        # Inject database into DI
+        di[Session] = cls.__db_session
 
-        create_container(database_session=cls.__db_session)
+        register_services_exchange()
+        register_services()
 
         # Initialize all database models
         Base.metadata.create_all(cls.__db_engine)
