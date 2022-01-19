@@ -19,14 +19,14 @@ import uuid
 
 # Library dependencies
 from kink import inject
-from metadata.routing import RoutingKey
+from fb_metadata.routing import RoutingKey
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
 
 # Library libs
-from triggers_module.entities.trigger import TriggerEntity
-from triggers_module.repositories.trigger import TriggersRepository
+from fb_triggers_module.entities.trigger import TriggerEntity
+from fb_triggers_module.repositories.trigger import TriggersRepository
 
 
 class TestTriggersRepository(DbTestCase):

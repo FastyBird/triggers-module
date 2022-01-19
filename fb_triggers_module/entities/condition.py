@@ -25,15 +25,19 @@ from abc import abstractmethod
 from typing import Dict, List, Optional, Union
 
 # Library dependencies
-from metadata.triggers_module import ConditionOperator, ConditionType
-from metadata.types import ButtonPayload, SwitchPayload
+from fb_metadata.triggers_module import ConditionOperator, ConditionType
+from fb_metadata.types import ButtonPayload, SwitchPayload
 from sqlalchemy import BINARY, BOOLEAN, DATE, TEXT, TIME, VARCHAR, Column, ForeignKey
 from sqlalchemy.orm import relationship
 
 # Library libs
-import triggers_module.entities  # pylint: disable=unused-import
-from triggers_module.entities.base import Base, EntityCreatedMixin, EntityUpdatedMixin
-from triggers_module.exceptions import InvalidStateException
+import fb_triggers_module.entities  # pylint: disable=unused-import
+from fb_triggers_module.entities.base import (
+    Base,
+    EntityCreatedMixin,
+    EntityUpdatedMixin,
+)
+from fb_triggers_module.exceptions import InvalidStateException
 
 
 class ConditionEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
@@ -65,7 +69,10 @@ class ConditionEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
     )
 
     trigger_id: Optional[bytes] = Column(  # type: ignore[assignment]  # pylint: disable=unused-private-member
-        BINARY(16), ForeignKey("fb_triggers.trigger_id", ondelete="CASCADE"), name="trigger_id", nullable=True
+        BINARY(16),
+        ForeignKey("fb_triggers.trigger_id", ondelete="CASCADE"),
+        name="trigger_id",
+        nullable=False,
     )
 
     trigger: "entities.trigger.AutomaticTriggerEntity" = relationship(  # type: ignore[name-defined]

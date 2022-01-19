@@ -28,7 +28,7 @@ from typing import List, Optional
 from sqlalchemy.orm import Session as OrmSession
 
 # Library libs
-from triggers_module.entities.notification import NotificationEntity
+from fb_triggers_module.entities.notification import NotificationEntity
 
 
 class NotificationsRepository:

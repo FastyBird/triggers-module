@@ -28,7 +28,7 @@ from typing import List, Optional
 from sqlalchemy.orm import Session as OrmSession
 
 # Library libs
-from triggers_module.entities.trigger import TriggerControlEntity, TriggerEntity
+from fb_triggers_module.entities.trigger import TriggerControlEntity, TriggerEntity
 
 
 class TriggersRepository:

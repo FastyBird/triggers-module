@@ -118,7 +118,7 @@ This module has all entities configured for Python PonyORM. Registration needs j
 
 ```python
 from pony.orm import Database
-from triggers_module.models import define_entities
+from fb_triggers_module.models import define_entities
 
 db: Database = Database()
 

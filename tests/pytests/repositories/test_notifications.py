@@ -19,15 +19,15 @@ import uuid
 
 # Library dependencies
 from kink import inject
-from metadata.routing import RoutingKey
+from fb_metadata.routing import RoutingKey
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
 
 # Library libs
-from triggers_module.entities.notification import SmsNotificationEntity
-from triggers_module.repositories.notification import NotificationsRepository
-from triggers_module.repositories.trigger import TriggersRepository
+from fb_triggers_module.entities.notification import SmsNotificationEntity
+from fb_triggers_module.repositories.notification import NotificationsRepository
+from fb_triggers_module.repositories.trigger import TriggersRepository
 
 
 class TestNotificationsRepository(DbTestCase):

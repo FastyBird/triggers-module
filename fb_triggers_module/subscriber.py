@@ -23,37 +23,42 @@ import datetime
 from typing import Dict, Optional, Type
 
 # Library dependencies
-from exchange.publisher import Publisher
+from fb_exchange.publisher import Publisher
+from fb_metadata.routing import RoutingKey
+from fb_metadata.types import ModuleOrigin
 from kink import inject
-from metadata.routing import RoutingKey
-from metadata.types import ModuleOrigin
 from sqlalchemy import event
+from sqlalchemy.orm import Session as OrmSession
 
 # Library libs
-from triggers_module.entities.action import (
+from fb_triggers_module.entities.action import (
     ActionEntity,
     ChannelPropertyActionEntity,
     DevicePropertyActionEntity,
 )
-from triggers_module.entities.base import Base, EntityCreatedMixin, EntityUpdatedMixin
-from triggers_module.entities.condition import (
+from fb_triggers_module.entities.base import (
+    Base,
+    EntityCreatedMixin,
+    EntityUpdatedMixin,
+)
+from fb_triggers_module.entities.condition import (
     ChannelPropertyConditionEntity,
     ConditionEntity,
     DateConditionEntity,
     DevicePropertyConditionEntity,
     TimeConditionEntity,
 )
-from triggers_module.entities.notification import (
+from fb_triggers_module.entities.notification import (
     EmailNotificationEntity,
     SmsNotificationEntity,
 )
-from triggers_module.entities.trigger import (
+from fb_triggers_module.entities.trigger import (
     AutomaticTriggerEntity,
     ManualTriggerEntity,
     TriggerControlEntity,
     TriggerEntity,
 )
-from triggers_module.repositories.state import (
+from fb_triggers_module.repositories.state import (
     IActionStateRepository,
     IConditionStateRepository,
 )
@@ -169,6 +174,7 @@ class EntitiesSubscriber:
 
     def __init__(
         self,
+        session: OrmSession,
         publisher: Publisher = None,  # type: ignore[assignment]
         action_state_repository: IActionStateRepository = None,  # type: ignore[assignment]
         condition_state_repository: IConditionStateRepository = None,  # type: ignore[assignment]
@@ -178,57 +184,51 @@ class EntitiesSubscriber:
         self.__action_state_repository = action_state_repository
         self.__condition_state_repository = condition_state_repository
 
-        event.listen(Base, "after_insert", lambda mapper, connection, target: self.after_insert(target), propagate=True)
-        event.listen(Base, "after_update", lambda mapper, connection, target: self.after_update(target), propagate=True)
-        event.listen(Base, "after_delete", lambda mapper, connection, target: self.after_delete(target), propagate=True)
+        event.listen(session, "after_flush", lambda active_session, transaction: self.after_flush(active_session))
 
     # -----------------------------------------------------------------------------
 
-    def after_insert(self, target: Base) -> None:
-        """Event fired after new entity is created"""
+    def after_flush(self, session: OrmSession) -> None:
+        """Event"""
         if self.__publisher is None:
             return
 
-        routing_key = self.__get_entity_created_routing_key(entity=type(target))
+        for entity in session.new:
+            routing_key = self.__get_entity_created_routing_key(entity=type(entity))
 
-        if routing_key is not None:
-            self.__publisher.publish(
-                origin=ModuleOrigin.DEVICES_MODULE,
-                routing_key=routing_key,
-                data={**target.to_dict(), **self.__get_entity_extended_data(entity=target)},
-            )
+            if routing_key is not None:
+                exchange_data = {**entity.to_dict(), **self.__get_entity_extended_data(entity=entity)}
 
-    # -----------------------------------------------------------------------------
+                self.__publisher.publish(
+                    origin=ModuleOrigin.TRIGGERS_MODULE,
+                    routing_key=routing_key,
+                    data=exchange_data,
+                )
 
-    def after_update(self, target: Base) -> None:
-        """Event fired after existing entity is updated"""
-        if self.__publisher is None:
-            return
+        for entity in session.dirty:
+            if not session.is_modified(entity, include_collections=False):
+                continue
 
-        routing_key = self.__get_entity_updated_routing_key(entity=type(target))
+            routing_key = self.__get_entity_updated_routing_key(entity=type(entity))
 
-        if routing_key is not None:
-            self.__publisher.publish(
-                origin=ModuleOrigin.DEVICES_MODULE,
-                routing_key=routing_key,
-                data={**target.to_dict(), **self.__get_entity_extended_data(entity=target)},
-            )
+            if routing_key is not None:
+                exchange_data = {**entity.to_dict(), **self.__get_entity_extended_data(entity=entity)}
 
-    # -----------------------------------------------------------------------------
+                self.__publisher.publish(
+                    origin=ModuleOrigin.TRIGGERS_MODULE,
+                    routing_key=routing_key,
+                    data=exchange_data,
+                )
 
-    def after_delete(self, target: Base) -> None:
-        """Event fired after existing entity is deleted"""
-        if self.__publisher is None:
-            return
+        for entity in session.deleted:
+            routing_key = self.__get_entity_deleted_routing_key(entity=type(entity))
 
-        routing_key = self.__get_entity_deleted_routing_key(entity=type(target))
-
-        if routing_key is not None:
-            self.__publisher.publish(
-                origin=ModuleOrigin.DEVICES_MODULE,
-                routing_key=routing_key,
-                data={**target.to_dict(), **self.__get_entity_extended_data(entity=target)},
-            )
+            if routing_key is not None:
+                self.__publisher.publish(
+                    origin=ModuleOrigin.TRIGGERS_MODULE,
+                    routing_key=routing_key,
+                    data={**entity.to_dict(), **self.__get_entity_extended_data(entity=entity)},
+                )
 
     # -----------------------------------------------------------------------------
 

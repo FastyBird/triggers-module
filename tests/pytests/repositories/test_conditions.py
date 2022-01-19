@@ -20,18 +20,18 @@ import uuid
 
 # Library dependencies
 from kink import inject
-from metadata.routing import RoutingKey
+from fb_metadata.routing import RoutingKey
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
 
 # Library libs
-from triggers_module.entities.condition import (
+from fb_triggers_module.entities.condition import (
     ChannelPropertyConditionEntity,
     TimeConditionEntity,
 )
-from triggers_module.repositories.condition import ConditionsRepository
-from triggers_module.repositories.trigger import TriggersRepository
+from fb_triggers_module.repositories.condition import ConditionsRepository
+from fb_triggers_module.repositories.trigger import TriggersRepository
 
 
 class TestConditionsRepository(DbTestCase):

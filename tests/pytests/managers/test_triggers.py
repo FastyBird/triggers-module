@@ -19,16 +19,16 @@ import uuid
 from unittest.mock import patch
 
 # Library dependencies
-from exchange.publisher import Publisher
+from fb_exchange.publisher import Publisher
 from kink import inject
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
 
 # Library libs
-from triggers_module.entities.trigger import ManualTriggerEntity, TriggerEntity
-from triggers_module.managers.trigger import TriggersManager
-from triggers_module.repositories.trigger import TriggersRepository
+from fb_triggers_module.entities.trigger import ManualTriggerEntity, TriggerEntity
+from fb_triggers_module.managers.trigger import TriggersManager
+from fb_triggers_module.repositories.trigger import TriggersRepository
 
 
 class TestTriggerEntity(DbTestCase):
@@ -47,7 +47,7 @@ class TestTriggerEntity(DbTestCase):
                 trigger_type=ManualTriggerEntity,
             )
 
-        MockPublisher.assert_called()
+        MockPublisher.assert_called_once()
 
         self.assertIsInstance(trigger_entity, ManualTriggerEntity)
         self.assertEqual("26d7a945-ba29-471e-9e3c-304ef0acb199", trigger_entity.id.__str__())
@@ -86,7 +86,7 @@ class TestTriggerEntity(DbTestCase):
                 },
             )
 
-        MockPublisher.assert_called()
+        MockPublisher.assert_called_once()
 
         self.assertIsInstance(trigger_entity, TriggerEntity)
         self.assertIsInstance(trigger_entity, ManualTriggerEntity)
@@ -122,6 +122,7 @@ class TestTriggerEntity(DbTestCase):
             )
 
         MockPublisher.assert_called()
+        self.assertEqual(4, MockPublisher.call_count)
 
         self.assertTrue(result)
 

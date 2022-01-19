@@ -19,17 +19,17 @@ import uuid
 from unittest.mock import patch
 
 # Library dependencies
-from exchange.publisher import Publisher
+from fb_exchange.publisher import Publisher
 from kink import inject
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
 
 # Library libs
-from triggers_module.entities.action import ChannelPropertyActionEntity
-from triggers_module.managers.action import ActionsManager
-from triggers_module.repositories.action import ActionsRepository
-from triggers_module.repositories.trigger import TriggersRepository
+from fb_triggers_module.entities.action import ChannelPropertyActionEntity
+from fb_triggers_module.managers.action import ActionsManager
+from fb_triggers_module.repositories.action import ActionsRepository
+from fb_triggers_module.repositories.trigger import TriggersRepository
 
 
 class TestChannelPropertyActionEntity(DbTestCase):
@@ -59,7 +59,7 @@ class TestChannelPropertyActionEntity(DbTestCase):
                 action_type=ChannelPropertyActionEntity,
             )
 
-        MockPublisher.assert_called()
+        MockPublisher.assert_called_once()
 
         self.assertIsInstance(action_entity, ChannelPropertyActionEntity)
         self.assertEqual("26d7a945-ba29-471e-9e3c-304ef0acb199", action_entity.id.__str__())

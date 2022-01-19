@@ -22,8 +22,8 @@ Triggers module condition managers module
 from typing import Dict, List, Type
 
 # Library libs
-from triggers_module.entities.condition import ConditionEntity
-from triggers_module.managers.base import BaseManager
+from fb_triggers_module.entities.condition import ConditionEntity
+from fb_triggers_module.managers.base import BaseManager
 
 
 class ConditionsManager(BaseManager[ConditionEntity]):

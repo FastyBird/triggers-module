@@ -24,14 +24,18 @@ from abc import abstractmethod
 from typing import Dict, Optional, Union
 
 # Library dependencies
-from metadata.triggers_module import NotificationType
+from fb_metadata.triggers_module import NotificationType
 from sqlalchemy import BINARY, BOOLEAN, VARCHAR, Column, ForeignKey
 from sqlalchemy.orm import relationship
 
 # Library libs
-import triggers_module.entities  # pylint: disable=unused-import
-from triggers_module.entities.base import Base, EntityCreatedMixin, EntityUpdatedMixin
-from triggers_module.exceptions import InvalidStateException
+import fb_triggers_module.entities  # pylint: disable=unused-import
+from fb_triggers_module.entities.base import (
+    Base,
+    EntityCreatedMixin,
+    EntityUpdatedMixin,
+)
+from fb_triggers_module.exceptions import InvalidStateException
 
 
 class NotificationEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
@@ -63,7 +67,10 @@ class NotificationEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
     )
 
     trigger_id: Optional[bytes] = Column(  # type: ignore[assignment]  # pylint: disable=unused-private-member
-        BINARY(16), ForeignKey("fb_triggers.trigger_id", ondelete="CASCADE"), name="trigger_id", nullable=True
+        BINARY(16),
+        ForeignKey("fb_triggers.trigger_id", ondelete="CASCADE"),
+        name="trigger_id",
+        nullable=False,
     )
 
     trigger: "entities.trigger.TriggerEntity" = relationship(  # type: ignore[name-defined]

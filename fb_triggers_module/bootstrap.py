@@ -28,18 +28,18 @@ from kink import di
 from sqlalchemy.orm import Session as OrmSession
 
 # Library libs
-from triggers_module.managers.action import ActionsManager
-from triggers_module.managers.condition import ConditionsManager
-from triggers_module.managers.notification import NotificationsManager
-from triggers_module.managers.trigger import TriggerControlsManager, TriggersManager
-from triggers_module.repositories.action import ActionsRepository
-from triggers_module.repositories.condition import ConditionsRepository
-from triggers_module.repositories.notification import NotificationsRepository
-from triggers_module.repositories.trigger import (
+from fb_triggers_module.managers.action import ActionsManager
+from fb_triggers_module.managers.condition import ConditionsManager
+from fb_triggers_module.managers.notification import NotificationsManager
+from fb_triggers_module.managers.trigger import TriggerControlsManager, TriggersManager
+from fb_triggers_module.repositories.action import ActionsRepository
+from fb_triggers_module.repositories.condition import ConditionsRepository
+from fb_triggers_module.repositories.notification import NotificationsRepository
+from fb_triggers_module.repositories.trigger import (
     TriggersControlsRepository,
     TriggersRepository,
 )
-from triggers_module.subscriber import EntitiesSubscriber, EntityCreatedSubscriber
+from fb_triggers_module.subscriber import EntitiesSubscriber, EntityCreatedSubscriber
 
 
 def register_services(
@@ -73,7 +73,7 @@ def register_services(
     di[NotificationsManager] = NotificationsManager(session=di[OrmSession])
     di["fb-triggers-module_actions-manager"] = di[NotificationsManager]
 
-    di[EntitiesSubscriber] = EntitiesSubscriber()
+    di[EntitiesSubscriber] = EntitiesSubscriber(session=di[OrmSession])
     di["fb-devices-module_entities-subscriber"] = di[EntitiesSubscriber]
     di[EntityCreatedSubscriber] = EntityCreatedSubscriber()
     di["fb-devices-module_entity-created-subscriber"] = di[EntityCreatedSubscriber]

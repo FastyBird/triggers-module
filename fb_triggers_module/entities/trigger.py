@@ -24,7 +24,7 @@ from abc import abstractmethod
 from typing import Dict, List, Optional, Union
 
 # Library dependencies
-from metadata.triggers_module import TriggerType
+from fb_metadata.triggers_module import TriggerType
 from sqlalchemy import (
     BINARY,
     BOOLEAN,
@@ -39,10 +39,14 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 
 # Library libs
-from triggers_module.entities.action import ActionEntity
-from triggers_module.entities.base import Base, EntityCreatedMixin, EntityUpdatedMixin
-from triggers_module.entities.condition import ConditionEntity
-from triggers_module.entities.notification import NotificationEntity
+from fb_triggers_module.entities.action import ActionEntity
+from fb_triggers_module.entities.base import (
+    Base,
+    EntityCreatedMixin,
+    EntityUpdatedMixin,
+)
+from fb_triggers_module.entities.condition import ConditionEntity
+from fb_triggers_module.entities.notification import NotificationEntity
 
 
 class TriggerEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
@@ -286,7 +290,10 @@ class TriggerControlEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
     __name: str = Column(VARCHAR(100), name="control_name", nullable=False)  # type: ignore[assignment]
 
     __trigger_id: bytes = Column(  # type: ignore[assignment]  # pylint: disable=unused-private-member
-        BINARY(16), ForeignKey("fb_triggers.trigger_id", ondelete="CASCADE"), name="trigger_id"
+        BINARY(16),
+        ForeignKey("fb_triggers.trigger_id", ondelete="CASCADE"),
+        name="trigger_id",
+        nullable=False,
     )
 
     trigger: TriggerEntity = relationship(TriggerEntity, back_populates="controls")  # type: ignore[assignment]
