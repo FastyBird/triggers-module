@@ -22,8 +22,8 @@ Triggers module action managers module
 from typing import Dict, List, Type
 
 # Library libs
-from fb_triggers_module.entities.action import ActionEntity
-from fb_triggers_module.managers.base import BaseManager
+from fastybird_triggers_module.entities.action import ActionEntity
+from fastybird_triggers_module.managers.base import BaseManager
 
 
 class ActionsManager(BaseManager[ActionEntity]):

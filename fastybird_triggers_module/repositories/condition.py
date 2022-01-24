@@ -17,7 +17,7 @@
 # pylint: disable=comparison-with-callable
 
 """
-Triggers module action repositories module
+Triggers module condition repositories module
 """
 
 # Python base dependencies
@@ -28,19 +28,19 @@ from typing import List, Optional, Union
 from sqlalchemy.orm import Session as OrmSession
 
 # Library libs
-from fb_triggers_module.entities.action import (
-    ActionEntity,
-    ChannelPropertyActionEntity,
-    DevicePropertyActionEntity,
+from fastybird_triggers_module.entities.condition import (
+    ChannelPropertyConditionEntity,
+    ConditionEntity,
+    DevicePropertyConditionEntity,
 )
 
 
-class ActionsRepository:
+class ConditionsRepository:
     """
-    Actions repository
+    Conditions repository
 
     @package        FastyBird:TriggersModule!
-    @module         repositories/action
+    @module         repositories/condition
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
@@ -57,34 +57,34 @@ class ActionsRepository:
 
     # -----------------------------------------------------------------------------
 
-    def get_by_id(self, action_id: uuid.UUID) -> Optional[ActionEntity]:
-        """Find action by provided database identifier"""
-        return self.__session.query(ActionEntity).get(action_id.bytes)
+    def get_by_id(self, condition_id: uuid.UUID) -> Optional[ConditionEntity]:
+        """Find condition by provided database identifier"""
+        return self.__session.query(ConditionEntity).get(condition_id.bytes)
 
     # -----------------------------------------------------------------------------
 
     def get_all_by_property_identifier(
         self,
         property_id: uuid.UUID,
-    ) -> List[Union[DevicePropertyActionEntity, ChannelPropertyActionEntity]]:
-        """Find actions by provided property database identifier"""
+    ) -> List[Union[DevicePropertyConditionEntity, ChannelPropertyConditionEntity]]:
+        """Find conditions by provided property database identifier"""
         return (
-            self.__session.query(DevicePropertyActionEntity)
-            .filter(DevicePropertyActionEntity.property == property_id.bytes)
+            self.__session.query(DevicePropertyConditionEntity)
+            .filter(DevicePropertyConditionEntity.property == property_id.bytes)
             .all()
-            + self.__session.query(ChannelPropertyActionEntity)
-            .filter(ChannelPropertyActionEntity.property == property_id.bytes)
+            + self.__session.query(ChannelPropertyConditionEntity)
+            .filter(ChannelPropertyConditionEntity.property == property_id.bytes)
             .all()
         )
 
     # -----------------------------------------------------------------------------
 
-    def get_all(self) -> List[ActionEntity]:
-        """Find all actions"""
-        return self.__session.query(ActionEntity).all()
+    def get_all(self) -> List[ConditionEntity]:
+        """Find all conditions"""
+        return self.__session.query(ConditionEntity).all()
 
     # -----------------------------------------------------------------------------
 
-    def get_all_by_trigger(self, trigger_id: uuid.UUID) -> List[ActionEntity]:
-        """Find all actions for trigger"""
-        return self.__session.query(ActionEntity).filter(ActionEntity.trigger_id == trigger_id.bytes).all()
+    def get_all_by_trigger(self, trigger_id: uuid.UUID) -> List[ConditionEntity]:
+        """Find all conditions for trigger"""
+        return self.__session.query(ConditionEntity).filter(ConditionEntity.trigger_id == trigger_id.bytes).all()

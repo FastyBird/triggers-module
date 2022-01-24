@@ -37,7 +37,8 @@ and also in [Python](https://python.org).
 - User access check & validation
 - Multilingual
 - JS integration via [Vuex ORM](https://vuex-orm.org) plugin
-- Python integration via [PonyORM](https://ponyorm.org)
+- Python integration via [SQLAlchemy](https://www.sqlalchemy.org)
+- Integrated connector worker for Python based connectors & PHP based connectors
 
 ## Requirements
 
@@ -74,7 +75,7 @@ or if you prefer npm:
 npm install @fastybird/triggers-module
 ```
 
-#### Application additional backend in Python
+#### Application workers in Python
 
 The best way to install **fastybird-triggers-module** is using [pip](https://pip.pypa.io/):
 

@@ -15,54 +15,64 @@
 #     limitations under the License.
 
 """
-Triggers module notification managers module
+Triggers module condition managers module
 """
 
 # Python base dependencies
 from typing import Dict, List, Type
 
 # Library libs
-from fb_triggers_module.entities.notification import NotificationEntity
-from fb_triggers_module.managers.base import BaseManager
+from fastybird_triggers_module.entities.condition import ConditionEntity
+from fastybird_triggers_module.managers.base import BaseManager
 
 
-class NotificationsManager(BaseManager[NotificationEntity]):
+class ConditionsManager(BaseManager[ConditionEntity]):
     """
-    Notifications manager
+    Conditions manager
 
     @package        FastyBird:TriggersModule!
-    @module         managers/notification
+    @module         managers/condition
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
 
     __REQUIRED_FIELDS: List[str] = ["trigger"]
-    __WRITABLE_FIELDS: List[str] = ["enabled", "phone", "email"]
+    __WRITABLE_FIELDS: List[str] = [
+        "enabled",
+        "device",
+        "channel",
+        "property",
+        "operator",
+        "operand",
+        "date",
+        "time",
+        "days",
+    ]
 
     # -----------------------------------------------------------------------------
 
-    def create(self, data: Dict, notification_type: Type[NotificationEntity]) -> NotificationEntity:
-        """Create new notification entity"""
+    def create(self, data: Dict, condition_type: Type[ConditionEntity]) -> ConditionEntity:
+        """Create new condition entity"""
         return super().create_entity(
-            data={**data, **{"notification_id": data.get("id", None)}},
-            entity_type=notification_type,
+            data={**data, **{"condition_id": data.get("id", None)}},
+            entity_type=condition_type,
             required_fields=self.__REQUIRED_FIELDS,
             writable_fields=self.__WRITABLE_FIELDS,
         )
 
     # -----------------------------------------------------------------------------
 
-    def update(self, data: Dict, notification: NotificationEntity) -> NotificationEntity:
-        """Update notification entity"""
+    def update(self, data: Dict, condition: ConditionEntity) -> ConditionEntity:
+        """Update condition entity"""
         return super().update_entity(
             data=data,
-            entity_id=notification.id,
-            entity_type=NotificationEntity,
+            entity_id=condition.id,
+            entity_type=ConditionEntity,
             writable_fields=self.__WRITABLE_FIELDS,
         )
 
     # -----------------------------------------------------------------------------
 
-    def delete(self, notification: NotificationEntity) -> bool:
-        """Delete notification entity"""
-        return super().delete_entity(entity_id=notification.id, entity_type=NotificationEntity)
+    def delete(self, condition: ConditionEntity) -> bool:
+        """Delete condition entity"""
+        return super().delete_entity(entity_id=condition.id, entity_type=ConditionEntity)

@@ -28,7 +28,7 @@ from typing import List, Optional
 from sqlalchemy.orm import Session as OrmSession
 
 # Library libs
-from fb_triggers_module.entities.notification import NotificationEntity
+from fastybird_triggers_module.entities.notification import NotificationEntity
 
 
 class NotificationsRepository:

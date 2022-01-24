@@ -22,8 +22,8 @@ Triggers module trigger managers module
 from typing import Dict, List, Type
 
 # Library libs
-from fb_triggers_module.entities.trigger import TriggerControlEntity, TriggerEntity
-from fb_triggers_module.managers.base import BaseManager
+from fastybird_triggers_module.entities.trigger import TriggerControlEntity, TriggerEntity
+from fastybird_triggers_module.managers.base import BaseManager
 
 
 class TriggersManager(BaseManager[TriggerEntity]):

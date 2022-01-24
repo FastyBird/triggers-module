@@ -24,8 +24,8 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 # Library libs
-from fb_triggers_module.state.action import ActionState
-from fb_triggers_module.state.condition import ConditionState
+from fastybird_triggers_module.state.action import ActionState
+from fastybird_triggers_module.state.condition import ConditionState
 
 
 class IActionStateRepository(ABC):

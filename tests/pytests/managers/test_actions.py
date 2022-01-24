@@ -19,17 +19,17 @@ import uuid
 from unittest.mock import patch
 
 # Library dependencies
-from fb_exchange.publisher import Publisher
+from fastybird_exchange.publisher import Publisher
 from kink import inject
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
 
 # Library libs
-from fb_triggers_module.entities.action import ChannelPropertyActionEntity
-from fb_triggers_module.managers.action import ActionsManager
-from fb_triggers_module.repositories.action import ActionsRepository
-from fb_triggers_module.repositories.trigger import TriggersRepository
+from fastybird_triggers_module.entities.action import ChannelPropertyActionEntity
+from fastybird_triggers_module.managers.action import ActionsManager
+from fastybird_triggers_module.repositories.action import ActionsRepository
+from fastybird_triggers_module.repositories.trigger import TriggersRepository
 
 
 class TestChannelPropertyActionEntity(DbTestCase):

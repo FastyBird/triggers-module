@@ -20,18 +20,18 @@ import uuid
 
 # Library dependencies
 from kink import inject
-from fb_metadata.routing import RoutingKey
+from fastybird_metadata.routing import RoutingKey
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
 
 # Library libs
-from fb_triggers_module.entities.condition import (
+from fastybird_triggers_module.entities.condition import (
     ChannelPropertyConditionEntity,
     TimeConditionEntity,
 )
-from fb_triggers_module.repositories.condition import ConditionsRepository
-from fb_triggers_module.repositories.trigger import TriggersRepository
+from fastybird_triggers_module.repositories.condition import ConditionsRepository
+from fastybird_triggers_module.repositories.trigger import TriggersRepository
 
 
 class TestConditionsRepository(DbTestCase):

@@ -23,42 +23,42 @@ import datetime
 from typing import Dict, Optional, Type
 
 # Library dependencies
-from fb_exchange.publisher import Publisher
-from fb_metadata.routing import RoutingKey
-from fb_metadata.types import ModuleOrigin
+from fastybird_exchange.publisher import Publisher
+from fastybird_metadata.routing import RoutingKey
+from fastybird_metadata.types import ModuleOrigin
 from kink import inject
 from sqlalchemy import event
 from sqlalchemy.orm import Session as OrmSession
 
 # Library libs
-from fb_triggers_module.entities.action import (
+from fastybird_triggers_module.entities.action import (
     ActionEntity,
     ChannelPropertyActionEntity,
     DevicePropertyActionEntity,
 )
-from fb_triggers_module.entities.base import (
+from fastybird_triggers_module.entities.base import (
     Base,
     EntityCreatedMixin,
     EntityUpdatedMixin,
 )
-from fb_triggers_module.entities.condition import (
+from fastybird_triggers_module.entities.condition import (
     ChannelPropertyConditionEntity,
     ConditionEntity,
     DateConditionEntity,
     DevicePropertyConditionEntity,
     TimeConditionEntity,
 )
-from fb_triggers_module.entities.notification import (
+from fastybird_triggers_module.entities.notification import (
     EmailNotificationEntity,
     SmsNotificationEntity,
 )
-from fb_triggers_module.entities.trigger import (
+from fastybird_triggers_module.entities.trigger import (
     AutomaticTriggerEntity,
     ManualTriggerEntity,
     TriggerControlEntity,
     TriggerEntity,
 )
-from fb_triggers_module.repositories.state import (
+from fastybird_triggers_module.repositories.state import (
     IActionStateRepository,
     IConditionStateRepository,
 )

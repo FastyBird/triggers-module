@@ -56,4 +56,4 @@ python_tests:
 	python -m unittest
 
 python_coverage:
-	coverage run --source=fb_triggers_module -m unittest
+	coverage run --source=fastybird_triggers_module -m unittest

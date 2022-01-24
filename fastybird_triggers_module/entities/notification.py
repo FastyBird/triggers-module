@@ -24,18 +24,18 @@ from abc import abstractmethod
 from typing import Dict, Optional, Union
 
 # Library dependencies
-from fb_metadata.triggers_module import NotificationType
+from fastybird_metadata.triggers_module import NotificationType
 from sqlalchemy import BINARY, BOOLEAN, VARCHAR, Column, ForeignKey
 from sqlalchemy.orm import relationship
 
 # Library libs
-import fb_triggers_module.entities  # pylint: disable=unused-import
-from fb_triggers_module.entities.base import (
+import fastybird_triggers_module.entities  # pylint: disable=unused-import
+from fastybird_triggers_module.entities.base import (
     Base,
     EntityCreatedMixin,
     EntityUpdatedMixin,
 )
-from fb_triggers_module.exceptions import InvalidStateException
+from fastybird_triggers_module.exceptions import InvalidStateException
 
 
 class NotificationEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):

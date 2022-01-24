@@ -48,7 +48,7 @@ or if you prefer npm:
 npm install @fastybird/triggers-module
 ```
 
-### Application additional backend in Python
+### Application workers in Python
 
 The best way to install **fastybird-triggers-module** is using [pip](https://pip.pypa.io/):
 
@@ -112,21 +112,26 @@ export default {
 }
 ```
 
-## Registering PonyORM models
+## Registering Python services
 
-This module has all entities configured for Python PonyORM. Registration needs just database instance:
+This module is using [dependency injection module](https://github.com/kodemore/kink) and has created services registration factory.
+All what you have to do i create SQLAlchemy session instance and register it to DI:
 
 ```python
-from pony.orm import Database
-from fb_triggers_module.models import define_entities
+from kink import di
 
-db: Database = Database()
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 
-TriggerEntity, ManualTriggerEntity, AutomaticTriggerEntity, \
-    ActionEntity, PropertyActionEntity, DevicePropertyActionEntity, ChannelPropertyActionEntity, \
-    NotificationEntity, EmailNotificationEntity, SmsNotificationEntity, \
-    ConditionEntity, TimeConditionEntity, DateConditionEntity, \
-    PropertyConditionEntity, ChannelPropertyConditionEntity, DevicePropertyConditionEntity, \
-    triggers_repository \
-    = define_entities(db)
+from fastybird_triggers_module.bootstrap import register_services
+
+db_engine = create_engine(f"mysql+pymysql://username:password@127.0.0.1/database_name")
+db_session = Session(db_engine)
+
+# Inject database session into DI
+# Module will autowire session in its own services
+di[Session] = db_session
+
+# Register module services into DI container
+register_services()
 ```

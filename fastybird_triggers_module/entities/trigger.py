@@ -24,7 +24,7 @@ from abc import abstractmethod
 from typing import Dict, List, Optional, Union
 
 # Library dependencies
-from fb_metadata.triggers_module import TriggerType
+from fastybird_metadata.triggers_module import TriggerType
 from sqlalchemy import (
     BINARY,
     BOOLEAN,
@@ -39,14 +39,14 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 
 # Library libs
-from fb_triggers_module.entities.action import ActionEntity
-from fb_triggers_module.entities.base import (
+from fastybird_triggers_module.entities.action import ActionEntity
+from fastybird_triggers_module.entities.base import (
     Base,
     EntityCreatedMixin,
     EntityUpdatedMixin,
 )
-from fb_triggers_module.entities.condition import ConditionEntity
-from fb_triggers_module.entities.notification import NotificationEntity
+from fastybird_triggers_module.entities.condition import ConditionEntity
+from fastybird_triggers_module.entities.notification import NotificationEntity
 
 
 class TriggerEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):

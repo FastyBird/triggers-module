@@ -19,14 +19,14 @@ import uuid
 
 # Library dependencies
 from kink import inject
-from fb_metadata.routing import RoutingKey
+from fastybird_metadata.routing import RoutingKey
 
 # Tests libs
 from tests.pytests.tests import DbTestCase
 
 # Library libs
-from fb_triggers_module.entities.trigger import TriggerControlEntity
-from fb_triggers_module.repositories.trigger import TriggersControlsRepository
+from fastybird_triggers_module.entities.trigger import TriggerControlEntity
+from fastybird_triggers_module.repositories.trigger import TriggersControlsRepository
 
 
 class TestTriggersControlsRepository(DbTestCase):
