@@ -28,7 +28,7 @@ from fastybird_triggers_module.state.action import ActionState
 from fastybird_triggers_module.state.condition import ConditionState
 
 
-class IActionStateRepository(ABC):
+class IActionStateRepository(ABC):  # pylint: disable=too-few-public-methods
     """
     State repository for action
 
@@ -43,7 +43,7 @@ class IActionStateRepository(ABC):
         """Find trigger action state record by provided database identifier"""
 
 
-class IConditionStateRepository(ABC):
+class IConditionStateRepository(ABC):  # pylint: disable=too-few-public-methods
     """
     State repository for condition
 

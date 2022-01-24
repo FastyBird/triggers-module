@@ -165,7 +165,7 @@ class DevicePropertyActionEntity(ActionEntity):
 
     # -----------------------------------------------------------------------------
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         device: uuid.UUID,
         device_property: uuid.UUID,
@@ -263,7 +263,7 @@ class ChannelPropertyActionEntity(ActionEntity):
 
     # -----------------------------------------------------------------------------
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         device: uuid.UUID,
         channel: uuid.UUID,

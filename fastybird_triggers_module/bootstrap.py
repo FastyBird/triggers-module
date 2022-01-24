@@ -31,7 +31,10 @@ from sqlalchemy.orm import Session as OrmSession
 from fastybird_triggers_module.managers.action import ActionsManager
 from fastybird_triggers_module.managers.condition import ConditionsManager
 from fastybird_triggers_module.managers.notification import NotificationsManager
-from fastybird_triggers_module.managers.trigger import TriggerControlsManager, TriggersManager
+from fastybird_triggers_module.managers.trigger import (
+    TriggerControlsManager,
+    TriggersManager,
+)
 from fastybird_triggers_module.repositories.action import ActionsRepository
 from fastybird_triggers_module.repositories.condition import ConditionsRepository
 from fastybird_triggers_module.repositories.notification import NotificationsRepository
@@ -39,7 +42,10 @@ from fastybird_triggers_module.repositories.trigger import (
     TriggersControlsRepository,
     TriggersRepository,
 )
-from fastybird_triggers_module.subscriber import EntitiesSubscriber, EntityCreatedSubscriber
+from fastybird_triggers_module.subscriber import (
+    EntitiesSubscriber,
+    EntityCreatedSubscriber,
+)
 
 
 def register_services(

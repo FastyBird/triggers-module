@@ -170,7 +170,7 @@ class DevicePropertyConditionEntity(ConditionEntity):
 
     # -----------------------------------------------------------------------------
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         device: uuid.UUID,
         condition_property: uuid.UUID,
@@ -297,7 +297,7 @@ class ChannelPropertyConditionEntity(ConditionEntity):
 
     # -----------------------------------------------------------------------------
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         device: uuid.UUID,
         channel: uuid.UUID,

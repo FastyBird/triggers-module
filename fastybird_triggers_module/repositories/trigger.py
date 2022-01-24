@@ -28,7 +28,10 @@ from typing import List, Optional
 from sqlalchemy.orm import Session as OrmSession
 
 # Library libs
-from fastybird_triggers_module.entities.trigger import TriggerControlEntity, TriggerEntity
+from fastybird_triggers_module.entities.trigger import (
+    TriggerControlEntity,
+    TriggerEntity,
+)
 
 
 class TriggersRepository:

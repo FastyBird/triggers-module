@@ -64,7 +64,7 @@ from fastybird_triggers_module.repositories.state import (
 )
 
 
-class EntityCreatedSubscriber:
+class EntityCreatedSubscriber:  # pylint: disable=too-few-public-methods
     """
     New entity creation subscriber
 
@@ -88,7 +88,7 @@ class EntityCreatedSubscriber:
             target.created_at = datetime.datetime.now()
 
 
-class EntityUpdatedSubscriber:
+class EntityUpdatedSubscriber:  # pylint: disable=too-few-public-methods
     """
     Existing entity update subscriber
 
@@ -113,7 +113,7 @@ class EntityUpdatedSubscriber:
 
 
 @inject
-class EntitiesSubscriber:
+class EntitiesSubscriber:  # pylint: disable=too-few-public-methods
     """
     Data exchanges utils
 
@@ -262,7 +262,7 @@ class EntitiesSubscriber:
 
     # -----------------------------------------------------------------------------
 
-    def __get_entity_extended_data(self, entity: Base) -> Dict:
+    def __get_entity_extended_data(self, entity: Base) -> Dict:  # pylint: disable=too-many-return-statements
         if isinstance(entity, ActionEntity) and self.__action_state_repository is not None:
             action_state = self.__action_state_repository.get_by_id(property_id=entity.id)
 
