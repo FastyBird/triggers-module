@@ -62,7 +62,7 @@ def register_services(
 
         return
 
-    di[logging.Logger] = Logger(logger=logger)
+    di[Logger] = Logger(logger=logger)
     di["fb-triggers-module_logger"] = di[Logger]
 
     # Entities repositories
