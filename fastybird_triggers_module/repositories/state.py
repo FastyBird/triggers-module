@@ -24,8 +24,8 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 # Library libs
-from fastybird_triggers_module.state.action import ActionState
-from fastybird_triggers_module.state.condition import ConditionState
+from fastybird_triggers_module.state.action import IActionState
+from fastybird_triggers_module.state.condition import IConditionState
 
 
 class IActionStateRepository(ABC):  # pylint: disable=too-few-public-methods
@@ -39,7 +39,7 @@ class IActionStateRepository(ABC):  # pylint: disable=too-few-public-methods
     """
 
     @abstractmethod
-    def get_by_id(self, property_id: uuid.UUID) -> Optional[ActionState]:
+    def get_by_id(self, action_id: uuid.UUID) -> Optional[IActionState]:
         """Find trigger action state record by provided database identifier"""
 
 
@@ -54,5 +54,5 @@ class IConditionStateRepository(ABC):  # pylint: disable=too-few-public-methods
     """
 
     @abstractmethod
-    def get_by_id(self, property_id: uuid.UUID) -> Optional[ConditionState]:
+    def get_by_id(self, condition_id: uuid.UUID) -> Optional[IConditionState]:
         """Find trigger condition state record by provided database identifier"""

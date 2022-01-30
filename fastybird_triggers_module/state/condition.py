@@ -23,7 +23,7 @@ import uuid
 from abc import ABC, abstractmethod
 
 
-class ConditionState(ABC):
+class IConditionState(ABC):
     """
     Condition state
 

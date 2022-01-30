@@ -112,7 +112,13 @@ class EntityUpdatedSubscriber:  # pylint: disable=too-few-public-methods
             target.updated_at = datetime.datetime.now()
 
 
-@inject
+@inject(
+    bind={
+        "publisher": Publisher,
+        "action_state_repository": IActionStateRepository,
+        "condition_state_repository": IConditionStateRepository,
+    }
+)
 class EntitiesSubscriber:  # pylint: disable=too-few-public-methods
     """
     Data exchanges utils
@@ -175,9 +181,9 @@ class EntitiesSubscriber:  # pylint: disable=too-few-public-methods
     def __init__(
         self,
         session: OrmSession,
-        publisher: Publisher = None,  # type: ignore[assignment]
-        action_state_repository: IActionStateRepository = None,  # type: ignore[assignment]
-        condition_state_repository: IConditionStateRepository = None,  # type: ignore[assignment]
+        publisher: Optional[Publisher] = None,
+        action_state_repository: Optional[IActionStateRepository] = None,
+        condition_state_repository: Optional[IConditionStateRepository] = None,
     ) -> None:
         self.__publisher = publisher
 
@@ -264,7 +270,7 @@ class EntitiesSubscriber:  # pylint: disable=too-few-public-methods
 
     def __get_entity_extended_data(self, entity: Base) -> Dict:  # pylint: disable=too-many-return-statements
         if isinstance(entity, ActionEntity) and self.__action_state_repository is not None:
-            action_state = self.__action_state_repository.get_by_id(property_id=entity.id)
+            action_state = self.__action_state_repository.get_by_id(action_id=entity.id)
 
             if action_state is None:
                 return {}
@@ -274,7 +280,7 @@ class EntitiesSubscriber:  # pylint: disable=too-few-public-methods
             }
 
         if isinstance(entity, ConditionEntity) and self.__condition_state_repository is not None:
-            condition_state = self.__condition_state_repository.get_by_id(property_id=entity.id)
+            condition_state = self.__condition_state_repository.get_by_id(condition_id=entity.id)
 
             if condition_state is None:
                 return {}
@@ -291,7 +297,7 @@ class EntitiesSubscriber:  # pylint: disable=too-few-public-methods
             is_triggered: bool = True
 
             for action in entity.actions:
-                action_state = self.__action_state_repository.get_by_id(property_id=action.id)
+                action_state = self.__action_state_repository.get_by_id(action_id=action.id)
 
                 if action_state is None or action_state.is_triggered is False:
                     is_triggered = False
@@ -300,7 +306,7 @@ class EntitiesSubscriber:  # pylint: disable=too-few-public-methods
                 is_fulfilled = True
 
                 for condition in entity.conditions:
-                    condition_state = self.__condition_state_repository.get_by_id(property_id=condition.id)
+                    condition_state = self.__condition_state_repository.get_by_id(condition_id=condition.id)
 
                     if condition_state is None or condition_state.is_fulfilled is False:
                         is_fulfilled = False

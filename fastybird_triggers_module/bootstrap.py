@@ -24,10 +24,15 @@ Triggers module DI container
 import logging
 
 # Library dependencies
+from fastybird_exchange.consumer import Consumer
 from kink import di
 from sqlalchemy.orm import Session as OrmSession
 
 # Library libs
+from fastybird_triggers_module.automation.automation import Automator
+from fastybird_triggers_module.automation.consumer import AutomationConsumer
+from fastybird_triggers_module.automation.queue import AutomationQueue
+from fastybird_triggers_module.logger import Logger
 from fastybird_triggers_module.managers.action import ActionsManager
 from fastybird_triggers_module.managers.condition import ConditionsManager
 from fastybird_triggers_module.managers.notification import NotificationsManager
@@ -57,6 +62,11 @@ def register_services(
 
         return
 
+    di[logging.Logger] = Logger(logger=logger)
+    di["fb-triggers-module_logger"] = di[Logger]
+
+    # Entities repositories
+
     di[TriggersRepository] = TriggersRepository(session=di[OrmSession])
     di["fb-triggers-module_trigger-repository"] = di[TriggersRepository]
     di[TriggersControlsRepository] = TriggersControlsRepository(session=di[OrmSession])
@@ -67,6 +77,8 @@ def register_services(
     di["fb-triggers-module_condition-repository"] = di[ConditionsRepository]
     di[NotificationsRepository] = NotificationsRepository(session=di[OrmSession])
     di["fb-triggers-module_notification-repository"] = di[NotificationsRepository]
+
+    # Entities managers
 
     di[TriggersManager] = TriggersManager(session=di[OrmSession])
     di["fb-triggers-module_triggers-manager"] = di[TriggersManager]
@@ -79,7 +91,30 @@ def register_services(
     di[NotificationsManager] = NotificationsManager(session=di[OrmSession])
     di["fb-triggers-module_actions-manager"] = di[NotificationsManager]
 
+    # Entities subscribers
+
     di[EntitiesSubscriber] = EntitiesSubscriber(session=di[OrmSession])
-    di["fb-devices-module_entities-subscriber"] = di[EntitiesSubscriber]
+    di["fb-triggers-module_entities-subscriber"] = di[EntitiesSubscriber]
     di[EntityCreatedSubscriber] = EntityCreatedSubscriber()
-    di["fb-devices-module_entity-created-subscriber"] = di[EntityCreatedSubscriber]
+    di["fb-triggers-module_entity-created-subscriber"] = di[EntityCreatedSubscriber]
+
+    # Module automator
+
+    di[AutomationQueue] = AutomationQueue(logger=di[Logger])
+    di["fb-triggers-module_automator-queue"] = di[AutomationQueue]
+    di[AutomationConsumer] = AutomationConsumer(queue=di[AutomationQueue], logger=di[Logger])
+    di["fb-triggers-module_automator-consumer"] = di[AutomationConsumer]
+
+    di[Automator] = Automator(
+        queue=di[AutomationQueue],
+        triggers_repository=di[TriggersRepository],
+        actions_repository=di[ActionsRepository],
+        conditions_repository=di[ConditionsRepository],
+        logger=di[Logger],
+    )
+    di["fb-triggers-module_automator-handler"] = di[Automator]
+
+    # Check for presence of exchange consumer proxy
+    if Consumer in di:
+        # Register automator exchange consumer into consumer proxy
+        di[Consumer].register_consumer(di[AutomationConsumer])

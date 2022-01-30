@@ -23,7 +23,7 @@ import uuid
 from abc import ABC, abstractmethod
 
 
-class ActionState(ABC):
+class IActionState(ABC):
     """
     Action state
 

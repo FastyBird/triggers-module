@@ -39,3 +39,14 @@ class InvalidArgumentException(Exception):
 
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
+
+
+class TerminateAutomatorException(Exception):
+    """
+    Exception thrown when service termination is required
+
+    @package        FastyBird:TriggersModule!
+    @module         exceptions
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
