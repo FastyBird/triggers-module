@@ -385,14 +385,14 @@ class Automator:  # pylint: disable=too-many-instance-attributes
                             "action": PropertyAction.SET.value,
                             "device": action.device.__str__(),
                             "property": action.device_property.__str__(),
-                            "expected_value": action.value,
+                            "expected_value": str(action.value),
                         },
                     )
 
                     self.__logger.debug(
                         "Dispatching trigger action for device property: %s with value: %s",
-                        action.device_property,
-                        action.value,
+                        action.device_property.__str__(),
+                        str(action.value),
                     )
 
                 elif isinstance(action, ChannelPropertyActionEntity):
@@ -404,14 +404,14 @@ class Automator:  # pylint: disable=too-many-instance-attributes
                             "device": action.device.__str__(),
                             "channel": action.channel.__str__(),
                             "property": action.channel_property.__str__(),
-                            "expected_value": action.value,
+                            "expected_value": str(action.value),
                         },
                     )
 
                     self.__logger.debug(
                         "Dispatching trigger action for channel property: %s with value: %s",
-                        action.channel_property,
-                        action.value,
+                        action.channel_property.__str__(),
+                        str(action.value),
                     )
 
                 else:
