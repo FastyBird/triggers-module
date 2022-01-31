@@ -132,6 +132,17 @@ class ConsumeMessageQueueItem(ABC):
         return self.__data
 
 
+class ConsumeControlActionMessageQueueItem(ConsumeMessageQueueItem):
+    """
+    Publish message queue item
+
+    @package        FastyBird:TriggersModule!
+    @module         connectors/queue
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+
+
 class ConsumeEntityMessageQueueItem(ConsumeMessageQueueItem):
     """
     Publish message queue item

@@ -59,12 +59,12 @@ class ConditionEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
         "mysql_comment": "Trigger conditions",
     }
 
-    _type: str = Column(VARCHAR(40), name="condition_type", nullable=False)  # type: ignore[assignment]
+    col_type: str = Column(VARCHAR(40), name="condition_type", nullable=False)  # type: ignore[assignment]
 
-    __condition_id: bytes = Column(  # type: ignore[assignment]
+    col_condition_id: bytes = Column(  # type: ignore[assignment]
         BINARY(16), primary_key=True, name="condition_id", default=uuid.uuid4
     )
-    __enabled: bool = Column(  # type: ignore[assignment]
+    col_enabled: bool = Column(  # type: ignore[assignment]
         BOOLEAN, name="condition_enabled", nullable=False, default=True
     )
 
@@ -80,23 +80,29 @@ class ConditionEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
         back_populates="conditions",
     )
 
-    _device: Optional[bytes] = Column(BINARY(16), name="condition_device", nullable=True)  # type: ignore[assignment]
-    _device_property: Optional[bytes] = Column(  # type: ignore[assignment]
+    col_device: Optional[bytes] = Column(BINARY(16), name="condition_device", nullable=True)  # type: ignore[assignment]
+    col_device_property: Optional[bytes] = Column(  # type: ignore[assignment]
         BINARY(16), name="condition_device_property", nullable=True
     )
-    _channel: Optional[bytes] = Column(BINARY(16), name="condition_channel", nullable=True)  # type: ignore[assignment]
-    _channel_property: Optional[bytes] = Column(  # type: ignore[assignment]
+    col_channel: Optional[bytes] = Column(  # type: ignore[assignment]
+        BINARY(16), name="condition_channel", nullable=True
+    )
+    col_channel_property: Optional[bytes] = Column(  # type: ignore[assignment]
         BINARY(16), name="condition_channel_property", nullable=True
     )
-    _operator: Optional[str] = Column(VARCHAR(15), name="condition_operator", nullable=True)  # type: ignore[assignment]
-    _operand: Optional[str] = Column(VARCHAR(20), name="condition_operand", nullable=True)  # type: ignore[assignment]
-    _date: Optional[datetime.date] = Column(DATE, name="condition_date", nullable=True)  # type: ignore[assignment]
-    _time: Optional[datetime.time] = Column(TIME, name="condition_time", nullable=True)  # type: ignore[assignment]
-    _days: Optional[str] = Column(TEXT, name="condition_days", nullable=True)  # type: ignore[assignment]
+    col_operator: Optional[str] = Column(  # type: ignore[assignment]
+        VARCHAR(15), name="condition_operator", nullable=True
+    )
+    col_operand: Optional[str] = Column(  # type: ignore[assignment]
+        VARCHAR(20), name="condition_operand", nullable=True
+    )
+    col_date: Optional[datetime.date] = Column(DATE, name="condition_date", nullable=True)  # type: ignore[assignment]
+    col_time: Optional[datetime.time] = Column(TIME, name="condition_time", nullable=True)  # type: ignore[assignment]
+    col_days: Optional[str] = Column(TEXT, name="condition_days", nullable=True)  # type: ignore[assignment]
 
     __mapper_args__ = {
         "polymorphic_identity": "condition",
-        "polymorphic_on": _type,
+        "polymorphic_on": col_type,
     }
 
     # -----------------------------------------------------------------------------
@@ -108,7 +114,7 @@ class ConditionEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
     ) -> None:
         super().__init__()
 
-        self.__condition_id = condition_id.bytes if condition_id is not None else uuid.uuid4().bytes
+        self.col_condition_id = condition_id.bytes if condition_id is not None else uuid.uuid4().bytes
 
         self.trigger = trigger
 
@@ -124,21 +130,21 @@ class ConditionEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
     @property
     def id(self) -> uuid.UUID:  # pylint: disable=invalid-name
         """Condition unique identifier"""
-        return uuid.UUID(bytes=self.__condition_id)
+        return uuid.UUID(bytes=self.col_condition_id)
 
     # -----------------------------------------------------------------------------
 
     @property
     def enabled(self) -> bool:
         """Condition enabled status"""
-        return self.__enabled
+        return self.col_enabled
 
     # -----------------------------------------------------------------------------
 
     @enabled.setter
     def enabled(self, enabled: bool) -> None:
         """Condition enabled setter"""
-        self.__enabled = enabled
+        self.col_enabled = enabled
 
     # -----------------------------------------------------------------------------
 
@@ -181,10 +187,10 @@ class DevicePropertyConditionEntity(ConditionEntity):
     ) -> None:
         super().__init__(trigger, condition_id)
 
-        self._device = device.bytes
-        self._device_property = condition_property.bytes
-        self._operator = operator.value
-        self._operand = operand
+        self.col_device = device.bytes
+        self.col_device_property = condition_property.bytes
+        self.col_operator = operator.value
+        self.col_operand = operand
 
     # -----------------------------------------------------------------------------
 
@@ -198,60 +204,60 @@ class DevicePropertyConditionEntity(ConditionEntity):
     @property
     def device(self) -> uuid.UUID:
         """Condition device database identifier"""
-        if self._device is None:
+        if self.col_device is None:
             raise InvalidStateException("Device identifier is missing on condition instance")
 
-        return uuid.UUID(bytes=self._device)
+        return uuid.UUID(bytes=self.col_device)
 
     # -----------------------------------------------------------------------------
 
     @property
     def device_property(self) -> uuid.UUID:
         """Condition property database identifier"""
-        if self._device_property is None:
+        if self.col_device_property is None:
             raise InvalidStateException("Property identifier is missing on condition instance")
 
-        return uuid.UUID(bytes=self._device_property)
+        return uuid.UUID(bytes=self.col_device_property)
 
     # -----------------------------------------------------------------------------
 
     @property
     def operator(self) -> ConditionOperator:
         """Condition operator"""
-        if self._operator is None:
+        if self.col_operator is None:
             raise InvalidStateException("Condition operator is missing on condition instance")
 
-        return ConditionOperator(self._operator)
+        return ConditionOperator(self.col_operator)
 
     # -----------------------------------------------------------------------------
 
     @operator.setter
     def operator(self, operator: ConditionOperator) -> None:
         """Condition operator setter"""
-        self._operator = operator.value
+        self.col_operator = operator.value
 
     # -----------------------------------------------------------------------------
 
     @property
     def operand(self) -> Union[str, ButtonPayload, SwitchPayload]:
         """Condition operand"""
-        if self._operand is None:
+        if self.col_operand is None:
             raise InvalidStateException("Condition operand is missing on condition instance")
 
-        if ButtonPayload.has_value(self._operand):
-            return ButtonPayload(self._operand)
+        if ButtonPayload.has_value(self.col_operand):
+            return ButtonPayload(self.col_operand)
 
-        if SwitchPayload.has_value(self._operand):
-            return SwitchPayload(self._operand)
+        if SwitchPayload.has_value(self.col_operand):
+            return SwitchPayload(self.col_operand)
 
-        return self._operand
+        return self.col_operand
 
     # -----------------------------------------------------------------------------
 
     @operand.setter
     def operand(self, operand: str) -> None:
         """Condition operand setter"""
-        self._operand = operand
+        self.col_operand = operand
 
     # -----------------------------------------------------------------------------
 
@@ -309,11 +315,11 @@ class ChannelPropertyConditionEntity(ConditionEntity):
     ) -> None:
         super().__init__(trigger, condition_id)
 
-        self._device = device.bytes
-        self._channel = channel.bytes
-        self._channel_property = condition_property.bytes
-        self._operator = operator.value
-        self._operand = operand
+        self.col_device = device.bytes
+        self.col_channel = channel.bytes
+        self.col_channel_property = condition_property.bytes
+        self.col_operator = operator.value
+        self.col_operand = operand
 
     # -----------------------------------------------------------------------------
 
@@ -327,70 +333,70 @@ class ChannelPropertyConditionEntity(ConditionEntity):
     @property
     def device(self) -> uuid.UUID:
         """Condition device database identifier"""
-        if self._device is None:
+        if self.col_device is None:
             raise InvalidStateException("Device identifier is missing on condition instance")
 
-        return uuid.UUID(bytes=self._device)
+        return uuid.UUID(bytes=self.col_device)
 
     # -----------------------------------------------------------------------------
 
     @property
     def channel(self) -> uuid.UUID:
         """Condition channel database identifier"""
-        if self._channel is None:
+        if self.col_channel is None:
             raise InvalidStateException("Channel identifier is missing on condition instance")
 
-        return uuid.UUID(bytes=self._channel)
+        return uuid.UUID(bytes=self.col_channel)
 
     # -----------------------------------------------------------------------------
 
     @property
     def channel_property(self) -> uuid.UUID:
         """Condition property database identifier"""
-        if self._channel_property is None:
+        if self.col_channel_property is None:
             raise InvalidStateException("Property identifier is missing on condition instance")
 
-        return uuid.UUID(bytes=self._channel_property)
+        return uuid.UUID(bytes=self.col_channel_property)
 
     # -----------------------------------------------------------------------------
 
     @property
     def operator(self) -> ConditionOperator:
         """Condition operator"""
-        if self._operator is None:
+        if self.col_operator is None:
             raise InvalidStateException("Condition operator is missing on condition instance")
 
-        return ConditionOperator(self._operator)
+        return ConditionOperator(self.col_operator)
 
     # -----------------------------------------------------------------------------
 
     @operator.setter
     def operator(self, operator: ConditionOperator) -> None:
         """Condition operator setter"""
-        self._operator = operator.value
+        self.col_operator = operator.value
 
     # -----------------------------------------------------------------------------
 
     @property
     def operand(self) -> Union[str, ButtonPayload, SwitchPayload]:
         """Condition operand"""
-        if self._operand is None:
+        if self.col_operand is None:
             raise InvalidStateException("Condition operand is missing on condition instance")
 
-        if ButtonPayload.has_value(self._operand):
-            return ButtonPayload(self._operand)
+        if ButtonPayload.has_value(self.col_operand):
+            return ButtonPayload(self.col_operand)
 
-        if SwitchPayload.has_value(self._operand):
-            return SwitchPayload(self._operand)
+        if SwitchPayload.has_value(self.col_operand):
+            return SwitchPayload(self.col_operand)
 
-        return self._operand
+        return self.col_operand
 
     # -----------------------------------------------------------------------------
 
     @operand.setter
     def operand(self, operand: str) -> None:
         """Condition operand setter"""
-        self._operand = operand
+        self.col_operand = operand
 
     # -----------------------------------------------------------------------------
 
@@ -445,7 +451,7 @@ class DateConditionEntity(ConditionEntity):
     ) -> None:
         super().__init__(trigger, condition_id)
 
-        self._date = date.date()
+        self.col_date = date.date()
 
     # -----------------------------------------------------------------------------
 
@@ -460,17 +466,17 @@ class DateConditionEntity(ConditionEntity):
     @property
     def date(self) -> datetime.date:
         """Condition date"""
-        if self._date is None:
+        if self.col_date is None:
             raise InvalidStateException("Date is missing on condition instance")
 
-        return self._date
+        return self.col_date
 
     # -----------------------------------------------------------------------------
 
     @date.setter
     def date(self, date: datetime.datetime) -> None:
         """Condition date setter"""
-        self._date = date.date()
+        self.col_date = date.date()
 
     # -----------------------------------------------------------------------------
 
@@ -513,8 +519,8 @@ class TimeConditionEntity(ConditionEntity):
     ) -> None:
         super().__init__(trigger, condition_id)
 
-        self._time = time.time()
-        self._days = ",".join([str(day) for day in days])
+        self.col_time = time.time()
+        self.col_days = ",".join([str(day) for day in days])
 
     # -----------------------------------------------------------------------------
 
@@ -529,34 +535,34 @@ class TimeConditionEntity(ConditionEntity):
     @property
     def time(self) -> datetime.time:
         """Condition time"""
-        if self._time is None:
+        if self.col_time is None:
             raise InvalidStateException("Time is missing on condition instance")
 
-        return self._time
+        return self.col_time
 
     # -----------------------------------------------------------------------------
 
     @time.setter
     def time(self, time: datetime.datetime) -> None:
         """Condition time setter"""
-        self._time = time.time()
+        self.col_time = time.time()
 
     # -----------------------------------------------------------------------------
 
     @property
     def days(self) -> List[int]:
         """Condition days"""
-        if self._days is None:
+        if self.col_days is None:
             raise InvalidStateException("Days are missing on condition instance")
 
-        return [int(day) for day in self._days.split(",")]
+        return [int(day) for day in self.col_days.split(",")]
 
     # -----------------------------------------------------------------------------
 
     @days.setter
     def days(self, days: List[int]) -> None:
         """Condition days setter"""
-        self._days = ",".join([str(day) for day in days])
+        self.col_days = ",".join([str(day) for day in days])
 
     # -----------------------------------------------------------------------------
 

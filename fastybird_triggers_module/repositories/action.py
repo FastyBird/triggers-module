@@ -70,10 +70,10 @@ class ActionsRepository:
         """Find actions by provided property database identifier"""
         return (
             self.__session.query(DevicePropertyActionEntity)
-            .filter(DevicePropertyActionEntity.property == property_id.bytes)
+            .filter(DevicePropertyActionEntity.col_device_property == property_id.bytes)
             .all()
             + self.__session.query(ChannelPropertyActionEntity)
-            .filter(ChannelPropertyActionEntity.property == property_id.bytes)
+            .filter(ChannelPropertyActionEntity.col_channel_property == property_id.bytes)
             .all()
         )
 

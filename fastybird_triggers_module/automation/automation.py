@@ -25,12 +25,14 @@ from typing import Optional, Union
 # Library dependencies
 from fastybird_exchange.publisher import Publisher
 from fastybird_metadata.routing import RoutingKey
-from fastybird_metadata.types import ModuleOrigin, PropertyAction
+from fastybird_metadata.types import ControlAction, ModuleOrigin, PropertyAction
 from kink import inject
+from sqlalchemy.orm import close_all_sessions
 
 # Library libs
 from fastybird_triggers_module.automation.queue import (
     AutomationQueue,
+    ConsumeControlActionMessageQueueItem,
     ConsumeEntityMessageQueueItem,
 )
 from fastybird_triggers_module.entities.action import (
@@ -53,7 +55,10 @@ from fastybird_triggers_module.repositories.state import (
     IActionStateRepository,
     IConditionStateRepository,
 )
-from fastybird_triggers_module.repositories.trigger import TriggersRepository
+from fastybird_triggers_module.repositories.trigger import (
+    TriggersControlsRepository,
+    TriggersRepository,
+)
 
 
 @inject(
@@ -80,6 +85,7 @@ class Automator:  # pylint: disable=too-many-instance-attributes
     __queue: AutomationQueue
 
     __triggers_repository: TriggersRepository
+    __triggers_control_repository: TriggersControlsRepository
     __actions_repository: ActionsRepository
     __conditions_repository: ConditionsRepository
 
@@ -98,6 +104,7 @@ class Automator:  # pylint: disable=too-many-instance-attributes
         self,
         queue: AutomationQueue,
         triggers_repository: TriggersRepository,
+        triggers_control_repository: TriggersControlsRepository,
         actions_repository: ActionsRepository,
         conditions_repository: ConditionsRepository,
         logger: Logger,
@@ -110,6 +117,7 @@ class Automator:  # pylint: disable=too-many-instance-attributes
         self.__queue = queue
 
         self.__triggers_repository = triggers_repository
+        self.__triggers_control_repository = triggers_control_repository
         self.__actions_repository = actions_repository
         self.__conditions_repository = conditions_repository
 
@@ -151,6 +159,9 @@ class Automator:  # pylint: disable=too-many-instance-attributes
                 if isinstance(queue_item, ConsumeEntityMessageQueueItem):
                     self.__handle_entity_event(item=queue_item)
 
+                if isinstance(queue_item, ConsumeControlActionMessageQueueItem):
+                    self.__handle_control_event(item=queue_item)
+
             except Exception as ex:  # pylint: disable=broad-except
                 self.__logger.error(
                     "An unexpected error occurred during processing queue item",
@@ -163,6 +174,27 @@ class Automator:  # pylint: disable=too-many-instance-attributes
                 )
 
                 raise TerminateAutomatorException("An unexpected error occurred during processing queue item") from ex
+
+    # -----------------------------------------------------------------------------
+
+    def __handle_control_event(  # pylint: disable=too-many-branches,too-many-return-statements,too-many-statements
+        self,
+        item: ConsumeControlActionMessageQueueItem,
+    ) -> None:
+        if item.routing_key == RoutingKey.TRIGGER_ACTION and item.data.get("action") == ControlAction.SET.value:
+            try:
+                trigger_control = self.__triggers_control_repository.get_by_name(
+                    trigger_id=uuid.UUID(item.data.get("trigger"), version=4),
+                    control_name=str(item.data.get("name")),
+                )
+
+            except ValueError:
+                return
+
+            if trigger_control is None:
+                return
+
+            self.__process_trigger_actions(trigger_id=trigger_control.trigger.id)
 
     # -----------------------------------------------------------------------------
 
@@ -190,7 +222,7 @@ class Automator:  # pylint: disable=too-many-instance-attributes
             and item.data.get("actual_value") is not None
         ):
             conditions = self.__conditions_repository.get_all_by_property_identifier(
-                property_id=uuid.UUID(item.data.get("property"), version=4),
+                property_id=uuid.UUID(item.data.get("id"), version=4),
             )
 
             for condition in conditions:
@@ -199,19 +231,39 @@ class Automator:  # pylint: disable=too-many-instance-attributes
                 is_fulfilled = self.__check_conditions(trigger_id=condition.trigger.id)
 
                 if is_fulfilled:
-                    trigger_item = self.__triggers_repository.get_by_id(trigger_id=condition.trigger.id)
+                    trigger = self.__triggers_repository.get_by_id(trigger_id=condition.trigger.id)
 
-                    if trigger_item is None or not trigger_item.enabled:
+                    if trigger is None or not trigger.enabled:
                         return
 
-                    self.__process_trigger_actions(trigger_id=trigger_item.trigger_id)
+                    self.__process_trigger_actions(trigger_id=trigger.id)
 
             actions = self.__actions_repository.get_all_by_property_identifier(
-                property_id=uuid.UUID(item.data.get("property"), version=4),
+                property_id=uuid.UUID(item.data.get("id"), version=4),
             )
 
             for action in actions:
                 self.__validate_action_property_item(action=action, value=str(item.data.get("actual_value")))
+
+        if item.routing_key in (
+            RoutingKey.TRIGGERS_ENTITY_CREATED,
+            RoutingKey.TRIGGERS_ENTITY_UPDATED,
+            RoutingKey.TRIGGERS_ENTITY_DELETED,
+            RoutingKey.TRIGGERS_CONTROL_ENTITY_CREATED,
+            RoutingKey.TRIGGERS_CONTROL_ENTITY_UPDATED,
+            RoutingKey.TRIGGERS_CONTROL_ENTITY_DELETED,
+            RoutingKey.TRIGGERS_ACTIONS_ENTITY_CREATED,
+            RoutingKey.TRIGGERS_ACTIONS_ENTITY_UPDATED,
+            RoutingKey.TRIGGERS_ACTIONS_ENTITY_DELETED,
+            RoutingKey.TRIGGERS_NOTIFICATIONS_ENTITY_CREATED,
+            RoutingKey.TRIGGERS_NOTIFICATIONS_ENTITY_UPDATED,
+            RoutingKey.TRIGGERS_NOTIFICATIONS_ENTITY_DELETED,
+            RoutingKey.TRIGGERS_CONDITIONS_ENTITY_CREATED,
+            RoutingKey.TRIGGERS_CONDITIONS_ENTITY_UPDATED,
+            RoutingKey.TRIGGERS_CONDITIONS_ENTITY_DELETED,
+        ):
+            # Clear all session after entity changes
+            close_all_sessions()
 
     # -----------------------------------------------------------------------------
 
@@ -248,7 +300,7 @@ class Automator:  # pylint: disable=too-many-instance-attributes
         self.__logger.debug(
             "Validation result: %s was saved into: %s",
             is_fulfilled,
-            condition.condition_id,
+            condition.id,
         )
 
     # -----------------------------------------------------------------------------
@@ -286,7 +338,7 @@ class Automator:  # pylint: disable=too-many-instance-attributes
         self.__logger.debug(
             "Validation result: %s was saved into: %s",
             is_triggered,
-            action.action_id,
+            action.id,
         )
 
     # -----------------------------------------------------------------------------

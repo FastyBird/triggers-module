@@ -20,7 +20,7 @@ Triggers module connectors connector worker exchange module
 
 # Python base dependencies
 import logging
-from typing import Dict, Optional, Union
+from typing import Dict, List, Optional, Union
 
 # Library dependencies
 from fastybird_exchange.consumer import IConsumer
@@ -30,6 +30,7 @@ from fastybird_metadata.types import ConnectorOrigin, ModuleOrigin, PluginOrigin
 # Library libs
 from fastybird_triggers_module.automation.queue import (
     AutomationQueue,
+    ConsumeControlActionMessageQueueItem,
     ConsumeEntityMessageQueueItem,
 )
 
@@ -45,10 +46,10 @@ class AutomationConsumer(IConsumer):  # pylint: disable=too-few-public-methods
     """
 
     __ENTITY_PREFIX_KEY: str = "fb.exchange.module.entity"
-    __ENTITY_REPORTED_KEY: str = "reported"
-    __ENTITY_CREATED_KEY: str = "created"
-    __ENTITY_UPDATED_KEY: str = "updated"
-    __ENTITY_DELETED_KEY: str = "deleted"
+
+    __CONTROLS_ACTIONS_ROUTING_KEYS: List[RoutingKey] = [
+        RoutingKey.TRIGGER_ACTION,
+    ]
 
     __queue: AutomationQueue
 
@@ -78,6 +79,15 @@ class AutomationConsumer(IConsumer):  # pylint: disable=too-few-public-methods
             if str(routing_key.value).startswith(self.__ENTITY_PREFIX_KEY):
                 self.__queue.append(
                     ConsumeEntityMessageQueueItem(
+                        origin=origin,
+                        routing_key=routing_key,
+                        data=data,
+                    )
+                )
+
+            elif routing_key in self.__CONTROLS_ACTIONS_ROUTING_KEYS:
+                self.__queue.append(
+                    ConsumeControlActionMessageQueueItem(
                         origin=origin,
                         routing_key=routing_key,
                         data=data,

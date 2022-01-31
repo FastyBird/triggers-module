@@ -72,20 +72,24 @@ class TriggerEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
         },
     )
 
-    _type: str = Column(VARCHAR(40), name="trigger_type", nullable=False)  # type: ignore[assignment]
+    col_type: str = Column(VARCHAR(40), name="trigger_type", nullable=False)  # type: ignore[assignment]
 
-    __trigger_id: bytes = Column(  # type: ignore[assignment]
+    col_trigger_id: bytes = Column(  # type: ignore[assignment]
         BINARY(16), primary_key=True, name="trigger_id", default=uuid.uuid4
     )
-    __name: str = Column(VARCHAR(255), name="trigger_name", nullable=False)  # type: ignore[assignment]
-    __comment: Optional[str] = Column(  # type: ignore[assignment]
+    col_name: str = Column(VARCHAR(255), name="trigger_name", nullable=False)  # type: ignore[assignment]
+    col_comment: Optional[str] = Column(  # type: ignore[assignment]
         TEXT, name="trigger_comment", nullable=True, default=None
     )
-    __enabled: bool = Column(BOOLEAN, name="trigger_enabled", nullable=False, default=True)  # type: ignore[assignment]
+    col_enabled: bool = Column(
+        BOOLEAN, name="trigger_enabled", nullable=False, default=True  # type: ignore[assignment]
+    )
 
-    __owner: Optional[str] = Column(VARCHAR(50), name="owner", nullable=True, default=None)  # type: ignore[assignment]
+    col_owner: Optional[str] = Column(  # type: ignore[assignment]
+        VARCHAR(50), name="owner", nullable=True, default=None
+    )
 
-    __params: Optional[Dict] = Column(JSON, name="params", nullable=True)  # type: ignore[assignment]
+    col_params: Optional[Dict] = Column(JSON, name="params", nullable=True)  # type: ignore[assignment]
 
     actions: List[ActionEntity] = relationship(  # type: ignore[assignment]
         ActionEntity,
@@ -105,7 +109,7 @@ class TriggerEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
 
     __mapper_args__ = {
         "polymorphic_identity": "trigger",
-        "polymorphic_on": _type,
+        "polymorphic_on": col_type,
     }
 
     # -----------------------------------------------------------------------------
@@ -113,9 +117,9 @@ class TriggerEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
     def __init__(self, name: str, trigger_id: Optional[uuid.UUID] = None) -> None:
         super().__init__()
 
-        self.__trigger_id = trigger_id.bytes if trigger_id is not None else uuid.uuid4().bytes
+        self.col_trigger_id = trigger_id.bytes if trigger_id is not None else uuid.uuid4().bytes
 
-        self.__name = name
+        self.col_name = name
 
     # -----------------------------------------------------------------------------
 
@@ -129,77 +133,77 @@ class TriggerEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
     @property
     def id(self) -> uuid.UUID:  # pylint: disable=invalid-name
         """Trigger unique identifier"""
-        return uuid.UUID(bytes=self.__trigger_id)
+        return uuid.UUID(bytes=self.col_trigger_id)
 
     # -----------------------------------------------------------------------------
 
     @property
     def name(self) -> str:
         """Trigger name"""
-        return self.__name
+        return self.col_name
 
     # -----------------------------------------------------------------------------
 
     @name.setter
     def name(self, name: str) -> None:
         """Trigger name setter"""
-        self.__name = name
+        self.col_name = name
 
     # -----------------------------------------------------------------------------
 
     @property
     def comment(self) -> Optional[str]:
         """Trigger comment"""
-        return self.__comment
+        return self.col_comment
 
     # -----------------------------------------------------------------------------
 
     @comment.setter
     def comment(self, comment: Optional[str]) -> None:
         """Trigger comment setter"""
-        self.__comment = comment
+        self.col_comment = comment
 
     # -----------------------------------------------------------------------------
 
     @property
     def enabled(self) -> bool:
         """Trigger enabled status"""
-        return self.__enabled
+        return self.col_enabled
 
     # -----------------------------------------------------------------------------
 
     @enabled.setter
     def enabled(self, enabled: bool) -> None:
         """Trigger enabled setter"""
-        self.__enabled = enabled
+        self.col_enabled = enabled
 
     # -----------------------------------------------------------------------------
 
     @property
     def owner(self) -> Optional[str]:
         """Trigger owner identifier"""
-        return self.__owner
+        return self.col_owner
 
     # -----------------------------------------------------------------------------
 
     @owner.setter
     def owner(self, owner: Optional[str]) -> None:
         """Trigger owner identifier setter"""
-        self.__owner = owner
+        self.col_owner = owner
 
     # -----------------------------------------------------------------------------
 
     @property
     def params(self) -> Dict:
         """Trigger params"""
-        return self.__params if self.__params is not None else {}
+        return self.col_params if self.col_params is not None else {}
 
     # -----------------------------------------------------------------------------
 
     @params.setter
     def params(self, params: Optional[Dict]) -> None:
         """Trigger params"""
-        self.__params = params
+        self.col_params = params
 
     # -----------------------------------------------------------------------------
 
@@ -284,12 +288,12 @@ class TriggerControlEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
         },
     )
 
-    __control_id: bytes = Column(  # type: ignore[assignment]
+    col_control_id: bytes = Column(  # type: ignore[assignment]
         BINARY(16), primary_key=True, name="control_id", default=uuid.uuid4
     )
-    __name: str = Column(VARCHAR(100), name="control_name", nullable=False)  # type: ignore[assignment]
+    col_name: str = Column(VARCHAR(100), name="control_name", nullable=False)  # type: ignore[assignment]
 
-    __trigger_id: bytes = Column(  # type: ignore[assignment]  # pylint: disable=unused-private-member
+    col_trigger_id: bytes = Column(  # type: ignore[assignment]  # pylint: disable=unused-private-member
         BINARY(16),
         ForeignKey("fb_triggers.trigger_id", ondelete="CASCADE"),
         name="trigger_id",
@@ -303,9 +307,9 @@ class TriggerControlEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
     def __init__(self, name: str, trigger: TriggerEntity, control_id: Optional[uuid.UUID] = None) -> None:
         super().__init__()
 
-        self.__control_id = control_id.bytes if control_id is not None else uuid.uuid4().bytes
+        self.col_control_id = control_id.bytes if control_id is not None else uuid.uuid4().bytes
 
-        self.__name = name
+        self.col_name = name
 
         self.trigger = trigger
 
@@ -314,14 +318,14 @@ class TriggerControlEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
     @property
     def id(self) -> uuid.UUID:  # pylint: disable=invalid-name
         """Control unique identifier"""
-        return uuid.UUID(bytes=self.__control_id)
+        return uuid.UUID(bytes=self.col_control_id)
 
     # -----------------------------------------------------------------------------
 
     @property
     def name(self) -> str:
         """Control name"""
-        return self.__name
+        return self.col_name
 
     # -----------------------------------------------------------------------------
 

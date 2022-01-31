@@ -70,10 +70,10 @@ class ConditionsRepository:
         """Find conditions by provided property database identifier"""
         return (
             self.__session.query(DevicePropertyConditionEntity)
-            .filter(DevicePropertyConditionEntity.property == property_id.bytes)
+            .filter(DevicePropertyConditionEntity.col_device_property == property_id.bytes)
             .all()
             + self.__session.query(ChannelPropertyConditionEntity)
-            .filter(ChannelPropertyConditionEntity.property == property_id.bytes)
+            .filter(ChannelPropertyConditionEntity.col_channel_property == property_id.bytes)
             .all()
         )
 

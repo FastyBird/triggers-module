@@ -57,12 +57,12 @@ class NotificationEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
         "mysql_comment": "Trigger notifications",
     }
 
-    _type: str = Column(VARCHAR(40), name="notification_type", nullable=False)  # type: ignore[assignment]
+    col_type: str = Column(VARCHAR(40), name="notification_type", nullable=False)  # type: ignore[assignment]
 
-    __notification_id: bytes = Column(  # type: ignore[assignment]
+    col_notification_id: bytes = Column(  # type: ignore[assignment]
         BINARY(16), primary_key=True, name="notification_id", default=uuid.uuid4
     )
-    __enabled: bool = Column(  # type: ignore[assignment]
+    col_enabled: bool = Column(  # type: ignore[assignment]
         BOOLEAN, name="notification_enabled", nullable=False, default=True
     )
 
@@ -78,12 +78,16 @@ class NotificationEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
         back_populates="notifications",
     )
 
-    _email: Optional[str] = Column(VARCHAR(255), name="notification_email", nullable=True)  # type: ignore[assignment]
-    _phone: Optional[str] = Column(VARCHAR(150), name="notification_phone", nullable=True)  # type: ignore[assignment]
+    col_email: Optional[str] = Column(  # type: ignore[assignment]
+        VARCHAR(255), name="notification_email", nullable=True
+    )
+    col_phone: Optional[str] = Column(  # type: ignore[assignment]
+        VARCHAR(150), name="notification_phone", nullable=True
+    )
 
     __mapper_args__ = {
         "polymorphic_identity": "notification",
-        "polymorphic_on": _type,
+        "polymorphic_on": col_type,
     }
 
     # -----------------------------------------------------------------------------
@@ -95,7 +99,7 @@ class NotificationEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
     ) -> None:
         super().__init__()
 
-        self.__notification_id = notification_id.bytes if notification_id is not None else uuid.uuid4().bytes
+        self.col_notification_id = notification_id.bytes if notification_id is not None else uuid.uuid4().bytes
 
         self.trigger = trigger
 
@@ -111,21 +115,21 @@ class NotificationEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
     @property
     def id(self) -> uuid.UUID:  # pylint: disable=invalid-name
         """Notification unique identifier"""
-        return uuid.UUID(bytes=self.__notification_id)
+        return uuid.UUID(bytes=self.col_notification_id)
 
     # -----------------------------------------------------------------------------
 
     @property
     def enabled(self) -> bool:
         """Notification enabled status"""
-        return self.__enabled
+        return self.col_enabled
 
     # -----------------------------------------------------------------------------
 
     @enabled.setter
     def enabled(self, enabled: bool) -> None:
         """Notification enabled setter"""
-        self.__enabled = enabled
+        self.col_enabled = enabled
 
     # -----------------------------------------------------------------------------
 
@@ -165,7 +169,7 @@ class EmailNotificationEntity(NotificationEntity):
     ) -> None:
         super().__init__(trigger, notification_id)
 
-        self._email = email
+        self.col_email = email
 
     # -----------------------------------------------------------------------------
 
@@ -179,17 +183,17 @@ class EmailNotificationEntity(NotificationEntity):
     @property
     def email(self) -> str:
         """Notification email"""
-        if self._email is None:
+        if self.col_email is None:
             raise InvalidStateException("Email is missing on notification instance")
 
-        return self._email
+        return self.col_email
 
     # -----------------------------------------------------------------------------
 
     @email.setter
     def email(self, email: str) -> None:
         """Notification email setter"""
-        self._email = email
+        self.col_email = email
 
     # -----------------------------------------------------------------------------
 
@@ -225,7 +229,7 @@ class SmsNotificationEntity(NotificationEntity):
     ) -> None:
         super().__init__(trigger, notification_id)
 
-        self._phone = phone
+        self.col_phone = phone
 
     # -----------------------------------------------------------------------------
 
@@ -239,17 +243,17 @@ class SmsNotificationEntity(NotificationEntity):
     @property
     def phone(self) -> str:
         """Notification phone"""
-        if self._phone is None:
+        if self.col_phone is None:
             raise InvalidStateException("Phone is missing on notification instance")
 
-        return self._phone
+        return self.col_phone
 
     # -----------------------------------------------------------------------------
 
     @phone.setter
     def phone(self, phone: str) -> None:
         """Notification phone setter"""
-        self._phone = phone
+        self.col_phone = phone
 
     # -----------------------------------------------------------------------------
 

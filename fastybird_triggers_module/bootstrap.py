@@ -108,6 +108,7 @@ def register_services(
     di[Automator] = Automator(
         queue=di[AutomationQueue],
         triggers_repository=di[TriggersRepository],
+        triggers_control_repository=di[TriggersControlsRepository],
         actions_repository=di[ActionsRepository],
         conditions_repository=di[ConditionsRepository],
         logger=di[Logger],

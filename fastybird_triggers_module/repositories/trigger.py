@@ -99,7 +99,9 @@ class TriggersControlsRepository:
         """Find control by provided name"""
         return (
             self.__session.query(TriggerControlEntity)
-            .filter(TriggerControlEntity.trigger.id == trigger_id.bytes and TriggerControlEntity.name == control_name)
+            .filter(
+                TriggerControlEntity.trigger.id == trigger_id.bytes and TriggerControlEntity.col_name == control_name
+            )
             .first()
         )
 

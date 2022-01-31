@@ -58,12 +58,12 @@ class ActionEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
         "mysql_comment": "Trigger actions",
     }
 
-    _type: str = Column(VARCHAR(40), name="action_type", nullable=False)  # type: ignore[assignment]
+    col_type: str = Column(VARCHAR(40), name="action_type", nullable=False)  # type: ignore[assignment]
 
-    __action_id: bytes = Column(  # type: ignore[assignment]
+    col_action_id: bytes = Column(  # type: ignore[assignment]
         BINARY(16), primary_key=True, name="action_id", default=uuid.uuid4
     )
-    __enabled: bool = Column(BOOLEAN, name="action_enabled", nullable=False, default=True)  # type: ignore[assignment]
+    col_enabled: bool = Column(BOOLEAN, name="action_enabled", nullable=False, default=True)  # type: ignore[assignment]
 
     trigger_id: Optional[bytes] = Column(  # type: ignore[assignment]  # pylint: disable=unused-private-member
         BINARY(16),
@@ -77,21 +77,21 @@ class ActionEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
         back_populates="actions",
     )
 
-    _value: Optional[str] = Column(  # type: ignore[assignment]
+    col_value: Optional[str] = Column(  # type: ignore[assignment]
         VARCHAR(100), name="action_value", nullable=False, default=True
     )
-    _device: Optional[bytes] = Column(BINARY(16), name="action_device", nullable=True)  # type: ignore[assignment]
-    _device_property: Optional[bytes] = Column(  # type: ignore[assignment]
+    col_device: Optional[bytes] = Column(BINARY(16), name="action_device", nullable=True)  # type: ignore[assignment]
+    col_device_property: Optional[bytes] = Column(  # type: ignore[assignment]
         BINARY(16), name="action_device_property", nullable=True
     )
-    _channel: Optional[bytes] = Column(BINARY(16), name="action_channel", nullable=True)  # type: ignore[assignment]
-    _channel_property: Optional[bytes] = Column(  # type: ignore[assignment]
+    col_channel: Optional[bytes] = Column(BINARY(16), name="action_channel", nullable=True)  # type: ignore[assignment]
+    col_channel_property: Optional[bytes] = Column(  # type: ignore[assignment]
         BINARY(16), name="action_channel_property", nullable=True
     )
 
     __mapper_args__ = {
         "polymorphic_identity": "action",
-        "polymorphic_on": _type,
+        "polymorphic_on": col_type,
     }
 
     # -----------------------------------------------------------------------------
@@ -103,7 +103,7 @@ class ActionEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
     ) -> None:
         super().__init__()
 
-        self.__action_id = action_id.bytes if action_id is not None else uuid.uuid4().bytes
+        self.col_action_id = action_id.bytes if action_id is not None else uuid.uuid4().bytes
 
         self.trigger = trigger
 
@@ -119,21 +119,21 @@ class ActionEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
     @property
     def id(self) -> uuid.UUID:  # pylint: disable=invalid-name
         """Action unique identifier"""
-        return uuid.UUID(bytes=self.__action_id)
+        return uuid.UUID(bytes=self.col_action_id)
 
     # -----------------------------------------------------------------------------
 
     @property
     def enabled(self) -> bool:
         """Action enabled status"""
-        return self.__enabled
+        return self.col_enabled
 
     # -----------------------------------------------------------------------------
 
     @enabled.setter
     def enabled(self, enabled: bool) -> None:
         """Action enabled setter"""
-        self.__enabled = enabled
+        self.col_enabled = enabled
 
     # -----------------------------------------------------------------------------
 
@@ -175,9 +175,9 @@ class DevicePropertyActionEntity(ActionEntity):
     ) -> None:
         super().__init__(trigger, action_id)
 
-        self._device = device.bytes
-        self._device_property = device_property.bytes
-        self._value = value
+        self.col_device = device.bytes
+        self.col_device_property = device_property.bytes
+        self.col_value = value
 
     # -----------------------------------------------------------------------------
 
@@ -191,43 +191,43 @@ class DevicePropertyActionEntity(ActionEntity):
     @property
     def device(self) -> uuid.UUID:
         """Action device database identifier"""
-        if self._device is None:
+        if self.col_device is None:
             raise InvalidStateException("Device identifier is missing on action instance")
 
-        return uuid.UUID(bytes=self._device)
+        return uuid.UUID(bytes=self.col_device)
 
     # -----------------------------------------------------------------------------
 
     @property
     def value(self) -> Union[str, ButtonPayload, SwitchPayload]:
         """Action value"""
-        if self._value is None:
+        if self.col_value is None:
             raise InvalidStateException("Action value is missing on action instance")
 
-        if ButtonPayload.has_value(self._value):
-            return ButtonPayload(self._value)
+        if ButtonPayload.has_value(self.col_value):
+            return ButtonPayload(self.col_value)
 
-        if SwitchPayload.has_value(self._value):
-            return SwitchPayload(self._value)
+        if SwitchPayload.has_value(self.col_value):
+            return SwitchPayload(self.col_value)
 
-        return self._value
+        return self.col_value
 
     # -----------------------------------------------------------------------------
 
     @value.setter
     def value(self, value: str) -> None:
         """Action value setter"""
-        self._value = value
+        self.col_value = value
 
     # -----------------------------------------------------------------------------
 
     @property
     def device_property(self) -> uuid.UUID:
         """Action property database identifier"""
-        if self._device_property is None:
+        if self.col_device_property is None:
             raise InvalidStateException("Property identifier is missing on action instance")
 
-        return uuid.UUID(bytes=self._device_property)
+        return uuid.UUID(bytes=self.col_device_property)
 
     # -----------------------------------------------------------------------------
 
@@ -274,10 +274,10 @@ class ChannelPropertyActionEntity(ActionEntity):
     ) -> None:
         super().__init__(trigger, action_id)
 
-        self._device = device.bytes
-        self._channel = channel.bytes
-        self._channel_property = channel_property.bytes
-        self._value = value
+        self.col_device = device.bytes
+        self.col_channel = channel.bytes
+        self.col_channel_property = channel_property.bytes
+        self.col_value = value
 
     # -----------------------------------------------------------------------------
 
@@ -291,53 +291,53 @@ class ChannelPropertyActionEntity(ActionEntity):
     @property
     def device(self) -> uuid.UUID:
         """Action device database identifier"""
-        if self._device is None:
+        if self.col_device is None:
             raise InvalidStateException("Device identifier is missing on action instance")
 
-        return uuid.UUID(bytes=self._device)
+        return uuid.UUID(bytes=self.col_device)
 
     # -----------------------------------------------------------------------------
 
     @property
     def value(self) -> Union[str, ButtonPayload, SwitchPayload]:
         """Action value"""
-        if self._value is None:
+        if self.col_value is None:
             raise InvalidStateException("Action value is missing on action instance")
 
-        if ButtonPayload.has_value(self._value):
-            return ButtonPayload(self._value)
+        if ButtonPayload.has_value(self.col_value):
+            return ButtonPayload(self.col_value)
 
-        if SwitchPayload.has_value(self._value):
-            return SwitchPayload(self._value)
+        if SwitchPayload.has_value(self.col_value):
+            return SwitchPayload(self.col_value)
 
-        return self._value
+        return self.col_value
 
     # -----------------------------------------------------------------------------
 
     @value.setter
     def value(self, value: str) -> None:
         """Action value setter"""
-        self._value = value
+        self.col_value = value
 
     # -----------------------------------------------------------------------------
 
     @property
     def channel(self) -> uuid.UUID:
         """Action channel database identifier"""
-        if self._channel is None:
+        if self.col_channel is None:
             raise InvalidStateException("Channel identifier is missing on action instance")
 
-        return uuid.UUID(bytes=self._channel)
+        return uuid.UUID(bytes=self.col_channel)
 
     # -----------------------------------------------------------------------------
 
     @property
     def channel_property(self) -> uuid.UUID:
         """Action property database identifier"""
-        if self._channel_property is None:
+        if self.col_channel_property is None:
             raise InvalidStateException("Property identifier is missing on action instance")
 
-        return uuid.UUID(bytes=self._channel_property)
+        return uuid.UUID(bytes=self.col_channel_property)
 
     # -----------------------------------------------------------------------------
 
