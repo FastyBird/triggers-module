@@ -21,7 +21,7 @@
 
 ## What is FastyBird IoT triggers module?
 
-Triggers module is a combined [Nette framework](https://nette.org) extension and [Vex ORM](https://vuex-orm.org) plugin
+Triggers module is a combined [Nette framework](https://nette.org) extension, [Vuex ORM](https://vuex-orm.org) plugin
 and also [Python](https://python.org) module for managing application automation & notifications.
 
 [FastyBird](https://www.fastybird.com) [IoT](https://en.wikipedia.org/wiki/Internet_of_things) triggers module is
