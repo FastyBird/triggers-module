@@ -20,11 +20,7 @@ Triggers module device states managers module
 
 # Python base dependencies
 from abc import abstractmethod
-from datetime import datetime
 from typing import Dict, Union
-
-# Library dependencies
-from fastybird_metadata.types import ButtonPayload, SwitchPayload
 
 # Library libs
 from fastybird_triggers_module.entities.action import ActionEntity
@@ -47,7 +43,7 @@ class IActionsStatesManager:
     def create(
         self,
         action: ActionEntity,
-        data: Dict[str, Union[str, int, float, bool, datetime, ButtonPayload, SwitchPayload, None]],
+        data: Dict[str, Union[bool, None]],
     ) -> IActionState:
         """Create new action state record"""
 
@@ -58,7 +54,7 @@ class IActionsStatesManager:
         self,
         action: ActionEntity,
         state: IActionState,
-        data: Dict[str, Union[str, int, float, bool, datetime, ButtonPayload, SwitchPayload, None]],
+        data: Dict[str, Union[bool, None]],
     ) -> IActionState:
         """Update existing action state record"""
 
@@ -87,7 +83,7 @@ class IConditionsStatesManager:
     def create(
         self,
         condition: ConditionEntity,
-        data: Dict[str, Union[str, int, float, bool, datetime, ButtonPayload, SwitchPayload, None]],
+        data: Dict[str, Union[bool, None]],
     ) -> IConditionState:
         """Create new condition state record"""
 
@@ -98,7 +94,7 @@ class IConditionsStatesManager:
         self,
         condition: ConditionEntity,
         state: IConditionState,
-        data: Dict[str, Union[str, int, float, bool, datetime, ButtonPayload, SwitchPayload, None]],
+        data: Dict[str, Union[bool, None]],
     ) -> IConditionState:
         """Update existing condition state record"""
 
