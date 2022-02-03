@@ -42,14 +42,14 @@ and also in [Python](https://python.org).
 
 ## Requirements
 
-PHP part of [FastyBird](https://www.fastybird.com) devices module is tested against PHP 7.4
+PHP part of [FastyBird](https://www.fastybird.com) triggers module is tested against PHP 7.4
 and [ReactPHP http](https://github.com/reactphp/http) 0.8 event-driven, streaming plaintext HTTP server
 and [Nette framework](https://nette.org/en/) 3.0 PHP framework for real programmers
 
-JavaScript part of [FastyBird](https://www.fastybird.com) devices module is tested
+JavaScript part of [FastyBird](https://www.fastybird.com) triggers module is tested
 against [ECMAScript 6](https://www.w3schools.com/JS/js_es6.asp)
 
-Python part of [FastyBird](https://www.fastybird.com) devices module is tested against [Python 3.7](http://python.org)
+Python part of [FastyBird](https://www.fastybird.com) triggers module is tested against [Python 3.7](http://python.org)
 
 ## Installation
 
