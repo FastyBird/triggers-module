@@ -25,7 +25,7 @@ use Ramsey\Uuid;
 /**
  * @ORM\Entity
  * @ORM\Table(
- *     name="fb_actions",
+ *     name="fb_triggers_module_actions",
  *     options={
  *       "collate"="utf8mb4_general_ci",
  *       "charset"="utf8mb4",

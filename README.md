@@ -32,7 +32,7 @@ and also in [Python](https://python.org).
 ### Features:
 
 - Triggers and their actions and conditions management
-- Support for data exchange
+- Support for data [exchange bus](https://github.com/FastyBird/exchange)
 - [{JSON:API}](https://jsonapi.org/) schemas for full api access
 - User access check & validation
 - Multilingual

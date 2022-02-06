@@ -1,4 +1,4 @@
-INSERT IGNORE INTO `fb_triggers` (`trigger_id`, `trigger_type`, `trigger_name`, `trigger_comment`, `trigger_enabled`,
+INSERT IGNORE INTO `fb_triggers_module_triggers` (`trigger_id`, `trigger_type`, `trigger_name`, `trigger_comment`, `trigger_enabled`,
                                   `created_at`, `updated_at`, `params`)
 VALUES (_binary 0x0B48DFBCFAC2429288DC7981A121602D, 'automatic', 'Good Evening', NULL, 1, '2020-01-27 20:49:53',
         '2020-01-27 20:49:53', '[]'),
@@ -13,7 +13,7 @@ VALUES (_binary 0x0B48DFBCFAC2429288DC7981A121602D, 'automatic', 'Good Evening',
        (_binary 0xC64BA1C40EDA4CAB87A04D634F7B67F4, 'manual', 'Good Night\'s Sleep', NULL, 1, '2020-01-27 14:28:17',
         '2020-01-27 14:28:17', '[]');
 
-INSERT IGNORE INTO `fb_triggers_controls` (`control_id`, `trigger_id`, `control_name`, `created_at`, `updated_at`)
+INSERT IGNORE INTO `fb_triggers_module_triggers_controls` (`control_id`, `trigger_id`, `control_name`, `created_at`, `updated_at`)
 VALUES (_binary 0x7C055B2B60C3401793DBE9478D8AA662, _binary 0x421CA8E926C6463089BAC53AEA9BCB1E, 'trigger',
         '2020-01-27 14:25:54', '2020-01-27 14:25:54'),
        (_binary 0xCFCA08FFD19948ED9F008C6B840A567A, _binary 0xB8BB82F331E2406A96EDF99EBAF9947A, 'trigger',
@@ -21,7 +21,7 @@ VALUES (_binary 0x7C055B2B60C3401793DBE9478D8AA662, _binary 0x421CA8E926C6463089
        (_binary 0x177D6FC719054FD9B847E2DA8189DD6A, _binary 0xC64BA1C40EDA4CAB87A04D634F7B67F4, 'trigger',
         '2020-01-27 14:28:17', '2020-01-27 14:28:17');
 
-INSERT IGNORE INTO `fb_conditions` (`condition_id`, `trigger_id`, `created_at`, `updated_at`, `condition_type`,
+INSERT IGNORE INTO `fb_triggers_module_conditions` (`condition_id`, `trigger_id`, `created_at`, `updated_at`, `condition_type`,
                                     `condition_time`, `condition_days`, `condition_device`, `condition_channel`,
                                     `condition_channel_property`, `condition_operator`, `condition_operand`)
 VALUES (_binary 0x09C453B3C55F40508F1CB50F8D5728C2, _binary 0x1B17BCAAA19E45F098B456211CC648AE, '2020-01-27 14:24:34',
@@ -32,7 +32,7 @@ VALUES (_binary 0x09C453B3C55F40508F1CB50F8D5728C2, _binary 0x1B17BCAAA19E45F098
         '2020-01-27 14:25:19', 'channel-property', null, null, _binary 0x28989c89e7d746649d18a73647a844fb,
         _binary 0x5421c2688f5d4972a7b56b4295c3e4b1, _binary 0xff7b36d7a0b043369efba608c93b0974, 'eq', '3');
 
-INSERT IGNORE INTO `fb_actions` (`action_id`, `trigger_id`, `action_type`, `created_at`, `updated_at`, `action_device`,
+INSERT IGNORE INTO `fb_triggers_module_actions` (`action_id`, `trigger_id`, `action_type`, `created_at`, `updated_at`, `action_device`,
                                  `action_channel`, `action_channel_property`, `action_value`)
 VALUES (_binary 0x21D13F148BE0462587644D5B1F3B4D1E, _binary 0x0B48DFBCFAC2429288DC7981A121602D, 'channel-property',
         '2020-01-28 18:39:35', '2020-01-28 18:39:35', _binary 0xa830828c67684274b90920ce0e222347,
@@ -74,7 +74,7 @@ VALUES (_binary 0x21D13F148BE0462587644D5B1F3B4D1E, _binary 0x0B48DFBCFAC2429288
         '2020-01-27 14:24:34', '2020-01-27 14:24:34', _binary 0x28989c89e7d746649d18a73647a844fb,
         _binary 0x5421c2688f5d4972a7b56b4295c3e4b1, _binary 0xdb5e2230ac1446fd959281a1f1e28380, 'on');
 
-INSERT IGNORE INTO `fb_notifications` (`notification_id`, `trigger_id`, `created_at`, `updated_at`, `notification_type`,
+INSERT IGNORE INTO `fb_triggers_module_notifications` (`notification_id`, `trigger_id`, `created_at`, `updated_at`, `notification_type`,
                                        `notification_email`, `notification_phone`)
 VALUES (_binary 0x05F28DF95F194923B3F8B9090116DADC, _binary 0xC64BA1C40EDA4CAB87A04D634F7B67F4, '2020-04-06 13:16:17',
         '2020-04-06 13:16:17', 'email', 'john.doe@fastybird.com', NULL),

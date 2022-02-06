@@ -59,7 +59,7 @@ class TriggerEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
 
-    __tablename__: str = "fb_triggers"
+    __tablename__: str = "fb_triggers_module_triggers"
 
     __table_args__ = (
         Index("trigger_name_idx", "trigger_name"),
@@ -275,7 +275,7 @@ class TriggerControlEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
 
-    __tablename__: str = "fb_triggers_controls"
+    __tablename__: str = "fb_triggers_module_triggers_controls"
 
     __table_args__ = (
         Index("control_name_idx", "control_name"),
@@ -295,7 +295,7 @@ class TriggerControlEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
 
     col_trigger_id: bytes = Column(  # type: ignore[assignment]  # pylint: disable=unused-private-member
         BINARY(16),
-        ForeignKey("fb_triggers.trigger_id", ondelete="CASCADE"),
+        ForeignKey("fb_triggers_module_triggers.trigger_id", ondelete="CASCADE"),
         name="trigger_id",
         nullable=False,
     )

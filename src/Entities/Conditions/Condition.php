@@ -26,7 +26,7 @@ use Throwable;
 /**
  * @ORM\Entity
  * @ORM\Table(
- *     name="fb_conditions",
+ *     name="fb_triggers_module_conditions",
  *     options={
  *       "collate"="utf8mb4_general_ci",
  *       "charset"="utf8mb4",

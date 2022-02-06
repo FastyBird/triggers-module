@@ -26,7 +26,7 @@ use Throwable;
 /**
  * @ORM\Entity
  * @ORM\Table(
- *     name="fb_notifications_sms",
+ *     name="fb_triggers_module_notifications_sms",
  *     options={
  *       "collate"="utf8mb4_general_ci",
  *       "charset"="utf8mb4",

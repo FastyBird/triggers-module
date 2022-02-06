@@ -49,7 +49,7 @@ class ActionEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
     @author         Adam Kadlec <adam.kadlec@fastybird.com>
     """
 
-    __tablename__: str = "fb_actions"
+    __tablename__: str = "fb_triggers_module_actions"
 
     __table_args__ = {
         "mysql_engine": "InnoDB",
@@ -67,7 +67,7 @@ class ActionEntity(EntityCreatedMixin, EntityUpdatedMixin, Base):
 
     trigger_id: Optional[bytes] = Column(  # type: ignore[assignment]  # pylint: disable=unused-private-member
         BINARY(16),
-        ForeignKey("fb_triggers.trigger_id", ondelete="CASCADE"),
+        ForeignKey("fb_triggers_module_triggers.trigger_id", ondelete="CASCADE"),
         name="trigger_id",
         nullable=False,
     )
