@@ -10,7 +10,7 @@
     "self" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4?include=actions,notifications"
   },
   "data" : {
-    "type" : "triggers-module/trigger-manual",
+    "type" : "triggers-module/trigger/manual",
     "id" : "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
     "attributes" : {
       "name" : "Good Night's Sleep",
@@ -31,7 +31,7 @@
         },
         "data" : [
           {
-            "type" : "triggers-module/trigger-control",
+            "type" : "triggers-module/control/trigger",
             "id" : "177d6fc7-1905-4fd9-b847-e2da8189dd6a"
           }
         ]
@@ -48,15 +48,15 @@
         },
         "data" : [
           {
-            "type" : "triggers-module/action-channel-property",
+            "type" : "triggers-module/action/channel-property",
             "id" : "4aa84028-d8b7-4128-95b2-295763634aa4"
           },
           {
-            "type" : "triggers-module/action-channel-property",
+            "type" : "triggers-module/action/channel-property",
             "id" : "827d61f7-5dcf-4cab-9662-f386f6fb0bce"
           },
           {
-            "type" : "triggers-module/action-channel-property",
+            "type" : "triggers-module/action/channel-property",
             "id" : "d062ce8b-9543-4b9b-b6ca-51907ec0246a"
           }
         ]
@@ -73,11 +73,11 @@
         },
         "data" : [
           {
-            "type" : "triggers-module/notification-email",
+            "type" : "triggers-module/notification/email",
             "id" : "05f28df9-5f19-4923-b3f8-b9090116dadc"
           },
           {
-            "type" : "triggers-module/notification-sms",
+            "type" : "triggers-module/notification/sms",
             "id" : "4fe1019c-f49e-4cbf-83e6-20b394e76317"
           }
         ]
@@ -89,7 +89,7 @@
   },
   "included" : [
     {
-      "type" : "triggers-module/action-channel-property",
+      "type" : "triggers-module/action/channel-property",
       "id" : "4aa84028-d8b7-4128-95b2-295763634aa4",
       "attributes" : {
         "enabled" : true,
@@ -106,7 +106,7 @@
             "related" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4"
           },
           "data" : {
-            "type" : "triggers-module/trigger-manual",
+            "type" : "triggers-module/trigger/manual",
             "id" : "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4"
           }
         }
@@ -116,7 +116,7 @@
       }
     },
     {
-      "type" : "triggers-module/action-channel-property",
+      "type" : "triggers-module/action/channel-property",
       "id" : "827d61f7-5dcf-4cab-9662-f386f6fb0bce",
       "attributes" : {
         "enabled" : true,
@@ -133,7 +133,7 @@
             "related" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4"
           },
           "data" : {
-            "type" : "triggers-module/trigger-manual",
+            "type" : "triggers-module/trigger/manual",
             "id" : "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4"
           }
         }
@@ -143,7 +143,7 @@
       }
     },
     {
-      "type" : "triggers-module/action-channel-property",
+      "type" : "triggers-module/action/channel-property",
       "id" : "d062ce8b-9543-4b9b-b6ca-51907ec0246a",
       "attributes" : {
         "enabled" : true,
@@ -160,7 +160,7 @@
             "related" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4"
           },
           "data" : {
-            "type" : "triggers-module/trigger-manual",
+            "type" : "triggers-module/trigger/manual",
             "id" : "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4"
           }
         }
@@ -170,7 +170,7 @@
       }
     },
     {
-      "type" : "triggers-module/notification-email",
+      "type" : "triggers-module/notification/email",
       "id" : "05f28df9-5f19-4923-b3f8-b9090116dadc",
       "attributes" : {
         "enabled" : true,
@@ -183,7 +183,7 @@
             "related" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4"
           },
           "data" : {
-            "type" : "triggers-module/trigger-manual",
+            "type" : "triggers-module/trigger/manual",
             "id" : "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4"
           }
         }
@@ -193,7 +193,7 @@
       }
     },
     {
-      "type" : "triggers-module/notification-sms",
+      "type" : "triggers-module/notification/sms",
       "id" : "4fe1019c-f49e-4cbf-83e6-20b394e76317",
       "attributes" : {
         "enabled" : true,
@@ -206,7 +206,7 @@
             "related" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4"
           },
           "data" : {
-            "type" : "triggers-module/trigger-manual",
+            "type" : "triggers-module/trigger/manual",
             "id" : "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4"
           }
         }

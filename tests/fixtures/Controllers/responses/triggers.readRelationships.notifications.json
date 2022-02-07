@@ -2,11 +2,11 @@
   "data" : [
     {
       "id" : "05f28df9-5f19-4923-b3f8-b9090116dadc",
-      "type" : "triggers-module/notification-email"
+      "type" : "triggers-module/notification/email"
     },
     {
       "id" : "4fe1019c-f49e-4cbf-83e6-20b394e76317",
-      "type" : "triggers-module/notification-sms"
+      "type" : "triggers-module/notification/sms"
     }
   ],
   "jsonapi" : {

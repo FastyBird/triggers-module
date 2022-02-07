@@ -39,7 +39,7 @@ final class ControlSchema extends JsonApiSchemas\JsonApiSchema
 	/**
 	 * Define entity schema type string
 	 */
-	public const SCHEMA_TYPE = 'triggers-module/trigger-control';
+	public const SCHEMA_TYPE = 'triggers-module/control/trigger';
 
 	/**
 	 * Define relationships names

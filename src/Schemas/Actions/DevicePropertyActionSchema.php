@@ -34,7 +34,7 @@ final class DevicePropertyActionSchema extends ActionSchema
 	/**
 	 * Define entity schema type string
 	 */
-	public const SCHEMA_TYPE = 'triggers-module/action-device-property';
+	public const SCHEMA_TYPE = 'triggers-module/action/device-property';
 
 	/**
 	 * @return string

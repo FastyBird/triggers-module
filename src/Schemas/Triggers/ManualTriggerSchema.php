@@ -36,7 +36,7 @@ final class ManualTriggerSchema extends TriggerSchema
 	/**
 	 * Define entity schema type string
 	 */
-	public const SCHEMA_TYPE = 'triggers-module/trigger-manual';
+	public const SCHEMA_TYPE = 'triggers-module/trigger/manual';
 
 	/**
 	 * Define relationships names

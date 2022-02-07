@@ -10,7 +10,7 @@
     "self" : "/v1/triggers"
   },
   "data" : {
-    "type" : "triggers-module/trigger-manual",
+    "type" : "triggers-module/trigger/manual",
     "id" : "bbbf5caa-b30e-4558-b83a-699617958cea",
     "attributes" : {
       "name" : "This is manual trigger",
@@ -31,7 +31,7 @@
         },
         "data" : [
           {
-            "type" : "triggers-module/trigger-control",
+            "type" : "triggers-module/control/trigger",
             "id" : "__CONTROL_IDENTIFIER_PLACEHOLDER__"
           }
         ]

@@ -35,7 +35,7 @@ final class TimeConditionSchema extends ConditionSchema
 	/**
 	 * Define entity schema type string
 	 */
-	public const SCHEMA_TYPE = 'triggers-module/condition-time';
+	public const SCHEMA_TYPE = 'triggers-module/condition/time';
 
 	/**
 	 * @return string

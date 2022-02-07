@@ -17,7 +17,7 @@ import {
 // ============
 
 export enum TriggerControlEntityTypes {
-  CONTROL = 'triggers-module/trigger-control',
+  CONTROL = 'triggers-module/control/trigger',
 }
 
 // ENTITY INTERFACE

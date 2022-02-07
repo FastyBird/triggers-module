@@ -34,7 +34,7 @@ final class ChannelPropertyActionSchema extends ActionSchema
 	/**
 	 * Define entity schema type string
 	 */
-	public const SCHEMA_TYPE = 'triggers-module/action-channel-property';
+	public const SCHEMA_TYPE = 'triggers-module/action/channel-property';
 
 	/**
 	 * @return string

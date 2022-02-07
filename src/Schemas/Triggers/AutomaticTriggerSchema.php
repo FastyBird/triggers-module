@@ -38,7 +38,7 @@ final class AutomaticTriggerSchema extends TriggerSchema
 	/**
 	 * Define entity schema type string
 	 */
-	public const SCHEMA_TYPE = 'triggers-module/trigger-automatic';
+	public const SCHEMA_TYPE = 'triggers-module/trigger/automatic';
 
 	/**
 	 * Define relationships names
