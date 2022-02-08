@@ -16,6 +16,7 @@
 namespace FastyBird\TriggersModule\Schemas\Triggers\Controls;
 
 use FastyBird\JsonApi\Schemas as JsonApiSchemas;
+use FastyBird\Metadata\Types\ModuleSourceType;
 use FastyBird\TriggersModule;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Router;

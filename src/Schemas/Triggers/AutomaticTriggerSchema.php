@@ -15,6 +15,7 @@
 
 namespace FastyBird\TriggersModule\Schemas\Triggers;
 
+use FastyBird\Metadata\Types\ModuleSourceType;
 use FastyBird\TriggersModule;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Models;

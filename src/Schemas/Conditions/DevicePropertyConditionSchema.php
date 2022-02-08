@@ -15,6 +15,7 @@
 
 namespace FastyBird\TriggersModule\Schemas\Conditions;
 
+use FastyBird\Metadata\Types\ModuleSourceType;
 use FastyBird\TriggersModule\Entities;
 use Neomerx\JsonApi;
 
