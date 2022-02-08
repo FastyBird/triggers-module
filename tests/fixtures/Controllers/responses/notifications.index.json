@@ -13,7 +13,7 @@
         "trigger" : {
           "data" : {
             "id" : "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
-            "type" : "triggers-module/trigger/manual"
+            "type" : "com.fastybird.triggers-module/trigger/manual"
           },
           "links" : {
             "related" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
@@ -21,7 +21,7 @@
           }
         }
       },
-      "type" : "triggers-module/notification/email"
+      "type" : "com.fastybird.triggers-module/notification/email"
     },
     {
       "attributes" : {
@@ -36,7 +36,7 @@
         "trigger" : {
           "data" : {
             "id" : "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
-            "type" : "triggers-module/trigger/manual"
+            "type" : "com.fastybird.triggers-module/trigger/manual"
           },
           "links" : {
             "related" : "/v1/triggers/c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
@@ -44,7 +44,7 @@
           }
         }
       },
-      "type" : "triggers-module/notification/sms"
+      "type" : "com.fastybird.triggers-module/notification/sms"
     }
   ],
   "jsonapi" : {

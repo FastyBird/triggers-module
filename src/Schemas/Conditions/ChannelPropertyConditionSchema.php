@@ -34,7 +34,7 @@ final class ChannelPropertyConditionSchema extends ConditionSchema
 	/**
 	 * Define entity schema type string
 	 */
-	public const SCHEMA_TYPE = 'triggers-module/condition/channel-property';
+	public const SCHEMA_TYPE = ModuleSourceType::SOURCE_MODULE_TRIGGERS . '/condition/channel-property';
 
 	/**
 	 * @return string

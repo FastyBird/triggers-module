@@ -35,7 +35,7 @@ final class DateConditionSchema extends ConditionSchema
 	/**
 	 * Define entity schema type string
 	 */
-	public const SCHEMA_TYPE = 'triggers-module/condition/date';
+	public const SCHEMA_TYPE = ModuleSourceType::SOURCE_MODULE_TRIGGERS . '/condition/date';
 
 	/**
 	 * @return string

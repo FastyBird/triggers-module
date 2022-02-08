@@ -16,8 +16,8 @@ import {
 // ============
 
 export enum ActionEntityTypes {
-  DEVICE_PROPERTY = 'triggers-module/action/device-property',
-  CHANNEL_PROPERTY = 'triggers-module/action/channel-property',
+  DEVICE_PROPERTY = 'com.fastybird.triggers-module/action/device-property',
+  CHANNEL_PROPERTY = 'com.fastybird.triggers-module/action/channel-property',
 }
 
 // ENTITY INTERFACE

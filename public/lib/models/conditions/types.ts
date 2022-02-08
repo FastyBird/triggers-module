@@ -18,10 +18,10 @@ import {
 // ============
 
 export enum ConditionEntityTypes {
-  TIME = 'triggers-module/condition/time',
-  DATE = 'triggers-module/condition/date',
-  DEVICE_PROPERTY = 'triggers-module/condition/device-property',
-  CHANNEL_PROPERTY = 'triggers-module/condition/channel-property',
+  TIME = 'com.fastybird.triggers-module/condition/time',
+  DATE = 'com.fastybird.triggers-module/condition/date',
+  DEVICE_PROPERTY = 'com.fastybird.triggers-module/condition/device-property',
+  CHANNEL_PROPERTY = 'com.fastybird.triggers-module/condition/channel-property',
 }
 
 // ENTITY INTERFACE

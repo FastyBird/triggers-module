@@ -17,7 +17,7 @@ import {
 // ============
 
 export enum TriggerControlEntityTypes {
-  CONTROL = 'triggers-module/control/trigger',
+  CONTROL = 'com.fastybird.triggers-module/control/trigger',
 }
 
 // ENTITY INTERFACE

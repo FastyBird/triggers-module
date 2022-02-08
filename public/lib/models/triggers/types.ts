@@ -30,8 +30,8 @@ import { TriggerControlDataResponseInterface, TriggerControlInterface } from '@/
 // ============
 
 export enum TriggerEntityTypes {
-  AUTOMATIC = 'triggers-module/trigger/automatic',
-  MANUAL = 'triggers-module/trigger/manual',
+  AUTOMATIC = 'com.fastybird.triggers-module/trigger/automatic',
+  MANUAL = 'com.fastybird.triggers-module/trigger/manual',
 }
 
 // ENTITY INTERFACE

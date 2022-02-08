@@ -11,7 +11,7 @@
   },
   "data" : [
     {
-      "type" : "triggers-module/trigger/automatic",
+      "type" : "com.fastybird.triggers-module/trigger/automatic",
       "id" : "0b48dfbc-fac2-4292-88dc-7981a121602d",
       "attributes" : {
         "name" : "Good Evening",
@@ -33,7 +33,7 @@
           },
           "data" : [
             {
-              "type" : "triggers-module/condition/time",
+              "type" : "com.fastybird.triggers-module/condition/time",
               "id" : "167900e9-19f3-4712-aa4d-00b160ff06d5"
             }
           ]
@@ -50,11 +50,11 @@
           },
           "data" : [
             {
-              "type" : "triggers-module/action/channel-property",
+              "type" : "com.fastybird.triggers-module/action/channel-property",
               "id" : "21d13f14-8be0-4625-8764-4d5b1f3b4d1e"
             },
             {
-              "type" : "triggers-module/action/channel-property",
+              "type" : "com.fastybird.triggers-module/action/channel-property",
               "id" : "cfca08ff-d199-48ed-9f00-8c6b840a567a"
             }
           ]
@@ -77,7 +77,7 @@
       }
     },
     {
-      "type" : "triggers-module/trigger/automatic",
+      "type" : "com.fastybird.triggers-module/trigger/automatic",
       "id" : "1b17bcaa-a19e-45f0-98b4-56211cc648ae",
       "attributes" : {
         "name" : "Rise n'Shine",
@@ -99,7 +99,7 @@
           },
           "data" : [
             {
-              "type" : "triggers-module/condition/time",
+              "type" : "com.fastybird.triggers-module/condition/time",
               "id" : "09c453b3-c55f-4050-8f1c-b50f8d5728c2"
             }
           ]
@@ -116,11 +116,11 @@
           },
           "data" : [
             {
-              "type" : "triggers-module/action/channel-property",
+              "type" : "com.fastybird.triggers-module/action/channel-property",
               "id" : "c40e6e57-4fe0-43b0-88ed-4f0374e8623d"
             },
             {
-              "type" : "triggers-module/action/channel-property",
+              "type" : "com.fastybird.triggers-module/action/channel-property",
               "id" : "ea072fff-125e-43b0-9d76-4a65738f4b88"
             }
           ]
@@ -143,7 +143,7 @@
       }
     },
     {
-      "type" : "triggers-module/trigger/automatic",
+      "type" : "com.fastybird.triggers-module/trigger/automatic",
       "id" : "2cea2c1b-4790-4d82-8a9f-902c7155ab36",
       "attributes" : {
         "name" : "House keeping",
@@ -165,7 +165,7 @@
           },
           "data" : [
             {
-              "type" : "triggers-module/condition/channel-property",
+              "type" : "com.fastybird.triggers-module/condition/channel-property",
               "id" : "2726f19c-7759-440e-b6f5-8c3306692fa2"
             }
           ]
@@ -182,7 +182,7 @@
           },
           "data" : [
             {
-              "type" : "triggers-module/action/channel-property",
+              "type" : "com.fastybird.triggers-module/action/channel-property",
               "id" : "69ced64e-6e54-41e9-8052-ba25e6199b25"
             }
           ]
@@ -205,7 +205,7 @@
       }
     },
     {
-      "type" : "triggers-module/trigger/manual",
+      "type" : "com.fastybird.triggers-module/trigger/manual",
       "id" : "421ca8e9-26c6-4630-89ba-c53aea9bcb1e",
       "attributes" : {
         "name" : "Movie Night",
@@ -226,7 +226,7 @@
           },
           "data" : [
             {
-              "type" : "triggers-module/control/trigger",
+              "type" : "com.fastybird.triggers-module/control/trigger",
               "id" : "7c055b2b-60c3-4017-93db-e9478d8aa662"
             }
           ]
@@ -243,11 +243,11 @@
           },
           "data" : [
             {
-              "type" : "triggers-module/action/channel-property",
+              "type" : "com.fastybird.triggers-module/action/channel-property",
               "id" : "46c39a95-39eb-4216-9fa3-4d575a6295bd"
             },
             {
-              "type" : "triggers-module/action/channel-property",
+              "type" : "com.fastybird.triggers-module/action/channel-property",
               "id" : "e7496bd7-7bd6-4bd8-9abb-013261b88543"
             }
           ]
@@ -270,7 +270,7 @@
       }
     },
     {
-      "type" : "triggers-module/trigger/manual",
+      "type" : "com.fastybird.triggers-module/trigger/manual",
       "id" : "b8bb82f3-31e2-406a-96ed-f99ebaf9947a",
       "attributes" : {
         "name" : "Bubble Bath",
@@ -291,7 +291,7 @@
           },
           "data" : [
             {
-              "type" : "triggers-module/control/trigger",
+              "type" : "com.fastybird.triggers-module/control/trigger",
               "id" : "cfca08ff-d199-48ed-9f00-8c6b840a567a"
             }
           ]
@@ -308,15 +308,15 @@
           },
           "data" : [
             {
-              "type" : "triggers-module/action/channel-property",
+              "type" : "com.fastybird.triggers-module/action/channel-property",
               "id" : "52aa8a35-1832-4317-be2c-8b8fffaae07f"
             },
             {
-              "type" : "triggers-module/action/channel-property",
+              "type" : "com.fastybird.triggers-module/action/channel-property",
               "id" : "7b6398e4-d26c-4cb1-ba0c-ed1b115a6cc0"
             },
             {
-              "type" : "triggers-module/action/channel-property",
+              "type" : "com.fastybird.triggers-module/action/channel-property",
               "id" : "7c14e872-e00a-432e-8b72-ad5679522cd4"
             }
           ]
@@ -339,7 +339,7 @@
       }
     },
     {
-      "type" : "triggers-module/trigger/manual",
+      "type" : "com.fastybird.triggers-module/trigger/manual",
       "id" : "c64ba1c4-0eda-4cab-87a0-4d634f7b67f4",
       "attributes" : {
         "name" : "Good Night's Sleep",
@@ -360,7 +360,7 @@
           },
           "data" : [
             {
-              "type" : "triggers-module/control/trigger",
+              "type" : "com.fastybird.triggers-module/control/trigger",
               "id" : "177d6fc7-1905-4fd9-b847-e2da8189dd6a"
             }
           ]
@@ -377,15 +377,15 @@
           },
           "data" : [
             {
-              "type" : "triggers-module/action/channel-property",
+              "type" : "com.fastybird.triggers-module/action/channel-property",
               "id" : "4aa84028-d8b7-4128-95b2-295763634aa4"
             },
             {
-              "type" : "triggers-module/action/channel-property",
+              "type" : "com.fastybird.triggers-module/action/channel-property",
               "id" : "827d61f7-5dcf-4cab-9662-f386f6fb0bce"
             },
             {
-              "type" : "triggers-module/action/channel-property",
+              "type" : "com.fastybird.triggers-module/action/channel-property",
               "id" : "d062ce8b-9543-4b9b-b6ca-51907ec0246a"
             }
           ]
@@ -402,11 +402,11 @@
           },
           "data" : [
             {
-              "type" : "triggers-module/notification/email",
+              "type" : "com.fastybird.triggers-module/notification/email",
               "id" : "05f28df9-5f19-4923-b3f8-b9090116dadc"
             },
             {
-              "type" : "triggers-module/notification/sms",
+              "type" : "com.fastybird.triggers-module/notification/sms",
               "id" : "4fe1019c-f49e-4cbf-83e6-20b394e76317"
             }
           ]

@@ -15,6 +15,7 @@
 
 namespace FastyBird\TriggersModule\Schemas\Actions;
 
+use FastyBird\Metadata\Types\ModuleSourceType;
 use FastyBird\TriggersModule\Entities;
 use Neomerx\JsonApi;
 
@@ -34,7 +35,7 @@ final class ChannelPropertyActionSchema extends ActionSchema
 	/**
 	 * Define entity schema type string
 	 */
-	public const SCHEMA_TYPE = 'triggers-module/action/channel-property';
+	public const SCHEMA_TYPE = ModuleSourceType::SOURCE_MODULE_TRIGGERS . '/action/channel-property';
 
 	/**
 	 * @return string

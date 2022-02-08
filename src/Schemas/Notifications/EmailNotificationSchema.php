@@ -32,7 +32,7 @@ final class EmailNotificationSchema extends NotificationSchema
 	/**
 	 * Define entity schema type string
 	 */
-	public const SCHEMA_TYPE = 'triggers-module/notification/email';
+	public const SCHEMA_TYPE = ModuleSourceType::SOURCE_MODULE_TRIGGERS . '/notification/email';
 
 	/**
 	 * @return string

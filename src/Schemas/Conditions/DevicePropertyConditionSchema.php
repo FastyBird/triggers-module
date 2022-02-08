@@ -34,7 +34,7 @@ final class DevicePropertyConditionSchema extends ConditionSchema
 	/**
 	 * Define entity schema type string
 	 */
-	public const SCHEMA_TYPE = 'triggers-module/condition/device-property';
+	public const SCHEMA_TYPE = ModuleSourceType::SOURCE_MODULE_TRIGGERS . '/condition/device-property';
 
 	/**
 	 * @return string

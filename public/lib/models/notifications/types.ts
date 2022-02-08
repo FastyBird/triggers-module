@@ -16,8 +16,8 @@ import {
 // ============
 
 export enum NotificationEntityTypes {
-  EMAIL = 'triggers-module/notification/email',
-  SMS = 'triggers-module/notification/sms',
+  EMAIL = 'com.fastybird.triggers-module/notification/email',
+  SMS = 'com.fastybird.triggers-module/notification/sms',
 }
 
 // ENTITY INTERFACE
