@@ -23,7 +23,7 @@ import datetime
 from typing import Dict, Optional, Union
 
 # Library dependencies
-from fastybird_metadata.types import ModuleSource, ConnectorSource, PluginSource
+from fastybird_metadata.types import ConnectorSource, ModuleSource, PluginSource
 from sqlalchemy import Column, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 

@@ -25,7 +25,7 @@ from typing import Optional, Union
 # Library dependencies
 from fastybird_exchange.publisher import Publisher
 from fastybird_metadata.routing import RoutingKey
-from fastybird_metadata.types import ControlAction, ModuleSource, PropertyAction
+from fastybird_metadata.types import ControlAction, PropertyAction
 from kink import inject
 from sqlalchemy.orm import close_all_sessions
 

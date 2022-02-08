@@ -36,7 +36,10 @@ from fastybird_triggers_module.logger import Logger
 from fastybird_triggers_module.managers.action import ActionsManager
 from fastybird_triggers_module.managers.condition import ConditionsManager
 from fastybird_triggers_module.managers.notification import NotificationsManager
-from fastybird_triggers_module.managers.state import ActionsStatesManager, ConditionsStatesManager
+from fastybird_triggers_module.managers.state import (
+    ActionsStatesManager,
+    ConditionsStatesManager,
+)
 from fastybird_triggers_module.managers.trigger import (
     TriggerControlsManager,
     TriggersManager,

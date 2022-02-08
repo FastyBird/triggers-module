@@ -52,7 +52,7 @@ trait TEntity
 	 */
 	public function getSource()
 	{
-		return MetadataTypes\ModuleSourceType::get(MetadataTypes\ModuleSourceType::SOURCE_MODULE_DEVICES);
+		return MetadataTypes\ModuleSourceType::get(MetadataTypes\ModuleSourceType::SOURCE_MODULE_TRIGGERS);
 	}
 
 }

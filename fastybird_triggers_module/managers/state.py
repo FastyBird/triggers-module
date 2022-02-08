@@ -20,7 +20,7 @@ Triggers module device states managers module
 
 # Python base dependencies
 from abc import abstractmethod
-from typing import Dict, Union, Optional
+from typing import Dict, Optional, Union
 
 # Library dependencies
 from fastybird_exchange.publisher import Publisher
