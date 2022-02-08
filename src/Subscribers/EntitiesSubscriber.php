@@ -220,7 +220,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 				$state = $this->actionStateRepository->findOne($entity);
 
 				$this->publisher->publish(
-					MetadataTypes\ModuleOriginType::get(MetadataTypes\ModuleOriginType::ORIGIN_MODULE_TRIGGERS),
+					$entity->getSource(),
 					$publishRoutingKey,
 					Utils\ArrayHash::from(array_merge($state !== null ? [
 						'is_triggered' => $state->isTriggered(),
@@ -231,7 +231,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 				$state = $this->conditionStateRepository->findOne($entity);
 
 				$this->publisher->publish(
-					MetadataTypes\ModuleOriginType::get(MetadataTypes\ModuleOriginType::ORIGIN_MODULE_TRIGGERS),
+					$entity->getSource(),
 					$publishRoutingKey,
 					Utils\ArrayHash::from(array_merge($state !== null ? [
 						'is_fulfilled' => $state->isFulfilled(),
@@ -265,7 +265,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 					}
 
 					$this->publisher->publish(
-						MetadataTypes\ModuleOriginType::get(MetadataTypes\ModuleOriginType::ORIGIN_MODULE_TRIGGERS),
+						$entity->getSource(),
 						$publishRoutingKey,
 						Utils\ArrayHash::from(array_merge([
 							'is_triggered' => $isTriggered,
@@ -275,7 +275,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 
 				} else {
 					$this->publisher->publish(
-						MetadataTypes\ModuleOriginType::get(MetadataTypes\ModuleOriginType::ORIGIN_MODULE_TRIGGERS),
+						$entity->getSource(),
 						$publishRoutingKey,
 						Utils\ArrayHash::from(array_merge([
 							'is_triggered' => $isTriggered,
@@ -284,7 +284,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 				}
 			} else {
 				$this->publisher->publish(
-					MetadataTypes\ModuleOriginType::get(MetadataTypes\ModuleOriginType::ORIGIN_MODULE_TRIGGERS),
+					$entity->getSource(),
 					$publishRoutingKey,
 					Utils\ArrayHash::from($entity->toArray())
 				);

@@ -2,7 +2,6 @@ import { Item } from '@vuex-orm/core'
 import * as exchangeEntitySchema
   from '@fastybird/metadata/resources/schemas/modules/triggers-module/entity.condition.json'
 import {
-  ModuleOrigin,
   ConditionEntity as ExchangeEntity,
   TriggersModuleRoutes as RoutingKeys,
   ConditionType,
@@ -203,10 +202,7 @@ const moduleActions: ActionTree<ConditionState, any> = {
     }
   },
 
-  async edit({
-               state,
-               commit,
-             }, payload: { condition: ConditionInterface, data: UpdateDevicePropertyConditionInterface | UpdateChannelPropertyConditionInterface | UpdateDateConditionInterface | UpdateTimeConditionInterface }): Promise<Item<Condition>> {
+  async edit({ state, commit }, payload: { condition: ConditionInterface, data: UpdateDevicePropertyConditionInterface | UpdateChannelPropertyConditionInterface | UpdateDateConditionInterface | UpdateTimeConditionInterface }): Promise<Item<Condition>> {
     if (state.semaphore.updating.includes(payload.condition.id)) {
       throw new Error('triggers-module.conditions.update.inProgress')
     }
@@ -422,11 +418,7 @@ const moduleActions: ActionTree<ConditionState, any> = {
     }
   },
 
-  async socketData({ state, commit }, payload: { origin: string, routingKey: string, data: string }): Promise<boolean> {
-    if (payload.origin !== ModuleOrigin.MODULE_TRIGGERS) {
-      return false
-    }
-
+  async socketData({ state, commit }, payload: { source: string, routingKey: string, data: string }): Promise<boolean> {
     if (
       ![
         RoutingKeys.CONDITIONS_ENTITY_REPORTED,

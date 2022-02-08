@@ -1,7 +1,6 @@
 import { Item } from '@vuex-orm/core'
 import * as exchangeEntitySchema from '@fastybird/metadata/resources/schemas/modules/triggers-module/entity.action.json'
 import {
-  ModuleOrigin,
   ActionEntity as ExchangeEntity,
   TriggersModuleRoutes as RoutingKeys,
   ActionType,
@@ -198,10 +197,7 @@ const moduleActions: ActionTree<ActionState, any> = {
     }
   },
 
-  async edit({
-               state,
-               commit,
-             }, payload: { action: ActionInterface, data: UpdateDevicePropertyActionInterface | UpdateChannelPropertyActionInterface }): Promise<Item<Action>> {
+  async edit({ state, commit }, payload: { action: ActionInterface, data: UpdateDevicePropertyActionInterface | UpdateChannelPropertyActionInterface }): Promise<Item<Action>> {
     if (state.semaphore.updating.includes(payload.action.id)) {
       throw new Error('triggers-module.actions.update.inProgress')
     }
@@ -417,11 +413,7 @@ const moduleActions: ActionTree<ActionState, any> = {
     }
   },
 
-  async socketData({ state, commit }, payload: { origin: string, routingKey: string, data: string }): Promise<boolean> {
-    if (payload.origin !== ModuleOrigin.MODULE_TRIGGERS) {
-      return false
-    }
-
+  async socketData({ state, commit }, payload: { source: string, routingKey: string, data: string }): Promise<boolean> {
     if (
       ![
         RoutingKeys.ACTIONS_ENTITY_REPORTED,

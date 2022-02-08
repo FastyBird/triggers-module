@@ -25,7 +25,7 @@ from typing import Dict, List, Optional, Union
 # Library dependencies
 from fastybird_exchange.consumer import IConsumer
 from fastybird_metadata.routing import RoutingKey
-from fastybird_metadata.types import ConnectorOrigin, ModuleOrigin, PluginOrigin
+from fastybird_metadata.types import ConnectorSource, ModuleSource, PluginSource
 
 # Library libs
 from fastybird_triggers_module.automation.queue import (
@@ -70,7 +70,7 @@ class AutomationConsumer(IConsumer):  # pylint: disable=too-few-public-methods
 
     def consume(
         self,
-        origin: Union[ModuleOrigin, PluginOrigin, ConnectorOrigin],
+        source: Union[ModuleSource, PluginSource, ConnectorSource],
         routing_key: RoutingKey,
         data: Optional[Dict],
     ) -> None:
@@ -79,7 +79,7 @@ class AutomationConsumer(IConsumer):  # pylint: disable=too-few-public-methods
             if str(routing_key.value).startswith(self.__ENTITY_PREFIX_KEY):
                 self.__queue.append(
                     ConsumeEntityMessageQueueItem(
-                        origin=origin,
+                        source=source,
                         routing_key=routing_key,
                         data=data,
                     )
@@ -88,7 +88,7 @@ class AutomationConsumer(IConsumer):  # pylint: disable=too-few-public-methods
             elif routing_key in self.__CONTROLS_ACTIONS_ROUTING_KEYS:
                 self.__queue.append(
                     ConsumeControlActionMessageQueueItem(
-                        origin=origin,
+                        source=source,
                         routing_key=routing_key,
                         data=data,
                     )

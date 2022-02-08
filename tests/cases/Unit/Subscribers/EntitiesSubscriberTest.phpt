@@ -39,8 +39,8 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 		$publisher = Mockery::mock(ExchangePublisher\Publisher::class);
 		$publisher
 			->shouldReceive('publish')
-			->withArgs(function (string $origin, string $key, Utils\ArrayHash $data): bool {
-				Assert::same(Metadata\Constants::MODULE_TRIGGERS_ORIGIN, $origin);
+			->withArgs(function (string $source, string $key, Utils\ArrayHash $data): bool {
+				Assert::same(Metadata\Constants::MODULE_TRIGGERS_SOURCE, $source);
 
 				unset($data['id']);
 
@@ -130,8 +130,8 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 		$publisher = Mockery::mock(ExchangePublisher\Publisher::class);
 		$publisher
 			->shouldReceive('publish')
-			->withArgs(function (string $origin, string $key, Utils\ArrayHash $data): bool {
-				Assert::same(Metadata\Constants::MODULE_TRIGGERS_ORIGIN, $origin);
+			->withArgs(function (string $source, string $key, Utils\ArrayHash $data): bool {
+				Assert::same(Metadata\Constants::MODULE_TRIGGERS_SOURCE, $source);
 
 				unset($data['id']);
 
@@ -173,8 +173,8 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 		$publisher = Mockery::mock(ExchangePublisher\Publisher::class);
 		$publisher
 			->shouldReceive('publish')
-			->withArgs(function (string $origin, string $key, Utils\ArrayHash $data): bool {
-				Assert::same(Metadata\Constants::MODULE_TRIGGERS_ORIGIN, $origin);
+			->withArgs(function (string $source, string $key, Utils\ArrayHash $data): bool {
+				Assert::same(Metadata\Constants::MODULE_TRIGGERS_SOURCE, $source);
 
 				unset($data['id']);
 

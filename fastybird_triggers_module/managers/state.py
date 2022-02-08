@@ -20,7 +20,12 @@ Triggers module device states managers module
 
 # Python base dependencies
 from abc import abstractmethod
-from typing import Dict, Union
+from typing import Dict, Union, Optional
+
+# Library dependencies
+from fastybird_exchange.publisher import Publisher
+from fastybird_metadata.routing import RoutingKey
+from kink import inject
 
 # Library libs
 from fastybird_triggers_module.entities.action import ActionEntity
@@ -107,3 +112,231 @@ class IConditionsStatesManager:
         state: IConditionState,
     ) -> bool:
         """Delete existing condition state"""
+
+
+@inject(
+    bind={
+        "manager": IActionsStatesManager,
+        "publisher": Publisher,
+    }
+)
+class ActionsStatesManager:
+    """
+    Actions states manager
+
+    @package        FastyBird:DevicesModule!
+    @module         managers/state
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+
+    __manager: Optional[IActionsStatesManager] = None
+
+    __publisher: Optional[Publisher] = None
+
+    # -----------------------------------------------------------------------------
+
+    def __init__(
+        self,
+        manager: Optional[IActionsStatesManager] = None,
+        publisher: Optional[Publisher] = None,
+    ) -> None:
+        self.__manager = manager
+        self.__publisher = publisher
+
+    # -----------------------------------------------------------------------------
+
+    def create(
+        self,
+        action: ActionEntity,
+        data: Dict[str, Union[bool, None]],
+    ) -> IActionState:
+        """Create new action state record"""
+        if self.__manager is None:
+            raise NotImplementedError("Actions states manager is not implemented")
+
+        created_state = self.__manager.create(action=action, data=data)
+
+        self.__publish_entity(
+            action=action,
+            state=created_state,
+        )
+
+        return created_state
+
+    # -----------------------------------------------------------------------------
+
+    def update(
+        self,
+        action: ActionEntity,
+        state: IActionState,
+        data: Dict[str, Union[bool, None]],
+    ) -> IActionState:
+        """Update existing action state record"""
+        if self.__manager is None:
+            raise NotImplementedError("Action states manager is not implemented")
+
+        updated_state = self.__manager.update(action=action, state=state, data=data)
+
+        self.__publish_entity(
+            action=action,
+            state=updated_state,
+        )
+
+        return updated_state
+
+    # -----------------------------------------------------------------------------
+
+    def delete(
+        self,
+        action: ActionEntity,
+        state: IActionState,
+    ) -> bool:
+        """Delete existing action state"""
+        if self.__manager is None:
+            raise NotImplementedError("Action states manager is not implemented")
+
+        result = self.__manager.delete(action=action, state=state)
+
+        if result is True:
+            self.__publish_entity(
+                action=action,
+                state=None,
+            )
+
+        return result
+
+    # -----------------------------------------------------------------------------
+
+    def __publish_entity(
+        self,
+        action: ActionEntity,
+        state: Optional[IActionState],
+    ) -> None:
+        if self.__publisher is None:
+            return
+
+        self.__publisher.publish(
+            source=action.source,
+            routing_key=RoutingKey.TRIGGERS_ACTIONS_ENTITY_UPDATED,
+            data={
+                **action.to_dict(),
+                **{
+                    "is_triggered": state.is_triggered if state is not None else False,
+                },
+            },
+        )
+
+
+@inject(
+    bind={
+        "manager": IConditionsStatesManager,
+        "publisher": Publisher,
+    }
+)
+class ConditionsStatesManager:
+    """
+    Conditions states manager
+
+    @package        FastyBird:DevicesModule!
+    @module         managers/state
+
+    @author         Adam Kadlec <adam.kadlec@fastybird.com>
+    """
+
+    __manager: Optional[IConditionsStatesManager] = None
+
+    __publisher: Optional[Publisher] = None
+
+    # -----------------------------------------------------------------------------
+
+    def __init__(
+        self,
+        manager: Optional[IConditionsStatesManager] = None,
+        publisher: Optional[Publisher] = None,
+    ) -> None:
+        self.__manager = manager
+        self.__publisher = publisher
+
+    # -----------------------------------------------------------------------------
+
+    def create(
+        self,
+        condition: ConditionEntity,
+        data: Dict[str, Union[bool, None]],
+    ) -> IConditionState:
+        """Create new condition state record"""
+        if self.__manager is None:
+            raise NotImplementedError("Conditions states manager is not implemented")
+
+        created_state = self.__manager.create(condition=condition, data=data)
+
+        self.__publish_entity(
+            condition=condition,
+            state=created_state,
+        )
+
+        return created_state
+
+    # -----------------------------------------------------------------------------
+
+    def update(
+        self,
+        condition: ConditionEntity,
+        state: IConditionState,
+        data: Dict[str, Union[bool, None]],
+    ) -> IConditionState:
+        """Update existing condition state record"""
+        if self.__manager is None:
+            raise NotImplementedError("Condition states manager is not implemented")
+
+        updated_state = self.__manager.update(condition=condition, state=state, data=data)
+
+        self.__publish_entity(
+            condition=condition,
+            state=updated_state,
+        )
+
+        return updated_state
+
+    # -----------------------------------------------------------------------------
+
+    def delete(
+        self,
+        condition: ConditionEntity,
+        state: IConditionState,
+    ) -> bool:
+        """Delete existing condition state"""
+        if self.__manager is None:
+            raise NotImplementedError("Condition states manager is not implemented")
+
+        result = self.__manager.delete(condition=condition, state=state)
+
+        if result is True:
+            self.__publish_entity(
+                condition=condition,
+                state=None,
+            )
+
+        return result
+
+    # -----------------------------------------------------------------------------
+
+    def __publish_entity(
+        self,
+        condition: ConditionEntity,
+        state: Optional[IConditionState],
+    ) -> None:
+        if self.__publisher is None:
+            return
+
+        self.__publisher.publish(
+            source=condition.source,
+            routing_key=RoutingKey.TRIGGERS_CONDITIONS_ENTITY_UPDATED,
+            data={
+                **condition.to_dict(),
+                **{
+                    "is_fulfilled": state.is_fulfilled if state is not None else False,
+                },
+            },
+        )

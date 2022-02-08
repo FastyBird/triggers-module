@@ -2,7 +2,6 @@ import { Item } from '@vuex-orm/core'
 import * as exchangeEntitySchema
   from '@fastybird/metadata/resources/schemas/modules/triggers-module/entity.trigger.json'
 import {
-  ModuleOrigin,
   TriggerEntity as ExchangeEntity,
   TriggersModuleRoutes as RoutingKeys,
   TriggerType,
@@ -431,10 +430,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
     }
   },
 
-  async edit({
-               state,
-               commit,
-             }, payload: { trigger: TriggerInterface, data: TriggerUpdateInterface }): Promise<Item<Trigger>> {
+  async edit({ state, commit }, payload: { trigger: TriggerInterface, data: TriggerUpdateInterface }): Promise<Item<Trigger>> {
     if (state.semaphore.updating.includes(payload.trigger.id)) {
       throw new Error('triggers-module.triggers.update.inProgress')
     }
@@ -720,11 +716,7 @@ const moduleActions: ActionTree<TriggerState, any> = {
     }
   },
 
-  async socketData({ state, commit }, payload: { origin: string, routingKey: string, data: string }): Promise<boolean> {
-    if (payload.origin !== ModuleOrigin.MODULE_TRIGGERS) {
-      return false
-    }
-
+  async socketData({ state, commit }, payload: { source: string, routingKey: string, data: string }): Promise<boolean> {
     if (
       ![
         RoutingKeys.TRIGGERS_ENTITY_REPORTED,

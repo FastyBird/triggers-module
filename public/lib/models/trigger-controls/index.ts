@@ -2,7 +2,6 @@ import { RpCallResponse } from '@fastybird/vue-wamp-v1'
 import * as exchangeEntitySchema
   from '@fastybird/metadata/resources/schemas/modules/triggers-module/entity.trigger.control.json'
 import {
-  ModuleOrigin,
   TriggerControlEntity as ExchangeEntity,
   TriggersModuleRoutes as RoutingKeys,
   ActionRoutes,
@@ -162,7 +161,7 @@ const moduleActions: ActionTree<TriggerControlState, unknown> = {
     return new Promise((resolve, reject) => {
       TriggerControl.wamp().call<{ data: string }>({
         routing_key: ActionRoutes.TRIGGER,
-        origin: TriggerControl.$triggersModuleOrigin,
+        source: TriggerControl.$triggersModuleSource,
         data: {
           action: ControlAction.SET,
           trigger: trigger.id,
@@ -183,11 +182,7 @@ const moduleActions: ActionTree<TriggerControlState, unknown> = {
     })
   },
 
-  async socketData({ state, commit }, payload: { origin: string, routingKey: string, data: string }): Promise<boolean> {
-    if (payload.origin !== ModuleOrigin.MODULE_TRIGGERS) {
-      return false
-    }
-
+  async socketData({ state, commit }, payload: { source: string, routingKey: string, data: string }): Promise<boolean> {
     if (
       ![
         RoutingKeys.TRIGGERS_CONTROL_ENTITY_REPORTED,

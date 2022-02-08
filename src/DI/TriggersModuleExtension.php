@@ -230,6 +230,13 @@ class TriggersModuleExtension extends DI\CompilerExtension
 
 		$builder->addDefinition($this->prefix('hydrators.notifications.sms'), new DI\Definitions\ServiceDefinition())
 			->setType(Hydrators\Notifications\SmsNotificationHydrator::class);
+
+		// States managers
+		$builder->addDefinition($this->prefix('states.managers.actions'), new DI\Definitions\ServiceDefinition())
+			->setType(Models\States\ActionsManager::class);
+
+		$builder->addDefinition($this->prefix('states.managers.conditions'), new DI\Definitions\ServiceDefinition())
+			->setType(Models\States\ConditionsManager::class);
 	}
 
 	/**

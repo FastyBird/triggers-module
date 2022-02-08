@@ -2,7 +2,6 @@ import { Item } from '@vuex-orm/core'
 import * as exchangeEntitySchema
   from '@fastybird/metadata/resources/schemas/modules/triggers-module/entity.notification.json'
 import {
-  ModuleOrigin,
   NotificationEntity as ExchangeEntity,
   NotificationType,
   TriggersModuleRoutes as RoutingKeys,
@@ -199,10 +198,7 @@ const moduleActions: ActionTree<NotificationState, any> = {
     }
   },
 
-  async edit({
-               state,
-               commit,
-             }, payload: { notification: NotificationInterface, data: UpdateSmsNotificationInterface | UpdateEmailNotificationInterface }): Promise<Item<Notification>> {
+  async edit({ state, commit }, payload: { notification: NotificationInterface, data: UpdateSmsNotificationInterface | UpdateEmailNotificationInterface }): Promise<Item<Notification>> {
     if (state.semaphore.updating.includes(payload.notification.id)) {
       throw new Error('triggers-module.notifications.update.inProgress')
     }
@@ -418,11 +414,7 @@ const moduleActions: ActionTree<NotificationState, any> = {
     }
   },
 
-  async socketData({ state, commit }, payload: { origin: string, routingKey: string, data: string }): Promise<boolean> {
-    if (payload.origin !== ModuleOrigin.MODULE_TRIGGERS) {
-      return false
-    }
-
+  async socketData({ state, commit }, payload: { source: string, routingKey: string, data: string }): Promise<boolean> {
     if (
       ![
         RoutingKeys.NOTIFICATIONS_ENTITY_REPORTED,

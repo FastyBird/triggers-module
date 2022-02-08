@@ -36,6 +36,7 @@ from fastybird_triggers_module.logger import Logger
 from fastybird_triggers_module.managers.action import ActionsManager
 from fastybird_triggers_module.managers.condition import ConditionsManager
 from fastybird_triggers_module.managers.notification import NotificationsManager
+from fastybird_triggers_module.managers.state import ActionsStatesManager, ConditionsStatesManager
 from fastybird_triggers_module.managers.trigger import (
     TriggerControlsManager,
     TriggersManager,
@@ -87,9 +88,16 @@ def register_services(
     di[ActionsManager] = ActionsManager(session=di[OrmSession])
     di["fb-triggers-module_actions-manager"] = di[ActionsManager]
     di[ConditionsManager] = ConditionsManager(session=di[OrmSession])
-    di["fb-triggers-module_actions-manager"] = di[ConditionsManager]
+    di["fb-triggers-module_conditions-manager"] = di[ConditionsManager]
     di[NotificationsManager] = NotificationsManager(session=di[OrmSession])
-    di["fb-triggers-module_actions-manager"] = di[NotificationsManager]
+    di["fb-triggers-module_notifications-manager"] = di[NotificationsManager]
+
+    # States managers
+
+    di[ActionsStatesManager] = ActionsStatesManager()
+    di["fb-triggers-module_actions-states-manager"] = di[ActionsStatesManager]
+    di[ConditionsStatesManager] = ConditionsStatesManager()
+    di["fb-triggers-module_conditions-states-manager"] = di[ConditionsStatesManager]
 
     # Entities subscribers
 

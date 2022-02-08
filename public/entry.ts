@@ -1,4 +1,4 @@
-import { ModuleOrigin } from '@fastybird/metadata'
+import { ModuleSource } from '@fastybird/metadata'
 import { Plugin } from '@vuex-orm/core/dist/src/plugins/use'
 
 import Trigger from '@/lib/models/triggers/Trigger'
@@ -17,12 +17,12 @@ import { ComponentsInterface, GlobalConfigInterface } from '@/types/triggers-mod
 
 // install function executed by VuexORM.use()
 const install: Plugin = function installVuexOrmWamp(components: ComponentsInterface, config: GlobalConfigInterface) {
-  if (typeof config.originName !== 'undefined') {
+  if (typeof config.sourceName !== 'undefined') {
     // @ts-ignore
-    components.Model.$triggersModuleOrigin = config.originName
+    components.Model.$triggersModuleSource = config.sourceName
   } else {
     // @ts-ignore
-    components.Model.$triggersModuleOrigin = ModuleOrigin.MODULE_TRIGGERS_ORIGIN
+    components.Model.$triggersModuleSource = ModuleSource.MODULE_TRIGGERS_SOURCE
   }
 
   config.database.register(Trigger, triggers)

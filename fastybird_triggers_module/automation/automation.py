@@ -25,7 +25,7 @@ from typing import Optional, Union
 # Library dependencies
 from fastybird_exchange.publisher import Publisher
 from fastybird_metadata.routing import RoutingKey
-from fastybird_metadata.types import ControlAction, ModuleOrigin, PropertyAction
+from fastybird_metadata.types import ControlAction, ModuleSource, PropertyAction
 from kink import inject
 from sqlalchemy.orm import close_all_sessions
 
@@ -379,7 +379,7 @@ class Automator:  # pylint: disable=too-many-instance-attributes
             if action.enabled is True:
                 if isinstance(action, DevicePropertyActionEntity):
                     self.__publisher.publish(
-                        origin=ModuleOrigin.TRIGGERS_MODULE,
+                        source=action.source,
                         routing_key=RoutingKey.DEVICE_PROPERTY_ACTION,
                         data={
                             "action": PropertyAction.SET.value,
@@ -397,7 +397,7 @@ class Automator:  # pylint: disable=too-many-instance-attributes
 
                 elif isinstance(action, ChannelPropertyActionEntity):
                     self.__publisher.publish(
-                        origin=ModuleOrigin.TRIGGERS_MODULE,
+                        source=action.source,
                         routing_key=RoutingKey.CHANNEL_PROPERTY_ACTION,
                         data={
                             "action": PropertyAction.SET.value,
