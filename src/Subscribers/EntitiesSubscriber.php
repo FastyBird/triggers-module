@@ -281,7 +281,6 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 				}
 
 				if ($entity instanceof Entities\Triggers\IAutomaticTrigger) {
-
 					try {
 						if (count($entity->getActions()) > 0) {
 							$isFulfilled = true;
