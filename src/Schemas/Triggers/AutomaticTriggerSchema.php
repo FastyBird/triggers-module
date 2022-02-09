@@ -87,13 +87,17 @@ final class AutomaticTriggerSchema extends TriggerSchema
 	public function getAttributes($trigger, JsonApi\Contracts\Schema\ContextInterface $context): iterable
 	{
 		try {
-			$isFulfilled = true;
+			$isFulfilled = false;
 
-			foreach ($trigger->getConditions() as $condition) {
-				$state = $this->conditionStateRepository->findOne($condition);
+			if (count($trigger->getConditions()) > 0) {
+				$isFulfilled = true;
 
-				if ($state === null || $state->isFulfilled() === false) {
-					$isFulfilled = false;
+				foreach ($trigger->getConditions() as $condition) {
+					$state = $this->conditionStateRepository->findOne($condition);
+
+					if ($state === null || $state->isFulfilled() === false) {
+						$isFulfilled = false;
+					}
 				}
 			}
 		} catch (Exceptions\NotImplementedException $ex) {

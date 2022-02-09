@@ -16,7 +16,7 @@
       "name" : "This is manual trigger",
       "comment" : null,
       "enabled" : true,
-      "is_triggered" : null
+      "is_triggered" : false
     },
     "relationships" : {
       "controls" : {

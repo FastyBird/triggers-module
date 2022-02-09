@@ -261,30 +261,43 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 					] : [], $entity->toArray()))
 				);
 
-			} elseif (
-				$entity instanceof Entities\Triggers\ITrigger
-				&& $this->actionStateRepository !== null
-				&& $this->conditionStateRepository !== null
-			) {
-				$isTriggered = true;
+			} elseif ($entity instanceof Entities\Triggers\ITrigger) {
+				try {
+					if (count($entity->getActions()) > 0) {
+						$isTriggered = true;
 
-				foreach ($entity->getActions() as $action) {
-					$state = $this->actionStateRepository->findOne($action);
+						foreach ($entity->getActions() as $action) {
+							$state = $this->actionStateRepository->findOne($action);
 
-					if ($state === null || $state->isTriggered() === false) {
+							if ($state === null || $state->isTriggered() === false) {
+								$isTriggered = false;
+							}
+						}
+					} else {
 						$isTriggered = false;
 					}
+				} catch (Exceptions\NotImplementedException $ex) {
+					$isTriggered = null;
 				}
 
 				if ($entity instanceof Entities\Triggers\IAutomaticTrigger) {
-					$isFulfilled = true;
 
-					foreach ($entity->getConditions() as $condition) {
-						$state = $this->conditionStateRepository->findOne($condition);
+					try {
+						if (count($entity->getActions()) > 0) {
+							$isFulfilled = true;
 
-						if ($state === null || $state->isFulfilled() === false) {
+							foreach ($entity->getConditions() as $condition) {
+								$state = $this->conditionStateRepository->findOne($condition);
+
+								if ($state === null || $state->isFulfilled() === false) {
+									$isFulfilled = false;
+								}
+							}
+						} else {
 							$isFulfilled = false;
 						}
+					} catch (Exceptions\NotImplementedException $ex) {
+						$isFulfilled = null;
 					}
 
 					$this->publisher->publish(

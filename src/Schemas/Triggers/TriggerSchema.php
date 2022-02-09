@@ -71,13 +71,17 @@ abstract class TriggerSchema extends JsonApiSchemas\JsonApiSchema
 	public function getAttributes($trigger, JsonApi\Contracts\Schema\ContextInterface $context): iterable
 	{
 		try {
-			$isTriggered = true;
+			$isTriggered = false;
 
-			foreach ($trigger->getActions() as $action) {
-				$state = $this->actionStateRepository->findOne($action);
+			if (count($trigger->getActions()) > 0) {
+				$isTriggered = true;
 
-				if ($state === null || $state->isTriggered() === false) {
-					$isTriggered = false;
+				foreach ($trigger->getActions() as $action) {
+					$state = $this->actionStateRepository->findOne($action);
+
+					if ($state === null || $state->isTriggered() === false) {
+						$isTriggered = false;
+					}
 				}
 			}
 		} catch (Exceptions\NotImplementedException $ex) {
