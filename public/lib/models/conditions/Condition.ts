@@ -42,7 +42,7 @@ export default class Condition extends Model implements ConditionInterface {
   triggerId!: string
 
   static get entity(): string {
-    return 'triggers_condition'
+    return 'triggers_module_condition'
   }
 
   get isDeviceProperty(): boolean {

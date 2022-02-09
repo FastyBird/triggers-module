@@ -45,7 +45,7 @@ export default class Trigger extends Model implements TriggerInterface {
   controls!: TriggerControlInterface[]
 
   static get entity(): string {
-    return 'triggers_trigger'
+    return 'triggers_module_trigger'
   }
 
   get isEnabled(): boolean {

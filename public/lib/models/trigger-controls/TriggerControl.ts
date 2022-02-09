@@ -21,7 +21,7 @@ export default class TriggerControl extends Model implements TriggerControlInter
   triggerId!: string
 
   static get entity(): string {
-    return 'triggers_trigger_control'
+    return 'triggers_module_trigger_control'
   }
 
   get triggerInstance(): TriggerInterface | null {

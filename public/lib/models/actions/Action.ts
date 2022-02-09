@@ -33,7 +33,7 @@ export default class Action extends Model implements ActionInterface {
   triggerId!: string
 
   static get entity(): string {
-    return 'triggers_action'
+    return 'triggers_module_action'
   }
 
   get isDeviceProperty(): boolean {

@@ -30,7 +30,7 @@ export default class Notification extends Model implements NotificationInterface
   triggerId!: string
 
   static get entity(): string {
-    return 'triggers_notification'
+    return 'triggers_module_notification'
   }
 
   get isSms(): boolean {
