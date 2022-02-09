@@ -80,7 +80,6 @@ abstract class TriggerSchema extends JsonApiSchemas\JsonApiSchema
 					$isTriggered = false;
 				}
 			}
-
 		} catch (Exceptions\NotImplementedException $ex) {
 			$isTriggered = null;
 		}

@@ -96,7 +96,6 @@ final class AutomaticTriggerSchema extends TriggerSchema
 					$isFulfilled = false;
 				}
 			}
-
 		} catch (Exceptions\NotImplementedException $ex) {
 			$isFulfilled = null;
 		}
