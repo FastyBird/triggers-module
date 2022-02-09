@@ -58,9 +58,9 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 	private ORM\EntityManagerInterface $entityManager;
 
 	public function __construct(
-		ORM\EntityManagerInterface          $entityManager,
-		?ExchangePublisher\Publisher        $publisher = null,
-		?Models\States\IActionsRepository   $actionStateRepository = null,
+		ORM\EntityManagerInterface $entityManager,
+		?ExchangePublisher\Publisher $publisher = null,
+		?Models\States\IActionsRepository $actionStateRepository = null,
 		?Models\States\IConditionsRepository $conditionStateRepository = null
 	) {
 		$this->actionStateRepository = $actionStateRepository;
