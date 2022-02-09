@@ -48,7 +48,7 @@ from fastybird_triggers_module.repositories.action import ActionsRepository
 from fastybird_triggers_module.repositories.condition import ConditionsRepository
 from fastybird_triggers_module.repositories.notification import NotificationsRepository
 from fastybird_triggers_module.repositories.trigger import (
-    TriggersControlsRepository,
+    TriggerControlsRepository,
     TriggersRepository,
 )
 from fastybird_triggers_module.subscriber import (
@@ -73,8 +73,8 @@ def register_services(
 
     di[TriggersRepository] = TriggersRepository(session=di[OrmSession])
     di["fb-triggers-module_trigger-repository"] = di[TriggersRepository]
-    di[TriggersControlsRepository] = TriggersControlsRepository(session=di[OrmSession])
-    di["fb-triggers-module_trigger-control-repository"] = di[TriggersControlsRepository]
+    di[TriggerControlsRepository] = TriggerControlsRepository(session=di[OrmSession])
+    di["fb-triggers-module_trigger-control-repository"] = di[TriggerControlsRepository]
     di[ActionsRepository] = ActionsRepository(session=di[OrmSession])
     di["fb-triggers-module_action-repository"] = di[ActionsRepository]
     di[ConditionsRepository] = ConditionsRepository(session=di[OrmSession])
@@ -119,7 +119,7 @@ def register_services(
     di[Automator] = Automator(
         queue=di[AutomationQueue],
         triggers_repository=di[TriggersRepository],
-        triggers_control_repository=di[TriggersControlsRepository],
+        triggers_control_repository=di[TriggerControlsRepository],
         actions_repository=di[ActionsRepository],
         conditions_repository=di[ConditionsRepository],
         logger=di[Logger],

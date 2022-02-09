@@ -26,18 +26,18 @@ from tests.pytests.tests import DbTestCase
 
 # Library libs
 from fastybird_triggers_module.entities.trigger import TriggerControlEntity
-from fastybird_triggers_module.repositories.trigger import TriggersControlsRepository
+from fastybird_triggers_module.repositories.trigger import TriggerControlsRepository
 
 
-class TestTriggersControlsRepository(DbTestCase):
+class TestTriggerControlsRepository(DbTestCase):
     @inject
-    def test_repository_iterator(self, control_repository: TriggersControlsRepository) -> None:
+    def test_repository_iterator(self, control_repository: TriggerControlsRepository) -> None:
         self.assertEqual(3, len(control_repository.get_all()))
 
     # -----------------------------------------------------------------------------
 
     @inject
-    def test_get_item(self, control_repository: TriggersControlsRepository) -> None:
+    def test_get_item(self, control_repository: TriggerControlsRepository) -> None:
         entity = control_repository.get_by_id(uuid.UUID("177d6fc7-1905-4fd9-b847-e2da8189dd6a", version=4))
 
         self.assertIsInstance(entity, TriggerControlEntity)
@@ -46,7 +46,7 @@ class TestTriggersControlsRepository(DbTestCase):
     # -----------------------------------------------------------------------------
 
     @inject
-    def test_transform_to_dict(self, control_repository: TriggersControlsRepository) -> None:
+    def test_transform_to_dict(self, control_repository: TriggerControlsRepository) -> None:
         entity = control_repository.get_by_id(uuid.UUID("177d6fc7-1905-4fd9-b847-e2da8189dd6a", version=4))
 
         self.assertIsInstance(entity, TriggerControlEntity)

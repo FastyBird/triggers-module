@@ -52,11 +52,11 @@ from fastybird_triggers_module.managers.state import (
 from fastybird_triggers_module.repositories.action import ActionsRepository
 from fastybird_triggers_module.repositories.condition import ConditionsRepository
 from fastybird_triggers_module.repositories.state import (
-    IActionStateRepository,
-    IConditionStateRepository,
+    IActionsStatesRepository,
+    IConditionsStatesRepository,
 )
 from fastybird_triggers_module.repositories.trigger import (
-    TriggersControlsRepository,
+    TriggerControlsRepository,
     TriggersRepository,
 )
 
@@ -64,9 +64,9 @@ from fastybird_triggers_module.repositories.trigger import (
 @inject(
     bind={
         "publisher": Publisher,
-        "action_state_repository": IActionStateRepository,
+        "action_state_repository": IActionsStatesRepository,
         "actions_states_manager": IActionsStatesManager,
-        "condition_state_repository": IConditionStateRepository,
+        "condition_state_repository": IConditionsStatesRepository,
         "conditions_states_manager": IConditionsStatesManager,
     }
 )
@@ -85,13 +85,13 @@ class Automator:  # pylint: disable=too-many-instance-attributes
     __queue: AutomationQueue
 
     __triggers_repository: TriggersRepository
-    __triggers_control_repository: TriggersControlsRepository
+    __triggers_control_repository: TriggerControlsRepository
     __actions_repository: ActionsRepository
     __conditions_repository: ConditionsRepository
 
-    __action_state_repository: Optional[IActionStateRepository] = None
+    __action_state_repository: Optional[IActionsStatesRepository] = None
     __actions_states_manager: Optional[IActionsStatesManager] = None
-    __condition_state_repository: Optional[IConditionStateRepository] = None
+    __condition_state_repository: Optional[IConditionsStatesRepository] = None
     __conditions_states_manager: Optional[IConditionsStatesManager] = None
 
     __publisher: Optional[Publisher] = None
@@ -104,13 +104,13 @@ class Automator:  # pylint: disable=too-many-instance-attributes
         self,
         queue: AutomationQueue,
         triggers_repository: TriggersRepository,
-        triggers_control_repository: TriggersControlsRepository,
+        triggers_control_repository: TriggerControlsRepository,
         actions_repository: ActionsRepository,
         conditions_repository: ConditionsRepository,
         logger: Logger,
-        action_state_repository: Optional[IActionStateRepository] = None,
+        action_state_repository: Optional[IActionsStatesRepository] = None,
         actions_states_manager: Optional[IActionsStatesManager] = None,
-        condition_state_repository: Optional[IConditionStateRepository] = None,
+        condition_state_repository: Optional[IConditionsStatesRepository] = None,
         conditions_states_manager: Optional[IConditionsStatesManager] = None,
         publisher: Optional[Publisher] = None,
     ) -> None:

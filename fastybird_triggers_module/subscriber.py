@@ -58,8 +58,8 @@ from fastybird_triggers_module.entities.trigger import (
     TriggerEntity,
 )
 from fastybird_triggers_module.repositories.state import (
-    IActionStateRepository,
-    IConditionStateRepository,
+    IActionsStatesRepository,
+    IConditionsStatesRepository,
 )
 
 
@@ -114,8 +114,8 @@ class EntityUpdatedSubscriber:  # pylint: disable=too-few-public-methods
 @inject(
     bind={
         "publisher": Publisher,
-        "action_state_repository": IActionStateRepository,
-        "condition_state_repository": IConditionStateRepository,
+        "action_state_repository": IActionsStatesRepository,
+        "condition_state_repository": IConditionsStatesRepository,
     }
 )
 class EntitiesSubscriber:  # pylint: disable=too-few-public-methods
@@ -172,8 +172,8 @@ class EntitiesSubscriber:  # pylint: disable=too-few-public-methods
 
     __publisher: Optional[Publisher]
 
-    __action_state_repository: Optional[IActionStateRepository]
-    __condition_state_repository: Optional[IConditionStateRepository]
+    __action_state_repository: Optional[IActionsStatesRepository]
+    __condition_state_repository: Optional[IConditionsStatesRepository]
 
     # -----------------------------------------------------------------------------
 
@@ -181,8 +181,8 @@ class EntitiesSubscriber:  # pylint: disable=too-few-public-methods
         self,
         session: OrmSession,
         publisher: Optional[Publisher] = None,
-        action_state_repository: Optional[IActionStateRepository] = None,
-        condition_state_repository: Optional[IConditionStateRepository] = None,
+        action_state_repository: Optional[IActionsStatesRepository] = None,
+        condition_state_repository: Optional[IConditionsStatesRepository] = None,
     ) -> None:
         self.__publisher = publisher
 

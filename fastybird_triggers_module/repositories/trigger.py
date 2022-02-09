@@ -67,9 +67,9 @@ class TriggersRepository:
         return self.__session.query(TriggerEntity).all()
 
 
-class TriggersControlsRepository:
+class TriggerControlsRepository:
     """
-    Triggers controls repository
+    Trigger controls repository
 
     @package        FastyBird:TriggersModule!
     @module         repositories/trigger
