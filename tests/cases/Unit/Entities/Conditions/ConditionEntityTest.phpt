@@ -21,7 +21,7 @@ final class ConditionEntityTest extends DbTestCase
 	public function testTimeConditionValidation(): void
 	{
 		/** @var Models\Conditions\IConditionRepository $repository */
-		$repository = $this->getContainer()->getByType(Models\Conditions\ConditionRepository::class);
+		$repository = $this->getContainer()->getByType(Models\Conditions\ConditionsRepository::class);
 
 		$findQuery = new Queries\FindConditionsQuery();
 		$findQuery->byId(Uuid\Uuid::fromString('09c453b3-c55f-4050-8f1c-b50f8d5728c2'));
@@ -43,7 +43,7 @@ final class ConditionEntityTest extends DbTestCase
 	public function testPropertyConditionValidation(): void
 	{
 		/** @var Models\Conditions\IConditionRepository $repository */
-		$repository = $this->getContainer()->getByType(Models\Conditions\ConditionRepository::class);
+		$repository = $this->getContainer()->getByType(Models\Conditions\ConditionsRepository::class);
 
 		$findQuery = new Queries\FindConditionsQuery();
 		$findQuery->byId(Uuid\Uuid::fromString('2726f19c-7759-440e-b6f5-8c3306692fa2'));

@@ -28,11 +28,11 @@ final class ServicesTest extends BaseTestCase
 
 		Assert::notNull($container->getByType(Commands\InitializeCommand::class));
 
-		Assert::notNull($container->getByType(Models\Triggers\TriggerRepository::class));
-		Assert::notNull($container->getByType(Models\Triggers\Controls\ControlRepository::class));
-		Assert::notNull($container->getByType(Models\Actions\ActionRepository::class));
-		Assert::notNull($container->getByType(Models\Notifications\NotificationRepository::class));
-		Assert::notNull($container->getByType(Models\Conditions\ConditionRepository::class));
+		Assert::notNull($container->getByType(Models\Triggers\TriggersRepository::class));
+		Assert::notNull($container->getByType(Models\Triggers\Controls\ControlsRepository::class));
+		Assert::notNull($container->getByType(Models\Actions\ActionsRepository::class));
+		Assert::notNull($container->getByType(Models\Notifications\NotificationsRepository::class));
+		Assert::notNull($container->getByType(Models\Conditions\ConditionsRepository::class));
 
 		Assert::notNull($container->getByType(Models\Triggers\TriggersManager::class));
 		Assert::notNull($container->getByType(Models\Triggers\Controls\ControlsManager::class));

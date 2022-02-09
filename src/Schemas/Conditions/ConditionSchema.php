@@ -46,12 +46,12 @@ abstract class ConditionSchema extends JsonApiSchemas\JsonApiSchema
 	/** @var Routing\IRouter */
 	protected Routing\IRouter $router;
 
-	/** @var Models\States\IConditionRepository|null */
-	private ?Models\States\IConditionRepository $stateRepository;
+	/** @var Models\States\IConditionsRepository|null */
+	private ?Models\States\IConditionsRepository $stateRepository;
 
 	public function __construct(
 		Routing\IRouter $router,
-		?Models\States\IConditionRepository $stateRepository
+		?Models\States\IConditionsRepository $stateRepository
 	) {
 		$this->router = $router;
 		$this->stateRepository = $stateRepository;

@@ -19,8 +19,8 @@ final class FindActionsQueryTest extends DbTestCase
 
 	public function testFindById(): void
 	{
-		/** @var Models\Actions\IActionRepository $repository */
-		$repository = $this->getContainer()->getByType(Models\Actions\ActionRepository::class);
+		/** @var Models\Actions\IActionsRepository $repository */
+		$repository = $this->getContainer()->getByType(Models\Actions\ActionsRepository::class);
 
 		$findQuery = new Queries\FindActionsQuery();
 		$findQuery->byId(Uuid\Uuid::fromString('4aa84028-d8b7-4128-95b2-295763634aa4'));
@@ -33,8 +33,8 @@ final class FindActionsQueryTest extends DbTestCase
 
 	public function testFindForDevice(): void
 	{
-		/** @var Models\Actions\IActionRepository $repository */
-		$repository = $this->getContainer()->getByType(Models\Actions\ActionRepository::class);
+		/** @var Models\Actions\IActionsRepository $repository */
+		$repository = $this->getContainer()->getByType(Models\Actions\ActionsRepository::class);
 
 		$findQuery = new Queries\FindActionsQuery();
 		$findQuery->forDevice(Uuid\Uuid::fromString('a830828c-6768-4274-b909-20ce0e222347'));
@@ -47,8 +47,8 @@ final class FindActionsQueryTest extends DbTestCase
 
 	public function testFindForChannel(): void
 	{
-		/** @var Models\Actions\IActionRepository $repository */
-		$repository = $this->getContainer()->getByType(Models\Actions\ActionRepository::class);
+		/** @var Models\Actions\IActionsRepository $repository */
+		$repository = $this->getContainer()->getByType(Models\Actions\ActionsRepository::class);
 
 		$findQuery = new Queries\FindActionsQuery();
 		$findQuery->forChannel(Uuid\Uuid::fromString('4f692f94-5be6-4384-94a7-60c424a5f723'));
@@ -61,8 +61,8 @@ final class FindActionsQueryTest extends DbTestCase
 
 	public function testFindForChannelProperty(): void
 	{
-		/** @var Models\Actions\IActionRepository $repository */
-		$repository = $this->getContainer()->getByType(Models\Actions\ActionRepository::class);
+		/** @var Models\Actions\IActionsRepository $repository */
+		$repository = $this->getContainer()->getByType(Models\Actions\ActionsRepository::class);
 
 		$findQuery = new Queries\FindActionsQuery();
 		$findQuery->forProperty(Uuid\Uuid::fromString('7bc1fc81-8ace-409d-b044-810140e2361a'));
@@ -75,8 +75,8 @@ final class FindActionsQueryTest extends DbTestCase
 
 	public function testFindForCombination(): void
 	{
-		/** @var Models\Actions\IActionRepository $repository */
-		$repository = $this->getContainer()->getByType(Models\Actions\ActionRepository::class);
+		/** @var Models\Actions\IActionsRepository $repository */
+		$repository = $this->getContainer()->getByType(Models\Actions\ActionsRepository::class);
 
 		$findQuery = new Queries\FindActionsQuery();
 		$findQuery->forDevice(Uuid\Uuid::fromString('a830828c-6768-4274-b909-20ce0e222347'));

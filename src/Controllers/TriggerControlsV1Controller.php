@@ -42,17 +42,17 @@ final class TriggerControlsV1Controller extends BaseV1Controller
 
 	use Controllers\Finders\TTriggerFinder;
 
-	/** @var Models\Triggers\ITriggerRepository */
-	protected Models\Triggers\ITriggerRepository $triggerRepository;
+	/** @var Models\Triggers\ITriggersRepository */
+	protected Models\Triggers\ITriggersRepository $triggersRepository;
 
-	/** @var Models\Triggers\Controls\IControlRepository */
-	private Models\Triggers\Controls\IControlRepository $controlRepository;
+	/** @var Models\Triggers\Controls\IControlsRepository */
+	private Models\Triggers\Controls\IControlsRepository $controlRepository;
 
 	public function __construct(
-		Models\Triggers\ITriggerRepository $triggerRepository,
-		Models\Triggers\Controls\IControlRepository $controlRepository
+		Models\Triggers\ITriggersRepository         $triggersRepository,
+		Models\Triggers\Controls\IControlsRepository $controlRepository
 	) {
-		$this->triggerRepository = $triggerRepository;
+		$this->triggersRepository = $triggersRepository;
 		$this->controlRepository = $controlRepository;
 	}
 

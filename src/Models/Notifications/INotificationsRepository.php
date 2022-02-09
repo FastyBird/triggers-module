@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * IActionRepository.php
+ * INotificationsRepository.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -13,62 +13,62 @@
  * @date           04.04.20
  */
 
-namespace FastyBird\TriggersModule\Models\Actions;
+namespace FastyBird\TriggersModule\Models\Notifications;
 
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Queries;
 use IPub\DoctrineOrmQuery;
 
 /**
- * Action repository interface
+ * Notification repository interface
  *
  * @package        FastyBird:TriggersModule!
  * @subpackage     Models
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-interface IActionRepository
+interface INotificationsRepository
 {
 
 	/**
-	 * @param Queries\FindActionsQuery $queryObject
+	 * @param Queries\FindNotificationsQuery $queryObject
 	 * @param string $type
 	 *
-	 * @return Entities\Actions\IAction|null
+	 * @return Entities\Notifications\INotification|null
 	 *
 	 * @phpstan-param class-string $type
 	 */
 	public function findOneBy(
-		Queries\FindActionsQuery $queryObject,
-		string $type = Entities\Actions\Action::class
-	): ?Entities\Actions\IAction;
+		Queries\FindNotificationsQuery $queryObject,
+		string $type = Entities\Notifications\Notification::class
+	): ?Entities\Notifications\INotification;
 
 	/**
-	 * @param Queries\FindActionsQuery $queryObject
+	 * @param Queries\FindNotificationsQuery $queryObject
 	 * @param string $type
 	 *
-	 * @return Entities\Actions\IAction[]
+	 * @return Entities\Notifications\INotification[]
 	 *
 	 * @phpstan-param class-string $type
 	 */
 	public function findAllBy(
-		Queries\FindActionsQuery $queryObject,
-		string $type = Entities\Actions\Action::class
+		Queries\FindNotificationsQuery $queryObject,
+		string $type = Entities\Notifications\Notification::class
 	): array;
 
 	/**
-	 * @param Queries\FindActionsQuery $queryObject
+	 * @param Queries\FindNotificationsQuery $queryObject
 	 * @param string $type
 	 *
 	 * @return DoctrineOrmQuery\ResultSet
 	 *
 	 * @phpstan-param class-string $type
 	 *
-	 * @phpstan-return DoctrineOrmQuery\ResultSet<Entities\Actions\IAction>
+	 * @phpstan-return DoctrineOrmQuery\ResultSet<Entities\Notifications\INotification>
 	 */
 	public function getResultSet(
-		Queries\FindActionsQuery $queryObject,
-		string $type = Entities\Actions\Action::class
+		Queries\FindNotificationsQuery $queryObject,
+		string $type = Entities\Notifications\Notification::class
 	): DoctrineOrmQuery\ResultSet;
 
 }

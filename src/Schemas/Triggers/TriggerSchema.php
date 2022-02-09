@@ -45,12 +45,12 @@ abstract class TriggerSchema extends JsonApiSchemas\JsonApiSchema
 	/** @var Routing\IRouter */
 	protected Routing\IRouter $router;
 
-	/** @var Models\States\IActionRepository|null */
-	private ?Models\States\IActionRepository $actionStateRepository;
+	/** @var Models\States\IActionsRepository|null */
+	private ?Models\States\IActionsRepository $actionStateRepository;
 
 	public function __construct(
 		Routing\IRouter $router,
-		?Models\States\IActionRepository $actionStateRepository
+		?Models\States\IActionsRepository $actionStateRepository
 	) {
 		$this->router = $router;
 

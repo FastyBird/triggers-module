@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * NotificationRepository.php
+ * TriggersRepository.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -13,7 +13,7 @@
  * @date           04.04.20
  */
 
-namespace FastyBird\TriggersModule\Models\Notifications;
+namespace FastyBird\TriggersModule\Models\Triggers;
 
 use Doctrine\ORM;
 use Doctrine\Persistence;
@@ -25,14 +25,14 @@ use Nette;
 use Throwable;
 
 /**
- * Notification repository
+ * Trigger repository
  *
  * @package        FastyBird:TriggersModule!
  * @subpackage     Models
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-final class NotificationRepository implements INotificationRepository
+final class TriggersRepository implements ITriggersRepository
 {
 
 	use Nette\SmartObject;
@@ -40,7 +40,7 @@ final class NotificationRepository implements INotificationRepository
 	/**
 	 * @var ORM\EntityRepository[]
 	 *
-	 * @phpstan-var ORM\EntityRepository<Entities\Notifications\INotification>[]
+	 * @phpstan-var ORM\EntityRepository<Entities\Triggers\ITrigger>[]
 	 */
 	private array $repository = [];
 
@@ -56,13 +56,13 @@ final class NotificationRepository implements INotificationRepository
 	 * {@inheritDoc}
 	 */
 	public function findOneBy(
-		Queries\FindNotificationsQuery $queryObject,
-		string $type = Entities\Notifications\Notification::class
-	): ?Entities\Notifications\INotification {
-		/** @var Entities\Notifications\INotification|null $notification */
-		$notification = $queryObject->fetchOne($this->getRepository($type));
+		Queries\FindTriggersQuery $queryObject,
+		string $type = Entities\Triggers\Trigger::class
+	): ?Entities\Triggers\ITrigger {
+		/** @var Entities\Triggers\ITrigger|null $trigger */
+		$trigger = $queryObject->fetchOne($this->getRepository($type));
 
-		return $notification;
+		return $trigger;
 	}
 
 	/**
@@ -72,7 +72,7 @@ final class NotificationRepository implements INotificationRepository
 	 *
 	 * @phpstan-param class-string $type
 	 *
-	 * @phpstan-return ORM\EntityRepository<Entities\Notifications\INotification>
+	 * @phpstan-return ORM\EntityRepository<Entities\Triggers\ITrigger>
 	 */
 	private function getRepository(string $type): ORM\EntityRepository
 	{
@@ -95,8 +95,8 @@ final class NotificationRepository implements INotificationRepository
 	 * @throws Throwable
 	 */
 	public function findAllBy(
-		Queries\FindNotificationsQuery $queryObject,
-		string $type = Entities\Notifications\Notification::class
+		Queries\FindTriggersQuery $queryObject,
+		string $type = Entities\Triggers\Trigger::class
 	): array {
 		$result = $queryObject->fetch($this->getRepository($type));
 
@@ -109,8 +109,8 @@ final class NotificationRepository implements INotificationRepository
 	 * @throws Throwable
 	 */
 	public function getResultSet(
-		Queries\FindNotificationsQuery $queryObject,
-		string $type = Entities\Notifications\Notification::class
+		Queries\FindTriggersQuery $queryObject,
+		string $type = Entities\Triggers\Trigger::class
 	): DoctrineOrmQuery\ResultSet {
 		$result = $queryObject->fetch($this->getRepository($type));
 

@@ -25,7 +25,7 @@ use Ramsey\Uuid;
 
 /**
  * @property-read Localization\ITranslator $translator
- * @property-read Models\Triggers\ITriggerRepository $triggerRepository
+ * @property-read Models\Triggers\ITriggersRepository $triggersRepository
  */
 trait TTriggerFinder
 {
@@ -43,7 +43,7 @@ trait TTriggerFinder
 			$findQuery = new Queries\FindTriggersQuery();
 			$findQuery->byId(Uuid\Uuid::fromString($id));
 
-			$trigger = $this->triggerRepository->findOneBy($findQuery);
+			$trigger = $this->triggersRepository->findOneBy($findQuery);
 
 			if ($trigger === null) {
 				throw new JsonApiExceptions\JsonApiErrorException(

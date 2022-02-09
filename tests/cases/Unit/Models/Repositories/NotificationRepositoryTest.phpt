@@ -20,8 +20,8 @@ final class NotificationRepositoryTest extends DbTestCase
 
 	public function testReadOne(): void
 	{
-		/** @var Models\Notifications\INotificationRepository $repository */
-		$repository = $this->getContainer()->getByType(Models\Notifications\NotificationRepository::class);
+		/** @var Models\Notifications\INotificationsRepository $repository */
+		$repository = $this->getContainer()->getByType(Models\Notifications\NotificationsRepository::class);
 
 		$findQuery = new Queries\FindNotificationsQuery();
 		$findQuery->byId(Uuid\Uuid::fromString('05f28df9-5f19-4923-b3f8-b9090116dadc'));
@@ -42,8 +42,8 @@ final class NotificationRepositoryTest extends DbTestCase
 
 	public function testReadResultSet(): void
 	{
-		/** @var Models\Notifications\INotificationRepository $repository */
-		$repository = $this->getContainer()->getByType(Models\Notifications\NotificationRepository::class);
+		/** @var Models\Notifications\INotificationsRepository $repository */
+		$repository = $this->getContainer()->getByType(Models\Notifications\NotificationsRepository::class);
 
 		$findQuery = new Queries\FindNotificationsQuery();
 

@@ -45,11 +45,11 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 
 	use Nette\SmartObject;
 
-	/** @var Models\States\IActionRepository|null */
-	private ?Models\States\IActionRepository $actionStateRepository;
+	/** @var Models\States\IActionsRepository|null */
+	private ?Models\States\IActionsRepository $actionStateRepository;
 
-	/** @var Models\States\IConditionRepository|null */
-	private ?Models\States\IConditionRepository $conditionStateRepository;
+	/** @var Models\States\IConditionsRepository|null */
+	private ?Models\States\IConditionsRepository $conditionStateRepository;
 
 	/** @var ExchangePublisher\Publisher|null */
 	private ?ExchangePublisher\Publisher $publisher;
@@ -58,10 +58,10 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 	private ORM\EntityManagerInterface $entityManager;
 
 	public function __construct(
-		ORM\EntityManagerInterface $entityManager,
-		?ExchangePublisher\Publisher $publisher = null,
-		?Models\States\IActionRepository $actionStateRepository = null,
-		?Models\States\IConditionRepository $conditionStateRepository = null
+		ORM\EntityManagerInterface          $entityManager,
+		?ExchangePublisher\Publisher        $publisher = null,
+		?Models\States\IActionsRepository   $actionStateRepository = null,
+		?Models\States\IConditionsRepository $conditionStateRepository = null
 	) {
 		$this->actionStateRepository = $actionStateRepository;
 		$this->conditionStateRepository = $conditionStateRepository;

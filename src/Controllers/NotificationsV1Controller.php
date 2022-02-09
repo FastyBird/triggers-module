@@ -47,22 +47,22 @@ final class NotificationsV1Controller extends BaseV1Controller
 
 	use Controllers\Finders\TTriggerFinder;
 
-	/** @var Models\Triggers\ITriggerRepository */
-	protected Models\Triggers\ITriggerRepository $triggerRepository;
+	/** @var Models\Triggers\ITriggersRepository */
+	protected Models\Triggers\ITriggersRepository $triggersRepository;
 
-	/** @var Models\Notifications\INotificationRepository */
-	private Models\Notifications\INotificationRepository $notificationRepository;
+	/** @var Models\Notifications\INotificationsRepository */
+	private Models\Notifications\INotificationsRepository $notificationsRepository;
 
 	/** @var Models\Notifications\INotificationsManager */
 	private Models\Notifications\INotificationsManager $notificationsManager;
 
 	public function __construct(
-		Models\Triggers\ITriggerRepository $triggerRepository,
-		Models\Notifications\INotificationRepository $notificationRepository,
-		Models\Notifications\INotificationsManager $notificationsManager
+		Models\Triggers\ITriggersRepository           $triggersRepository,
+		Models\Notifications\INotificationsRepository $notificationsRepository,
+		Models\Notifications\INotificationsManager    $notificationsManager
 	) {
-		$this->triggerRepository = $triggerRepository;
-		$this->notificationRepository = $notificationRepository;
+		$this->triggersRepository = $triggersRepository;
+		$this->notificationsRepository = $notificationsRepository;
 		$this->notificationsManager = $notificationsManager;
 	}
 
@@ -84,7 +84,7 @@ final class NotificationsV1Controller extends BaseV1Controller
 		$findQuery = new Queries\FindNotificationsQuery();
 		$findQuery->forTrigger($trigger);
 
-		$rows = $this->notificationRepository->getResultSet($findQuery);
+		$rows = $this->notificationsRepository->getResultSet($findQuery);
 
 		// @phpstan-ignore-next-line
 		return $this->buildResponse($request, $response, $rows);
@@ -128,7 +128,7 @@ final class NotificationsV1Controller extends BaseV1Controller
 			$findQuery->byId(Uuid\Uuid::fromString($id));
 			$findQuery->forTrigger($trigger);
 
-			$notification = $this->notificationRepository->findOneBy($findQuery);
+			$notification = $this->notificationsRepository->findOneBy($findQuery);
 
 			if ($notification === null) {
 				throw new JsonApiExceptions\JsonApiErrorException(

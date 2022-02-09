@@ -46,13 +46,13 @@ final class AutomaticTriggerSchema extends TriggerSchema
 	 */
 	public const RELATIONSHIPS_CONDITIONS = 'conditions';
 
-	/** @var Models\States\IConditionRepository|null */
-	private ?Models\States\IConditionRepository $conditionStateRepository;
+	/** @var Models\States\IConditionsRepository|null */
+	private ?Models\States\IConditionsRepository $conditionStateRepository;
 
 	public function __construct(
-		Routing\IRouter $router,
-		?Models\States\IActionRepository $actionStateRepository,
-		?Models\States\IConditionRepository $conditionStateRepository
+		Routing\IRouter                     $router,
+		?Models\States\IActionsRepository   $actionStateRepository,
+		?Models\States\IConditionsRepository $conditionStateRepository
 	) {
 		parent::__construct($router, $actionStateRepository);
 

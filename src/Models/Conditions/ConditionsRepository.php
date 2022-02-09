@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * TriggerRepository.php
+ * ConditionsRepository.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -13,7 +13,7 @@
  * @date           04.04.20
  */
 
-namespace FastyBird\TriggersModule\Models\Triggers;
+namespace FastyBird\TriggersModule\Models\Conditions;
 
 use Doctrine\ORM;
 use Doctrine\Persistence;
@@ -25,14 +25,14 @@ use Nette;
 use Throwable;
 
 /**
- * Trigger repository
+ * Condition repository
  *
  * @package        FastyBird:TriggersModule!
  * @subpackage     Models
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-final class TriggerRepository implements ITriggerRepository
+final class ConditionsRepository implements IConditionRepository
 {
 
 	use Nette\SmartObject;
@@ -40,7 +40,7 @@ final class TriggerRepository implements ITriggerRepository
 	/**
 	 * @var ORM\EntityRepository[]
 	 *
-	 * @phpstan-var ORM\EntityRepository<Entities\Triggers\ITrigger>[]
+	 * @phpstan-var ORM\EntityRepository<Entities\Conditions\ICondition>[]
 	 */
 	private array $repository = [];
 
@@ -56,13 +56,13 @@ final class TriggerRepository implements ITriggerRepository
 	 * {@inheritDoc}
 	 */
 	public function findOneBy(
-		Queries\FindTriggersQuery $queryObject,
-		string $type = Entities\Triggers\Trigger::class
-	): ?Entities\Triggers\ITrigger {
-		/** @var Entities\Triggers\ITrigger|null $trigger */
-		$trigger = $queryObject->fetchOne($this->getRepository($type));
+		Queries\FindConditionsQuery $queryObject,
+		string $type = Entities\Conditions\Condition::class
+	): ?Entities\Conditions\ICondition {
+		/** @var Entities\Conditions\ICondition|null $condition */
+		$condition = $queryObject->fetchOne($this->getRepository($type));
 
-		return $trigger;
+		return $condition;
 	}
 
 	/**
@@ -72,7 +72,7 @@ final class TriggerRepository implements ITriggerRepository
 	 *
 	 * @phpstan-param class-string $type
 	 *
-	 * @phpstan-return ORM\EntityRepository<Entities\Triggers\ITrigger>
+	 * @phpstan-return ORM\EntityRepository<Entities\Conditions\ICondition>
 	 */
 	private function getRepository(string $type): ORM\EntityRepository
 	{
@@ -95,8 +95,8 @@ final class TriggerRepository implements ITriggerRepository
 	 * @throws Throwable
 	 */
 	public function findAllBy(
-		Queries\FindTriggersQuery $queryObject,
-		string $type = Entities\Triggers\Trigger::class
+		Queries\FindConditionsQuery $queryObject,
+		string $type = Entities\Conditions\Condition::class
 	): array {
 		$result = $queryObject->fetch($this->getRepository($type));
 
@@ -109,8 +109,8 @@ final class TriggerRepository implements ITriggerRepository
 	 * @throws Throwable
 	 */
 	public function getResultSet(
-		Queries\FindTriggersQuery $queryObject,
-		string $type = Entities\Triggers\Trigger::class
+		Queries\FindConditionsQuery $queryObject,
+		string $type = Entities\Conditions\Condition::class
 	): DoctrineOrmQuery\ResultSet {
 		$result = $queryObject->fetch($this->getRepository($type));
 

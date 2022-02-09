@@ -21,7 +21,7 @@ final class ConditionRepositoryTest extends DbTestCase
 	public function testReadOne(): void
 	{
 		/** @var Models\Conditions\IConditionRepository $repository */
-		$repository = $this->getContainer()->getByType(Models\Conditions\ConditionRepository::class);
+		$repository = $this->getContainer()->getByType(Models\Conditions\ConditionsRepository::class);
 
 		$findQuery = new Queries\FindConditionsQuery();
 		$findQuery->byId(Uuid\Uuid::fromString('09c453b3-c55f-4050-8f1c-b50f8d5728c2'));
@@ -35,7 +35,7 @@ final class ConditionRepositoryTest extends DbTestCase
 	public function testReadResultSet(): void
 	{
 		/** @var Models\Conditions\IConditionRepository $repository */
-		$repository = $this->getContainer()->getByType(Models\Conditions\ConditionRepository::class);
+		$repository = $this->getContainer()->getByType(Models\Conditions\ConditionsRepository::class);
 
 		$findQuery = new Queries\FindConditionsQuery();
 

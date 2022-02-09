@@ -47,22 +47,22 @@ final class ActionsV1Controller extends BaseV1Controller
 
 	use Controllers\Finders\TTriggerFinder;
 
-	/** @var Models\Triggers\ITriggerRepository */
-	protected Models\Triggers\ITriggerRepository $triggerRepository;
+	/** @var Models\Triggers\ITriggersRepository */
+	protected Models\Triggers\ITriggersRepository $triggersRepository;
 
-	/** @var Models\Actions\IActionRepository */
-	private Models\Actions\IActionRepository $actionRepository;
+	/** @var Models\Actions\IActionsRepository */
+	private Models\Actions\IActionsRepository $actionsRepository;
 
 	/** @var Models\Actions\IActionsManager */
 	private Models\Actions\IActionsManager $actionsManager;
 
 	public function __construct(
-		Models\Triggers\ITriggerRepository $triggerRepository,
-		Models\Actions\IActionRepository $actionRepository,
-		Models\Actions\IActionsManager $actionsManager
+		Models\Triggers\ITriggersRepository $triggersRepository,
+		Models\Actions\IActionsRepository   $actionsRepository,
+		Models\Actions\IActionsManager      $actionsManager
 	) {
-		$this->triggerRepository = $triggerRepository;
-		$this->actionRepository = $actionRepository;
+		$this->triggersRepository = $triggersRepository;
+		$this->actionsRepository = $actionsRepository;
 		$this->actionsManager = $actionsManager;
 	}
 
@@ -84,7 +84,7 @@ final class ActionsV1Controller extends BaseV1Controller
 		$findQuery = new Queries\FindActionsQuery();
 		$findQuery->forTrigger($trigger);
 
-		$rows = $this->actionRepository->getResultSet($findQuery);
+		$rows = $this->actionsRepository->getResultSet($findQuery);
 
 		// @phpstan-ignore-next-line
 		return $this->buildResponse($request, $response, $rows);
@@ -128,7 +128,7 @@ final class ActionsV1Controller extends BaseV1Controller
 			$findQuery->byId(Uuid\Uuid::fromString($id));
 			$findQuery->forTrigger($trigger);
 
-			$action = $this->actionRepository->findOneBy($findQuery);
+			$action = $this->actionsRepository->findOneBy($findQuery);
 
 			if ($action === null) {
 				throw new JsonApiExceptions\JsonApiErrorException(

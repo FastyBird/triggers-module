@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * ActionRepository.php
+ * NotificationsRepository.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -13,7 +13,7 @@
  * @date           04.04.20
  */
 
-namespace FastyBird\TriggersModule\Models\Actions;
+namespace FastyBird\TriggersModule\Models\Notifications;
 
 use Doctrine\ORM;
 use Doctrine\Persistence;
@@ -25,14 +25,14 @@ use Nette;
 use Throwable;
 
 /**
- * Action repository
+ * Notification repository
  *
  * @package        FastyBird:TriggersModule!
  * @subpackage     Models
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-final class ActionRepository implements IActionRepository
+final class NotificationsRepository implements INotificationsRepository
 {
 
 	use Nette\SmartObject;
@@ -40,7 +40,7 @@ final class ActionRepository implements IActionRepository
 	/**
 	 * @var ORM\EntityRepository[]
 	 *
-	 * @phpstan-var ORM\EntityRepository<Entities\Actions\IAction>[]
+	 * @phpstan-var ORM\EntityRepository<Entities\Notifications\INotification>[]
 	 */
 	private array $repository = [];
 
@@ -56,13 +56,13 @@ final class ActionRepository implements IActionRepository
 	 * {@inheritDoc}
 	 */
 	public function findOneBy(
-		Queries\FindActionsQuery $queryObject,
-		string $type = Entities\Actions\Action::class
-	): ?Entities\Actions\IAction {
-		/** @var Entities\Actions\IAction|null $action */
-		$action = $queryObject->fetchOne($this->getRepository($type));
+		Queries\FindNotificationsQuery $queryObject,
+		string $type = Entities\Notifications\Notification::class
+	): ?Entities\Notifications\INotification {
+		/** @var Entities\Notifications\INotification|null $notification */
+		$notification = $queryObject->fetchOne($this->getRepository($type));
 
-		return $action;
+		return $notification;
 	}
 
 	/**
@@ -72,7 +72,7 @@ final class ActionRepository implements IActionRepository
 	 *
 	 * @phpstan-param class-string $type
 	 *
-	 * @phpstan-return ORM\EntityRepository<Entities\Actions\IAction>
+	 * @phpstan-return ORM\EntityRepository<Entities\Notifications\INotification>
 	 */
 	private function getRepository(string $type): ORM\EntityRepository
 	{
@@ -95,8 +95,8 @@ final class ActionRepository implements IActionRepository
 	 * @throws Throwable
 	 */
 	public function findAllBy(
-		Queries\FindActionsQuery $queryObject,
-		string $type = Entities\Actions\Action::class
+		Queries\FindNotificationsQuery $queryObject,
+		string $type = Entities\Notifications\Notification::class
 	): array {
 		$result = $queryObject->fetch($this->getRepository($type));
 
@@ -109,8 +109,8 @@ final class ActionRepository implements IActionRepository
 	 * @throws Throwable
 	 */
 	public function getResultSet(
-		Queries\FindActionsQuery $queryObject,
-		string $type = Entities\Actions\Action::class
+		Queries\FindNotificationsQuery $queryObject,
+		string $type = Entities\Notifications\Notification::class
 	): DoctrineOrmQuery\ResultSet {
 		$result = $queryObject->fetch($this->getRepository($type));
 

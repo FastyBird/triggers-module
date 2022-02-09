@@ -47,22 +47,22 @@ final class ConditionsV1Controller extends BaseV1Controller
 
 	use Controllers\Finders\TTriggerFinder;
 
-	/** @var Models\Triggers\ITriggerRepository */
-	protected Models\Triggers\ITriggerRepository $triggerRepository;
+	/** @var Models\Triggers\ITriggersRepository */
+	protected Models\Triggers\ITriggersRepository $triggersRepository;
 
 	/** @var Models\Conditions\IConditionRepository */
-	private Models\Conditions\IConditionRepository $conditionRepository;
+	private Models\Conditions\IConditionRepository $conditionsRepository;
 
 	/** @var Models\Conditions\IConditionsManager */
 	private Models\Conditions\IConditionsManager $conditionsManager;
 
 	public function __construct(
-		Models\Triggers\ITriggerRepository $triggerRepository,
-		Models\Conditions\IConditionRepository $conditionRepository,
-		Models\Conditions\IConditionsManager $conditionsManager
+		Models\Triggers\ITriggersRepository    $triggersRepository,
+		Models\Conditions\IConditionRepository $conditionsRepository,
+		Models\Conditions\IConditionsManager   $conditionsManager
 	) {
-		$this->triggerRepository = $triggerRepository;
-		$this->conditionRepository = $conditionRepository;
+		$this->triggersRepository = $triggersRepository;
+		$this->conditionsRepository = $conditionsRepository;
 		$this->conditionsManager = $conditionsManager;
 	}
 
@@ -92,7 +92,7 @@ final class ConditionsV1Controller extends BaseV1Controller
 		$findQuery = new Queries\FindConditionsQuery();
 		$findQuery->forTrigger($trigger);
 
-		$rows = $this->conditionRepository->getResultSet($findQuery);
+		$rows = $this->conditionsRepository->getResultSet($findQuery);
 
 		// @phpstan-ignore-next-line
 		return $this->buildResponse($request, $response, $rows);
@@ -144,7 +144,7 @@ final class ConditionsV1Controller extends BaseV1Controller
 			$findQuery->byId(Uuid\Uuid::fromString($id));
 			$findQuery->forTrigger($trigger);
 
-			$condition = $this->conditionRepository->findOneBy($findQuery);
+			$condition = $this->conditionsRepository->findOneBy($findQuery);
 
 			if ($condition === null) {
 				throw new JsonApiExceptions\JsonApiErrorException(

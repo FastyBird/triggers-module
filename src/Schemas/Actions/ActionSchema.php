@@ -46,12 +46,12 @@ abstract class ActionSchema extends JsonApiSchemas\JsonApiSchema
 	/** @var Routing\IRouter */
 	protected Routing\IRouter $router;
 
-	/** @var Models\States\IActionRepository|null */
-	private ?Models\States\IActionRepository $stateRepository;
+	/** @var Models\States\IActionsRepository|null */
+	private ?Models\States\IActionsRepository $stateRepository;
 
 	public function __construct(
 		Routing\IRouter $router,
-		?Models\States\IActionRepository $stateRepository
+		?Models\States\IActionsRepository $stateRepository
 	) {
 		$this->router = $router;
 		$this->stateRepository = $stateRepository;

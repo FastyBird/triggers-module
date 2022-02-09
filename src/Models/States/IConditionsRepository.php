@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * IConditionRepository.php
+ * IConditionsRepository.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -26,7 +26,7 @@ use FastyBird\TriggersModule\States;
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-interface IConditionRepository
+interface IConditionsRepository
 {
 
 	/**

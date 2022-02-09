@@ -20,7 +20,7 @@ final class FindConditionsQueryTest extends DbTestCase
 	public function testFindById(): void
 	{
 		/** @var Models\Conditions\IConditionRepository $repository */
-		$repository = $this->getContainer()->getByType(Models\Conditions\ConditionRepository::class);
+		$repository = $this->getContainer()->getByType(Models\Conditions\ConditionsRepository::class);
 
 		$findQuery = new Queries\FindConditionsQuery();
 		$findQuery->byId(Uuid\Uuid::fromString('2726f19c-7759-440e-b6f5-8c3306692fa2'));
@@ -34,7 +34,7 @@ final class FindConditionsQueryTest extends DbTestCase
 	public function testFindForDevice(): void
 	{
 		/** @var Models\Conditions\IConditionRepository $repository */
-		$repository = $this->getContainer()->getByType(Models\Conditions\ConditionRepository::class);
+		$repository = $this->getContainer()->getByType(Models\Conditions\ConditionsRepository::class);
 
 		$findQuery = new Queries\FindConditionsQuery();
 		$findQuery->forDevice(Uuid\Uuid::fromString('28989c89-e7d7-4664-9d18-a73647a844fb'));
@@ -48,7 +48,7 @@ final class FindConditionsQueryTest extends DbTestCase
 	public function testFindForChannel(): void
 	{
 		/** @var Models\Conditions\IConditionRepository $repository */
-		$repository = $this->getContainer()->getByType(Models\Conditions\ConditionRepository::class);
+		$repository = $this->getContainer()->getByType(Models\Conditions\ConditionsRepository::class);
 
 		$findQuery = new Queries\FindConditionsQuery();
 		$findQuery->forChannel(Uuid\Uuid::fromString('5421c268-8f5d-4972-a7b5-6b4295c3e4b1'));
@@ -62,7 +62,7 @@ final class FindConditionsQueryTest extends DbTestCase
 	public function testFindForChannelProperty(): void
 	{
 		/** @var Models\Conditions\IConditionRepository $repository */
-		$repository = $this->getContainer()->getByType(Models\Conditions\ConditionRepository::class);
+		$repository = $this->getContainer()->getByType(Models\Conditions\ConditionsRepository::class);
 
 		$findQuery = new Queries\FindConditionsQuery();
 		$findQuery->forProperty(Uuid\Uuid::fromString('ff7b36d7-a0b0-4336-9efb-a608c93b0974'));
@@ -76,7 +76,7 @@ final class FindConditionsQueryTest extends DbTestCase
 	public function testFindForCombination(): void
 	{
 		/** @var Models\Conditions\IConditionRepository $repository */
-		$repository = $this->getContainer()->getByType(Models\Conditions\ConditionRepository::class);
+		$repository = $this->getContainer()->getByType(Models\Conditions\ConditionsRepository::class);
 
 		$findQuery = new Queries\FindConditionsQuery();
 		$findQuery->forDevice(Uuid\Uuid::fromString('28989c89-e7d7-4664-9d18-a73647a844fb'));

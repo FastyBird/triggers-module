@@ -45,17 +45,17 @@ final class TriggersV1Controller extends BaseV1Controller
 
 	use Controllers\Finders\TTriggerFinder;
 
-	/** @var Models\Triggers\ITriggerRepository */
-	private Models\Triggers\ITriggerRepository $triggerRepository;
+	/** @var Models\Triggers\ITriggersRepository */
+	private Models\Triggers\ITriggersRepository $triggersRepository;
 
 	/** @var Models\Triggers\ITriggersManager */
 	private Models\Triggers\ITriggersManager $triggersManager;
 
 	public function __construct(
-		Models\Triggers\ITriggerRepository $triggerRepository,
-		Models\Triggers\ITriggersManager $triggersManager
+		Models\Triggers\ITriggersRepository $triggersRepository,
+		Models\Triggers\ITriggersManager    $triggersManager
 	) {
-		$this->triggerRepository = $triggerRepository;
+		$this->triggersRepository = $triggersRepository;
 		$this->triggersManager = $triggersManager;
 	}
 
@@ -71,7 +71,7 @@ final class TriggersV1Controller extends BaseV1Controller
 	): Message\ResponseInterface {
 		$findQuery = new Queries\FindTriggersQuery();
 
-		$triggers = $this->triggerRepository->getResultSet($findQuery);
+		$triggers = $this->triggersRepository->getResultSet($findQuery);
 
 		// @phpstan-ignore-next-line
 		return $this->buildResponse($request, $response, $triggers);

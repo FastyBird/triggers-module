@@ -20,8 +20,8 @@ final class TriggerRepositoryTest extends DbTestCase
 
 	public function testReadOne(): void
 	{
-		/** @var Models\Triggers\ITriggerRepository $repository */
-		$repository = $this->getContainer()->getByType(Models\Triggers\TriggerRepository::class);
+		/** @var Models\Triggers\ITriggersRepository $repository */
+		$repository = $this->getContainer()->getByType(Models\Triggers\TriggersRepository::class);
 
 		$findQuery = new Queries\FindTriggersQuery();
 		$findQuery->byId(Uuid\Uuid::fromString('0b48dfbc-fac2-4292-88dc-7981a121602d'));
@@ -35,8 +35,8 @@ final class TriggerRepositoryTest extends DbTestCase
 
 	public function testReadResultSet(): void
 	{
-		/** @var Models\Triggers\ITriggerRepository $repository */
-		$repository = $this->getContainer()->getByType(Models\Triggers\TriggerRepository::class);
+		/** @var Models\Triggers\ITriggersRepository $repository */
+		$repository = $this->getContainer()->getByType(Models\Triggers\TriggersRepository::class);
 
 		$findQuery = new Queries\FindTriggersQuery();
 

@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * ConditionRepository.php
+ * ActionsRepository.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -13,7 +13,7 @@
  * @date           04.04.20
  */
 
-namespace FastyBird\TriggersModule\Models\Conditions;
+namespace FastyBird\TriggersModule\Models\Actions;
 
 use Doctrine\ORM;
 use Doctrine\Persistence;
@@ -25,14 +25,14 @@ use Nette;
 use Throwable;
 
 /**
- * Condition repository
+ * Action repository
  *
  * @package        FastyBird:TriggersModule!
  * @subpackage     Models
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-final class ConditionRepository implements IConditionRepository
+final class ActionsRepository implements IActionsRepository
 {
 
 	use Nette\SmartObject;
@@ -40,7 +40,7 @@ final class ConditionRepository implements IConditionRepository
 	/**
 	 * @var ORM\EntityRepository[]
 	 *
-	 * @phpstan-var ORM\EntityRepository<Entities\Conditions\ICondition>[]
+	 * @phpstan-var ORM\EntityRepository<Entities\Actions\IAction>[]
 	 */
 	private array $repository = [];
 
@@ -56,13 +56,13 @@ final class ConditionRepository implements IConditionRepository
 	 * {@inheritDoc}
 	 */
 	public function findOneBy(
-		Queries\FindConditionsQuery $queryObject,
-		string $type = Entities\Conditions\Condition::class
-	): ?Entities\Conditions\ICondition {
-		/** @var Entities\Conditions\ICondition|null $condition */
-		$condition = $queryObject->fetchOne($this->getRepository($type));
+		Queries\FindActionsQuery $queryObject,
+		string $type = Entities\Actions\Action::class
+	): ?Entities\Actions\IAction {
+		/** @var Entities\Actions\IAction|null $action */
+		$action = $queryObject->fetchOne($this->getRepository($type));
 
-		return $condition;
+		return $action;
 	}
 
 	/**
@@ -72,7 +72,7 @@ final class ConditionRepository implements IConditionRepository
 	 *
 	 * @phpstan-param class-string $type
 	 *
-	 * @phpstan-return ORM\EntityRepository<Entities\Conditions\ICondition>
+	 * @phpstan-return ORM\EntityRepository<Entities\Actions\IAction>
 	 */
 	private function getRepository(string $type): ORM\EntityRepository
 	{
@@ -95,8 +95,8 @@ final class ConditionRepository implements IConditionRepository
 	 * @throws Throwable
 	 */
 	public function findAllBy(
-		Queries\FindConditionsQuery $queryObject,
-		string $type = Entities\Conditions\Condition::class
+		Queries\FindActionsQuery $queryObject,
+		string $type = Entities\Actions\Action::class
 	): array {
 		$result = $queryObject->fetch($this->getRepository($type));
 
@@ -109,8 +109,8 @@ final class ConditionRepository implements IConditionRepository
 	 * @throws Throwable
 	 */
 	public function getResultSet(
-		Queries\FindConditionsQuery $queryObject,
-		string $type = Entities\Conditions\Condition::class
+		Queries\FindActionsQuery $queryObject,
+		string $type = Entities\Actions\Action::class
 	): DoctrineOrmQuery\ResultSet {
 		$result = $queryObject->fetch($this->getRepository($type));
 

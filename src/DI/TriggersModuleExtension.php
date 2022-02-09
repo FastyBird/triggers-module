@@ -96,20 +96,20 @@ class TriggersModuleExtension extends DI\CompilerExtension
 			->setType(Commands\InitializeCommand::class);
 
 		// Database repositories
-		$builder->addDefinition($this->prefix('models.triggerRepository'), new DI\Definitions\ServiceDefinition())
-			->setType(Models\Triggers\TriggerRepository::class);
+		$builder->addDefinition($this->prefix('models.triggersRepository'), new DI\Definitions\ServiceDefinition())
+			->setType(Models\Triggers\TriggersRepository::class);
 
-		$builder->addDefinition($this->prefix('models.triggerControlRepository'), new DI\Definitions\ServiceDefinition())
-			->setType(Models\Triggers\Controls\ControlRepository::class);
+		$builder->addDefinition($this->prefix('models.triggeControlsRepository'), new DI\Definitions\ServiceDefinition())
+			->setType(Models\Triggers\Controls\ControlsRepository::class);
 
-		$builder->addDefinition($this->prefix('models.actionRepository'), new DI\Definitions\ServiceDefinition())
-			->setType(Models\Actions\ActionRepository::class);
+		$builder->addDefinition($this->prefix('models.actionsRepository'), new DI\Definitions\ServiceDefinition())
+			->setType(Models\Actions\ActionsRepository::class);
 
-		$builder->addDefinition($this->prefix('models.conditionRepository'), new DI\Definitions\ServiceDefinition())
-			->setType(Models\Conditions\ConditionRepository::class);
+		$builder->addDefinition($this->prefix('models.conditionsRepository'), new DI\Definitions\ServiceDefinition())
+			->setType(Models\Conditions\ConditionsRepository::class);
 
-		$builder->addDefinition($this->prefix('models.notificationRepository'), new DI\Definitions\ServiceDefinition())
-			->setType(Models\Notifications\NotificationRepository::class);
+		$builder->addDefinition($this->prefix('models.notificationsRepository'), new DI\Definitions\ServiceDefinition())
+			->setType(Models\Notifications\NotificationsRepository::class);
 
 		// Database managers
 		$builder->addDefinition($this->prefix('models.triggersManager'), new DI\Definitions\ServiceDefinition())
