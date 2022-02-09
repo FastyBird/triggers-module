@@ -50,8 +50,8 @@ final class AutomaticTriggerSchema extends TriggerSchema
 	private ?Models\States\IConditionsRepository $conditionStateRepository;
 
 	public function __construct(
-		Routing\IRouter                     $router,
-		?Models\States\IActionsRepository   $actionStateRepository,
+		Routing\IRouter $router,
+		?Models\States\IActionsRepository $actionStateRepository,
 		?Models\States\IConditionsRepository $conditionStateRepository
 	) {
 		parent::__construct($router, $actionStateRepository);

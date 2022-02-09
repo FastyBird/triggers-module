@@ -53,7 +53,7 @@ final class TriggersV1Controller extends BaseV1Controller
 
 	public function __construct(
 		Models\Triggers\ITriggersRepository $triggersRepository,
-		Models\Triggers\ITriggersManager    $triggersManager
+		Models\Triggers\ITriggersManager $triggersManager
 	) {
 		$this->triggersRepository = $triggersRepository;
 		$this->triggersManager = $triggersManager;

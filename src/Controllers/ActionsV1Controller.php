@@ -58,8 +58,8 @@ final class ActionsV1Controller extends BaseV1Controller
 
 	public function __construct(
 		Models\Triggers\ITriggersRepository $triggersRepository,
-		Models\Actions\IActionsRepository   $actionsRepository,
-		Models\Actions\IActionsManager      $actionsManager
+		Models\Actions\IActionsRepository $actionsRepository,
+		Models\Actions\IActionsManager $actionsManager
 	) {
 		$this->triggersRepository = $triggersRepository;
 		$this->actionsRepository = $actionsRepository;

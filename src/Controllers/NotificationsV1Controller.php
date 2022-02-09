@@ -57,9 +57,9 @@ final class NotificationsV1Controller extends BaseV1Controller
 	private Models\Notifications\INotificationsManager $notificationsManager;
 
 	public function __construct(
-		Models\Triggers\ITriggersRepository           $triggersRepository,
+		Models\Triggers\ITriggersRepository $triggersRepository,
 		Models\Notifications\INotificationsRepository $notificationsRepository,
-		Models\Notifications\INotificationsManager    $notificationsManager
+		Models\Notifications\INotificationsManager $notificationsManager
 	) {
 		$this->triggersRepository = $triggersRepository;
 		$this->notificationsRepository = $notificationsRepository;

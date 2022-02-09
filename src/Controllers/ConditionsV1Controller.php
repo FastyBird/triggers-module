@@ -57,9 +57,9 @@ final class ConditionsV1Controller extends BaseV1Controller
 	private Models\Conditions\IConditionsManager $conditionsManager;
 
 	public function __construct(
-		Models\Triggers\ITriggersRepository    $triggersRepository,
+		Models\Triggers\ITriggersRepository $triggersRepository,
 		Models\Conditions\IConditionRepository $conditionsRepository,
-		Models\Conditions\IConditionsManager   $conditionsManager
+		Models\Conditions\IConditionsManager $conditionsManager
 	) {
 		$this->triggersRepository = $triggersRepository;
 		$this->conditionsRepository = $conditionsRepository;
