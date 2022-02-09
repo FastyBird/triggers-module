@@ -40,6 +40,9 @@ final class ServicesTest extends BaseTestCase
 		Assert::notNull($container->getByType(Models\Notifications\NotificationsManager::class));
 		Assert::notNull($container->getByType(Models\Conditions\ConditionsManager::class));
 
+		Assert::notNull($container->getByType(Models\States\ActionsRepository::class));
+		Assert::notNull($container->getByType(Models\States\ConditionsRepository::class));
+
 		Assert::notNull($container->getByType(Models\States\ActionsManager::class));
 		Assert::notNull($container->getByType(Models\States\ConditionsManager::class));
 

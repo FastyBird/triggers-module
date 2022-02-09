@@ -18,6 +18,7 @@ namespace FastyBird\TriggersModule\Schemas\Conditions;
 use FastyBird\JsonApi\Schemas as JsonApiSchemas;
 use FastyBird\TriggersModule;
 use FastyBird\TriggersModule\Entities;
+use FastyBird\TriggersModule\Exceptions;
 use FastyBird\TriggersModule\Models;
 use FastyBird\TriggersModule\Router;
 use FastyBird\TriggersModule\Schemas;
@@ -46,12 +47,12 @@ abstract class ConditionSchema extends JsonApiSchemas\JsonApiSchema
 	/** @var Routing\IRouter */
 	protected Routing\IRouter $router;
 
-	/** @var Models\States\IConditionsRepository|null */
-	private ?Models\States\IConditionsRepository $stateRepository;
+	/** @var Models\States\ConditionsRepository */
+	private Models\States\ConditionsRepository $stateRepository;
 
 	public function __construct(
 		Routing\IRouter $router,
-		?Models\States\IConditionsRepository $stateRepository
+		Models\States\ConditionsRepository $stateRepository
 	) {
 		$this->router = $router;
 		$this->stateRepository = $stateRepository;
@@ -69,7 +70,12 @@ abstract class ConditionSchema extends JsonApiSchemas\JsonApiSchema
 	 */
 	public function getAttributes($condition, JsonApi\Contracts\Schema\ContextInterface $context): iterable
 	{
-		$state = $this->stateRepository === null ? null : $this->stateRepository->findOne($condition);
+		try {
+			$state = $this->stateRepository->findOne($condition);
+
+		} catch (Exceptions\NotImplementedException $ex) {
+			$state = null;
+		}
 
 		return [
 			'enabled'      => $condition->isEnabled(),

@@ -46,14 +46,14 @@ from fastybird_triggers_module.entities.condition import (
 from fastybird_triggers_module.exceptions import TerminateAutomatorException
 from fastybird_triggers_module.logger import Logger
 from fastybird_triggers_module.managers.state import (
-    IActionsStatesManager,
-    IConditionsStatesManager,
+    ActionsStatesManager,
+    ConditionsStatesManager,
 )
 from fastybird_triggers_module.repositories.action import ActionsRepository
 from fastybird_triggers_module.repositories.condition import ConditionsRepository
 from fastybird_triggers_module.repositories.state import (
-    IActionsStatesRepository,
-    IConditionsStatesRepository,
+    ActionsStatesRepository,
+    ConditionsStatesRepository,
 )
 from fastybird_triggers_module.repositories.trigger import (
     TriggerControlsRepository,
@@ -64,10 +64,6 @@ from fastybird_triggers_module.repositories.trigger import (
 @inject(
     bind={
         "publisher": Publisher,
-        "action_state_repository": IActionsStatesRepository,
-        "actions_states_manager": IActionsStatesManager,
-        "condition_state_repository": IConditionsStatesRepository,
-        "conditions_states_manager": IConditionsStatesManager,
     }
 )
 class Automator:  # pylint: disable=too-many-instance-attributes
@@ -89,10 +85,10 @@ class Automator:  # pylint: disable=too-many-instance-attributes
     __actions_repository: ActionsRepository
     __conditions_repository: ConditionsRepository
 
-    __action_state_repository: Optional[IActionsStatesRepository] = None
-    __actions_states_manager: Optional[IActionsStatesManager] = None
-    __condition_state_repository: Optional[IConditionsStatesRepository] = None
-    __conditions_states_manager: Optional[IConditionsStatesManager] = None
+    __actions_states_repository: ActionsStatesRepository
+    __actions_states_manager: ActionsStatesManager
+    __conditions_states_repository: ConditionsStatesRepository
+    __conditions_states_manager: ConditionsStatesManager
 
     __publisher: Optional[Publisher] = None
 
@@ -107,11 +103,11 @@ class Automator:  # pylint: disable=too-many-instance-attributes
         triggers_control_repository: TriggerControlsRepository,
         actions_repository: ActionsRepository,
         conditions_repository: ConditionsRepository,
+        actions_states_repository: ActionsStatesRepository,
+        actions_states_manager: ActionsStatesManager,
+        conditions_states_repository: ConditionsStatesRepository,
+        conditions_states_manager: ConditionsStatesManager,
         logger: Logger,
-        action_state_repository: Optional[IActionsStatesRepository] = None,
-        actions_states_manager: Optional[IActionsStatesManager] = None,
-        condition_state_repository: Optional[IConditionsStatesRepository] = None,
-        conditions_states_manager: Optional[IConditionsStatesManager] = None,
         publisher: Optional[Publisher] = None,
     ) -> None:
         self.__queue = queue
@@ -121,9 +117,9 @@ class Automator:  # pylint: disable=too-many-instance-attributes
         self.__actions_repository = actions_repository
         self.__conditions_repository = conditions_repository
 
-        self.__action_state_repository = action_state_repository
+        self.__actions_states_repository = actions_states_repository
         self.__actions_states_manager = actions_states_manager
-        self.__condition_state_repository = condition_state_repository
+        self.__conditions_states_repository = conditions_states_repository
         self.__conditions_states_manager = conditions_states_manager
 
         self.__publisher = publisher
@@ -203,14 +199,6 @@ class Automator:  # pylint: disable=too-many-instance-attributes
         item: ConsumeEntityMessageQueueItem,
     ) -> None:
         if (
-            self.__action_state_repository is None
-            or self.__actions_states_manager is None
-            or self.__condition_state_repository is None
-            or self.__conditions_states_manager is None
-        ):
-            return
-
-        if (
             item.routing_key
             in (
                 RoutingKey.DEVICES_PROPERTY_ENTITY_CREATED,
@@ -273,29 +261,34 @@ class Automator:  # pylint: disable=too-many-instance-attributes
         value: str,
     ) -> None:
         """Check property against trigger conditions"""
-        if self.__condition_state_repository is None or self.__conditions_states_manager is None:
-            return
-
         is_fulfilled = condition.validate(value=value)
 
-        condition_state = self.__condition_state_repository.get_by_id(condition_id=condition.id)
+        try:
+            condition_state = self.__conditions_states_repository.get_by_id(condition_id=condition.id)
 
-        if condition_state is None:
-            self.__conditions_states_manager.create(
-                condition=condition,
-                data={
-                    "is_fulfilled": is_fulfilled,
-                },
-            )
+        except NotImplementedError:
+            return
 
-        else:
-            self.__conditions_states_manager.update(
-                condition=condition,
-                state=condition_state,
-                data={
-                    "is_fulfilled": is_fulfilled,
-                },
-            )
+        try:
+            if condition_state is None:
+                self.__conditions_states_manager.create(
+                    condition=condition,
+                    data={
+                        "is_fulfilled": is_fulfilled,
+                    },
+                )
+
+            else:
+                self.__conditions_states_manager.update(
+                    condition=condition,
+                    state=condition_state,
+                    data={
+                        "is_fulfilled": is_fulfilled,
+                    },
+                )
+
+        except NotImplementedError:
+            return
 
         self.__logger.debug(
             "Validation result: %s was saved into: %s",
@@ -311,29 +304,34 @@ class Automator:  # pylint: disable=too-many-instance-attributes
         value: str,
     ) -> None:
         """Check property against trigger actions"""
-        if self.__action_state_repository is None or self.__actions_states_manager is None:
-            return
-
         is_triggered = action.validate(value=value)
 
-        action_state = self.__action_state_repository.get_by_id(action_id=action.id)
+        try:
+            action_state = self.__actions_states_repository.get_by_id(action_id=action.id)
 
-        if action_state is None:
-            self.__actions_states_manager.create(
-                action=action,
-                data={
-                    "is_triggered": is_triggered,
-                },
-            )
+        except NotImplementedError:
+            return
 
-        else:
-            self.__actions_states_manager.update(
-                action=action,
-                state=action_state,
-                data={
-                    "is_triggered": is_triggered,
-                },
-            )
+        try:
+            if action_state is None:
+                self.__actions_states_manager.create(
+                    action=action,
+                    data={
+                        "is_triggered": is_triggered,
+                    },
+                )
+
+            else:
+                self.__actions_states_manager.update(
+                    action=action,
+                    state=action_state,
+                    data={
+                        "is_triggered": is_triggered,
+                    },
+                )
+
+        except NotImplementedError:
+            return
 
         self.__logger.debug(
             "Validation result: %s was saved into: %s",
@@ -347,9 +345,6 @@ class Automator:  # pylint: disable=too-many-instance-attributes
         self,
         trigger_id: uuid.UUID,
     ) -> bool:
-        if self.__condition_state_repository is None:
-            return False
-
         conditions_count = 0
 
         for condition in self.__conditions_repository.get_all_by_trigger(trigger_id=trigger_id):
@@ -359,7 +354,11 @@ class Automator:  # pylint: disable=too-many-instance-attributes
                 if not isinstance(condition, (DevicePropertyConditionEntity, ChannelPropertyConditionEntity)):
                     return False
 
-                condition_state = self.__condition_state_repository.get_by_id(condition_id=condition.id)
+                try:
+                    condition_state = self.__conditions_states_repository.get_by_id(condition_id=condition.id)
+
+                except NotImplementedError:
+                    return False
 
                 if condition_state is None or not condition_state.is_fulfilled:
                     return False

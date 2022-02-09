@@ -18,6 +18,7 @@ namespace FastyBird\TriggersModule\Schemas\Triggers;
 use FastyBird\JsonApi\Schemas as JsonApiSchemas;
 use FastyBird\TriggersModule;
 use FastyBird\TriggersModule\Entities;
+use FastyBird\TriggersModule\Exceptions;
 use FastyBird\TriggersModule\Models;
 use FastyBird\TriggersModule\Router;
 use FastyBird\TriggersModule\Schemas;
@@ -45,12 +46,12 @@ abstract class TriggerSchema extends JsonApiSchemas\JsonApiSchema
 	/** @var Routing\IRouter */
 	protected Routing\IRouter $router;
 
-	/** @var Models\States\IActionsRepository|null */
-	private ?Models\States\IActionsRepository $actionStateRepository;
+	/** @var Models\States\ActionsRepository */
+	private Models\States\ActionsRepository $actionStateRepository;
 
 	public function __construct(
 		Routing\IRouter $router,
-		?Models\States\IActionsRepository $actionStateRepository
+		Models\States\ActionsRepository $actionStateRepository
 	) {
 		$this->router = $router;
 
@@ -69,9 +70,7 @@ abstract class TriggerSchema extends JsonApiSchemas\JsonApiSchema
 	 */
 	public function getAttributes($trigger, JsonApi\Contracts\Schema\ContextInterface $context): iterable
 	{
-		$isTriggered = null;
-
-		if ($this->actionStateRepository !== null) {
+		try {
 			$isTriggered = true;
 
 			foreach ($trigger->getActions() as $action) {
@@ -81,6 +80,9 @@ abstract class TriggerSchema extends JsonApiSchemas\JsonApiSchema
 					$isTriggered = false;
 				}
 			}
+
+		} catch (Exceptions\NotImplementedException $ex) {
+			$isTriggered = null;
 		}
 
 		return [

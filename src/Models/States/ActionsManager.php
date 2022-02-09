@@ -62,7 +62,7 @@ final class ActionsManager
 		Utils\ArrayHash $values
 	): States\IAction {
 		if ($this->manager === null) {
-			throw new Exceptions\InvalidStateException('Action state manager is not registered');
+			throw new Exceptions\NotImplementedException('Action state manager is not registered');
 		}
 
 		/** @var States\IAction $createdState */
@@ -86,7 +86,7 @@ final class ActionsManager
 		Utils\ArrayHash $values
 	): States\IAction {
 		if ($this->manager === null) {
-			throw new Exceptions\InvalidStateException('Action state manager is not registered');
+			throw new Exceptions\NotImplementedException('Action state manager is not registered');
 		}
 
 		/** @var States\IAction $updatedState */
@@ -108,7 +108,7 @@ final class ActionsManager
 		States\IAction $state
 	): bool {
 		if ($this->manager === null) {
-			throw new Exceptions\InvalidStateException('Action state manager is not registered');
+			throw new Exceptions\NotImplementedException('Action state manager is not registered');
 		}
 
 		$result = $this->manager->delete($state);

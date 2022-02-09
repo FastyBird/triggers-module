@@ -18,6 +18,7 @@ namespace FastyBird\TriggersModule\Schemas\Triggers;
 use FastyBird\Metadata\Types\ModuleSourceType;
 use FastyBird\TriggersModule;
 use FastyBird\TriggersModule\Entities;
+use FastyBird\TriggersModule\Exceptions;
 use FastyBird\TriggersModule\Models;
 use FastyBird\TriggersModule\Router;
 use IPub\SlimRouter\Routing;
@@ -46,13 +47,13 @@ final class AutomaticTriggerSchema extends TriggerSchema
 	 */
 	public const RELATIONSHIPS_CONDITIONS = 'conditions';
 
-	/** @var Models\States\IConditionsRepository|null */
-	private ?Models\States\IConditionsRepository $conditionStateRepository;
+	/** @var Models\States\ConditionsRepository */
+	private Models\States\ConditionsRepository $conditionStateRepository;
 
 	public function __construct(
 		Routing\IRouter $router,
-		?Models\States\IActionsRepository $actionStateRepository,
-		?Models\States\IConditionsRepository $conditionStateRepository
+		Models\States\ActionsRepository $actionStateRepository,
+		Models\States\ConditionsRepository $conditionStateRepository
 	) {
 		parent::__construct($router, $actionStateRepository);
 
@@ -85,9 +86,7 @@ final class AutomaticTriggerSchema extends TriggerSchema
 	 */
 	public function getAttributes($trigger, JsonApi\Contracts\Schema\ContextInterface $context): iterable
 	{
-		$isFulfilled = null;
-
-		if ($this->conditionStateRepository !== null) {
+		try {
 			$isFulfilled = true;
 
 			foreach ($trigger->getConditions() as $condition) {
@@ -97,6 +96,9 @@ final class AutomaticTriggerSchema extends TriggerSchema
 					$isFulfilled = false;
 				}
 			}
+
+		} catch (Exceptions\NotImplementedException $ex) {
+			$isFulfilled = null;
 		}
 
 		return array_merge((array) parent::getAttributes($trigger, $context), [

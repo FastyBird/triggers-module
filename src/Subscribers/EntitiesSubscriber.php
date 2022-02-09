@@ -22,6 +22,7 @@ use FastyBird\Exchange\Publisher as ExchangePublisher;
 use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule;
 use FastyBird\TriggersModule\Entities;
+use FastyBird\TriggersModule\Exceptions;
 use FastyBird\TriggersModule\Models;
 use Nette;
 use Nette\Utils;
@@ -45,11 +46,11 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 
 	use Nette\SmartObject;
 
-	/** @var Models\States\IActionsRepository|null */
-	private ?Models\States\IActionsRepository $actionStateRepository;
+	/** @var Models\States\ActionsRepository */
+	private Models\States\ActionsRepository $actionStateRepository;
 
-	/** @var Models\States\IConditionsRepository|null */
-	private ?Models\States\IConditionsRepository $conditionStateRepository;
+	/** @var Models\States\ConditionsRepository */
+	private Models\States\ConditionsRepository $conditionStateRepository;
 
 	/** @var ExchangePublisher\Publisher|null */
 	private ?ExchangePublisher\Publisher $publisher;
@@ -59,9 +60,9 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 
 	public function __construct(
 		ORM\EntityManagerInterface $entityManager,
-		?ExchangePublisher\Publisher $publisher = null,
-		?Models\States\IActionsRepository $actionStateRepository = null,
-		?Models\States\IConditionsRepository $conditionStateRepository = null
+		Models\States\ActionsRepository $actionStateRepository,
+		Models\States\ConditionsRepository $conditionStateRepository,
+		?ExchangePublisher\Publisher $publisher = null
 	) {
 		$this->actionStateRepository = $actionStateRepository;
 		$this->conditionStateRepository = $conditionStateRepository;
@@ -216,8 +217,19 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 		}
 
 		if ($publishRoutingKey !== null) {
-			if ($entity instanceof Entities\Actions\IAction && $this->actionStateRepository !== null) {
-				$state = $this->actionStateRepository->findOne($entity);
+			if ($entity instanceof Entities\Actions\IAction) {
+				try {
+					$state = $this->actionStateRepository->findOne($entity);
+
+				} catch (Exceptions\NotImplementedException $ex) {
+					$this->publisher->publish(
+						$entity->getSource(),
+						$publishRoutingKey,
+						Utils\ArrayHash::from($entity->toArray())
+					);
+
+					return;
+				}
 
 				$this->publisher->publish(
 					$entity->getSource(),
@@ -227,8 +239,19 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 					] : [], $entity->toArray()))
 				);
 
-			} elseif ($entity instanceof Entities\Conditions\ICondition && $this->conditionStateRepository !== null) {
-				$state = $this->conditionStateRepository->findOne($entity);
+			} elseif ($entity instanceof Entities\Conditions\ICondition) {
+				try {
+					$state = $this->conditionStateRepository->findOne($entity);
+
+				} catch (Exceptions\NotImplementedException $ex) {
+					$this->publisher->publish(
+						$entity->getSource(),
+						$publishRoutingKey,
+						Utils\ArrayHash::from($entity->toArray())
+					);
+
+					return;
+				}
 
 				$this->publisher->publish(
 					$entity->getSource(),

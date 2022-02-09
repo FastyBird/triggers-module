@@ -47,6 +47,10 @@ from fastybird_triggers_module.managers.trigger import (
 from fastybird_triggers_module.repositories.action import ActionsRepository
 from fastybird_triggers_module.repositories.condition import ConditionsRepository
 from fastybird_triggers_module.repositories.notification import NotificationsRepository
+from fastybird_triggers_module.repositories.state import (
+    ActionsStatesRepository,
+    ConditionsStatesRepository,
+)
 from fastybird_triggers_module.repositories.trigger import (
     TriggerControlsRepository,
     TriggersRepository,
@@ -82,6 +86,13 @@ def register_services(
     di[NotificationsRepository] = NotificationsRepository(session=di[OrmSession])
     di["fb-triggers-module_notification-repository"] = di[NotificationsRepository]
 
+    # States repositories
+
+    di[ActionsStatesRepository] = ActionsStatesRepository()
+    di["fb-triggers-module_actions-states-repository"] = di[ActionsStatesRepository]
+    di[ConditionsStatesRepository] = ConditionsStatesRepository()
+    di["fb-triggers-module_conditions-states-repository"] = di[ConditionsStatesRepository]
+
     # Entities managers
 
     di[TriggersManager] = TriggersManager(session=di[OrmSession])
@@ -104,7 +115,11 @@ def register_services(
 
     # Entities subscribers
 
-    di[EntitiesSubscriber] = EntitiesSubscriber(session=di[OrmSession])
+    di[EntitiesSubscriber] = EntitiesSubscriber(
+        action_state_repository=di[ActionsStatesRepository],
+        condition_state_repository=di[ConditionsStatesRepository],
+        session=di[OrmSession],
+    )
     di["fb-triggers-module_entities-subscriber"] = di[EntitiesSubscriber]
     di[EntityCreatedSubscriber] = EntityCreatedSubscriber()
     di["fb-triggers-module_entity-created-subscriber"] = di[EntityCreatedSubscriber]
@@ -121,7 +136,11 @@ def register_services(
         triggers_repository=di[TriggersRepository],
         triggers_control_repository=di[TriggerControlsRepository],
         actions_repository=di[ActionsRepository],
+        actions_states_manager=di[ActionsStatesRepository],
+        actions_states_repository=di[ActionsStatesRepository],
         conditions_repository=di[ConditionsRepository],
+        conditions_states_repository=di[ConditionsStatesRepository],
+        conditions_states_manager=di[ConditionsStatesManager],
         logger=di[Logger],
     )
     di["fb-triggers-module_automator-handler"] = di[Automator]

@@ -58,8 +58,8 @@ from fastybird_triggers_module.entities.trigger import (
     TriggerEntity,
 )
 from fastybird_triggers_module.repositories.state import (
-    IActionsStatesRepository,
-    IConditionsStatesRepository,
+    ActionsStatesRepository,
+    ConditionsStatesRepository,
 )
 
 
@@ -114,8 +114,6 @@ class EntityUpdatedSubscriber:  # pylint: disable=too-few-public-methods
 @inject(
     bind={
         "publisher": Publisher,
-        "action_state_repository": IActionsStatesRepository,
-        "condition_state_repository": IConditionsStatesRepository,
     }
 )
 class EntitiesSubscriber:  # pylint: disable=too-few-public-methods
@@ -172,17 +170,17 @@ class EntitiesSubscriber:  # pylint: disable=too-few-public-methods
 
     __publisher: Optional[Publisher]
 
-    __action_state_repository: Optional[IActionsStatesRepository]
-    __condition_state_repository: Optional[IConditionsStatesRepository]
+    __action_state_repository: ActionsStatesRepository
+    __condition_state_repository: ConditionsStatesRepository
 
     # -----------------------------------------------------------------------------
 
     def __init__(
         self,
         session: OrmSession,
+        action_state_repository: ActionsStatesRepository,
+        condition_state_repository: ConditionsStatesRepository,
         publisher: Optional[Publisher] = None,
-        action_state_repository: Optional[IActionsStatesRepository] = None,
-        condition_state_repository: Optional[IConditionsStatesRepository] = None,
     ) -> None:
         self.__publisher = publisher
 
@@ -267,9 +265,16 @@ class EntitiesSubscriber:  # pylint: disable=too-few-public-methods
 
     # -----------------------------------------------------------------------------
 
-    def __get_entity_extended_data(self, entity: Base) -> Dict:  # pylint: disable=too-many-return-statements
-        if isinstance(entity, ActionEntity) and self.__action_state_repository is not None:
-            action_state = self.__action_state_repository.get_by_id(action_id=entity.id)
+    def __get_entity_extended_data(  # pylint: disable=too-many-return-statements,too-many-branches
+        self,
+        entity: Base,
+    ) -> Dict:
+        if isinstance(entity, ActionEntity):
+            try:
+                action_state = self.__action_state_repository.get_by_id(action_id=entity.id)
+
+            except NotImplementedError:
+                return {}
 
             if action_state is None:
                 return {}
@@ -278,8 +283,12 @@ class EntitiesSubscriber:  # pylint: disable=too-few-public-methods
                 "is_triggered": action_state.is_triggered,
             }
 
-        if isinstance(entity, ConditionEntity) and self.__condition_state_repository is not None:
-            condition_state = self.__condition_state_repository.get_by_id(condition_id=entity.id)
+        if isinstance(entity, ConditionEntity):
+            try:
+                condition_state = self.__condition_state_repository.get_by_id(condition_id=entity.id)
+
+            except NotImplementedError:
+                return {}
 
             if condition_state is None:
                 return {}
@@ -288,27 +297,31 @@ class EntitiesSubscriber:  # pylint: disable=too-few-public-methods
                 "is_fulfilled": condition_state.is_fulfilled,
             }
 
-        if (
-            isinstance(entity, TriggerEntity)
-            and self.__action_state_repository is not None
-            and self.__condition_state_repository is not None
-        ):
+        if isinstance(entity, TriggerEntity):
             is_triggered: bool = True
 
-            for action in entity.actions:
-                action_state = self.__action_state_repository.get_by_id(action_id=action.id)
+            try:
+                for action in entity.actions:
+                    action_state = self.__action_state_repository.get_by_id(action_id=action.id)
 
-                if action_state is None or action_state.is_triggered is False:
-                    is_triggered = False
+                    if action_state is None or action_state.is_triggered is False:
+                        is_triggered = False
+
+            except NotImplementedError:
+                is_triggered = False
 
             if isinstance(entity, AutomaticTriggerEntity):
                 is_fulfilled = True
 
-                for condition in entity.conditions:
-                    condition_state = self.__condition_state_repository.get_by_id(condition_id=condition.id)
+                try:
+                    for condition in entity.conditions:
+                        condition_state = self.__condition_state_repository.get_by_id(condition_id=condition.id)
 
-                    if condition_state is None or condition_state.is_fulfilled is False:
-                        is_fulfilled = False
+                        if condition_state is None or condition_state.is_fulfilled is False:
+                            is_fulfilled = False
+
+                except NotImplementedError:
+                    is_fulfilled = False
 
                 return {
                     "is_triggered": is_triggered,

@@ -6,6 +6,8 @@ use Doctrine\ORM;
 use FastyBird\Exchange\Publisher as ExchangePublisher;
 use FastyBird\Metadata;
 use FastyBird\TriggersModule\Entities;
+use FastyBird\TriggersModule\Exceptions;
+use FastyBird\TriggersModule\Models;
 use FastyBird\TriggersModule\Subscribers;
 use Mockery;
 use Nette\Utils;
@@ -26,8 +28,20 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 		$publisher = Mockery::mock(ExchangePublisher\Publisher::class);
 		$entityManager = Mockery::mock(ORM\EntityManagerInterface::class);
 
+		$actionStateRepository = Mockery::mock(Models\States\ActionsRepository::class);
+		$actionStateRepository
+			->shouldReceive('findOne')
+			->andThrow(Exceptions\NotImplementedException::class);
+
+		$conditionStateRepository = Mockery::mock(Models\States\ConditionsRepository::class);
+		$conditionStateRepository
+			->shouldReceive('findOne')
+			->andThrow(Exceptions\NotImplementedException::class);
+
 		$subscriber = new Subscribers\EntitiesSubscriber(
 			$entityManager,
+			$actionStateRepository,
+			$conditionStateRepository,
 			$publisher
 		);
 
@@ -59,8 +73,20 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 
 		$entityManager = $this->getEntityManager();
 
+		$actionStateRepository = Mockery::mock(Models\States\ActionsRepository::class);
+		$actionStateRepository
+			->shouldReceive('findOne')
+			->andThrow(Exceptions\NotImplementedException::class);
+
+		$conditionStateRepository = Mockery::mock(Models\States\ConditionsRepository::class);
+		$conditionStateRepository
+			->shouldReceive('findOne')
+			->andThrow(Exceptions\NotImplementedException::class);
+
 		$subscriber = new Subscribers\EntitiesSubscriber(
 			$entityManager,
+			$actionStateRepository,
+			$conditionStateRepository,
 			$publisher
 		);
 
@@ -76,53 +102,6 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 			->times(1);
 
 		$subscriber->postPersist($eventArgs);
-	}
-
-	/**
-	 * @param bool $withUow
-	 *
-	 * @return ORM\EntityManagerInterface
-	 */
-	private function getEntityManager(bool $withUow = false): ORM\EntityManagerInterface
-	{
-		$metadata = new stdClass();
-		$metadata->fieldMappings = [
-			[
-				'fieldName' => 'name',
-			],
-			[
-				'fieldName' => 'comment',
-			],
-			[
-				'fieldName' => 'enabled',
-			],
-		];
-
-		$entityManager = Mockery::mock(ORM\EntityManagerInterface::class);
-		$entityManager
-			->shouldReceive('getClassMetadata')
-			->withArgs([Entities\Triggers\Trigger::class])
-			->andReturn($metadata);
-
-		if ($withUow) {
-			$uow = Mockery::mock(ORM\UnitOfWork::class);
-			$uow
-				->shouldReceive('getEntityChangeSet')
-				->andReturn(['name'])
-				->times(1)
-				->getMock()
-				->shouldReceive('isScheduledForDelete')
-				->andReturn(false)
-				->getMock();
-
-			$entityManager
-				->shouldReceive('getUnitOfWork')
-				->withNoArgs()
-				->andReturn($uow)
-				->times(1);
-		}
-
-		return $entityManager;
 	}
 
 	public function testPublishUpdatedEntity(): void
@@ -150,8 +129,20 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 
 		$entityManager = $this->getEntityManager(true);
 
+		$actionStateRepository = Mockery::mock(Models\States\ActionsRepository::class);
+		$actionStateRepository
+			->shouldReceive('findOne')
+			->andThrow(Exceptions\NotImplementedException::class);
+
+		$conditionStateRepository = Mockery::mock(Models\States\ConditionsRepository::class);
+		$conditionStateRepository
+			->shouldReceive('findOne')
+			->andThrow(Exceptions\NotImplementedException::class);
+
 		$subscriber = new Subscribers\EntitiesSubscriber(
 			$entityManager,
+			$actionStateRepository,
+			$conditionStateRepository,
 			$publisher
 		);
 
@@ -215,12 +206,71 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 			->andReturn($uow)
 			->times(1);
 
+		$actionStateRepository = Mockery::mock(Models\States\ActionsRepository::class);
+		$actionStateRepository
+			->shouldReceive('findOne')
+			->andThrow(Exceptions\NotImplementedException::class);
+
+		$conditionStateRepository = Mockery::mock(Models\States\ConditionsRepository::class);
+		$conditionStateRepository
+			->shouldReceive('findOne')
+			->andThrow(Exceptions\NotImplementedException::class);
+
 		$subscriber = new Subscribers\EntitiesSubscriber(
 			$entityManager,
+			$actionStateRepository,
+			$conditionStateRepository,
 			$publisher
 		);
 
 		$subscriber->onFlush();
+	}
+
+	/**
+	 * @param bool $withUow
+	 *
+	 * @return ORM\EntityManagerInterface
+	 */
+	private function getEntityManager(bool $withUow = false): ORM\EntityManagerInterface
+	{
+		$metadata = new stdClass();
+		$metadata->fieldMappings = [
+			[
+				'fieldName' => 'name',
+			],
+			[
+				'fieldName' => 'comment',
+			],
+			[
+				'fieldName' => 'enabled',
+			],
+		];
+
+		$entityManager = Mockery::mock(ORM\EntityManagerInterface::class);
+		$entityManager
+			->shouldReceive('getClassMetadata')
+			->withArgs([Entities\Triggers\Trigger::class])
+			->andReturn($metadata);
+
+		if ($withUow) {
+			$uow = Mockery::mock(ORM\UnitOfWork::class);
+			$uow
+				->shouldReceive('getEntityChangeSet')
+				->andReturn(['name'])
+				->times(1)
+				->getMock()
+				->shouldReceive('isScheduledForDelete')
+				->andReturn(false)
+				->getMock();
+
+			$entityManager
+				->shouldReceive('getUnitOfWork')
+				->withNoArgs()
+				->andReturn($uow)
+				->times(1);
+		}
+
+		return $entityManager;
 	}
 
 }

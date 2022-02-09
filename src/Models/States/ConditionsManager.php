@@ -62,7 +62,7 @@ final class ConditionsManager
 		Utils\ArrayHash $values
 	): States\ICondition {
 		if ($this->manager === null) {
-			throw new Exceptions\InvalidStateException('Condition state manager is not registered');
+			throw new Exceptions\NotImplementedException('Condition state manager is not registered');
 		}
 
 		/** @var States\ICondition $createdState */
@@ -86,7 +86,7 @@ final class ConditionsManager
 		Utils\ArrayHash $values
 	): States\ICondition {
 		if ($this->manager === null) {
-			throw new Exceptions\InvalidStateException('Condition state manager is not registered');
+			throw new Exceptions\NotImplementedException('Condition state manager is not registered');
 		}
 
 		/** @var States\ICondition $updatedState */
@@ -108,7 +108,7 @@ final class ConditionsManager
 		States\ICondition $state
 	): bool {
 		if ($this->manager === null) {
-			throw new Exceptions\InvalidStateException('Condition state manager is not registered');
+			throw new Exceptions\NotImplementedException('Condition state manager is not registered');
 		}
 
 		$result = $this->manager->delete($state);
