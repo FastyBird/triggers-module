@@ -218,7 +218,7 @@ class ActionsStatesManager:
 
         self.__publisher.publish(
             source=action.source,
-            routing_key=RoutingKey.TRIGGERS_ACTIONS_ENTITY_UPDATED,
+            routing_key=RoutingKey.TRIGGER_ACTION_ENTITY_UPDATED,
             data={
                 **action.to_dict(),
                 **{
@@ -332,7 +332,7 @@ class ConditionsStatesManager:
 
         self.__publisher.publish(
             source=condition.source,
-            routing_key=RoutingKey.TRIGGERS_CONDITIONS_ENTITY_UPDATED,
+            routing_key=RoutingKey.TRIGGER_CONDITION_ENTITY_UPDATED,
             data={
                 **condition.to_dict(),
                 **{

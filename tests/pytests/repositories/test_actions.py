@@ -84,7 +84,7 @@ class TestActionsRepository(DbTestCase):
         )
         self.assertIsInstance(
             self.validate_exchange_data(
-                routing_key=RoutingKey.TRIGGERS_ACTIONS_ENTITY_REPORTED,
+                routing_key=RoutingKey.TRIGGER_ACTION_ENTITY_REPORTED,
                 data=entity.to_dict(),
             ),
             dict,

@@ -201,10 +201,10 @@ class Automator:  # pylint: disable=too-many-instance-attributes
         if (
             item.routing_key
             in (
-                RoutingKey.DEVICES_PROPERTY_ENTITY_CREATED,
-                RoutingKey.DEVICES_PROPERTY_ENTITY_UPDATED,
-                RoutingKey.CHANNELS_PROPERTY_ENTITY_CREATED,
-                RoutingKey.CHANNELS_PROPERTY_ENTITY_UPDATED,
+                RoutingKey.DEVICE_PROPERTY_ENTITY_CREATED,
+                RoutingKey.DEVICE_PROPERTY_ENTITY_UPDATED,
+                RoutingKey.CHANNEL_PROPERTY_ENTITY_CREATED,
+                RoutingKey.CHANNEL_PROPERTY_ENTITY_UPDATED,
             )
             and "actual_value" in item.data.keys()
             and item.data.get("actual_value") is not None
@@ -234,21 +234,21 @@ class Automator:  # pylint: disable=too-many-instance-attributes
                 self.__validate_action_property_item(action=action, value=str(item.data.get("actual_value")))
 
         if item.routing_key in (
-            RoutingKey.TRIGGERS_ENTITY_CREATED,
-            RoutingKey.TRIGGERS_ENTITY_UPDATED,
-            RoutingKey.TRIGGERS_ENTITY_DELETED,
-            RoutingKey.TRIGGERS_CONTROL_ENTITY_CREATED,
-            RoutingKey.TRIGGERS_CONTROL_ENTITY_UPDATED,
-            RoutingKey.TRIGGERS_CONTROL_ENTITY_DELETED,
-            RoutingKey.TRIGGERS_ACTIONS_ENTITY_CREATED,
-            RoutingKey.TRIGGERS_ACTIONS_ENTITY_UPDATED,
-            RoutingKey.TRIGGERS_ACTIONS_ENTITY_DELETED,
-            RoutingKey.TRIGGERS_NOTIFICATIONS_ENTITY_CREATED,
-            RoutingKey.TRIGGERS_NOTIFICATIONS_ENTITY_UPDATED,
-            RoutingKey.TRIGGERS_NOTIFICATIONS_ENTITY_DELETED,
-            RoutingKey.TRIGGERS_CONDITIONS_ENTITY_CREATED,
-            RoutingKey.TRIGGERS_CONDITIONS_ENTITY_UPDATED,
-            RoutingKey.TRIGGERS_CONDITIONS_ENTITY_DELETED,
+            RoutingKey.TRIGGER_ENTITY_CREATED,
+            RoutingKey.TRIGGER_ENTITY_UPDATED,
+            RoutingKey.TRIGGER_ENTITY_DELETED,
+            RoutingKey.TRIGGER_CONTROL_ENTITY_CREATED,
+            RoutingKey.TRIGGER_CONTROL_ENTITY_UPDATED,
+            RoutingKey.TRIGGER_CONTROL_ENTITY_DELETED,
+            RoutingKey.TRIGGER_ACTION_ENTITY_CREATED,
+            RoutingKey.TRIGGER_ACTION_ENTITY_UPDATED,
+            RoutingKey.TRIGGER_ACTION_ENTITY_DELETED,
+            RoutingKey.TRIGGER_NOTIFICATION_ENTITY_CREATED,
+            RoutingKey.TRIGGER_NOTIFICATION_ENTITY_UPDATED,
+            RoutingKey.TRIGGER_NOTIFICATION_ENTITY_DELETED,
+            RoutingKey.TRIGGER_CONDITION_ENTITY_CREATED,
+            RoutingKey.TRIGGER_CONDITION_ENTITY_UPDATED,
+            RoutingKey.TRIGGER_CONDITION_ENTITY_DELETED,
         ):
             # Clear all session after entity changes
             close_all_sessions()

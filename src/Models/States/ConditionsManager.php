@@ -130,7 +130,7 @@ final class ConditionsManager
 
 		$this->publisher->publish(
 			$condition->getSource(),
-			MetadataTypes\RoutingKeyType::get(MetadataTypes\RoutingKeyType::ROUTE_TRIGGERS_CONDITIONS_ENTITY_UPDATED),
+			MetadataTypes\RoutingKeyType::get(MetadataTypes\RoutingKeyType::ROUTE_TRIGGER_CONDITION_ENTITY_UPDATED),
 			Utils\ArrayHash::from(array_merge($condition->toArray(), [
 				'is_fulfilled' => !($state === null) && $state->isFulfilled(),
 			]))

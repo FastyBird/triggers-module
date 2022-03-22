@@ -130,7 +130,7 @@ final class ActionsManager
 
 		$this->publisher->publish(
 			$action->getSource(),
-			MetadataTypes\RoutingKeyType::get(MetadataTypes\RoutingKeyType::ROUTE_TRIGGERS_ACTIONS_ENTITY_UPDATED),
+			MetadataTypes\RoutingKeyType::get(MetadataTypes\RoutingKeyType::ROUTE_TRIGGER_ACTION_ENTITY_UPDATED),
 			Utils\ArrayHash::from(array_merge($action->toArray(), [
 				'is_triggered' => !($state === null) && $state->isTriggered(),
 			]))

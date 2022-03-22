@@ -106,7 +106,7 @@ class TestConditionsRepository(DbTestCase):
         )
         self.assertIsInstance(
             self.validate_exchange_data(
-                routing_key=RoutingKey.TRIGGERS_CONDITIONS_ENTITY_REPORTED,
+                routing_key=RoutingKey.TRIGGER_CONDITION_ENTITY_REPORTED,
                 data=entity.to_dict(),
             ),
             dict,

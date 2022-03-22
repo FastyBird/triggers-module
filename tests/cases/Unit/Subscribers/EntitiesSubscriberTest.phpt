@@ -58,7 +58,7 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 
 				unset($data['id']);
 
-				Assert::same(Metadata\Constants::MESSAGE_BUS_TRIGGERS_CREATED_ENTITY_ROUTING_KEY, $key);
+				Assert::same(Metadata\Constants::MESSAGE_BUS_TRIGGER_ENTITY_CREATED_ROUTING_KEY, $key);
 				Assert::equal(Utils\ArrayHash::from([
 					'name'         => 'Trigger name',
 					'comment'      => null,
@@ -115,7 +115,7 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 
 				unset($data['id']);
 
-				Assert::same(Metadata\Constants::MESSAGE_BUS_TRIGGERS_UPDATED_ENTITY_ROUTING_KEY, $key);
+				Assert::same(Metadata\Constants::MESSAGE_BUS_TRIGGER_ENTITY_UPDATED_ROUTING_KEY, $key);
 				Assert::equal(Utils\ArrayHash::from([
 					'name'         => 'Trigger name',
 					'comment'      => null,
@@ -171,7 +171,7 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 
 				unset($data['id']);
 
-				Assert::same(Metadata\Constants::MESSAGE_BUS_TRIGGERS_DELETED_ENTITY_ROUTING_KEY, $key);
+				Assert::same(Metadata\Constants::MESSAGE_BUS_TRIGGER_ENTITY_DELETED_ROUTING_KEY, $key);
 				Assert::equal(Utils\ArrayHash::from([
 					'name'         => 'Trigger name',
 					'comment'      => null,

@@ -62,7 +62,7 @@ class TestTriggerControlsRepository(DbTestCase):
         )
         self.assertIsInstance(
             self.validate_exchange_data(
-                routing_key=RoutingKey.TRIGGERS_CONTROL_ENTITY_REPORTED,
+                routing_key=RoutingKey.TRIGGER_CONTROL_ENTITY_REPORTED,
                 data=entity.to_dict(),
             ),
             dict,
