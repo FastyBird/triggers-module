@@ -5,6 +5,7 @@ namespace Tests\Cases;
 use Doctrine\ORM;
 use FastyBird\Exchange\Publisher as ExchangePublisher;
 use FastyBird\Metadata;
+use FastyBird\Metadata\Entities as MetadataEntities;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Exceptions;
 use FastyBird\TriggersModule\Models;
@@ -38,10 +39,13 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 			->shouldReceive('findOne')
 			->andThrow(Exceptions\NotImplementedException::class);
 
+		$entityFactory = Mockery::mock(MetadataEntities\GlobalEntityFactory::class);
+
 		$subscriber = new Subscribers\EntitiesSubscriber(
-			$entityManager,
 			$actionStateRepository,
 			$conditionStateRepository,
+			$entityFactory,
+			$entityManager,
 			$publisher
 		);
 
@@ -53,20 +57,22 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 		$publisher = Mockery::mock(ExchangePublisher\Publisher::class);
 		$publisher
 			->shouldReceive('publish')
-			->withArgs(function (string $source, string $key, Utils\ArrayHash $data): bool {
+			->withArgs(function (string $source, string $key, MetadataEntities\IEntity $data): bool {
 				Assert::same(Metadata\Constants::MODULE_TRIGGERS_SOURCE, $source);
 
-				unset($data['id']);
+				$asArray = $data->toArray();
+
+				unset($asArray['id']);
 
 				Assert::same(Metadata\Constants::MESSAGE_BUS_TRIGGER_ENTITY_CREATED_ROUTING_KEY, $key);
-				Assert::equal(Utils\ArrayHash::from([
+				Assert::equal([
 					'name'         => 'Trigger name',
 					'comment'      => null,
 					'enabled'      => true,
 					'owner'        => null,
 					'type'         => 'manual',
 					'is_triggered' => false,
-				]), $data);
+				], $asArray);
 
 				return true;
 			})
@@ -84,10 +90,28 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 			->shouldReceive('findOne')
 			->andThrow(Exceptions\NotImplementedException::class);
 
+		$entity = Mockery::mock(MetadataEntities\Modules\TriggersModule\ManualTriggerEntity::class);
+		$entity
+			->shouldReceive('toArray')
+			->andReturn([
+				'name'         => 'Trigger name',
+				'comment'      => null,
+				'enabled'      => true,
+				'owner'        => null,
+				'type'         => 'manual',
+				'is_triggered' => false,
+			]);
+
+		$entityFactory = Mockery::mock(MetadataEntities\GlobalEntityFactory::class);
+		$entityFactory
+			->shouldReceive('create')
+			->andReturn($entity);
+
 		$subscriber = new Subscribers\EntitiesSubscriber(
-			$entityManager,
 			$actionStateRepository,
 			$conditionStateRepository,
+			$entityFactory,
+			$entityManager,
 			$publisher
 		);
 
@@ -110,20 +134,22 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 		$publisher = Mockery::mock(ExchangePublisher\Publisher::class);
 		$publisher
 			->shouldReceive('publish')
-			->withArgs(function (string $source, string $key, Utils\ArrayHash $data): bool {
+			->withArgs(function (string $source, string $key, MetadataEntities\IEntity $data): bool {
 				Assert::same(Metadata\Constants::MODULE_TRIGGERS_SOURCE, $source);
 
-				unset($data['id']);
+				$asArray = $data->toArray();
+
+				unset($asArray['id']);
 
 				Assert::same(Metadata\Constants::MESSAGE_BUS_TRIGGER_ENTITY_UPDATED_ROUTING_KEY, $key);
-				Assert::equal(Utils\ArrayHash::from([
+				Assert::equal([
 					'name'         => 'Trigger name',
 					'comment'      => null,
 					'enabled'      => true,
 					'owner'        => null,
 					'type'         => 'manual',
 					'is_triggered' => false,
-				]), $data);
+				], $asArray);
 
 				return true;
 			})
@@ -141,10 +167,28 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 			->shouldReceive('findOne')
 			->andThrow(Exceptions\NotImplementedException::class);
 
+		$entity = Mockery::mock(MetadataEntities\Modules\TriggersModule\ManualTriggerEntity::class);
+		$entity
+			->shouldReceive('toArray')
+			->andReturn([
+				'name'         => 'Trigger name',
+				'comment'      => null,
+				'enabled'      => true,
+				'owner'        => null,
+				'type'         => 'manual',
+				'is_triggered' => false,
+			]);
+
+		$entityFactory = Mockery::mock(MetadataEntities\GlobalEntityFactory::class);
+		$entityFactory
+			->shouldReceive('create')
+			->andReturn($entity);
+
 		$subscriber = new Subscribers\EntitiesSubscriber(
-			$entityManager,
 			$actionStateRepository,
 			$conditionStateRepository,
+			$entityFactory,
+			$entityManager,
 			$publisher
 		);
 
@@ -166,20 +210,22 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 		$publisher = Mockery::mock(ExchangePublisher\Publisher::class);
 		$publisher
 			->shouldReceive('publish')
-			->withArgs(function (string $source, string $key, Utils\ArrayHash $data): bool {
+			->withArgs(function (string $source, string $key, MetadataEntities\IEntity $data): bool {
 				Assert::same(Metadata\Constants::MODULE_TRIGGERS_SOURCE, $source);
 
-				unset($data['id']);
+				$asArray = $data->toArray();
+
+				unset($asArray['id']);
 
 				Assert::same(Metadata\Constants::MESSAGE_BUS_TRIGGER_ENTITY_DELETED_ROUTING_KEY, $key);
-				Assert::equal(Utils\ArrayHash::from([
+				Assert::equal([
 					'name'         => 'Trigger name',
 					'comment'      => null,
 					'enabled'      => true,
 					'owner'        => null,
 					'type'         => 'manual',
 					'is_triggered' => false,
-				]), $data);
+				], $asArray);
 
 				return true;
 			})
@@ -219,10 +265,28 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 			->shouldReceive('findOne')
 			->andThrow(Exceptions\NotImplementedException::class);
 
+		$entity = Mockery::mock(MetadataEntities\Modules\TriggersModule\ManualTriggerEntity::class);
+		$entity
+			->shouldReceive('toArray')
+			->andReturn([
+				'name'         => 'Trigger name',
+				'comment'      => null,
+				'enabled'      => true,
+				'owner'        => null,
+				'type'         => 'manual',
+				'is_triggered' => false,
+			]);
+
+		$entityFactory = Mockery::mock(MetadataEntities\GlobalEntityFactory::class);
+		$entityFactory
+			->shouldReceive('create')
+			->andReturn($entity);
+
 		$subscriber = new Subscribers\EntitiesSubscriber(
-			$entityManager,
 			$actionStateRepository,
 			$conditionStateRepository,
+			$entityFactory,
+			$entityManager,
 			$publisher
 		);
 
