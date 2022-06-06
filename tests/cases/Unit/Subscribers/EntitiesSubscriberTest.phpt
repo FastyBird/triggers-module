@@ -11,7 +11,6 @@ use FastyBird\TriggersModule\Exceptions;
 use FastyBird\TriggersModule\Models;
 use FastyBird\TriggersModule\Subscribers;
 use Mockery;
-use Nette\Utils;
 use Ninjify\Nunjuck\TestCase\BaseMockeryTestCase;
 use stdClass;
 use Tester\Assert;
