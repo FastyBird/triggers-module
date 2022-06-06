@@ -19,6 +19,7 @@ use Doctrine\Common;
 use Doctrine\ORM;
 use Doctrine\Persistence;
 use FastyBird\Exchange\Publisher as ExchangePublisher;
+use FastyBird\Metadata\Entities as MetadataEntities;
 use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule;
 use FastyBird\TriggersModule\Entities;
@@ -55,17 +56,22 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 	/** @var ExchangePublisher\Publisher|null */
 	private ?ExchangePublisher\Publisher $publisher;
 
+	/** @var MetadataEntities\GlobalEntityFactory */
+	private MetadataEntities\GlobalEntityFactory $entityFactory;
+
 	/** @var ORM\EntityManagerInterface */
 	private ORM\EntityManagerInterface $entityManager;
 
 	public function __construct(
-		ORM\EntityManagerInterface $entityManager,
 		Models\States\ActionsRepository $actionStateRepository,
 		Models\States\ConditionsRepository $conditionStateRepository,
+		MetadataEntities\GlobalEntityFactory $entityFactory,
+		ORM\EntityManagerInterface $entityManager,
 		?ExchangePublisher\Publisher $publisher = null
 	) {
 		$this->actionStateRepository = $actionStateRepository;
 		$this->conditionStateRepository = $conditionStateRepository;
+		$this->entityFactory = $entityFactory;
 		$this->publisher = $publisher;
 		$this->entityManager = $entityManager;
 	}
@@ -225,7 +231,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 					$this->publisher->publish(
 						$entity->getSource(),
 						$publishRoutingKey,
-						Utils\ArrayHash::from($entity->toArray())
+						$this->entityFactory->create(Utils\Json::encode($entity->toArray()), $publishRoutingKey)
 					);
 
 					return;
@@ -234,9 +240,9 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 				$this->publisher->publish(
 					$entity->getSource(),
 					$publishRoutingKey,
-					Utils\ArrayHash::from(array_merge($state !== null ? [
+					$this->entityFactory->create(Utils\Json::encode(array_merge($state !== null ? [
 						'is_triggered' => $state->isTriggered(),
-					] : [], $entity->toArray()))
+					] : [], $entity->toArray())), $publishRoutingKey)
 				);
 
 			} elseif ($entity instanceof Entities\Conditions\ICondition) {
@@ -247,7 +253,7 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 					$this->publisher->publish(
 						$entity->getSource(),
 						$publishRoutingKey,
-						Utils\ArrayHash::from($entity->toArray())
+						$this->entityFactory->create(Utils\Json::encode($entity->toArray()), $publishRoutingKey)
 					);
 
 					return;
@@ -256,9 +262,9 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 				$this->publisher->publish(
 					$entity->getSource(),
 					$publishRoutingKey,
-					Utils\ArrayHash::from(array_merge($state !== null ? [
+					$this->entityFactory->create(Utils\Json::encode(array_merge($state !== null ? [
 						'is_fulfilled' => $state->isFulfilled(),
-					] : [], $entity->toArray()))
+					] : [], $entity->toArray())), $publishRoutingKey)
 				);
 
 			} elseif ($entity instanceof Entities\Triggers\ITrigger) {
@@ -302,26 +308,26 @@ final class EntitiesSubscriber implements Common\EventSubscriber
 					$this->publisher->publish(
 						$entity->getSource(),
 						$publishRoutingKey,
-						Utils\ArrayHash::from(array_merge([
+						$this->entityFactory->create(Utils\Json::encode(array_merge([
 							'is_triggered' => $isTriggered,
 							'is_fulfilled' => $isFulfilled,
-						], $entity->toArray()))
+						], $entity->toArray())), $publishRoutingKey)
 					);
 
 				} else {
 					$this->publisher->publish(
 						$entity->getSource(),
 						$publishRoutingKey,
-						Utils\ArrayHash::from(array_merge([
+						$this->entityFactory->create(Utils\Json::encode(array_merge([
 							'is_triggered' => $isTriggered,
-						], $entity->toArray()))
+						], $entity->toArray())), $publishRoutingKey)
 					);
 				}
 			} else {
 				$this->publisher->publish(
 					$entity->getSource(),
 					$publishRoutingKey,
-					Utils\ArrayHash::from($entity->toArray())
+					$this->entityFactory->create(Utils\Json::encode($entity->toArray()), $publishRoutingKey)
 				);
 			}
 		}
