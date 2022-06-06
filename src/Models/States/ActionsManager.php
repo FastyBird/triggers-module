@@ -16,6 +16,7 @@
 namespace FastyBird\TriggersModule\Models\States;
 
 use FastyBird\Exchange\Publisher as ExchangePublisher;
+use FastyBird\Metadata\Entities as MetadataEntities;
 use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Exceptions;
@@ -37,6 +38,9 @@ final class ActionsManager
 
 	use Nette\SmartObject;
 
+	/** @var MetadataEntities\GlobalEntityFactory */
+	protected MetadataEntities\GlobalEntityFactory $entityFactory;
+
 	/** @var ExchangePublisher\IPublisher|null */
 	protected ?ExchangePublisher\IPublisher $publisher;
 
@@ -45,9 +49,11 @@ final class ActionsManager
 
 	public function __construct(
 		?IActionsManager $manager,
+		MetadataEntities\GlobalEntityFactory $entityFactory,
 		?ExchangePublisher\IPublisher $publisher
 	) {
 		$this->manager = $manager;
+		$this->entityFactory = $entityFactory;
 		$this->publisher = $publisher;
 	}
 
@@ -131,9 +137,9 @@ final class ActionsManager
 		$this->publisher->publish(
 			$action->getSource(),
 			MetadataTypes\RoutingKeyType::get(MetadataTypes\RoutingKeyType::ROUTE_TRIGGER_ACTION_ENTITY_UPDATED),
-			Utils\ArrayHash::from(array_merge($action->toArray(), [
+			$this->entityFactory->create(Utils\Json::encode(array_merge($action->toArray(), [
 				'is_triggered' => !($state === null) && $state->isTriggered(),
-			]))
+			])), MetadataTypes\RoutingKeyType::get(MetadataTypes\RoutingKeyType::ROUTE_TRIGGER_ACTION_ENTITY_UPDATED))
 		);
 	}
 

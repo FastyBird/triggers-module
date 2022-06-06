@@ -16,6 +16,7 @@
 namespace FastyBird\TriggersModule\Models\States;
 
 use FastyBird\Exchange\Publisher as ExchangePublisher;
+use FastyBird\Metadata\Entities as MetadataEntities;
 use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Exceptions;
@@ -37,6 +38,9 @@ final class ConditionsManager
 
 	use Nette\SmartObject;
 
+	/** @var MetadataEntities\GlobalEntityFactory */
+	protected MetadataEntities\GlobalEntityFactory $entityFactory;
+
 	/** @var ExchangePublisher\IPublisher|null */
 	protected ?ExchangePublisher\IPublisher $publisher;
 
@@ -45,9 +49,11 @@ final class ConditionsManager
 
 	public function __construct(
 		?IConditionsManager $manager,
+		MetadataEntities\GlobalEntityFactory $entityFactory,
 		?ExchangePublisher\IPublisher $publisher
 	) {
 		$this->manager = $manager;
+		$this->entityFactory = $entityFactory;
 		$this->publisher = $publisher;
 	}
 
@@ -131,9 +137,9 @@ final class ConditionsManager
 		$this->publisher->publish(
 			$condition->getSource(),
 			MetadataTypes\RoutingKeyType::get(MetadataTypes\RoutingKeyType::ROUTE_TRIGGER_CONDITION_ENTITY_UPDATED),
-			Utils\ArrayHash::from(array_merge($condition->toArray(), [
+			$this->entityFactory->create(Utils\Json::encode(array_merge($condition->toArray(), [
 				'is_fulfilled' => !($state === null) && $state->isFulfilled(),
-			]))
+			])), MetadataTypes\RoutingKeyType::get(MetadataTypes\RoutingKeyType::ROUTE_TRIGGER_CONDITION_ENTITY_UPDATED))
 		);
 	}
 

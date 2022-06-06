@@ -33,6 +33,7 @@ extensions:
     fbSimpleAuth                        : FastyBird\SimpleAuth\DI\SimpleAuthExtension
     fbSocketServerFactory               : FastyBird\SocketServerFactory\DI\SocketServerFactoryExtension
     fbWebServer                         : FastyBird\WebServer\DI\WebServerExtension(%consoleMode%)
+    fbMetadata                          : FastyBird\Metadata\DI\MetadataExtension
 
 services:
     - {factory: Symfony\Component\Console\Application}
