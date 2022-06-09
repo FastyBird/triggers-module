@@ -26,6 +26,7 @@ use FastyBird\TriggersModule\Router;
 use FastyBird\TriggersModule\Schemas;
 use FastyBird\TriggersModule\Subscribers;
 use IPub\DoctrineCrud;
+use IPub\SlimRouter\Routing as SlimRouterRouting;
 use Nette;
 use Nette\DI;
 use Nette\PhpGenerator;
@@ -272,6 +273,16 @@ class TriggersModuleExtension extends DI\CompilerExtension
 				$ormAnnotationDriverService,
 				'FastyBird\TriggersModule\Entities',
 			]);
+		}
+
+		/**
+		 * Routes
+		 */
+
+		$routerService = $builder->getDefinitionByType(SlimRouterRouting\Router::class);
+
+		if ($routerService instanceof DI\Definitions\ServiceDefinition) {
+			$routerService->addSetup('?->registerRoutes(?)', [$builder->getDefinitionByType(Router\Routes::class), $routerService]);
 		}
 	}
 

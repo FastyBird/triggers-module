@@ -2,9 +2,9 @@
 
 namespace Tests\Cases;
 
-use FastyBird\WebServer\Http;
 use Fig\Http\Message\RequestMethodInterface;
 use IPub\SlimRouter;
+use IPub\SlimRouter\Http as SlimRouterHttp;
 use Nette\Utils;
 use React\Http\Message\ServerRequest;
 use Tester\Assert;
@@ -51,7 +51,7 @@ final class TriggersV1ControllerTest extends DbTestCase
 			(string) $response->getBody()
 		);
 		Assert::same($statusCode, $response->getStatusCode());
-		Assert::type(Http\Response::class, $response);
+		Assert::type(SlimRouterHttp\Response::class, $response);
 	}
 
 	/**
@@ -103,7 +103,7 @@ final class TriggersV1ControllerTest extends DbTestCase
 			}
 		);
 		Assert::same($statusCode, $response->getStatusCode());
-		Assert::type(Http\Response::class, $response);
+		Assert::type(SlimRouterHttp\Response::class, $response);
 	}
 
 	/**
@@ -140,7 +140,7 @@ final class TriggersV1ControllerTest extends DbTestCase
 			(string) $response->getBody()
 		);
 		Assert::same($statusCode, $response->getStatusCode());
-		Assert::type(Http\Response::class, $response);
+		Assert::type(SlimRouterHttp\Response::class, $response);
 	}
 
 	/**
@@ -175,7 +175,7 @@ final class TriggersV1ControllerTest extends DbTestCase
 			(string) $response->getBody()
 		);
 		Assert::same($statusCode, $response->getStatusCode());
-		Assert::type(Http\Response::class, $response);
+		Assert::type(SlimRouterHttp\Response::class, $response);
 	}
 
 }
