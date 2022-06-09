@@ -155,7 +155,7 @@ class TimeCondition extends Condition implements ITimeCondition
 	{
 		return array_merge(parent::toArray(), [
 			'time' => $this->getTime()->format(DATE_ATOM),
-			'days' => $this->getDays(),
+			'days' => (array) $this->getDays(),
 		]);
 	}
 
