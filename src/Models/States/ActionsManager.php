@@ -15,8 +15,8 @@
 
 namespace FastyBird\TriggersModule\Models\States;
 
+use FastyBird\Exchange\Entities as ExchangeEntities;
 use FastyBird\Exchange\Publisher as ExchangePublisher;
-use FastyBird\Metadata\Entities as MetadataEntities;
 use FastyBird\Metadata\Types as MetadataTypes;
 use FastyBird\TriggersModule\Entities;
 use FastyBird\TriggersModule\Exceptions;
@@ -38,8 +38,8 @@ final class ActionsManager
 
 	use Nette\SmartObject;
 
-	/** @var MetadataEntities\GlobalEntityFactory */
-	protected MetadataEntities\GlobalEntityFactory $entityFactory;
+	/** @var ExchangeEntities\EntityFactory */
+	protected ExchangeEntities\EntityFactory $entityFactory;
 
 	/** @var ExchangePublisher\IPublisher|null */
 	protected ?ExchangePublisher\IPublisher $publisher;
@@ -49,7 +49,7 @@ final class ActionsManager
 
 	public function __construct(
 		?IActionsManager $manager,
-		MetadataEntities\GlobalEntityFactory $entityFactory,
+		ExchangeEntities\EntityFactory $entityFactory,
 		?ExchangePublisher\IPublisher $publisher
 	) {
 		$this->manager = $manager;
