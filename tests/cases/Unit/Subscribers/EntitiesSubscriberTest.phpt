@@ -3,6 +3,7 @@
 namespace Tests\Cases;
 
 use Doctrine\ORM;
+use FastyBird\Exchange\Entities as ExchangeEntities;
 use FastyBird\Exchange\Publisher as ExchangePublisher;
 use FastyBird\Metadata;
 use FastyBird\Metadata\Entities as MetadataEntities;
@@ -38,7 +39,7 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 			->shouldReceive('findOne')
 			->andThrow(Exceptions\NotImplementedException::class);
 
-		$entityFactory = Mockery::mock(MetadataEntities\GlobalEntityFactory::class);
+		$entityFactory = Mockery::mock(ExchangeEntities\EntityFactory::class);
 
 		$subscriber = new Subscribers\EntitiesSubscriber(
 			$actionStateRepository,
@@ -101,7 +102,7 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 				'is_triggered' => false,
 			]);
 
-		$entityFactory = Mockery::mock(MetadataEntities\GlobalEntityFactory::class);
+		$entityFactory = Mockery::mock(ExchangeEntities\EntityFactory::class);
 		$entityFactory
 			->shouldReceive('create')
 			->andReturn($entity);
@@ -178,7 +179,7 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 				'is_triggered' => false,
 			]);
 
-		$entityFactory = Mockery::mock(MetadataEntities\GlobalEntityFactory::class);
+		$entityFactory = Mockery::mock(ExchangeEntities\EntityFactory::class);
 		$entityFactory
 			->shouldReceive('create')
 			->andReturn($entity);
@@ -276,7 +277,7 @@ final class EntitiesSubscriberTest extends BaseMockeryTestCase
 				'is_triggered' => false,
 			]);
 
-		$entityFactory = Mockery::mock(MetadataEntities\GlobalEntityFactory::class);
+		$entityFactory = Mockery::mock(ExchangeEntities\EntityFactory::class);
 		$entityFactory
 			->shouldReceive('create')
 			->andReturn($entity);
