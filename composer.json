@@ -48,7 +48,8 @@
     "ipub/doctrine-phone" : "^1.6",
     "ipub/doctrine-timestampable" : "^1.5",
     "ipub/slim-router": "^0.2",
-    "nettrine/orm" : "^0.8"
+    "nettrine/orm" : "^0.8",
+    "symfony/console": "^5.0"
   },
 
   "require-dev" : {
