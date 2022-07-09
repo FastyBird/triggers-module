@@ -177,7 +177,7 @@ class Automator:  # pylint: disable=too-many-instance-attributes
         self,
         item: ConsumeControlActionMessageQueueItem,
     ) -> None:
-        if item.routing_key == RoutingKey.TRIGGER_ACTION and item.data.get("action") == ControlAction.SET.value:
+        if item.routing_key == RoutingKey.TRIGGER_CONTROL_ACTION and item.data.get("action") == ControlAction.SET.value:
             try:
                 trigger_control = self.__triggers_control_repository.get_by_name(
                     trigger_id=uuid.UUID(item.data.get("trigger"), version=4),
