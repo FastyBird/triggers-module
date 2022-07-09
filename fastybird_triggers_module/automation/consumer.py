@@ -48,7 +48,7 @@ class AutomationConsumer(IConsumer):  # pylint: disable=too-few-public-methods
     __ENTITY_PREFIX_KEY: str = "fb.exchange.module.entity"
 
     __CONTROLS_ACTIONS_ROUTING_KEYS: List[RoutingKey] = [
-        RoutingKey.TRIGGER_ACTION,
+        RoutingKey.TRIGGER_CONTROL_ACTION,
     ]
 
     __queue: AutomationQueue
