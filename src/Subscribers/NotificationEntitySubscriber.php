@@ -53,8 +53,8 @@ final class NotificationEntitySubscriber implements Common\EventSubscriber
 	 */
 	public function onFlush(ORM\Event\OnFlushEventArgs $eventArgs): void
 	{
-		$em = $eventArgs->getEntityManager();
-		$uow = $em->getUnitOfWork();
+		$manager = $eventArgs->getObjectManager();
+		$uow = $manager->getUnitOfWork();
 
 		// Check all scheduled updates
 		foreach (array_merge($uow->getScheduledEntityInsertions(), $uow->getScheduledEntityUpdates()) as $object) {
