@@ -1,7 +1,7 @@
 # FastyBird IoT triggers module
 
-[![Build Status](https://badgen.net/github/checks/FastyBird/triggers-module/master?cache=300&style=flat-square)](https://github.com/FastyBird/triggers-module/actions)
-[![Licence](https://badgen.net/github/license/FastyBird/triggers-module?cache=300&style=flat-square)](https://github.com/FastyBird/triggers-module/blob/master/LICENSE.md)
+[![Build Status](https://badgen.net/github/checks/FastyBird/triggers-module/main?cache=300&style=flat-square)](https://github.com/FastyBird/triggers-module/actions)
+[![Licence](https://badgen.net/github/license/FastyBird/triggers-module?cache=300&style=flat-square)](https://github.com/FastyBird/triggers-module/blob/main/LICENSE.md)
 
 ![PHP](https://badgen.net/packagist/php/FastyBird/triggers-module?cache=300&style=flat-square)
 [![PHP code coverage](https://badgen.net/coveralls/c/github/FastyBird/triggers-module?cache=300&style=flat-square)](https://coveralls.io/r/FastyBird/triggers-module)
@@ -86,7 +86,7 @@ pip install fastybird-triggers-module
 ## Documentation
 
 Learn how to use triggers module and manage your triggers
-in [documentation](https://github.com/FastyBird/triggers-module/blob/master/.docs/en/index.md).
+in [documentation](https://github.com/FastyBird/triggers-module/blob/main/.docs/en/index.md).
 
 ## Feedback
 
