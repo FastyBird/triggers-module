@@ -75,7 +75,7 @@ class TestConditionsRepository(DbTestCase):
         self.assertEqual(
             {
                 "id": "2726f19c-7759-440e-b6f5-8c3306692fa2",
-                "type": "channel-property",
+                "type": "channel_property",
                 "enabled": False,
                 "trigger": "2cea2c1b-4790-4d82-8a9f-902c7155ab36",
                 "device": "28989c89-e7d7-4664-9d18-a73647a844fb",
