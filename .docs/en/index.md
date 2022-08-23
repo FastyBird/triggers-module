@@ -62,7 +62,7 @@ This module is dependent on other Nette extensions. All this extensions have to 
 configuration file.
 
 Example configuration could be
-found [here](https://github.com/FastyBird/triggers-module/blob/master/config/example.neon)
+found [here](https://github.com/FastyBird/triggers-module/blob/main/config/example.neon)
 
 ## Initialization
 
