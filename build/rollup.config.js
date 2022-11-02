@@ -62,11 +62,11 @@ const external = [
   'lodash/uniq',
   'uuid',
   'vuex',
-  '@fastybird/metadata',
-  '@fastybird/metadata/resources/schemas/triggers-module/entity.condition.json',
-  '@fastybird/metadata/resources/schemas/triggers-module/entity.trigger.json',
-  '@fastybird/metadata/resources/schemas/triggers-module/entity.notification.json',
-  '@fastybird/metadata/resources/schemas/triggers-module/entity.action.json',
+  '@fastybird/metadata-library',
+  '@fastybird/metadata-library/resources/schemas/triggers-module/entity.condition.json',
+  '@fastybird/metadata-library/resources/schemas/triggers-module/entity.trigger.json',
+  '@fastybird/metadata-library/resources/schemas/triggers-module/entity.notification.json',
+  '@fastybird/metadata-library/resources/schemas/triggers-module/entity.action.json',
   '@vuex-orm/core',
 ];
 
@@ -85,11 +85,11 @@ const globals = {
   'lodash/uniq': 'uniq',
   uuid: 'v4',
   vuex: 'Vuex',
-  '@fastybird/metadata': 'Metadata',
-  '@fastybird/metadata/resources/schemas/triggers-module/entity.condition.json': 'ConditionExchangeEntitySchema',
-  '@fastybird/metadata/resources/schemas/triggers-module/entity.trigger.json': 'TriggerExchangeEntitySchema',
-  '@fastybird/metadata/resources/schemas/triggers-module/entity.notification.json': 'NotificationExchangeEntitySchema',
-  '@fastybird/metadata/resources/schemas/triggers-module/entity.action.json': 'ActionExchangeEntitySchema',
+  '@fastybird/metadata-library': 'Metadata',
+  '@fastybird/metadata-library/resources/schemas/triggers-module/entity.condition.json': 'ConditionExchangeEntitySchema',
+  '@fastybird/metadata-library/resources/schemas/triggers-module/entity.trigger.json': 'TriggerExchangeEntitySchema',
+  '@fastybird/metadata-library/resources/schemas/triggers-module/entity.notification.json': 'NotificationExchangeEntitySchema',
+  '@fastybird/metadata-library/resources/schemas/triggers-module/entity.action.json': 'ActionExchangeEntitySchema',
   '@vuex-orm/core': 'OrmCore',
 };
 
