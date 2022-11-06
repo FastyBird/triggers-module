@@ -1,19 +1,6 @@
 <?php declare(strict_types = 1);
 
-/**
- * PropertyCondition.php
- *
- * @license        More in LICENSE.md
- * @copyright      https://www.fastybird.com
- * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        FastyBird:TriggersModule!
- * @subpackage     Entities
- * @since          0.1.0
- *
- * @date           04.04.20
- */
-
-namespace FastyBird\Module\Triggers\Entities\Conditions;
+namespace FastyBird\Module\Triggers\Tests\Fixtures\Dummy;
 
 use Consistence\Doctrine\Enum\EnumAnnotation as Enum;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,18 +9,21 @@ use FastyBird\Module\Triggers\Entities;
 use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
 use Ramsey\Uuid;
 use function array_merge;
+use function strval;
 
 /**
- * @ORM\MappedSuperclass
+ * @ORM\Entity
  */
-abstract class PropertyCondition extends Condition
+class DummyConditionEntity extends Entities\Conditions\Condition
 {
+
+	public const CONDITION_TYPE = 'dummy';
 
 	/**
 	 * @IPubDoctrine\Crud(is="required")
-	 * @ORM\Column(type="uuid_binary", name="condition_device", nullable=true)
+	 * @ORM\Column(type="uuid_binary", name="condition_watch_item", nullable=true)
 	 */
-	protected Uuid\UuidInterface $device;
+	private Uuid\UuidInterface $watchItem;
 
 	/**
 	 * @var MetadataTypes\TriggerConditionOperator
@@ -44,37 +34,27 @@ abstract class PropertyCondition extends Condition
 	 * @Enum(class=MetadataTypes\TriggerConditionOperator::class)
 	 * @ORM\Column(type="string_enum", name="condition_operator", length=15, nullable=true)
 	 */
-	protected $operator;
+	private $operator;
 
 	/**
 	 * @IPubDoctrine\Crud(is={"required", "writable"})
 	 * @ORM\Column(type="string", name="condition_operand", length=20, nullable=true)
 	 */
-	protected string $operand;
+	private string $operand;
 
-	public function __construct(
-		Uuid\UuidInterface $device,
-		MetadataTypes\TriggerConditionOperator $operator,
-		string $operand,
-		Entities\Triggers\AutomaticTrigger $trigger,
-		Uuid\UuidInterface|null $id = null,
-	)
+	public function getType(): string
 	{
-		parent::__construct($trigger, $id);
-
-		$this->device = $device;
-		$this->operator = $operator;
-		$this->operand = $operand;
+		return 'dummy';
 	}
 
-	public function getDevice(): Uuid\UuidInterface
+	public function setWatchItem(Uuid\UuidInterface $watchItem): void
 	{
-		return $this->device;
+		$this->watchItem = $watchItem;
 	}
 
-	public function getOperator(): MetadataTypes\TriggerConditionOperator
+	public function getWatchItem(): Uuid\UuidInterface
 	{
-		return $this->operator;
+		return $this->watchItem;
 	}
 
 	public function setOperator(MetadataTypes\TriggerConditionOperator $operator): void
@@ -82,22 +62,24 @@ abstract class PropertyCondition extends Condition
 		$this->operator = $operator;
 	}
 
-	public function getOperand(): string|MetadataTypes\ButtonPayload|MetadataTypes\SwitchPayload
+	public function getOperator(): MetadataTypes\TriggerConditionOperator
 	{
-		if (MetadataTypes\ButtonPayload::isValidValue($this->operand)) {
-			return MetadataTypes\ButtonPayload::get($this->operand);
-		}
-
-		if (MetadataTypes\SwitchPayload::isValidValue($this->operand)) {
-			return MetadataTypes\SwitchPayload::get($this->operand);
-		}
-
-		return $this->operand;
+		return $this->operator;
 	}
 
 	public function setOperand(string $operand): void
 	{
 		$this->operand = $operand;
+	}
+
+	public function getOperand(): string
+	{
+		return $this->operand;
+	}
+
+	public function getDiscriminatorName(): string
+	{
+		return 'dummy';
 	}
 
 	public function validate(string $value): bool
@@ -123,9 +105,9 @@ abstract class PropertyCondition extends Condition
 	public function toArray(): array
 	{
 		return array_merge(parent::toArray(), [
-			'device' => $this->getDevice()->toString(),
-			'operator' => $this->getOperator()->getValue(),
-			'operand' => (string) $this->getOperand(),
+			'watch_item' => $this->getWatchItem()->toString(),
+			'operator' => strval($this->getOperator()->getValue()),
+			'operand' => $this->getOperand(),
 		]);
 	}
 
