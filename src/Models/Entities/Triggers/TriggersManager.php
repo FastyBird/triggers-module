@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * ConditionsManager.php
+ * ITriggersManager.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -13,7 +13,7 @@
  * @date           04.04.20
  */
 
-namespace FastyBird\Module\Triggers\Models\Conditions;
+namespace FastyBird\Module\Triggers\Models\Entities\Triggers;
 
 use FastyBird\Module\Triggers\Entities;
 use FastyBird\Module\Triggers\Models;
@@ -24,30 +24,30 @@ use Nette\Utils;
 use function assert;
 
 /**
- * Conditions entities manager
+ * Triggers entities manager
  *
  * @package        FastyBird:TriggersModule!
  * @subpackage     Models
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-final class ConditionsManager
+final class TriggersManager
 {
 
 	use Nette\SmartObject;
 
 	/**
-	 * @param DoctrineCrudCrud\IEntityCrud<Entities\Conditions\Condition> $entityCrud
+	 * @param DoctrineCrudCrud\IEntityCrud<Entities\Triggers\Trigger> $entityCrud
 	 */
 	public function __construct(private readonly DoctrineCrudCrud\IEntityCrud $entityCrud)
 	{
 		// Transformer CRUD for handling entities
 	}
 
-	public function create(Utils\ArrayHash $values): Entities\Conditions\Condition
+	public function create(Utils\ArrayHash $values): Entities\Triggers\Trigger
 	{
 		$entity = $this->entityCrud->getEntityCreator()->create($values);
-		assert($entity instanceof Entities\Conditions\Condition);
+		assert($entity instanceof Entities\Triggers\Trigger);
 
 		return $entity;
 	}
@@ -56,12 +56,12 @@ final class ConditionsManager
 	 * @throws DoctrineCrudExceptions\InvalidArgumentException
 	 */
 	public function update(
-		Entities\Conditions\Condition $entity,
+		Entities\Triggers\Trigger $entity,
 		Utils\ArrayHash $values,
-	): Entities\Conditions\Condition
+	): Entities\Triggers\Trigger
 	{
 		$entity = $this->entityCrud->getEntityUpdater()->update($values, $entity);
-		assert($entity instanceof Entities\Conditions\Condition);
+		assert($entity instanceof Entities\Triggers\Trigger);
 
 		return $entity;
 	}
@@ -69,7 +69,7 @@ final class ConditionsManager
 	/**
 	 * @throws DoctrineCrudExceptions\InvalidArgumentException
 	 */
-	public function delete(Entities\Conditions\Condition $entity): bool
+	public function delete(Entities\Triggers\Trigger $entity): bool
 	{
 		// Delete entity from database
 		return $this->entityCrud->getEntityDeleter()->delete($entity);

@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * TriggersRepository.php
+ * NotificationsRepository.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -13,7 +13,7 @@
  * @date           04.04.20
  */
 
-namespace FastyBird\Module\Triggers\Models\Triggers;
+namespace FastyBird\Module\Triggers\Models\Entities\Notifications;
 
 use Doctrine\ORM;
 use Doctrine\Persistence;
@@ -26,19 +26,19 @@ use Nette;
 use function is_array;
 
 /**
- * Trigger repository
+ * Notification repository
  *
  * @package        FastyBird:TriggersModule!
  * @subpackage     Models
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-final class TriggersRepository
+final class NotificationsRepository
 {
 
 	use Nette\SmartObject;
 
-	/** @var array<ORM\EntityRepository<Entities\Triggers\Trigger>> */
+	/** @var array<ORM\EntityRepository<Entities\Notifications\Notification>> */
 	private array $repository = [];
 
 	public function __construct(
@@ -49,42 +49,42 @@ final class TriggersRepository
 	}
 
 	/**
-	 * @param class-string<Entities\Triggers\Trigger> $type
+	 * @param class-string<Entities\Notifications\Notification> $type
 	 *
 	 * @throws Exceptions\InvalidState
 	 */
 	public function findOneBy(
-		Queries\FindTriggers $queryObject,
-		string $type = Entities\Triggers\Trigger::class,
-	): Entities\Triggers\Trigger|null
+		Queries\Entities\FindNotifications $queryObject,
+		string $type = Entities\Notifications\Notification::class,
+	): Entities\Notifications\Notification|null
 	{
 		return $this->database->query(
-			fn (): Entities\Triggers\Trigger|null => $queryObject->fetchOne($this->getRepository($type)),
+			fn (): Entities\Notifications\Notification|null => $queryObject->fetchOne($this->getRepository($type)),
 		);
 	}
 
 	/**
-	 * @param class-string<Entities\Triggers\Trigger> $type
+	 * @param class-string<Entities\Notifications\Notification> $type
 	 *
-	 * @return array<Entities\Triggers\Trigger>
+	 * @return array<Entities\Notifications\Notification>
 	 *
 	 * @throws Exceptions\InvalidState
 	 */
 	public function findAllBy(
-		Queries\FindTriggers $queryObject,
-		string $type = Entities\Triggers\Trigger::class,
+		Queries\Entities\FindNotifications $queryObject,
+		string $type = Entities\Notifications\Notification::class,
 	): array
 	{
 		return $this->database->query(
 			function () use ($queryObject, $type): array {
-				/** @var array<Entities\Triggers\Trigger>|DoctrineOrmQuery\ResultSet<Entities\Triggers\Trigger> $result */
+				/** @var array<Entities\Notifications\Notification>|DoctrineOrmQuery\ResultSet<Entities\Notifications\Notification> $result */
 				$result = $queryObject->fetch($this->getRepository($type));
 
 				if (is_array($result)) {
 					return $result;
 				}
 
-				/** @var array<Entities\Triggers\Trigger> $data */
+				/** @var array<Entities\Notifications\Notification> $data */
 				$data = $result->toArray();
 
 				return $data;
@@ -93,20 +93,20 @@ final class TriggersRepository
 	}
 
 	/**
-	 * @phpstan-param class-string<Entities\Triggers\Trigger> $type
+	 * @phpstan-param class-string<Entities\Notifications\Notification> $type
 	 *
-	 * @phpstan-return DoctrineOrmQuery\ResultSet<Entities\Triggers\Trigger>
+	 * @phpstan-return DoctrineOrmQuery\ResultSet<Entities\Notifications\Notification>
 	 *
 	 * @throws Exceptions\InvalidState
 	 */
 	public function getResultSet(
-		Queries\FindTriggers $queryObject,
-		string $type = Entities\Triggers\Trigger::class,
+		Queries\Entities\FindNotifications $queryObject,
+		string $type = Entities\Notifications\Notification::class,
 	): DoctrineOrmQuery\ResultSet
 	{
 		return $this->database->query(
 			function () use ($queryObject, $type): DoctrineOrmQuery\ResultSet {
-				/** @var DoctrineOrmQuery\ResultSet<Entities\Triggers\Trigger> $result */
+				/** @var DoctrineOrmQuery\ResultSet<Entities\Notifications\Notification> $result */
 				$result = $queryObject->fetch($this->getRepository($type));
 
 				return $result;
@@ -115,9 +115,9 @@ final class TriggersRepository
 	}
 
 	/**
-	 * @param class-string<Entities\Triggers\Trigger> $type
+	 * @param class-string<Entities\Notifications\Notification> $type
 	 *
-	 * @return ORM\EntityRepository<Entities\Triggers\Trigger>
+	 * @return ORM\EntityRepository<Entities\Notifications\Notification>
 	 */
 	private function getRepository(string $type): ORM\EntityRepository
 	{

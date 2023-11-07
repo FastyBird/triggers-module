@@ -13,7 +13,7 @@
  * @date           01.10.21
  */
 
-namespace FastyBird\Module\Triggers\Models\Triggers\Controls;
+namespace FastyBird\Module\Triggers\Models\Entities\Triggers\Controls;
 
 use FastyBird\Module\Triggers\Entities;
 use FastyBird\Module\Triggers\Models;

@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * ActionsRepository.php
+ * ConditionsRepository.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -13,7 +13,7 @@
  * @date           04.04.20
  */
 
-namespace FastyBird\Module\Triggers\Models\Actions;
+namespace FastyBird\Module\Triggers\Models\Entities\Conditions;
 
 use Doctrine\ORM;
 use Doctrine\Persistence;
@@ -26,19 +26,19 @@ use Nette;
 use function is_array;
 
 /**
- * Actions repository
+ * Condition repository
  *
  * @package        FastyBird:TriggersModule!
  * @subpackage     Models
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-final class ActionsRepository
+final class ConditionsRepository
 {
 
 	use Nette\SmartObject;
 
-	/** @var array<ORM\EntityRepository<Entities\Actions\Action>> */
+	/** @var array<ORM\EntityRepository<Entities\Conditions\Condition>> */
 	private array $repository = [];
 
 	public function __construct(
@@ -49,44 +49,44 @@ final class ActionsRepository
 	}
 
 	/**
-	 * @phpstan-param Queries\FindActions<Entities\Actions\Action> $queryObject
-	 * @phpstan-param class-string<Entities\Actions\Action> $type
+	 * @phpstan-param Queries\Entities\FindConditions<Entities\Conditions\Condition> $queryObject
+	 * @phpstan-param class-string<Entities\Conditions\Condition> $type
 	 *
 	 * @throws Exceptions\InvalidState
 	 */
 	public function findOneBy(
-		Queries\FindActions $queryObject,
-		string $type = Entities\Actions\Action::class,
-	): Entities\Actions\Action|null
+		Queries\Entities\FindConditions $queryObject,
+		string $type = Entities\Conditions\Condition::class,
+	): Entities\Conditions\Condition|null
 	{
 		return $this->database->query(
-			fn (): Entities\Actions\Action|null => $queryObject->fetchOne($this->getRepository($type)),
+			fn (): Entities\Conditions\Condition|null => $queryObject->fetchOne($this->getRepository($type)),
 		);
 	}
 
 	/**
-	 * @param Queries\FindActions<Entities\Actions\Action> $queryObject
-	 * @param class-string<Entities\Actions\Action> $type
+	 * @param Queries\Entities\FindConditions<Entities\Conditions\Condition> $queryObject
+	 * @param class-string<Entities\Conditions\Condition> $type
 	 *
-	 * @return array<Entities\Actions\Action>
+	 * @return array<Entities\Conditions\Condition>
 	 *
 	 * @throws Exceptions\InvalidState
 	 */
 	public function findAllBy(
-		Queries\FindActions $queryObject,
-		string $type = Entities\Actions\Action::class,
+		Queries\Entities\FindConditions $queryObject,
+		string $type = Entities\Conditions\Condition::class,
 	): array
 	{
 		return $this->database->query(
 			function () use ($queryObject, $type): array {
-				/** @var array<Entities\Actions\Action>|DoctrineOrmQuery\ResultSet<Entities\Actions\Action> $result */
+				/** @var array<Entities\Conditions\Condition>|DoctrineOrmQuery\ResultSet<Entities\Conditions\Condition> $result */
 				$result = $queryObject->fetch($this->getRepository($type));
 
 				if (is_array($result)) {
 					return $result;
 				}
 
-				/** @var array<Entities\Actions\Action> $data */
+				/** @var array<Entities\Conditions\Condition> $data */
 				$data = $result->toArray();
 
 				return $data;
@@ -95,21 +95,21 @@ final class ActionsRepository
 	}
 
 	/**
-	 * @param Queries\FindActions<Entities\Actions\Action> $queryObject
-	 * @param class-string<Entities\Actions\Action> $type
+	 * @param Queries\Entities\FindConditions<Entities\Conditions\Condition> $queryObject
+	 * @param class-string<Entities\Conditions\Condition> $type
 	 *
-	 * @return DoctrineOrmQuery\ResultSet<Entities\Actions\Action>
+	 * @return DoctrineOrmQuery\ResultSet<Entities\Conditions\Condition>
 	 *
 	 * @throws Exceptions\InvalidState
 	 */
 	public function getResultSet(
-		Queries\FindActions $queryObject,
-		string $type = Entities\Actions\Action::class,
+		Queries\Entities\FindConditions $queryObject,
+		string $type = Entities\Conditions\Condition::class,
 	): DoctrineOrmQuery\ResultSet
 	{
 		return $this->database->query(
 			function () use ($queryObject, $type): DoctrineOrmQuery\ResultSet {
-				/** @var DoctrineOrmQuery\ResultSet<Entities\Actions\Action> $result */
+				/** @var DoctrineOrmQuery\ResultSet<Entities\Conditions\Condition> $result */
 				$result = $queryObject->fetch($this->getRepository($type));
 
 				return $result;
@@ -118,9 +118,9 @@ final class ActionsRepository
 	}
 
 	/**
-	 * @param class-string<Entities\Actions\Action> $type
+	 * @param class-string<Entities\Conditions\Condition> $type
 	 *
-	 * @return ORM\EntityRepository<Entities\Actions\Action>
+	 * @return ORM\EntityRepository<Entities\Conditions\Condition>
 	 */
 	private function getRepository(string $type): ORM\EntityRepository
 	{

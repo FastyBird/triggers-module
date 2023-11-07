@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * NotificationsManager.php
+ * ConditionsManager.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -13,7 +13,7 @@
  * @date           04.04.20
  */
 
-namespace FastyBird\Module\Triggers\Models\Notifications;
+namespace FastyBird\Module\Triggers\Models\Entities\Conditions;
 
 use FastyBird\Module\Triggers\Entities;
 use FastyBird\Module\Triggers\Models;
@@ -24,30 +24,30 @@ use Nette\Utils;
 use function assert;
 
 /**
- * Notifications entities manager
+ * Conditions entities manager
  *
  * @package        FastyBird:TriggersModule!
  * @subpackage     Models
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-final class NotificationsManager
+final class ConditionsManager
 {
 
 	use Nette\SmartObject;
 
 	/**
-	 * @param DoctrineCrudCrud\IEntityCrud<Entities\Notifications\Notification> $entityCrud
+	 * @param DoctrineCrudCrud\IEntityCrud<Entities\Conditions\Condition> $entityCrud
 	 */
 	public function __construct(private readonly DoctrineCrudCrud\IEntityCrud $entityCrud)
 	{
 		// Transformer CRUD for handling entities
 	}
 
-	public function create(Utils\ArrayHash $values): Entities\Notifications\Notification
+	public function create(Utils\ArrayHash $values): Entities\Conditions\Condition
 	{
 		$entity = $this->entityCrud->getEntityCreator()->create($values);
-		assert($entity instanceof Entities\Notifications\Notification);
+		assert($entity instanceof Entities\Conditions\Condition);
 
 		return $entity;
 	}
@@ -56,12 +56,12 @@ final class NotificationsManager
 	 * @throws DoctrineCrudExceptions\InvalidArgumentException
 	 */
 	public function update(
-		Entities\Notifications\Notification $entity,
+		Entities\Conditions\Condition $entity,
 		Utils\ArrayHash $values,
-	): Entities\Notifications\Notification
+	): Entities\Conditions\Condition
 	{
 		$entity = $this->entityCrud->getEntityUpdater()->update($values, $entity);
-		assert($entity instanceof Entities\Notifications\Notification);
+		assert($entity instanceof Entities\Conditions\Condition);
 
 		return $entity;
 	}
@@ -69,7 +69,7 @@ final class NotificationsManager
 	/**
 	 * @throws DoctrineCrudExceptions\InvalidArgumentException
 	 */
-	public function delete(Entities\Notifications\Notification $entity): bool
+	public function delete(Entities\Conditions\Condition $entity): bool
 	{
 		// Delete entity from database
 		return $this->entityCrud->getEntityDeleter()->delete($entity);

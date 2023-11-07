@@ -13,7 +13,7 @@
  * @date           01.10.21
  */
 
-namespace FastyBird\Module\Triggers\Models\Triggers\Controls;
+namespace FastyBird\Module\Triggers\Models\Entities\Triggers\Controls;
 
 use Doctrine\ORM;
 use Doctrine\Persistence;
@@ -51,7 +51,9 @@ final class ControlsRepository
 	/**
 	 * @throws Exceptions\InvalidState
 	 */
-	public function findOneBy(Queries\FindTriggerControls $queryObject): Entities\Triggers\Controls\Control|null
+	public function findOneBy(
+		Queries\Entities\FindTriggerControls $queryObject,
+	): Entities\Triggers\Controls\Control|null
 	{
 		return $this->database->query(
 			fn (): Entities\Triggers\Controls\Control|null => $queryObject->fetchOne($this->getRepository()),
@@ -63,7 +65,7 @@ final class ControlsRepository
 	 *
 	 * @throws Exceptions\InvalidState
 	 */
-	public function findAllBy(Queries\FindTriggerControls $queryObject): array
+	public function findAllBy(Queries\Entities\FindTriggerControls $queryObject): array
 	{
 		return $this->database->query(
 			function () use ($queryObject): array {
@@ -88,7 +90,7 @@ final class ControlsRepository
 	 * @throws Exceptions\InvalidState
 	 */
 	public function getResultSet(
-		Queries\FindTriggerControls $queryObject,
+		Queries\Entities\FindTriggerControls $queryObject,
 	): DoctrineOrmQuery\ResultSet
 	{
 		return $this->database->query(

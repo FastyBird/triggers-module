@@ -13,7 +13,7 @@
  * @date           04.04.20
  */
 
-namespace FastyBird\Module\Triggers\Queries;
+namespace FastyBird\Module\Triggers\Queries\Entities;
 
 use Closure;
 use Doctrine\ORM;

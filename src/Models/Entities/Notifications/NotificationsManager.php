@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * ITriggersManager.php
+ * NotificationsManager.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -13,7 +13,7 @@
  * @date           04.04.20
  */
 
-namespace FastyBird\Module\Triggers\Models\Triggers;
+namespace FastyBird\Module\Triggers\Models\Entities\Notifications;
 
 use FastyBird\Module\Triggers\Entities;
 use FastyBird\Module\Triggers\Models;
@@ -24,30 +24,30 @@ use Nette\Utils;
 use function assert;
 
 /**
- * Triggers entities manager
+ * Notifications entities manager
  *
  * @package        FastyBird:TriggersModule!
  * @subpackage     Models
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-final class TriggersManager
+final class NotificationsManager
 {
 
 	use Nette\SmartObject;
 
 	/**
-	 * @param DoctrineCrudCrud\IEntityCrud<Entities\Triggers\Trigger> $entityCrud
+	 * @param DoctrineCrudCrud\IEntityCrud<Entities\Notifications\Notification> $entityCrud
 	 */
 	public function __construct(private readonly DoctrineCrudCrud\IEntityCrud $entityCrud)
 	{
 		// Transformer CRUD for handling entities
 	}
 
-	public function create(Utils\ArrayHash $values): Entities\Triggers\Trigger
+	public function create(Utils\ArrayHash $values): Entities\Notifications\Notification
 	{
 		$entity = $this->entityCrud->getEntityCreator()->create($values);
-		assert($entity instanceof Entities\Triggers\Trigger);
+		assert($entity instanceof Entities\Notifications\Notification);
 
 		return $entity;
 	}
@@ -56,12 +56,12 @@ final class TriggersManager
 	 * @throws DoctrineCrudExceptions\InvalidArgumentException
 	 */
 	public function update(
-		Entities\Triggers\Trigger $entity,
+		Entities\Notifications\Notification $entity,
 		Utils\ArrayHash $values,
-	): Entities\Triggers\Trigger
+	): Entities\Notifications\Notification
 	{
 		$entity = $this->entityCrud->getEntityUpdater()->update($values, $entity);
-		assert($entity instanceof Entities\Triggers\Trigger);
+		assert($entity instanceof Entities\Notifications\Notification);
 
 		return $entity;
 	}
@@ -69,7 +69,7 @@ final class TriggersManager
 	/**
 	 * @throws DoctrineCrudExceptions\InvalidArgumentException
 	 */
-	public function delete(Entities\Triggers\Trigger $entity): bool
+	public function delete(Entities\Notifications\Notification $entity): bool
 	{
 		// Delete entity from database
 		return $this->entityCrud->getEntityDeleter()->delete($entity);
