@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * Initialize.php
+ * Install.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -17,6 +17,7 @@ namespace FastyBird\Module\Triggers\Commands;
 
 use FastyBird\Library\Bootstrap\Helpers as BootstrapHelpers;
 use FastyBird\Library\Metadata\Types as MetadataTypes;
+use Nette\Localization;
 use Psr\Log;
 use Symfony\Component\Console;
 use Symfony\Component\Console\Input;
@@ -32,12 +33,13 @@ use Throwable;
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-class Initialize extends Console\Command\Command
+class Install extends Console\Command\Command
 {
 
-	public const NAME = 'fb:triggers-module:initialize';
+	public const NAME = 'fb:triggers-module:install';
 
 	public function __construct(
+		private readonly Localization\Translator $translator,
 		private readonly Log\LoggerInterface $logger = new Log\NullLogger(),
 		string|null $name = null,
 	)
@@ -52,7 +54,7 @@ class Initialize extends Console\Command\Command
 	{
 		$this
 			->setName(self::NAME)
-			->setDescription('Triggers module initialization');
+			->setDescription('Triggers module installer');
 	}
 
 	/**
@@ -69,14 +71,14 @@ class Initialize extends Console\Command\Command
 		$io = new Style\SymfonyStyle($input, $output);
 
 		if ($input->getOption('quiet') === false) {
-			$io->title('Triggers module - initialization');
+			$io->title($this->translator->translate('//triggers-module.cmd.install.title'));
 
-			$io->note('This action will create|update module database structure and build module configuration.');
+			$io->note($this->translator->translate('//triggers-module.cmd.install.subtitle'));
 		}
 
 		if ($input->getOption('no-interaction') === false) {
 			$question = new Console\Question\ConfirmationQuestion(
-				'Would you like to continue?',
+				$this->translator->translate('//triggers-module.cmd.base.questions.continue'),
 				false,
 			);
 
@@ -91,7 +93,7 @@ class Initialize extends Console\Command\Command
 			$this->initializeDatabase($io, $input, $output);
 
 			if ($input->getOption('quiet') === false) {
-				$io->success('Triggers module has been successfully initialized and can be now used.');
+				$io->success($this->translator->translate('//triggers-module.cmd.install.messages.success'));
 			}
 
 			return Console\Command\Command::SUCCESS;
@@ -99,12 +101,12 @@ class Initialize extends Console\Command\Command
 			// Log caught exception
 			$this->logger->error('An unhandled error occurred', [
 				'source' => MetadataTypes\ModuleSource::SOURCE_MODULE_TRIGGERS,
-				'type' => 'command',
+				'type' => 'initialize-cmd',
 				'exception' => BootstrapHelpers\Logger::buildException($ex),
 			]);
 
 			if ($input->getOption('quiet') === false) {
-				$io->error('Something went wrong, initialization could not be finished. Error was logged.');
+				$io->error($this->translator->translate('//triggers-module.cmd.install.messages.error'));
 			}
 
 			return Console\Command\Command::FAILURE;
@@ -128,7 +130,7 @@ class Initialize extends Console\Command\Command
 		}
 
 		if ($input->getOption('quiet') === false) {
-			$io->section('Preparing module database');
+			$io->section($this->translator->translate('//triggers-module.cmd.install.info.database'));
 		}
 
 		$databaseCmd = $symfonyApp->find('orm:schema-tool:update');
@@ -139,7 +141,9 @@ class Initialize extends Console\Command\Command
 
 		if ($result !== Console\Command\Command::SUCCESS) {
 			if ($input->getOption('quiet') === false) {
-				$io->error('Something went wrong, initialization could not be finished.');
+				$io->error(
+					$this->translator->translate('//triggers-module.cmd.install.messages.initialisationFailed'),
+				);
 			}
 
 			return;
@@ -153,14 +157,14 @@ class Initialize extends Console\Command\Command
 
 		if ($result !== 0) {
 			if ($input->getOption('quiet') === false) {
-				$io->error('Something went wrong, database initialization could not be finished.');
+				$io->error($this->translator->translate('//triggers-module.cmd.install.messages.databaseFailed'));
 			}
 
 			return;
 		}
 
 		if ($input->getOption('quiet') === false) {
-			$io->success('Triggers module database has been successfully initialized.');
+			$io->success($this->translator->translate('//triggers-module.cmd.install.messages.databaseReady'));
 		}
 	}
 
