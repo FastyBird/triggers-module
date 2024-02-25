@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * EmailNotification.php
+ * Email.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -15,7 +15,7 @@
 
 namespace FastyBird\Module\Triggers\Schemas\Notifications;
 
-use FastyBird\Library\Metadata\Types\ModuleSource;
+use FastyBird\Library\Metadata\Types as MetadataTypes;
 use FastyBird\Module\Triggers\Entities;
 use Neomerx\JsonApi;
 use function array_merge;
@@ -23,19 +23,19 @@ use function array_merge;
 /**
  * Trigger email notification entity schema
  *
- * @template T of Entities\Notifications\EmailNotification
+ * @template T of Entities\Notifications\Email
  * @extends  Notification<T>
  *
  * @package        FastyBird:TriggersModule!
  * @subpackage     Schemas
  */
-final class EmailNotification extends Notification
+final class Email extends Notification
 {
 
 	/**
 	 * Define entity schema type string
 	 */
-	public const SCHEMA_TYPE = ModuleSource::SOURCE_MODULE_TRIGGERS . '/notification/email';
+	public const SCHEMA_TYPE = MetadataTypes\Sources\Module::TRIGGERS->value . '/notification/' . Entities\Notifications\Email::TYPE;
 
 	public function getType(): string
 	{
@@ -44,7 +44,7 @@ final class EmailNotification extends Notification
 
 	public function getEntityClass(): string
 	{
-		return Entities\Notifications\EmailNotification::class;
+		return Entities\Notifications\Email::class;
 	}
 
 	/**

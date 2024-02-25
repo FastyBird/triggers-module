@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * ManualTrigger.php
+ * Manual.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -15,7 +15,7 @@
 
 namespace FastyBird\Module\Triggers\Schemas\Triggers;
 
-use FastyBird\Library\Metadata\Types\ModuleSource;
+use FastyBird\Library\Metadata\Types as MetadataTypes;
 use FastyBird\Module\Triggers;
 use FastyBird\Module\Triggers\Entities;
 use FastyBird\Module\Triggers\Router;
@@ -26,20 +26,20 @@ use function count;
 /**
  * Manual trigger entity schema
  *
- * @template T of Entities\Triggers\ManualTrigger
+ * @template T of Entities\Triggers\Manual
  * @extends  Trigger<T>
  *
  * @package        FastyBird:TriggersModule!
  * @subpackage     Schemas
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-final class ManualTrigger extends Trigger
+final class Manual extends Trigger
 {
 
 	/**
 	 * Define entity schema type string
 	 */
-	public const SCHEMA_TYPE = ModuleSource::SOURCE_MODULE_TRIGGERS . '/trigger/manual';
+	public const SCHEMA_TYPE = MetadataTypes\Sources\Module::TRIGGERS->value . '/trigger/' . Entities\Triggers\Manual::TYPE;
 
 	/**
 	 * Define relationships names
@@ -53,7 +53,7 @@ final class ManualTrigger extends Trigger
 
 	public function getEntityClass(): string
 	{
-		return Entities\Triggers\ManualTrigger::class;
+		return Entities\Triggers\Manual::class;
 	}
 
 	/**

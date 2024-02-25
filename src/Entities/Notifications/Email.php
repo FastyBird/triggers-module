@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * EmailNotification.php
+ * Email.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -16,32 +16,31 @@
 namespace FastyBird\Module\Triggers\Entities\Notifications;
 
 use Doctrine\ORM\Mapping as ORM;
-use FastyBird\Library\Metadata\Types as MetadataTypes;
+use FastyBird\Library\Application\Entities\Mapping as ApplicationMapping;
 use FastyBird\Module\Triggers\Entities;
-use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
+use IPub\DoctrineCrud\Mapping\Attribute as IPubDoctrine;
 use Ramsey\Uuid;
 use function array_merge;
 use function assert;
 use function is_string;
 
-/**
- * @ORM\Entity
- * @ORM\Table(
- *     name="fb_triggers_module_notifications_emails",
- *     options={
- *       "collate"="utf8mb4_general_ci",
- *       "charset"="utf8mb4",
- *       "comment"="Emails notifications"
- *     }
- * )
- */
-class EmailNotification extends Notification
+#[ORM\Entity]
+#[ORM\Table(
+	name: 'fb_triggers_module_notifications_emails',
+	options: [
+		'collate' => 'utf8mb4_general_ci',
+		'charset' => 'utf8mb4',
+		'comment' => 'Emails notifications',
+	],
+)]
+#[ApplicationMapping\DiscriminatorEntry(name: self::TYPE)]
+class Email extends Notification
 {
 
-	/**
-	 * @IPubDoctrine\Crud(is={"required", "writable"})
-	 * @ORM\Column(type="string", name="notification_email", nullable=true)
-	 */
+	public const TYPE = 'email';
+
+	#[IPubDoctrine\Crud(required: true, writable: true)]
+	#[ORM\Column(name: 'notification_email', type: 'string', nullable: false)]
 	private string|null $email;
 
 	public function __construct(
@@ -55,9 +54,9 @@ class EmailNotification extends Notification
 		$this->email = $email;
 	}
 
-	public function getType(): MetadataTypes\TriggerNotificationType
+	public static function getType(): string
 	{
-		return MetadataTypes\TriggerNotificationType::get(MetadataTypes\TriggerNotificationType::TYPE_EMAIL);
+		return self::TYPE;
 	}
 
 	public function getEmail(): string

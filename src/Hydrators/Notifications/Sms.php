@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * SmsNotification.php
+ * Sms.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -27,13 +27,13 @@ use function is_scalar;
 /**
  * SMS notification entity hydrator
  *
- * @extends Notification<Entities\Notifications\SmsNotification>
+ * @extends Notification<Entities\Notifications\Sms>
  *
  * @package        FastyBird:TriggersModule!
  * @subpackage     Hydrators
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-final class SmsNotification extends Notification
+final class Sms extends Notification
 {
 
 	/** @var array<int|string, string> */
@@ -53,7 +53,7 @@ final class SmsNotification extends Notification
 
 	public function getEntityName(): string
 	{
-		return Entities\Notifications\SmsNotification::class;
+		return Entities\Notifications\Sms::class;
 	}
 
 	/**

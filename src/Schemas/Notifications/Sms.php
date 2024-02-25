@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * SmsNotification.php
+ * Sms.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -15,7 +15,7 @@
 
 namespace FastyBird\Module\Triggers\Schemas\Notifications;
 
-use FastyBird\Library\Metadata\Types\ModuleSource;
+use FastyBird\Library\Metadata\Types as MetadataTypes;
 use FastyBird\Module\Triggers\Entities;
 use Neomerx\JsonApi;
 use function array_merge;
@@ -23,20 +23,20 @@ use function array_merge;
 /**
  * SMS notification entity schema
  *
- * @template T of Entities\Notifications\SmsNotification
+ * @template T of Entities\Notifications\Sms
  * @extends  Notification<T>
  *
  * @package        FastyBird:TriggersModule!
  * @subpackage     Schemas
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-final class SmsNotification extends Notification
+final class Sms extends Notification
 {
 
 	/**
 	 * Define entity schema type string
 	 */
-	public const SCHEMA_TYPE = ModuleSource::SOURCE_MODULE_TRIGGERS . '/notification/sms';
+	public const SCHEMA_TYPE = MetadataTypes\Sources\Module::TRIGGERS->value . '/notification/' . Entities\Notifications\Sms::TYPE;
 
 	public function getType(): string
 	{
@@ -45,7 +45,7 @@ final class SmsNotification extends Notification
 
 	public function getEntityClass(): string
 	{
-		return Entities\Notifications\SmsNotification::class;
+		return Entities\Notifications\Sms::class;
 	}
 
 	/**

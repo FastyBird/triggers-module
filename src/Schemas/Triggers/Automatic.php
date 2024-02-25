@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * AutomaticTrigger.php
+ * Automatic.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -15,7 +15,7 @@
 
 namespace FastyBird\Module\Triggers\Schemas\Triggers;
 
-use FastyBird\Library\Metadata\Types\ModuleSource;
+use FastyBird\Library\Metadata\Types as MetadataTypes;
 use FastyBird\Module\Triggers;
 use FastyBird\Module\Triggers\Entities;
 use FastyBird\Module\Triggers\Exceptions;
@@ -29,20 +29,20 @@ use function count;
 /**
  * Automatic trigger entity schema
  *
- * @template T of Entities\Triggers\AutomaticTrigger
+ * @template T of Entities\Triggers\Automatic
  * @extends  Trigger<T>
  *
  * @package        FastyBird:TriggersModule!
  * @subpackage     Schemas
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-final class AutomaticTrigger extends Trigger
+final class Automatic extends Trigger
 {
 
 	/**
 	 * Define entity schema type string
 	 */
-	public const SCHEMA_TYPE = ModuleSource::SOURCE_MODULE_TRIGGERS . '/trigger/automatic';
+	public const SCHEMA_TYPE = MetadataTypes\Sources\Module::TRIGGERS->value . '/trigger/' . Entities\Triggers\Automatic::TYPE;
 
 	/**
 	 * Define relationships names
@@ -65,7 +65,7 @@ final class AutomaticTrigger extends Trigger
 
 	public function getEntityClass(): string
 	{
-		return Entities\Triggers\AutomaticTrigger::class;
+		return Entities\Triggers\Automatic::class;
 	}
 
 	/**

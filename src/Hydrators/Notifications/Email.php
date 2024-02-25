@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * EmailNotification.php
+ * Email.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -25,13 +25,13 @@ use function is_scalar;
 /**
  * Email notification entity hydrator
  *
- * @extends Notification<Entities\Notifications\EmailNotification>
+ * @extends Notification<Entities\Notifications\Email>
  *
  * @package        FastyBird:TriggersModule!
  * @subpackage     Hydrators
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-final class EmailNotification extends Notification
+final class Email extends Notification
 {
 
 	/** @var array<int|string, string> */
@@ -42,7 +42,7 @@ final class EmailNotification extends Notification
 
 	public function getEntityName(): string
 	{
-		return Entities\Notifications\EmailNotification::class;
+		return Entities\Notifications\Email::class;
 	}
 
 	/**

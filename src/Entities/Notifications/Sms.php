@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 /**
- * SmsNotification.php
+ * Sms.php
  *
  * @license        More in LICENSE.md
  * @copyright      https://www.fastybird.com
@@ -16,31 +16,30 @@
 namespace FastyBird\Module\Triggers\Entities\Notifications;
 
 use Doctrine\ORM\Mapping as ORM;
-use FastyBird\Library\Metadata\Types as MetadataTypes;
+use FastyBird\Library\Application\Entities\Mapping as ApplicationMapping;
 use FastyBird\Module\Triggers\Entities;
-use IPub\DoctrineCrud\Mapping\Annotation as IPubDoctrine;
+use IPub\DoctrineCrud\Mapping\Attribute as IPubDoctrine;
 use IPub\Phone;
 use Ramsey\Uuid;
 use function array_merge;
 
-/**
- * @ORM\Entity
- * @ORM\Table(
- *     name="fb_triggers_module_notifications_sms",
- *     options={
- *       "collate"="utf8mb4_general_ci",
- *       "charset"="utf8mb4",
- *       "comment"="SMS notifications"
- *     }
- * )
- */
-class SmsNotification extends Notification
+#[ORM\Entity]
+#[ORM\Table(
+	name: 'fb_triggers_module_notifications_sms',
+	options: [
+		'collate' => 'utf8mb4_general_ci',
+		'charset' => 'utf8mb4',
+		'comment' => 'SMS notifications',
+	],
+)]
+#[ApplicationMapping\DiscriminatorEntry(name: self::TYPE)]
+class Sms extends Notification
 {
 
-	/**
-	 * @IPubDoctrine\Crud(is={"required", "writable"})
-	 * @ORM\Column(type="phone", name="notification_phone", length=150, nullable=true)
-	 */
+	public const TYPE = 'sms';
+
+	#[IPubDoctrine\Crud(required: true, writable: true)]
+	#[ORM\Column(name: 'notification_phone', type: 'phone', length: 150, nullable: false)]
 	private Phone\Entities\Phone $phone;
 
 	public function __construct(
@@ -54,9 +53,9 @@ class SmsNotification extends Notification
 		$this->phone = $phone;
 	}
 
-	public function getType(): MetadataTypes\TriggerNotificationType
+	public static function getType(): string
 	{
-		return MetadataTypes\TriggerNotificationType::get(MetadataTypes\TriggerNotificationType::TYPE_SMS);
+		return self::TYPE;
 	}
 
 	public function getPhone(): Phone\Entities\Phone
